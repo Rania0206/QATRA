@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Rebuild the whole QATRA+ data pack. Raw downloads are cached in data/raw (add --refresh to 01/02 to re-download).
+# Rebuild the whole QATRA data pack. Raw downloads are cached in data/raw (add --refresh to 01/02 to re-download).
 set -e
 cd "$(dirname "$0")"
 PY="${PY:-py -3.13}"

@@ -1,0 +1,52 @@
+{
+  "start": "2026-07-08",
+  "days": 7,
+  "items": [
+    {
+      "date": "2026-07-08",
+      "plant_id": "w27944541",
+      "volume_m3": 1200.0,
+      "batch_id": "SSUD-20260708"
+    },
+    {
+      "date": "2026-07-09",
+      "plant_id": "w27944541",
+      "volume_m3": 1130.0,
+      "batch_id": "SSUD-20260709"
+    },
+    {
+      "date": "2026-07-10",
+      "plant_id": "w27944541",
+      "volume_m3": 1220.0,
+      "batch_id": "SSUD-20260710"
+    },
+    {
+      "date": "2026-07-11",
+      "plant_id": "w27944541",
+      "volume_m3": 1260.0,
+      "batch_id": "SSUD-20260711"
+    },
+    {
+      "date": "2026-07-12",
+      "plant_id": "w27944541",
+      "volume_m3": 990.0,
+      "batch_id": "SSUD-20260712"
+    },
+    {
+      "date": "2026-07-13",
+      "plant_id": "w27944541",
+      "volume_m3": 2040.0,
+      "batch_id": "SSUD-20260713"
+    },
+    {
+      "date": "2026-07-14",
+      "plant_id": "w27944541",
+      "volume_m3": 710.0,
+      "batch_id": "SSUD-20260714"
+    }
+  ],
+  "tag": {
+    "status": "SIMULATED",
+    "source": "data/simulated/sim_batches.csv"
+  }
+}

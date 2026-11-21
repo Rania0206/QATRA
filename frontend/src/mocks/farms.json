@@ -1,0 +1,192 @@
+[
+  {
+    "id": "A",
+    "name": "Ferme A - Luzerne",
+    "crop": "alfalfa",
+    "area_ha": 2.0,
+    "lat": 35.863818,
+    "lon": 10.613871,
+    "soil_texture": "clay loam",
+    "soil_ece": 1.9,
+    "head_m": 103,
+    "distance_km": 8.17,
+    "fresh_source": "well",
+    "fresh_m3_season": 12700.0,
+    "is_small_farm": true,
+    "tag": {
+      "status": "SIMULATED",
+      "source": "data/simulated/sim_farms.csv"
+    }
+  },
+  {
+    "id": "B",
+    "name": "Ferme B - Oliveraie",
+    "crop": "olive",
+    "area_ha": 4.0,
+    "lat": 35.778837,
+    "lon": 10.597947,
+    "soil_texture": "sandy loam",
+    "soil_ece": 1.1,
+    "head_m": 54,
+    "distance_km": 4.57,
+    "fresh_source": "borehole",
+    "fresh_m3_season": 18700.0,
+    "is_small_farm": false,
+    "tag": {
+      "status": "SIMULATED",
+      "source": "data/simulated/sim_farms.csv"
+    }
+  },
+  {
+    "id": "C",
+    "name": "Ferme C - Laitue",
+    "crop": "lettuce",
+    "area_ha": 1.0,
+    "lat": 35.796271,
+    "lon": 10.608035,
+    "soil_texture": "clay loam",
+    "soil_ece": 1.4,
+    "head_m": null,
+    "distance_km": 3.31,
+    "fresh_source": "network",
+    "fresh_m3_season": 6700.0,
+    "is_small_farm": true,
+    "tag": {
+      "status": "SIMULATED",
+      "source": "data/simulated/sim_farms.csv"
+    }
+  },
+  {
+    "id": "D",
+    "name": "Ferme D - Oliviers Chemlali",
+    "crop": "olive",
+    "area_ha": 6.5,
+    "lat": 35.774764,
+    "lon": 10.595148,
+    "soil_texture": "clay loam",
+    "soil_ece": 2.6,
+    "head_m": 56,
+    "distance_km": 4.99,
+    "fresh_source": "borehole",
+    "fresh_m3_season": 30300.0,
+    "is_small_farm": false,
+    "tag": {
+      "status": "SIMULATED",
+      "source": "data/simulated/sim_farms.csv"
+    }
+  },
+  {
+    "id": "E",
+    "name": "Ferme E - Orge fourragere",
+    "crop": "barley_fodder",
+    "area_ha": 3.0,
+    "lat": 35.814381,
+    "lon": 10.602977,
+    "soil_texture": "clay loam",
+    "soil_ece": 3.8,
+    "head_m": 93,
+    "distance_km": 4.35,
+    "fresh_source": "well",
+    "fresh_m3_season": 23000.0,
+    "is_small_farm": false,
+    "tag": {
+      "status": "SIMULATED",
+      "source": "data/simulated/sim_farms.csv"
+    }
+  },
+  {
+    "id": "F",
+    "name": "Ferme F - Ble dur",
+    "crop": "wheat",
+    "area_ha": 5.0,
+    "lat": 35.776873,
+    "lon": 10.580993,
+    "soil_texture": "clay loam",
+    "soil_ece": 2.2,
+    "head_m": 92,
+    "distance_km": 6.08,
+    "fresh_source": "well",
+    "fresh_m3_season": 38300.0,
+    "is_small_farm": false,
+    "tag": {
+      "status": "SIMULATED",
+      "source": "data/simulated/sim_farms.csv"
+    }
+  },
+  {
+    "id": "G",
+    "name": "Ferme G - Avoine fourragere",
+    "crop": "oat_fodder",
+    "area_ha": 0.8,
+    "lat": 35.779555,
+    "lon": 10.591433,
+    "soil_texture": "clay loam",
+    "soil_ece": 2.9,
+    "head_m": 104,
+    "distance_km": 5.09,
+    "fresh_source": "well",
+    "fresh_m3_season": 6100.0,
+    "is_small_farm": true,
+    "tag": {
+      "status": "SIMULATED",
+      "source": "data/simulated/sim_farms.csv"
+    }
+  },
+  {
+    "id": "H",
+    "name": "Ferme H - Petite oliveraie",
+    "crop": "olive",
+    "area_ha": 0.6,
+    "lat": 35.817704,
+    "lon": 10.621242,
+    "soil_texture": "clay loam",
+    "soil_ece": 1.6,
+    "head_m": null,
+    "distance_km": 3.32,
+    "fresh_source": "network",
+    "fresh_m3_season": 2800.0,
+    "is_small_farm": true,
+    "tag": {
+      "status": "SIMULATED",
+      "source": "data/simulated/sim_farms.csv"
+    }
+  },
+  {
+    "id": "I",
+    "name": "Ferme I - Luzerne",
+    "crop": "alfalfa",
+    "area_ha": 1.5,
+    "lat": 35.797902,
+    "lon": 10.575422,
+    "soil_texture": "clay loam",
+    "soil_ece": 1.2,
+    "head_m": 47,
+    "distance_km": 6.26,
+    "fresh_source": "borehole",
+    "fresh_m3_season": 9500.0,
+    "is_small_farm": true,
+    "tag": {
+      "status": "SIMULATED",
+      "source": "data/simulated/sim_farms.csv"
+    }
+  },
+  {
+    "id": "J",
+    "name": "Ferme J - Orge",
+    "crop": "barley",
+    "area_ha": 8.0,
+    "lat": 35.778569,
+    "lon": 10.584047,
+    "soil_texture": "clay loam",
+    "soil_ece": 4.5,
+    "head_m": 63,
+    "distance_km": 5.76,
+    "fresh_source": "borehole",
+    "fresh_m3_season": 61300.0,
+    "is_small_farm": false,
+    "tag": {
+      "status": "SIMULATED",
+      "source": "data/simulated/sim_farms.csv"
+    }
+  }
+]

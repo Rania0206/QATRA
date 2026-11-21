@@ -64,7 +64,7 @@ def nt106003():
         "cahier_des_charges_1995": {"status": "TO_VERIFY", "note": "Text not located online within time-box."},
         "engine_rule_mapping": {"blocked": ["vegetables eaten raw (lettuce, tomato as fresh vegetable)", "direct grazing"],
                                 "allowed": ["cereals", "fodder (alfalfa, oat, barley fodder)", "industrial crops", "fruit trees (no sprinkler)", "olive (as fruit tree)"],
-                                "status": "ESTIMATE (QATRA+ interpretation of decree + arrete)"},
+                                "status": "ESTIMATE (QATRA interpretation of decree + arrete)"},
     }
 
 
@@ -135,7 +135,7 @@ def pumping_official():
              date="TO_VERIFY", status="TO_VERIFY", source_url="https://managers.tn/2023/04/26/onas-suez-construction-de-14-stations-depuration-dans-4-regions/", note="Contract scope, not national inventory."),
         dict(entity="ONAS / SONEDE / CRDA Sousse", scope="Sousse", item="Official public list of pumping stations with coordinates/specs", value=None, unit=None,
              date=None, status="NOT FOUND (public)", source_url=None,
-             note="Finding: pump/network data is fragmented and not published openly. QATRA+ uses OSM (incomplete) + simulated specs."),
+             note="Finding: pump/network data is fragmented and not published openly. QATRA uses OSM (incomplete) + simulated specs."),
     ])
 
 

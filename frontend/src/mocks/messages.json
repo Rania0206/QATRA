@@ -1,0 +1,36 @@
+[
+  {
+    "id": "M1",
+    "farm_id": "B",
+    "direction": "out",
+    "channel": "sms",
+    "at": "2026-07-08T06:30:00",
+    "text_ar": "دفعة اليوم: 320 م3 من 10:00 إلى 12:00.",
+    "text_fr": "Lot du jour : 320 m3 de 10h a 12h."
+  },
+  {
+    "id": "M2",
+    "farm_id": "B",
+    "direction": "in",
+    "channel": "sms",
+    "at": "2026-07-08T06:41:00",
+    "text": "OK"
+  },
+  {
+    "id": "M3",
+    "farm_id": "C",
+    "direction": "out",
+    "channel": "sms",
+    "at": "2026-07-08T06:30:00",
+    "text_ar": "لا يُسمح بري الخس بالمياه المعالجة.",
+    "text_fr": "La laitue ne peut pas etre irriguee avec des EUT."
+  },
+  {
+    "id": "M4",
+    "farm_id": "J",
+    "direction": "in",
+    "channel": "sms",
+    "at": "2026-07-08T07:05:00",
+    "text": "Besoin de plus d'eau demain"
+  }
+]

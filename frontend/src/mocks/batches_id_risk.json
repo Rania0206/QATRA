@@ -1,0 +1,41 @@
+{
+  "batch_id": "SSUD-20260708",
+  "risk_colour": "green",
+  "score": 0.18,
+  "factors": [
+    {
+      "param": "BOD5_mg_L",
+      "value": 23.5,
+      "limit": 30,
+      "ok": true
+    },
+    {
+      "param": "COD_mg_L",
+      "value": 68.8,
+      "limit": 90,
+      "ok": true
+    },
+    {
+      "param": "TSS_mg_L",
+      "value": 19.3,
+      "limit": 30,
+      "ok": true
+    },
+    {
+      "param": "EC_dS_m",
+      "value": 3.66,
+      "limit": 7.0,
+      "ok": true
+    },
+    {
+      "param": "helminth_eggs_per_L",
+      "value": 0.76,
+      "limit": 1,
+      "ok": true
+    }
+  ],
+  "tag": {
+    "status": "ESTIMATE",
+    "source": "NT 106.03 limits applied to SIMULATED batch"
+  }
+}

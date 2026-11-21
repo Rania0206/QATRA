@@ -3,7 +3,11 @@ __pycache__/
 *.pyc
 .venv/
 venv/
+.pytest_cache/
 .ipynb_checkpoints/
+
+# Node
+node_modules/
 
 # Secrets / local config
 .env
@@ -13,3 +17,9 @@ venv/
 .DS_Store
 Thumbs.db
 .vscode/
+~$*
+
+# Frontend build / local env
+dist/
+*.local
+*.tsbuildinfo

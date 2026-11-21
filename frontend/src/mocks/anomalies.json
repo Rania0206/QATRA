@@ -1,0 +1,101 @@
+[
+  {
+    "batch_id": "SSUD-20260712",
+    "date": "2026-07-12",
+    "type": "stale_analysis",
+    "detail": "stale analysis (>30 d, decree 89-1047 monthly frequency)",
+    "severity": "warning",
+    "tag": {
+      "status": "SIMULATED",
+      "source": "data/simulated/sim_batches.csv"
+    }
+  },
+  {
+    "batch_id": "SSUD-20260718",
+    "date": "2026-07-18",
+    "type": "quality",
+    "detail": "BOD5/COD/TSS above NT 106.03",
+    "severity": "critical",
+    "tag": {
+      "status": "SIMULATED",
+      "source": "data/simulated/sim_batches.csv"
+    }
+  },
+  {
+    "batch_id": "SSUD-20260719",
+    "date": "2026-07-19",
+    "type": "stale_analysis",
+    "detail": "stale analysis (>30 d, decree 89-1047 monthly frequency)",
+    "severity": "warning",
+    "tag": {
+      "status": "SIMULATED",
+      "source": "data/simulated/sim_batches.csv"
+    }
+  },
+  {
+    "batch_id": "SSUD-20260728",
+    "date": "2026-07-28",
+    "type": "stale_analysis",
+    "detail": "stale analysis (>30 d, decree 89-1047 monthly frequency)",
+    "severity": "warning",
+    "tag": {
+      "status": "SIMULATED",
+      "source": "data/simulated/sim_batches.csv"
+    }
+  },
+  {
+    "batch_id": "SSUD-20260803",
+    "date": "2026-08-03",
+    "type": "stale_analysis",
+    "detail": "stale analysis (>30 d, decree 89-1047 monthly frequency)",
+    "severity": "warning",
+    "tag": {
+      "status": "SIMULATED",
+      "source": "data/simulated/sim_batches.csv"
+    }
+  },
+  {
+    "batch_id": "SSUD-20260808",
+    "date": "2026-08-08",
+    "type": "quality",
+    "detail": "helminth eggs > 1/L",
+    "severity": "critical",
+    "tag": {
+      "status": "SIMULATED",
+      "source": "data/simulated/sim_batches.csv"
+    }
+  },
+  {
+    "batch_id": "SSUD-20260810",
+    "date": "2026-08-10",
+    "type": "stale_analysis",
+    "detail": "stale analysis (>30 d, decree 89-1047 monthly frequency)",
+    "severity": "warning",
+    "tag": {
+      "status": "SIMULATED",
+      "source": "data/simulated/sim_batches.csv"
+    }
+  },
+  {
+    "batch_id": "SSUD-20260818",
+    "date": "2026-08-18",
+    "type": "stale_analysis",
+    "detail": "stale analysis (>30 d, decree 89-1047 monthly frequency)",
+    "severity": "warning",
+    "tag": {
+      "status": "SIMULATED",
+      "source": "data/simulated/sim_batches.csv"
+    }
+  },
+  {
+    "batch_id": "SSUD-20260821",
+    "date": "2026-08-21",
+    "type": "quality",
+    "detail": "BOD5 above NT 106.03",
+    "severity": "critical",
+    "tag": {
+      "status": "SIMULATED",
+      "source": "data/simulated/sim_batches.csv"
+    }
+  }
+]

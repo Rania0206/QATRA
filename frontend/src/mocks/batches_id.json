@@ -1,0 +1,42 @@
+{
+  "id": "SSUD-20260708",
+  "plant_id": "w27944541",
+  "date": "2026-07-08",
+  "volume_m3": 1200.0,
+  "treatment_level": "secondary (assumed; Sousse Sud level TO_VERIFY)",
+  "analyses": [
+    {
+      "type": "physico_chemical",
+      "date": "2026-07-04",
+      "valid_until": "2026-08-03",
+      "is_valid": true,
+      "values": {
+        "EC_dS_m": 3.66,
+        "SAR": 7.31,
+        "BOD5_mg_L": 23.5,
+        "COD_mg_L": 68.8,
+        "TSS_mg_L": 19.3,
+        "total_N_mg_L": 14.3,
+        "Cl_mg_L": 483.0,
+        "pH": 7.34,
+        "faecal_coliforms_cfu_100mL": 171873.0
+      }
+    },
+    {
+      "type": "parasite_eggs",
+      "date": "2026-07-04",
+      "valid_until": "2026-07-19",
+      "is_valid": true,
+      "values": {
+        "helminth_eggs_per_L": 0.76
+      }
+    }
+  ],
+  "analysis_status": "valid",
+  "status": "received",
+  "risk_colour": "green",
+  "tag": {
+    "status": "SIMULATED",
+    "source": "data/simulated/sim_batches.csv"
+  }
+}

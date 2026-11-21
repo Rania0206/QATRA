@@ -1,4 +1,4 @@
-# QATRA+ data pack: Zaouiet-Sousse demo (collected 2026-11-21)
+# QATRA data pack: Zaouiet-Sousse demo (collected 2026-11-21)
 
 Every dataset and figure has a **status**:
 - **REPORTED**: published by someone else

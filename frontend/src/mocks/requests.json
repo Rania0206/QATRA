@@ -1,0 +1,18 @@
+[
+  {
+    "id": "REQ-001",
+    "farm_id": "G",
+    "requested_m3": 80,
+    "date": "2026-07-09",
+    "status": "pending",
+    "created_at": "2026-07-08T08:00:00"
+  },
+  {
+    "id": "REQ-002",
+    "farm_id": "I",
+    "requested_m3": 150,
+    "date": "2026-07-09",
+    "status": "approved",
+    "created_at": "2026-07-08T08:00:00"
+  }
+]
