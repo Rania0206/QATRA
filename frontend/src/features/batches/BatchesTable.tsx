@@ -1,7 +1,7 @@
 import type { Batch } from "../../api/types";
 import { fmtDate, fmtNumber } from "./format";
 import StatusBadge from "./StatusBadge";
-import TagChip from "./TagChip";
+import TagChip from "../../components/TagChip";
 
 interface Props {
   batches: Batch[];

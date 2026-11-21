@@ -3,7 +3,7 @@ import { get } from "../../api/client";
 import type { Batch, Tag } from "../../api/types";
 import BatchDrawer from "./BatchDrawer";
 import BatchesTable from "./BatchesTable";
-import TagChip from "./TagChip";
+import TagChip from "../../components/TagChip";
 
 type Filter = "all" | "valid" | "problem";
 
