@@ -5,7 +5,6 @@ If a value is missing or unclear, the rule is kept with limit=None and tag TO_VE
 
 Sources (all via get_store()):
 - nt106003_rules: NT 106.03 limits, Decree 89-1047 articles, 1994 allowed-crop order
-- irrigation_water_quality_guidelines: FAO-29 Table 1 (water salinity)
 - crop_salt_tolerance: FAO-29 Table 4 (soil ECe thresholds per crop)
 """
 import math
@@ -16,14 +15,14 @@ from typing import Literal, Optional
 import pandas as pd
 from pydantic import BaseModel, Field
 
-from app.schemas import Tag
+from app.schemas import RuleResult, Tag
 from app.store import get_store
 
 Family = Literal["analysis", "water_limit", "crop", "use", "salinity"]
 Severity = Literal["block", "condition", "info"]
+SourceType = Literal["tunisian_law", "agronomic_advice"]
 
 NT_DATASET = "nt106003_rules"
-FAO_WATER_DATASET = "irrigation_water_quality_guidelines"
 SALT_DATASET = "crop_salt_tolerance"
 
 NT_REF = "NT 106.03 (1989)"
@@ -34,6 +33,7 @@ SALINITY_SOIL_FACTOR = 0.8  # condition when soil ECe >= 80% of the crop thresho
 class Rule(BaseModel):
     rule_id: str
     family: Family
+    source_type: SourceType  # tunisian_law: NT 106.03, Decree 89-1047, 1994 order; agronomic_advice: FAO-29
     parameter: Optional[str] = None
     limit: Optional[float] = None  # upper limit (pass if value <= limit)
     limit_min: Optional[float] = None  # lower limit, only for ranges (pH)
@@ -104,6 +104,7 @@ def _analysis_rule(nt: dict) -> Rule:
         rule_id="R-ANALYSIS",
         family="analysis",
         severity_if_failed="block",
+        source_type="tunisian_law",
         legal_ref="Decree 89-1047 Art.3 (monitoring frequencies)",
         tag=Tag(status=_status(dec.get("status")), source=dec.get("source")),
         text_en=f"Required analyses (physico-chemical, parasite eggs) must be present and still valid "
@@ -136,6 +137,7 @@ def _limit_rules(nt: dict) -> list[Rule]:
             unit=p.get("unit"),
             batch_fields=BATCH_FIELDS.get(name, []),
             severity_if_failed="block",
+            source_type="tunisian_law",
             legal_ref=NT_REF,
             tag=tag,
             text_en=f"{name} must be {bound}{unit} (NT 106.03).",
@@ -155,31 +157,12 @@ def _nematode_rule(nt: dict) -> Rule:
         unit=p.get("unit"),
         batch_fields=NEMATODE_FIELDS,
         severity_if_failed="block",
+        source_type="tunisian_law",
         legal_ref=NT_REF,
         tag=Tag(status=_status(p.get("status")) if limit is not None else "TO_VERIFY",
                 source=_short_source(p.get("source", ""))),
         text_en=f"Intestinal nematode (helminth) eggs must be <= {limit:g} egg per litre (NT 106.03).",
         text_fr=f"Les oeufs de nematodes intestinaux doivent etre <= {limit:g} oeuf par litre (NT 106.03).",
-    )
-
-
-def _coliform_rule(nt: dict) -> Rule:
-    p = next(x for x in nt["parameters"] if "coliform" in x["parameter"].lower())
-    limit = _num(p.get("fallback_used_by_engine"))
-    return Rule(
-        rule_id="R-COLIFORM",
-        family="water_limit",
-        parameter=p["parameter"],
-        limit=limit,
-        unit=p.get("unit"),
-        batch_fields=["faecal_coliforms_cfu_100mL"],
-        severity_if_failed="condition",
-        legal_ref="WHO 2006 guidelines (not Tunisian law; NT 106.03 sets no coliform limit)",
-        tag=Tag(status="TO_VERIFY", source=p.get("fallback_status")),
-        text_en=f"Faecal coliforms above {limit:g} CFU/100 mL: WHO guideline — not Tunisian law. "
-                "Irrigation allowed only with health-protection conditions.",
-        text_fr=f"Coliformes fecaux au-dessus de {limit:g} UFC/100 mL : recommandation OMS — pas la loi "
-                "tunisienne. Irrigation possible seulement avec mesures de protection sanitaire.",
     )
 
 
@@ -199,6 +182,7 @@ def _crop_allowed_rule(nt: dict) -> Rule:
         # as allowed (fruit tree / fodder) and marks this TO_VERIFY.
         crops_to_verify=["olive", "alfalfa"],
         severity_if_failed="block",
+        source_type="tunisian_law",
         legal_ref="Arrete du Ministre de l'Agriculture du 21 juin 1994 (Decree 89-1047 Art.7)",
         tag=Tag(status=_status(a.get("status")), source=_short_source(a.get("source", ""))),
         text_en="The crop must be on the list fixed by the 21 June 1994 order (industrial crops, cereals, "
@@ -221,6 +205,7 @@ def _raw_eaten_rule(nt: dict) -> Rule:
         family="crop",
         crops=crops,
         severity_if_failed="block",
+        source_type="tunisian_law",
         legal_ref="Decree 89-1047 Art.5",
         tag=Tag(status=_status(dec.get("status")), source=dec.get("source")),
         text_en="Vegetable crops (cultures maraicheres) and crops eaten raw (crudites) cannot be irrigated "
@@ -241,6 +226,7 @@ def _grazing_rules(nt: dict) -> list[Rule]:
             family="use",
             parameter="direct_grazing",
             severity_if_failed="block",
+            source_type="tunisian_law",
             legal_ref="Decree 89-1047 Art.6",
             tag=tag,
             text_en="Direct grazing on plots irrigated with treated wastewater is prohibited.",
@@ -252,6 +238,7 @@ def _grazing_rules(nt: dict) -> list[Rule]:
             crops=fodder,
             crops_to_verify=["alfalfa"],
             severity_if_failed="info",
+            source_type="tunisian_law",
             legal_ref="Decree 89-1047 Art.6",
             tag=tag,
             text_en="Fodder crop: cut-and-carry only, no direct grazing.",
@@ -260,50 +247,54 @@ def _grazing_rules(nt: dict) -> list[Rule]:
     ]
 
 
-def _salinity_rules(water: pd.DataFrame, salt: pd.DataFrame) -> list[Rule]:
+def _salinity_rules(salt: pd.DataFrame) -> list[Rule]:
+    """One rule per crop whose ECe threshold comes directly from FAO-29 (crop_salt_tolerance).
+
+    Crops with a missing or estimated threshold (olive, pomegranate, oat_fodder) get no rule: the
+    engine returns salinity_not_assessed() for them instead. The general water-salinity class
+    (FAO-29 Table 1, ECw > 3.0 dS/m) is not used: it is not a crop threshold.
+    """
     rules = []
-    ecw = water[(water["problem"] == "Salinity") & (water["parameter"] == "ECw")]
-    if not ecw.empty:
-        row = ecw.iloc[0]
-        limit = _num(str(row["severe"]).lstrip("><= "))
-        rules.append(Rule(
-            rule_id="R-SALINITY-WATER",
-            family="salinity",
-            parameter="ECw",
-            limit=limit,
-            unit=row["unit"],
-            batch_fields=["EC_dS_m"],
-            severity_if_failed="condition",
-            legal_ref=FAO_REF,
-            tag=Tag(status="ESTIMATE", source=_short_source(row["source"])),
-            # The data has no per-crop water (ECw) tolerance, only the general FAO-29 class.
-            text_en=f"Water EC above {limit:g} dS/m is a severe salinity risk (FAO-29): irrigate with a "
-                    "leaching fraction and watch soil salinity.",
-            text_fr=f"CE de l'eau au-dessus de {limit:g} dS/m : risque de salinite severe (FAO-29) ; "
-                    "prevoir une fraction de lessivage et suivre la salinite du sol.",
-        ))
     for _, r in salt.iterrows():
         crop = r["crop"]
         thr = _num(r["ECe_threshold_dS_m"])
-        status = "TO_VERIFY" if thr is None or _status(r["status"]) == "TO_VERIFY" else "ESTIMATE"
-        trigger = f"{SALINITY_SOIL_FACTOR * thr:g}" if thr is not None else "unknown"
+        if thr is None or _status(r["status"]) != "REPORTED":
+            continue
         rules.append(Rule(
             rule_id=f"R-SALINITY-{_slug(crop)}",
             family="salinity",
+            source_type="agronomic_advice",
             parameter="soil_ece",
             limit=thr,
             unit="dS/m",
             crops=[crop],
             severity_if_failed="condition",
             legal_ref=FAO_REF,
-            tag=Tag(status=status, source=_short_source(r["source"])),
-            text_en=f"{crop}: soil ECe at or above 80% of the crop threshold "
-                    f"({thr if thr is not None else 'not established'} dS/m, trigger {trigger}) "
-                    "risks yield loss; irrigate with a leaching fraction.",
-            text_fr=f"{crop} : ECe du sol >= 80 % du seuil de la culture "
-                    f"({thr if thr is not None else 'non etabli'} dS/m) ; risque de perte de rendement.",
+            tag=Tag(status="ESTIMATE", source=_short_source(r["source"])),
+            text_en=f"{crop}: soil ECe at or above 80% of the FAO-29 crop threshold ({thr:g} dS/m, "
+                    f"trigger {SALINITY_SOIL_FACTOR * thr:g}) risks yield loss; irrigate with a leaching fraction.",
+            text_fr=f"{crop} : ECe du sol >= 80 % du seuil FAO-29 de la culture ({thr:g} dS/m) ; "
+                    "risque de perte de rendement, prevoir une fraction de lessivage.",
         ))
     return rules
+
+
+def salinity_crops() -> set[str]:
+    """Crops that have a salinity rule."""
+    return {c for r in _build() if r.family == "salinity" for c in r.crops}
+
+
+def salinity_not_assessed(crop: str) -> RuleResult:
+    """Result for a crop with no FAO salinity threshold (A-03b uses it when no salinity rule applies)."""
+    return RuleResult(
+        rule_id="R-SALINITY-NONE",
+        passed=True,
+        severity="info",
+        source_type="agronomic_advice",
+        reason_en="No FAO salinity threshold for this crop — salinity not assessed",
+        reason_fr="Pas de seuil FAO de salinité pour cette culture — salinité non évaluée",
+        legal_ref=FAO_REF,
+    )
 
 
 @lru_cache(maxsize=1)
@@ -314,11 +305,11 @@ def _build() -> tuple[Rule, ...]:
         _analysis_rule(nt),
         *_limit_rules(nt),
         _nematode_rule(nt),
-        _coliform_rule(nt),
+        # Faecal coliforms: removed. NT 106.03 sets no coliform limit (only WHO guidance exists).
         _crop_allowed_rule(nt),
         _raw_eaten_rule(nt),
         *_grazing_rules(nt),
-        *_salinity_rules(store[FAO_WATER_DATASET], store[SALT_DATASET]),
+        *_salinity_rules(store[SALT_DATASET]),
     ]
     return tuple(rules)
 

@@ -54,11 +54,13 @@ export interface Farm {
 }
 
 export type Severity = "block" | "condition" | "info";
+export type SourceType = "tunisian_law" | "agronomic_advice";
 
 export interface RuleResult {
   rule_id: string;
   passed: boolean;
   severity: Severity;
+  source_type?: SourceType; // UI groups results: "Tunisian law" / "Agronomic advice (FAO)"
   reason_en: string;
   reason_fr: string;
   legal_ref: string;

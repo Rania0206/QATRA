@@ -56,6 +56,7 @@ class RuleResult(BaseModel):
     rule_id: str
     passed: bool
     severity: Literal["block", "condition", "info"]
+    source_type: Optional[Literal["tunisian_law", "agronomic_advice"]] = None
     reason_en: str
     reason_fr: str
     legal_ref: str
