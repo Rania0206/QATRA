@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import type { Analysis, AnalysisType, Batch } from "../../api/types";
 import { ANALYSIS_LABEL, REQUIRED_TYPES, fmtDate, fmtNumber, paramInfo } from "./format";
 import StatusBadge from "./StatusBadge";
-import TagChip from "./TagChip";
+import TagChip from "../../components/TagChip";
 
 interface Props {
   batch: Batch;
