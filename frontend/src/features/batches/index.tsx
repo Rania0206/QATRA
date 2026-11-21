@@ -27,7 +27,7 @@ function distinctTags(batches: Batch[]): Tag[] {
 function Figure({ value, unit, caption, children }: { value: string; unit: string; caption: string; children?: ReactNode }) {
   return (
     <div className="flex flex-col items-center gap-4 px-4 text-center">
-      <p className="font-serif text-6xl leading-none tabular-nums md:text-7xl">
+      <p className="font-display text-6xl leading-none tabular-nums md:text-7xl">
         {value}
         <span className="ml-2 text-3xl">{unit}</span>
       </p>
@@ -78,7 +78,7 @@ export default function BatchesTab() {
       </Band>
 
       {/* Key figures */}
-      <Band tone="blush" wide>
+      <Band tone="khaki" wide>
         <div className="grid gap-14 md:grid-cols-3 md:gap-6">
           <Figure value={fmtNumber(PERIMETER.equipped_ha)} unit="ha" caption={`${PERIMETER.name}, equipped for treated water`} />
           <Figure value={fmtNumber(PERIMETER.delivered_m3)} unit="m³" caption={`Delivered to farms in ${PERIMETER.season}`} />
@@ -93,7 +93,7 @@ export default function BatchesTab() {
             </div>
           )}
         </div>
-        <p className="mt-14 text-center font-mono text-[15px]">Source: {PERIMETER.tag.source}</p>
+        <p className="mt-14 text-center text-[15px]">Source: {PERIMETER.tag.source}</p>
       </Band>
 
       {/* Daily batches */}
@@ -129,7 +129,7 @@ export default function BatchesTab() {
           ) : batches === null ? (
             <TableSkeleton />
           ) : visible.length === 0 ? (
-            <p className="border-y border-line py-12 text-center font-serif text-3xl">
+            <p className="border-y border-line py-12 text-center font-display text-3xl">
               {all.length === 0 ? "No batches yet." : "No batch matches this filter."}
             </p>
           ) : (

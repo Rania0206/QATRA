@@ -28,7 +28,7 @@ function Burger({ open }: { open: boolean }) {
 
 function Wordmark() {
   return (
-    <span className="flex items-baseline gap-2 font-serif">
+    <span className="flex items-baseline gap-2 font-display">
       <span className="text-[28px] leading-none tracking-tight">{PROJECT_NAME}</span>
       <span lang="ar" dir="rtl" className="text-[22px] leading-none">
         قطرة
@@ -61,7 +61,7 @@ export default function Shell({ tabs, active, onSelect, children }: Props) {
 
   return (
     <div className="flex min-h-screen flex-col bg-cream text-ink">
-      <div role="note" className="bg-ink px-4 py-2 text-center font-mono text-[15px] text-cream">
+      <div role="note" className="bg-ink px-4 py-2 text-center text-[15px] text-cream">
         {DEMO_BANNER}
         {USE_MOCKS && <span className="ml-3 underline underline-offset-4">mock API</span>}
       </div>
@@ -78,7 +78,7 @@ export default function Shell({ tabs, active, onSelect, children }: Props) {
             >
               <Burger open={false} />
             </button>
-            {current && <span className="hidden font-mono text-[16px] md:inline">{current.label}</span>}
+            {current && <span className="hidden text-[16px] md:inline">{current.label}</span>}
           </div>
           <a
             href={`#/${tabs[0]?.id ?? ""}`}
@@ -134,10 +134,10 @@ export default function Shell({ tabs, active, onSelect, children }: Props) {
                     aria-current={active === t.id ? "page" : undefined}
                     className="group flex items-baseline gap-4 border-b border-olive-deep pb-3"
                   >
-                    <span className="font-mono text-[15px]">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="text-[15px]">{String(i + 1).padStart(2, "0")}</span>
                     <span
-                      className={`font-serif text-4xl leading-tight transition-transform duration-300 group-hover:translate-x-2 ${
-                        active === t.id ? "italic" : ""
+                      className={`font-display text-4xl leading-tight transition-transform duration-300 group-hover:translate-x-2 ${
+                        active === t.id ? "underline decoration-2 underline-offset-8" : ""
                       }`}
                     >
                       {t.label}
@@ -147,14 +147,14 @@ export default function Shell({ tabs, active, onSelect, children }: Props) {
               ))}
             </ol>
           </nav>
-          <p className="pb-8 text-center font-mono text-[15px]">Sousse Sud plant → Zaouiet-Sousse irrigated area</p>
+          <p className="pb-8 text-center text-[15px]">Sousse Sud plant → Zaouiet-Sousse irrigated area</p>
         </div>
       )}
 
       <main className="flex-1">{children}</main>
 
-      <footer className="bg-blush px-8 py-16 text-center">
-        <p className="font-serif text-4xl">{PROJECT_NAME}</p>
+      <footer className="bg-khaki px-8 py-16 text-center">
+        <p className="font-display text-4xl">{PROJECT_NAME}</p>
         <p className="mx-auto mt-4 max-w-sm">Treated wastewater, safely reused in Tunisian agriculture.</p>
       </footer>
     </div>

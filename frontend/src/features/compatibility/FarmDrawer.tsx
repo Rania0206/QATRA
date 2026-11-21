@@ -18,14 +18,14 @@ function ResultRow({ r, lang }: { r: RuleResult; lang: Lang }) {
   return (
     <li className={`flex gap-4 border-b border-line py-4 last:border-0 ${failed ? "" : ""}`}>
       <span className="pt-2">
-        {r.passed && r.severity !== "info" ? <span aria-hidden="true" className="font-mono text-ok">✓</span> : <Dot tone={tone} />}
+        {r.passed && r.severity !== "info" ? <span aria-hidden="true" className="text-ok">✓</span> : <Dot tone={tone} />}
       </span>
       <div className="min-w-0 flex-1 space-y-2">
         <p className={failed ? (r.severity === "block" ? "text-bad" : "text-warn") : ""}>{reason(r, lang)}</p>
-        {isWho(r) && <p className="inline-block border border-bad px-2 py-0.5 font-mono text-[15px] text-bad">{T.who[lang]}</p>}
+        {isWho(r) && <p className="inline-block border border-bad px-2 py-0.5 text-[15px] text-bad">{T.who[lang]}</p>}
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
           <span className="font-medium">{r.legal_ref}</span>
-          <span className="font-mono text-[15px] text-ink-soft">{r.rule_id}</span>
+          <span className="text-[15px] text-ink-soft">{r.rule_id}</span>
         </div>
       </div>
     </li>
@@ -47,7 +47,7 @@ export default function FarmDrawer({ farm, result, rules, lang, onClose }: Props
           <div className="flex flex-wrap items-center gap-2">
             <DecisionPill decision={result.decision} lang={lang} large />
           </div>
-          <p className="font-mono text-[15px]">
+          <p className="text-[15px]">
             {T.crop[lang]}: {cropLabel(farm.crop)} · {T.area[lang]}: {fmtNumber(farm.area_ha)} ha · {T.soil[lang]}:{" "}
             {fmtNumber(farm.soil_ece)} dS/m
           </p>

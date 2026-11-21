@@ -2,12 +2,12 @@ import { useEffect, type ReactNode } from "react";
 
 /* Shared building blocks for every screen. Style tokens live in index.css (@theme). */
 
-export type BandTone = "cream" | "olive" | "blush" | "sand";
+export type BandTone = "cream" | "olive" | "khaki" | "sand";
 
 const BAND: Record<BandTone, string> = {
   cream: "bg-cream",
   olive: "bg-olive",
-  blush: "bg-blush",
+  khaki: "bg-khaki",
   sand: "bg-sand",
 };
 
@@ -71,7 +71,7 @@ export function Pill({ tone, children, title, large = false }: { tone: Tone; chi
   return (
     <span
       title={title}
-      className={`inline-flex items-center gap-2 whitespace-nowrap border bg-cream font-mono ${PILL[tone]} ${
+      className={`inline-flex items-center gap-2 whitespace-nowrap border bg-cream ${PILL[tone]} ${
         large ? "px-3 py-1 text-[16px]" : "px-2.5 py-0.5 text-[15px]"
       }`}
     >

@@ -11,7 +11,7 @@ interface Props {
   onSelect: (b: Batch) => void;
 }
 
-const TH = "sticky top-0 z-10 border-b border-ink bg-cream px-4 py-4 text-left font-mono text-[15px] font-normal";
+const TH = "sticky top-0 z-10 border-b border-ink bg-cream px-4 py-4 text-left text-[15px] font-normal";
 const TD = "px-4 py-4";
 
 export function TableSkeleton() {
@@ -56,9 +56,9 @@ export default function BatchesTable({ batches, latestId, selectedId, onSelect }
               >
                 <td className={`${TD} whitespace-nowrap`}>
                   {fmtDate(b.date)}
-                  {latest && <span className="ml-3 font-serif text-[17px] italic">today</span>}
+                  {latest && <span className="ml-3 rounded-sm bg-olive px-2 py-0.5 text-[14px] font-medium text-ink">today</span>}
                 </td>
-                <td className={`${TD} whitespace-nowrap font-mono text-[16px]`}>
+                <td className={`${TD} whitespace-nowrap text-[16px]`}>
                   {b.id}
                 </td>
                 <td className={`${TD} text-right tabular-nums`}>{fmtNumber(b.volume_m3)}</td>

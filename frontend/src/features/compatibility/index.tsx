@@ -65,7 +65,7 @@ export default function CompatibilityTab() {
         <Intro as="h1" size="xl" eyebrow={T.eyebrow[lang]} title={T.title[lang]}>
           <p>{T.lead[lang]}</p>
           {compat.data && !compat.loading && (
-            <p className="mt-6 font-serif text-[26px] leading-snug">
+            <p className="mt-6 font-display text-[26px] leading-snug">
               {ORDER.map((d, i) => (
                 <span key={d}>
                   {i > 0 && <span className="mx-2">·</span>}
@@ -89,7 +89,7 @@ export default function CompatibilityTab() {
               value={shownBatch}
               disabled={!base.data}
               onChange={(e) => setBatchId(e.target.value)}
-              className="min-w-0 flex-1 border border-ink bg-transparent px-4 py-3 font-mono text-[16px] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink sm:max-w-sm"
+              className="min-w-0 flex-1 border border-ink bg-transparent px-4 py-3 text-[16px] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink sm:max-w-sm"
             >
               {!shownBatch && <option value="">…</option>}
               {base.data?.batches.map((b) => (
@@ -120,11 +120,11 @@ export default function CompatibilityTab() {
               <span key={d} className="inline-flex items-center gap-2">
                 <Dot tone={DECISION[d].tone} />
                 {DECISION[d][lang]}
-                {compat.data && !compat.loading && <span className="font-mono">({counts[d]})</span>}
+                {compat.data && !compat.loading && <span className="">({counts[d]})</span>}
               </span>
             ))}
           </p>
-          {USE_MOCKS && <p className="mt-4 font-mono text-[15px]">{T.mockNote[lang]}</p>}
+          {USE_MOCKS && <p className="mt-4 text-[15px]">{T.mockNote[lang]}</p>}
         </Intro>
 
         <div className="mt-16">
@@ -137,15 +137,15 @@ export default function CompatibilityTab() {
               }}
             />
           ) : loading ? (
-            <div className="grid gap-x-10 gap-y-16 sm:grid-cols-2 lg:grid-cols-3" aria-busy="true">
-              {Array.from({ length: 6 }, (_, i) => (
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" aria-busy="true">
+              {Array.from({ length: 8 }, (_, i) => (
                 <FarmCardSkeleton key={i} />
               ))}
             </div>
           ) : base.data!.farms.length === 0 ? (
-            <p className="text-center font-serif text-3xl">{lang === "fr" ? "Aucune ferme." : "No farms yet."}</p>
+            <p className="text-center font-display text-3xl">{lang === "fr" ? "Aucune ferme." : "No farms yet."}</p>
           ) : (
-            <div className="grid gap-x-10 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {base.data!.farms.map((f) => {
                 const r = byFarm.get(f.id);
                 return r ? (

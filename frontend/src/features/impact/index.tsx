@@ -35,14 +35,14 @@ export default function ImpactTab() {
         {data && (
           <div className="fade-up flex flex-col items-center gap-5 text-center">
             <p className="eyebrow">{data.period}</p>
-            <p className="font-serif text-7xl leading-none tabular-nums">
+            <p className="font-display text-7xl leading-none tabular-nums">
               {data.fresh_water_saved_m3.toLocaleString("en-US")}
               <span className="ml-2 text-3xl">m³</span>
             </p>
             <p>of fresh water saved</p>
           </div>
         )}
-        <label className="mt-12 flex items-center justify-center gap-3 font-mono text-[15px]">
+        <label className="mt-12 flex items-center justify-center gap-3 text-[15px]">
           <input
             type="checkbox"
             className="h-4 w-4 accent-ink"

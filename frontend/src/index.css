@@ -1,20 +1,18 @@
 /* QATRA visual style: calm, editorial, nature-inspired.
-   Serif titles, clean sans for everything else; full-width colour bands; outlined buttons. */
-@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap");
+   Serif titles (Fraunces), clean sans body (DM Sans); earthy full-width bands; outlined buttons. */
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap");
 @import "tailwindcss";
 
 @theme {
-  --font-serif: "Fraunces", Georgia, serif;
+  --font-display: "Fraunces", Georgia, serif; /* titles */
   --font-sans: "DM Sans", system-ui, sans-serif;
-  /* no monospace: labels, pills, buttons and IDs use the body sans with aligned digits */
-  --font-mono: "DM Sans", system-ui, sans-serif;
 
   /* bands */
   --color-cream: #fcf7f1; /* page */
   --color-sand: #f3ebe0; /* zebra rows, tiles, muted cards */
   --color-olive: #76914f; /* signature band */
   --color-olive-deep: #5e7740; /* olive hover / borders on olive */
-  --color-blush: #e3a6b1; /* second band */
+  --color-khaki: #e2d9c3; /* second band, earthy */
 
   /* text and lines */
   --color-ink: #1b1b1a;
@@ -43,23 +41,22 @@
   h2,
   h3,
   h4 {
-    font-family: var(--font-serif);
+    font-family: var(--font-display);
     font-weight: 400;
     letter-spacing: -0.015em;
     line-height: 1.1;
-    font-variant-numeric: lining-nums;
   }
-  /* Keep strokes sturdy at every size so titles stay crisp on a projector. */
+  /* keep strokes sturdy at every size so titles stay crisp on a projector */
   h1,
   h2,
   h3,
   h4,
-  .font-serif {
+  .font-display {
     font-optical-sizing: none;
     font-variation-settings: "opsz" 36;
   }
   ::selection {
-    background: var(--color-blush);
+    background: var(--color-khaki);
   }
 }
 
@@ -72,7 +69,6 @@
     gap: 0.5rem;
     min-width: 12rem;
     padding: 0.85rem 2rem;
-    font-family: var(--font-mono);
     font-size: 16px;
     border: 1px solid currentColor;
     background: transparent;
@@ -90,7 +86,6 @@
   }
   /* underlined text link */
   .link {
-    font-family: var(--font-mono);
     text-decoration: underline;
     text-underline-offset: 4px;
   }
