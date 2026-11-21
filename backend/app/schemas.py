@@ -1,7 +1,7 @@
 """Shared API objects. Mirror of frontend/src/api/types.ts. Change only by agreement."""
 from typing import Literal, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 TagStatus = Literal["REPORTED", "ESTIMATE", "PROJECTION", "SIMULATED", "TO_VERIFY"]
 
@@ -29,6 +29,7 @@ class Batch(BaseModel):
     analysis_status: Literal["valid", "expired", "missing"]
     status: str
     risk_colour: Optional[Literal["green", "amber", "red"]] = None
+    warnings: list[str] = Field(default_factory=list)
     tag: Tag
 
 

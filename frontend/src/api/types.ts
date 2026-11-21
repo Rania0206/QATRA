@@ -30,6 +30,7 @@ export interface Batch {
   analysis_status: AnalysisStatus;
   status: string;
   risk_colour?: RiskColour;
+  warnings?: string[]; // non-blocking notes, e.g. no metals analysis this semester
   tag: Tag;
 }
 
