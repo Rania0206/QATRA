@@ -46,3 +46,11 @@ export const STATUS_BADGE: Record<AnalysisStatus, { label: string; cls: string }
   expired: { label: "Expired", cls: "bg-orange-500 text-white" },
   missing: { label: "Missing", cls: "bg-red-600 text-white" },
 };
+
+/** Batch.status (A-03b). Unknown values (older backends) render as a dash. */
+export const COMPLIANCE_BADGE: Record<string, { label: string; cls: string; title: string }> = {
+  compliant: { label: "Compliant", cls: "bg-emerald-600 text-white", title: "All measured values within NT 106.03" },
+  conditional: { label: "Conditional", cls: "bg-amber-500 text-white", title: "Usable with conditions" },
+  non_compliant: { label: "Non-compliant", cls: "bg-red-600 text-white", title: "A measured value is above an NT 106.03 limit" },
+  analysis_invalid: { label: "Analysis invalid", cls: "bg-slate-600 text-white", title: "Analysis expired or missing (Decree 89-1047 Art. 3)" },
+};

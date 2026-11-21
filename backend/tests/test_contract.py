@@ -48,3 +48,18 @@ def test_all_mocks_are_strict_json():
 def test_lite_mocks_match_schema():
     SavingsResult.model_validate(load("post_savings.json"))
     BusinessView.model_validate(load("business.json"))
+
+
+def test_compatibility_mock_matches_engine_model():
+    from app.engine.compatibility import Compatibility
+
+    Compatibility.model_validate(load("farms_id_compatibility.json"))
+
+
+def test_a03c_mocks_match_engine_models():
+    from app.engine.compatibility import AllFarmsCompatibility
+    from app.engine.rules_config import Rule
+
+    AllFarmsCompatibility.model_validate(load("compatibility.json"))
+    for r in load("rules.json"):
+        Rule.model_validate(r)

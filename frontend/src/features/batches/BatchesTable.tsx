@@ -1,4 +1,5 @@
 import type { Batch } from "../../api/types";
+import ComplianceBadge from "./ComplianceBadge";
 import { fmtDate, fmtNumber } from "./format";
 import StatusBadge from "./StatusBadge";
 import TagChip from "../../components/TagChip";
@@ -24,7 +25,7 @@ export default function BatchesTable({ batches, selectedId, showRowTags, onSelec
             <th className={`${TH} text-right`}>Volume (m³)</th>
             <th className={TH}>Treatment</th>
             <th className={TH}>Analyses</th>
-            <th className={TH} title="Legal limits check (A-03)">Compliance</th>
+            <th className={TH} title="NT 106.03 limits and Decree 89-1047 analyses">Compliance</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-100">
@@ -54,7 +55,9 @@ export default function BatchesTable({ batches, selectedId, showRowTags, onSelec
               <td className={TD}>
                 <StatusBadge status={b.analysis_status} />
               </td>
-              <td className={`${TD} text-slate-400`}>—</td>
+              <td className={TD}>
+                <ComplianceBadge status={b.status} />
+              </td>
             </tr>
           ))}
         </tbody>
