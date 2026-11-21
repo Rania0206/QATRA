@@ -72,7 +72,7 @@ export function Pill({ tone, children, title, large = false }: { tone: Tone; chi
     <span
       title={title}
       className={`inline-flex items-center gap-2 whitespace-nowrap border bg-cream font-mono ${PILL[tone]} ${
-        large ? "px-3.5 py-1.5 text-[17px]" : "px-2.5 py-0.5 text-[15px]"
+        large ? "px-3 py-1 text-[16px]" : "px-2.5 py-0.5 text-[15px]"
       }`}
     >
       <span aria-hidden="true" className={`h-2 w-2 rounded-full ${DOT[tone]}`} />
@@ -98,7 +98,7 @@ export function Segmented<T extends string>({
   label: string;
 }) {
   return (
-    <div role="group" aria-label={label} className="inline-flex border border-ink font-mono text-[16px]">
+    <div role="group" aria-label={label} className="inline-flex border border-ink text-[16px]">
       {options.map((o, i) => {
         const on = o.id === value;
         return (
@@ -149,14 +149,14 @@ export function Drawer({
   return (
     <div className="fixed inset-0 z-[1100] flex justify-end" role="dialog" aria-modal="true" aria-label={label}>
       <button type="button" aria-label="Close" onClick={onClose} className="absolute inset-0 bg-ink/35" />
-      <aside className="relative flex h-full w-full max-w-2xl flex-col overflow-y-auto bg-cream">
-        <header className="sticky top-0 z-10 border-b border-line bg-cream px-7 pb-6 pt-7">
-          <button type="button" onClick={onClose} className="link absolute right-7 top-7 text-[16px]">
+      <aside className="relative flex h-full w-full max-w-xl flex-col overflow-y-auto bg-cream">
+        <header className="sticky top-0 z-10 border-b border-line bg-cream px-6 pb-5 pt-6">
+          <button type="button" onClick={onClose} className="link absolute right-6 top-6 text-[15px]">
             Close
           </button>
           {header}
         </header>
-        <div className="space-y-10 px-7 py-8">{children}</div>
+        <div className="space-y-8 px-6 py-6">{children}</div>
       </aside>
     </div>
   );
