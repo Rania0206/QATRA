@@ -45,10 +45,7 @@ export default function FarmDrawer({ farm, result, rules, lang, onClose }: Props
           <p className="eyebrow">
             {T.batch[lang]} {result.batch_id}
           </p>
-          <h2 className="text-4xl">
-            <span className="mr-3 italic">{farm.id}.</span>
-            {farm.name.replace(/^Ferme [A-Z] - /, "")}
-          </h2>
+          <h2 className="text-4xl">{farm.name.replace(/^Ferme [A-Z] - /, "")}</h2>
           <div className="flex flex-wrap items-center gap-2">
             <DecisionPill decision={result.decision} lang={lang} large />
             <TagChip tag={result.tag} showSource={false} />

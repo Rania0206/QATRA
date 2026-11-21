@@ -20,43 +20,37 @@ export function DecisionPill({ decision, lang, large = false }: { decision: Deci
   );
 }
 
-const TILE: Record<Decision, string> = {
-  compatible: "bg-olive",
-  conditional: "bg-blush",
-  blocked: "bg-sand",
+/** Thin status line on top of each card, so the verdict scans at a glance. */
+const EDGE: Record<Decision, string> = {
+  compatible: "bg-ok",
+  conditional: "bg-warn",
+  blocked: "bg-bad",
 };
 
 export function FarmCardSkeleton() {
   return (
-    <div className="flex flex-col items-center gap-4" aria-hidden="true">
-      <Skeleton className="aspect-[4/3] w-full" />
-      <Skeleton className="h-7 w-2/3" />
+    <div className="flex flex-col items-center gap-4 border border-line p-8" aria-hidden="true">
+      <Skeleton className="h-8 w-2/3" />
       <Skeleton className="h-5 w-1/2" />
+      <Skeleton className="h-10 w-3/4" />
+      <Skeleton className="h-5 w-full" />
     </div>
   );
 }
 
-/** Card in the spirit of an editorial gallery: a coloured tile with the farm letter, then name, status, reason. */
+/** Farm card: name and crop, plain verdict, one plain reason, "Why?". */
 export default function FarmCard({ farm, result, lang, selected, onSelect }: Props) {
-  const blocked = result.decision === "blocked";
   return (
     <button
       type="button"
       onClick={onSelect}
       aria-pressed={selected}
-      className="group flex h-full flex-col items-center text-center focus:outline-none"
+      className={`group relative flex h-full flex-col items-center border bg-cream px-6 pb-8 pt-10 text-center transition-colors duration-200 hover:bg-sand focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink ${
+        selected ? "border-ink" : "border-line"
+      }`}
     >
-      <span
-        className={`relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden transition-transform duration-500 group-hover:scale-[1.02] group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-4 group-focus-visible:outline-ink ${
-          TILE[result.decision]
-        } ${selected ? "outline outline-2 outline-offset-4 outline-ink" : ""}`}
-      >
-        <span className={`font-serif text-[7rem] leading-none ${blocked ? "text-ink-soft" : ""}`}>{farm.id}</span>
-        {blocked && (
-          <span aria-hidden="true" className="absolute inset-x-8 top-1/2 h-px -rotate-12 bg-bad" />
-        )}
-      </span>
-      <span className="mt-6 font-serif text-3xl leading-tight">{farm.name.replace(/^Ferme [A-Z] - /, "")}</span>
+      <span aria-hidden="true" className={`absolute inset-x-0 top-0 h-1.5 ${EDGE[result.decision]}`} />
+      <span className="font-serif text-3xl leading-tight">{farm.name.replace(/^Ferme [A-Z] - /, "")}</span>
       <span className="mt-1 font-mono text-[15px]">
         {cropLabel(farm.crop)} · {fmtNumber(farm.area_ha)} ha
       </span>
