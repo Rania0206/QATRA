@@ -1,5 +1,5 @@
 from fastapi import APIRouter
 
-router = APIRouter(prefix="/api/needs", tags=["needs"])
+router = APIRouter(prefix="/api", tags=["needs"])
 
 # TODO: implement needs endpoints

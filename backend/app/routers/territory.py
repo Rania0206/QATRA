@@ -1,5 +1,5 @@
 from fastapi import APIRouter
 
-router = APIRouter(prefix="/api/territory", tags=["territory"])
+router = APIRouter(prefix="/api", tags=["territory"])
 
 # TODO: implement territory endpoints

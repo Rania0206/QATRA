@@ -1,5 +1,5 @@
 from fastapi import APIRouter
 
-router = APIRouter(prefix="/api/llm", tags=["llm"])
+router = APIRouter(prefix="/api", tags=["llm"])
 
 # TODO: implement llm endpoints

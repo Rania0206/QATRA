@@ -1,0 +1,47 @@
+{
+  "batch_id": "SSUD-20260708",
+  "plant": "Sousse Sud WWTP (identity TO_VERIFY)",
+  "date": "2026-07-08",
+  "volume_m3": 1200.0,
+  "analysis_status": "valid",
+  "risk_colour": "green",
+  "allowed_crops": [
+    "olive",
+    "wheat",
+    "barley",
+    "alfalfa (no sprinkler)",
+    "oat fodder"
+  ],
+  "blocked_crops": [
+    "lettuce",
+    "vegetables eaten raw"
+  ],
+  "destinations": [
+    {
+      "farm_id": "B",
+      "m3": 320.0
+    },
+    {
+      "farm_id": "D",
+      "m3": 280.0
+    },
+    {
+      "farm_id": "F",
+      "m3": 180.0
+    },
+    {
+      "farm_id": "A",
+      "m3": 120.0
+    },
+    {
+      "farm_id": "J",
+      "m3": 100.0
+    }
+  ],
+  "issued_at": "2026-07-08T07:00:00",
+  "qr_payload": "qatra:passport:SSUD-20260708",
+  "tag": {
+    "status": "SIMULATED",
+    "source": "data/simulated/sim_batches.csv"
+  }
+}

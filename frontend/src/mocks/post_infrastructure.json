@@ -1,0 +1,11 @@
+{
+  "id": "INF-001",
+  "type": "storage_basin",
+  "lat": 35.79,
+  "lon": 10.62,
+  "capacity_m3": 2000,
+  "status": "proposed",
+  "tag": {
+    "status": "SIMULATED"
+  }
+}

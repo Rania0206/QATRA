@@ -1,5 +1,5 @@
 from fastapi import APIRouter
 
-router = APIRouter(prefix="/api/optimiser", tags=["optimiser"])
+router = APIRouter(prefix="/api", tags=["optimiser"])
 
 # TODO: implement optimiser endpoints

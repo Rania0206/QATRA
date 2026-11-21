@@ -1,0 +1,8 @@
+{
+  "text_en": "Farm C grows lettuce, which is eaten raw. Tunisian rules forbid irrigating such crops with treated wastewater, so its share went to olive and cereal farms.",
+  "text_fr": "La ferme C cultive de la laitue, consommee crue. La reglementation tunisienne interdit de l'irriguer avec des EUT ; sa part est allee aux oliveraies et cereales.",
+  "tag": {
+    "status": "ESTIMATE",
+    "source": "LLM explanation of rule results"
+  }
+}

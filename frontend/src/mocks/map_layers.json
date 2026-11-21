@@ -1,0 +1,117 @@
+{
+  "layers": [
+    {
+      "id": "plants",
+      "label": "Treatment plants",
+      "tag": {
+        "status": "REPORTED",
+        "source": "OSM"
+      },
+      "features": [
+        {
+          "id": "w27944541",
+          "name": "Sousse Sud WWTP",
+          "lat": 35.794719,
+          "lon": 10.644677
+        }
+      ]
+    },
+    {
+      "id": "farms",
+      "label": "Demo farms",
+      "tag": {
+        "status": "SIMULATED",
+        "source": "data/simulated/sim_farms.csv"
+      },
+      "features": [
+        {
+          "id": "A",
+          "name": "Ferme A - Luzerne",
+          "lat": 35.863818,
+          "lon": 10.613871,
+          "crop": "alfalfa"
+        },
+        {
+          "id": "B",
+          "name": "Ferme B - Oliveraie",
+          "lat": 35.778837,
+          "lon": 10.597947,
+          "crop": "olive"
+        },
+        {
+          "id": "C",
+          "name": "Ferme C - Laitue",
+          "lat": 35.796271,
+          "lon": 10.608035,
+          "crop": "lettuce"
+        },
+        {
+          "id": "D",
+          "name": "Ferme D - Oliviers Chemlali",
+          "lat": 35.774764,
+          "lon": 10.595148,
+          "crop": "olive"
+        },
+        {
+          "id": "E",
+          "name": "Ferme E - Orge fourragere",
+          "lat": 35.814381,
+          "lon": 10.602977,
+          "crop": "barley_fodder"
+        },
+        {
+          "id": "F",
+          "name": "Ferme F - Ble dur",
+          "lat": 35.776873,
+          "lon": 10.580993,
+          "crop": "wheat"
+        },
+        {
+          "id": "G",
+          "name": "Ferme G - Avoine fourragere",
+          "lat": 35.779555,
+          "lon": 10.591433,
+          "crop": "oat_fodder"
+        },
+        {
+          "id": "H",
+          "name": "Ferme H - Petite oliveraie",
+          "lat": 35.817704,
+          "lon": 10.621242,
+          "crop": "olive"
+        },
+        {
+          "id": "I",
+          "name": "Ferme I - Luzerne",
+          "lat": 35.797902,
+          "lon": 10.575422,
+          "crop": "alfalfa"
+        },
+        {
+          "id": "J",
+          "name": "Ferme J - Orge",
+          "lat": 35.778569,
+          "lon": 10.584047,
+          "crop": "barley"
+        }
+      ]
+    },
+    {
+      "id": "basin",
+      "label": "Storage basin",
+      "tag": {
+        "status": "SIMULATED",
+        "source": "data/simulated/sim_pumps_basin.json"
+      },
+      "features": [
+        {
+          "id": "BASIN-1",
+          "name": "Basin 3000 m3",
+          "lat": 35.783205,
+          "lon": 10.634207,
+          "capacity_m3": 3000
+        }
+      ]
+    }
+  ]
+}

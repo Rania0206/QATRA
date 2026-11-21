@@ -18,3 +18,8 @@ node_modules/
 Thumbs.db
 .vscode/
 ~$*
+
+# Frontend build / local env
+dist/
+*.local
+*.tsbuildinfo

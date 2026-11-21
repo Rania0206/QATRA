@@ -1,5 +1,5 @@
 from fastapi import APIRouter
 
-router = APIRouter(prefix="/api/requests", tags=["requests"])
+router = APIRouter(prefix="/api", tags=["requests"])
 
 # TODO: implement requests endpoints

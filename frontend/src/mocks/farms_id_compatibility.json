@@ -1,0 +1,51 @@
+{
+  "farm_id": "C",
+  "batch_id": "SSUD-20260708",
+  "decision": "blocked",
+  "results": [
+    {
+      "rule_id": "R01_analysis_valid",
+      "passed": true,
+      "severity": "block",
+      "reason_en": "Physico-chemical analysis is less than 30 days old.",
+      "reason_fr": "L'analyse physico-chimique date de moins de 30 jours.",
+      "legal_ref": "Decret 89-1047 Art.3a (monthly)"
+    },
+    {
+      "rule_id": "R02_nt106_limits",
+      "passed": true,
+      "severity": "block",
+      "reason_en": "BOD5, COD, TSS, EC, pH and chloride are within NT 106.03 limits.",
+      "reason_fr": "DBO5, DCO, MES, CE, pH et chlorures respectent la NT 106.03.",
+      "legal_ref": "NT 106.03 (1989)"
+    },
+    {
+      "rule_id": "R03_helminth_eggs",
+      "passed": true,
+      "severity": "block",
+      "reason_en": "Helminth eggs below 1 per litre.",
+      "reason_fr": "Oeufs d'helminthes inferieurs a 1 par litre.",
+      "legal_ref": "NT 106.03 (1989)"
+    },
+    {
+      "rule_id": "R04_crop_allowed",
+      "passed": false,
+      "severity": "block",
+      "reason_en": "Lettuce is a vegetable eaten raw: irrigation with treated wastewater is prohibited.",
+      "reason_fr": "La laitue est un legume consomme cru : l'irrigation par EUT est interdite.",
+      "legal_ref": "Decret 89-1047 Art.5; Arrete MA 21/06/1994"
+    },
+    {
+      "rule_id": "R05_soil_salinity",
+      "passed": true,
+      "severity": "condition",
+      "reason_en": "Soil ECe 1.4 dS/m: no leaching requirement for this batch.",
+      "reason_fr": "CEe du sol 1,4 dS/m : pas de besoin de lessivage pour ce lot.",
+      "legal_ref": "FAO-29 guidelines (ESTIMATE)"
+    }
+  ],
+  "tag": {
+    "status": "ESTIMATE",
+    "source": "Decret 89-1047; Arrete MA 21/06/1994; NT 106.03"
+  }
+}

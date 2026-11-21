@@ -1,0 +1,190 @@
+{
+  "batch_id": "SSUD-20260708",
+  "items": [
+    {
+      "farm_id": "B",
+      "status": "allocated",
+      "m3": 320.0
+    },
+    {
+      "farm_id": "D",
+      "status": "allocated",
+      "m3": 280.0
+    },
+    {
+      "farm_id": "F",
+      "status": "allocated",
+      "m3": 180.0
+    },
+    {
+      "farm_id": "A",
+      "status": "conditional",
+      "m3": 120.0,
+      "cap_reason": "Alfalfa: no sprinkler irrigation; drip/surface only"
+    },
+    {
+      "farm_id": "J",
+      "status": "capped",
+      "m3": 100.0,
+      "cap_reason": "Soil ECe 4.5 dS/m: leaching fraction limits volume"
+    },
+    {
+      "farm_id": "C",
+      "status": "blocked",
+      "m3": 0.0,
+      "cap_reason": "Lettuce eaten raw: prohibited (Decret 89-1047)"
+    }
+  ],
+  "schedule": [
+    {
+      "hour": 0,
+      "pump_kw": 0.0,
+      "source": "off",
+      "basin_m3": 1200.0
+    },
+    {
+      "hour": 1,
+      "pump_kw": 0.0,
+      "source": "off",
+      "basin_m3": 1200.0
+    },
+    {
+      "hour": 2,
+      "pump_kw": 0.0,
+      "source": "off",
+      "basin_m3": 1200.0
+    },
+    {
+      "hour": 3,
+      "pump_kw": 0.0,
+      "source": "off",
+      "basin_m3": 1200.0
+    },
+    {
+      "hour": 4,
+      "pump_kw": 0.0,
+      "source": "off",
+      "basin_m3": 1200.0
+    },
+    {
+      "hour": 5,
+      "pump_kw": 0.0,
+      "source": "off",
+      "basin_m3": 1200.0
+    },
+    {
+      "hour": 6,
+      "pump_kw": 0.0,
+      "source": "off",
+      "basin_m3": 1200.0
+    },
+    {
+      "hour": 7,
+      "pump_kw": 0.0,
+      "source": "off",
+      "basin_m3": 1200.0
+    },
+    {
+      "hour": 8,
+      "pump_kw": 44.6,
+      "source": "solar",
+      "basin_m3": 1350.0
+    },
+    {
+      "hour": 9,
+      "pump_kw": 44.6,
+      "source": "solar",
+      "basin_m3": 1500.0
+    },
+    {
+      "hour": 10,
+      "pump_kw": 44.6,
+      "source": "solar",
+      "basin_m3": 1650.0
+    },
+    {
+      "hour": 11,
+      "pump_kw": 44.6,
+      "source": "solar",
+      "basin_m3": 1800.0
+    },
+    {
+      "hour": 12,
+      "pump_kw": 44.6,
+      "source": "solar",
+      "basin_m3": 1950.0
+    },
+    {
+      "hour": 13,
+      "pump_kw": 44.6,
+      "source": "solar",
+      "basin_m3": 2100.0
+    },
+    {
+      "hour": 14,
+      "pump_kw": 44.6,
+      "source": "solar",
+      "basin_m3": 2200.0
+    },
+    {
+      "hour": 15,
+      "pump_kw": 0.0,
+      "source": "off",
+      "basin_m3": 2200.0
+    },
+    {
+      "hour": 16,
+      "pump_kw": 0.0,
+      "source": "off",
+      "basin_m3": 2200.0
+    },
+    {
+      "hour": 17,
+      "pump_kw": 0.0,
+      "source": "off",
+      "basin_m3": 2200.0
+    },
+    {
+      "hour": 18,
+      "pump_kw": 0.0,
+      "source": "basin",
+      "basin_m3": 2050.0
+    },
+    {
+      "hour": 19,
+      "pump_kw": 0.0,
+      "source": "basin",
+      "basin_m3": 1900.0
+    },
+    {
+      "hour": 20,
+      "pump_kw": 0.0,
+      "source": "basin",
+      "basin_m3": 1750.0
+    },
+    {
+      "hour": 21,
+      "pump_kw": 0.0,
+      "source": "off",
+      "basin_m3": 1750.0
+    },
+    {
+      "hour": 22,
+      "pump_kw": 0.0,
+      "source": "off",
+      "basin_m3": 1750.0
+    },
+    {
+      "hour": 23,
+      "pump_kw": 0.0,
+      "source": "off",
+      "basin_m3": 1750.0
+    }
+  ],
+  "energy_kwh": 312.2,
+  "solar_share": 1.0,
+  "fresh_replaced_m3": 1000.0,
+  "warnings": [
+    "Farm C blocked: crop not allowed with treated wastewater."
+  ]
+}

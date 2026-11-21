@@ -1,0 +1,338 @@
+{
+  "layers": [
+    {
+      "id": "wwtp_tunisia",
+      "label": "Wastewater plants (Tunisia)",
+      "tag": {
+        "status": "REPORTED",
+        "source": "OSM (incomplete)"
+      },
+      "features": [
+        {
+          "id": "n6446632769",
+          "name": "ONAS",
+          "lat": 36.7346173,
+          "lon": 9.2209016
+        },
+        {
+          "id": "n8266132029",
+          "name": "ONAS Frina",
+          "lat": 35.7296698,
+          "lon": 10.8166606
+        },
+        {
+          "id": "n9327601910",
+          "name": "ONAS Station d'épuration Soliman",
+          "lat": 36.7155737,
+          "lon": 10.4850042
+        },
+        {
+          "id": "n12526689343",
+          "name": "ONAS S.T.E.P",
+          "lat": 35.8586401,
+          "lon": 9.5939446
+        },
+        {
+          "id": "n12526689344",
+          "name": "ONAS S.T.E.P",
+          "lat": 35.8586401,
+          "lon": 9.5939446
+        },
+        {
+          "id": "w27943379",
+          "name": "Station traitement des eaux ONAS",
+          "lat": 35.8696888,
+          "lon": 10.6008057
+        },
+        {
+          "id": "w27944541",
+          "name": null,
+          "lat": 35.7947191,
+          "lon": 10.6446773
+        },
+        {
+          "id": "w28167238",
+          "name": null,
+          "lat": 35.9646453,
+          "lon": 10.4501193
+        },
+        {
+          "id": "w28652965",
+          "name": "Station d'épuration Msaken",
+          "lat": 35.7473437,
+          "lon": 10.6033727
+        },
+        {
+          "id": "w102880759",
+          "name": "Station d'épuration de Radès",
+          "lat": 36.7420985,
+          "lon": 10.2646159
+        },
+        {
+          "id": "w102892852",
+          "name": "محطات معالجة مياه الصرف",
+          "lat": 36.8405748,
+          "lon": 10.209888
+        },
+        {
+          "id": "w124333205",
+          "name": null,
+          "lat": 35.7980179,
+          "lon": 9.8002056
+        },
+        {
+          "id": "w173921396",
+          "name": null,
+          "lat": 36.896257,
+          "lon": 10.2006955
+        },
+        {
+          "id": "w180501595",
+          "name": "Station d'épurations des eaux usées",
+          "lat": 34.0008852,
+          "lon": 10.0070009
+        },
+        {
+          "id": "w188832802",
+          "name": "Station ONAS Mahrès",
+          "lat": 34.518196,
+          "lon": 10.4925617
+        },
+        {
+          "id": "w197647377",
+          "name": "ONAS",
+          "lat": 36.8362662,
+          "lon": 11.0854653
+        },
+        {
+          "id": "w198662108",
+          "name": null,
+          "lat": 34.8601626,
+          "lon": 9.8052336
+        },
+        {
+          "id": "w208546184",
+          "name": null,
+          "lat": 36.567919,
+          "lon": 10.8259589
+        },
+        {
+          "id": "w238113539",
+          "name": "Station ONAS Mezraya",
+          "lat": 33.8460276,
+          "lon": 10.9694574
+        },
+        {
+          "id": "w254040244",
+          "name": null,
+          "lat": 37.025647,
+          "lon": 9.6257383
+        },
+        {
+          "id": "w259249435",
+          "name": "ONAS STEP El Attar",
+          "lat": 36.7266673,
+          "lon": 10.0814496
+        },
+        {
+          "id": "w260300916",
+          "name": null,
+          "lat": 33.6549726,
+          "lon": 10.3698746
+        },
+        {
+          "id": "w264779877",
+          "name": "Onas",
+          "lat": 35.5178358,
+          "lon": 11.0431215
+        },
+        {
+          "id": "w272553767",
+          "name": null,
+          "lat": 33.7000188,
+          "lon": 10.9370937
+        },
+        {
+          "id": "w278870461",
+          "name": "Station d'epuration Teboursouk",
+          "lat": 36.464065,
+          "lon": 9.2701784
+        },
+        {
+          "id": "w315843128",
+          "name": null,
+          "lat": 37.2545703,
+          "lon": 9.7900033
+        },
+        {
+          "id": "w386064503",
+          "name": null,
+          "lat": 33.8468095,
+          "lon": 10.9738722
+        },
+        {
+          "id": "w391587608",
+          "name": "ONAS Sfax Sud",
+          "lat": 34.6887798,
+          "lon": 10.7330141
+        },
+        {
+          "id": "w408621722",
+          "name": null,
+          "lat": 33.7642797,
+          "lon": 10.7356824
+        },
+        {
+          "id": "w512605500",
+          "name": "الديوان الوطني للتطهير ماطر الشمالية",
+          "lat": 37.0495954,
+          "lon": 9.6912926
+        },
+        {
+          "id": "w519760231",
+          "name": "Station d'épuration Enfidha",
+          "lat": 36.1292851,
+          "lon": 10.4591446
+        },
+        {
+          "id": "w609950811",
+          "name": null,
+          "lat": 36.7498809,
+          "lon": 9.9403089
+        },
+        {
+          "id": "w671719940",
+          "name": null,
+          "lat": 35.7744436,
+          "lon": 10.6852904
+        },
+        {
+          "id": "w671719942",
+          "name": null,
+          "lat": 35.7780585,
+          "lon": 10.6799522
+        },
+        {
+          "id": "w687671381",
+          "name": "ONAS",
+          "lat": 36.7344991,
+          "lon": 9.2210117
+        },
+        {
+          "id": "w689988312",
+          "name": "Office National d'Assainissement",
+          "lat": 36.4520633,
+          "lon": 10.7666672
+        },
+        {
+          "id": "w749015966",
+          "name": null,
+          "lat": 33.9241664,
+          "lon": 8.1316951
+        },
+        {
+          "id": "w850997552",
+          "name": "ONAS STEP Jelma",
+          "lat": 34.8623188,
+          "lon": 9.1691106
+        },
+        {
+          "id": "w883873399",
+          "name": "ONAS Station d'assainissement Agareb",
+          "lat": 34.7134293,
+          "lon": 10.5468901
+        },
+        {
+          "id": "w884655386",
+          "name": "محطة التطهير بالقيروان",
+          "lat": 35.7300253,
+          "lon": 10.1144928
+        },
+        {
+          "id": "w967222522",
+          "name": null,
+          "lat": 33.9034735,
+          "lon": 9.7551558
+        },
+        {
+          "id": "w968589058",
+          "name": "Station d'épuration de Zarzis",
+          "lat": 33.4854478,
+          "lon": 11.1056264
+        },
+        {
+          "id": "w1021619996",
+          "name": null,
+          "lat": 33.8910594,
+          "lon": 10.8385984
+        },
+        {
+          "id": "w1085066359",
+          "name": "Station d'Epuration des Eaux Usées de Siliana",
+          "lat": 36.1198666,
+          "lon": 9.3825253
+        },
+        {
+          "id": "w1091213305",
+          "name": null,
+          "lat": 35.9254503,
+          "lon": 10.0283171
+        },
+        {
+          "id": "w1119186433",
+          "name": null,
+          "lat": 35.3191778,
+          "lon": 10.7079119
+        },
+        {
+          "id": "w1124282504",
+          "name": null,
+          "lat": 35.7306448,
+          "lon": 10.8155275
+        },
+        {
+          "id": "w1133083692",
+          "name": "Station d'épuration El Hencha",
+          "lat": 35.1366396,
+          "lon": 10.7463094
+        },
+        {
+          "id": "w1191386064",
+          "name": "Station d'épuration Sayada Lamta Bouhjar",
+          "lat": 35.6813228,
+          "lon": 10.8673104
+        },
+        {
+          "id": "w1251978336",
+          "name": null,
+          "lat": 35.4838741,
+          "lon": 11.0235359
+        },
+        {
+          "id": "w1314117038",
+          "name": "STEP ONAS",
+          "lat": 35.4834168,
+          "lon": 11.048944
+        },
+        {
+          "id": "w1329371302",
+          "name": null,
+          "lat": 35.8371968,
+          "lon": 10.5633769
+        },
+        {
+          "id": "w1356963051",
+          "name": null,
+          "lat": 36.8141611,
+          "lon": 10.9800236
+        },
+        {
+          "id": "w1577654523",
+          "name": "Office National de l'Assainissement (ONAS) jemmel",
+          "lat": 35.6253173,
+          "lon": 10.7596347
+        }
+      ]
+    }
+  ]
+}

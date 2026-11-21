@@ -1,0 +1,64 @@
+{
+  "farm_id": "J",
+  "batch_id": "SSUD-20260708",
+  "series": [
+    {
+      "day": 0,
+      "ece": 4.5
+    },
+    {
+      "day": 5,
+      "ece": 4.58
+    },
+    {
+      "day": 10,
+      "ece": 4.64
+    },
+    {
+      "day": 15,
+      "ece": 4.7
+    },
+    {
+      "day": 20,
+      "ece": 4.75
+    },
+    {
+      "day": 25,
+      "ece": 4.79
+    },
+    {
+      "day": 30,
+      "ece": 4.82
+    },
+    {
+      "day": 35,
+      "ece": 4.85
+    },
+    {
+      "day": 40,
+      "ece": 4.88
+    },
+    {
+      "day": 45,
+      "ece": 4.9
+    },
+    {
+      "day": 50,
+      "ece": 4.92
+    },
+    {
+      "day": 55,
+      "ece": 4.94
+    },
+    {
+      "day": 60,
+      "ece": 4.95
+    }
+  ],
+  "leaching_fraction": 0.15,
+  "warning": "ECe approaches barley threshold (8 dS/m) only after >60 days; no action needed this season.",
+  "tag": {
+    "status": "ESTIMATE",
+    "source": "FAO-29 steady-state salt balance, soil ECe SIMULATED"
+  }
+}
