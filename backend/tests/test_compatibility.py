@@ -97,4 +97,5 @@ def test_endpoint():
         assert body.decision == "blocked" and body.tag.status
         assert client.get(f"/api/farms/Z/compatibility?batch_id={BATCH}").status_code == 404
         assert client.get("/api/farms/A/compatibility?batch_id=NOPE").status_code == 404
-        assert client.get("/api/farms/A/compatibility").status_code == 422
+        default = client.get("/api/farms/A/compatibility")  # batch_id optional since A-03c
+        assert default.status_code == 200 and default.json()["batch_id"] == "SSUD-20260829"

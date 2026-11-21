@@ -54,3 +54,12 @@ def test_compatibility_mock_matches_engine_model():
     from app.engine.compatibility import Compatibility
 
     Compatibility.model_validate(load("farms_id_compatibility.json"))
+
+
+def test_a03c_mocks_match_engine_models():
+    from app.engine.compatibility import AllFarmsCompatibility
+    from app.engine.rules_config import Rule
+
+    AllFarmsCompatibility.model_validate(load("compatibility.json"))
+    for r in load("rules.json"):
+        Rule.model_validate(r)

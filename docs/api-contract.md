@@ -43,7 +43,7 @@ Conventions used in mocks (free strings, agree before adding values):
 | 8 | GET | `/api/batches/{id}/passport` | `passport` | – | `{batch_id, plant, date, volume_m3, analysis_status, risk_colour, allowed_crops, blocked_crops, destinations, issued_at, qr_payload, tag}` | `batches_id_passport.json` |
 | 9 | GET | `/api/batches/{id}/risk` | **CUT FROM MVP** (QATRA Lite) · `risk` | – | `{batch_id, risk_colour, score, factors: [{param, value, limit, ok}], tag}` | `batches_id_risk.json` |
 | 10 | GET | `/api/farms` | `needs` | – | `Farm[]` | `farms.json` |
-| 11 | GET | `/api/farms/{id}/compatibility?batch_id=` | `rules` | query `batch_id` | `{farm_id, batch_id, decision: "compatible" \| "conditional" \| "blocked", results: RuleResult[], tag}` | `farms_id_compatibility.json` |
+| 11 | GET | `/api/farms/{id}/compatibility?batch_id=` | `rules` | query `batch_id?` (default: latest batch whose status is not `analysis_invalid`) | `{farm_id, batch_id, decision: "compatible" \| "conditional" \| "blocked", results: RuleResult[], tag}` | `farms_id_compatibility.json` |
 | 12 | GET | `/api/forecast/needs` | `needs` | query `start?`, `days?` (default 7) | `{start, days, items: [{date, farm_id, et0_mm, kc, need_m3}], tag}` | `forecast_needs.json` |
 | 13 | GET | `/api/forecast/supply` | **CUT FROM MVP** (QATRA Lite) · `supply` | query `start?`, `days?` | `{start, days, items: [{date, plant_id, volume_m3, batch_id}], tag}` | `forecast_supply.json` |
 | 14 | POST | `/api/allocate` | `optimiser` | `{batch_id, date?, farm_ids?}` | `Allocation` | `post_allocate.json` |
@@ -61,6 +61,8 @@ Conventions used in mocks (free strings, agree before adding values):
 | 26 | POST | `/api/infrastructure` | `territory` | `{type, lat, lon, capacity_m3?}` | `{id, type, lat, lon, capacity_m3, status: "proposed", tag}` | `post_infrastructure.json` |
 | 27 | POST | `/api/savings` | `savings` (Dev A) | `{farm_id?, crop, area_ha, well_depth_m, current_well_m3_season?, pump_efficiency?}` | `SavingsResult` | `post_savings.json` |
 | 28 | GET | `/api/business` | `business` (Dev A) | – | `BusinessView` | `business.json` |
+| 29 | GET | `/api/compatibility?batch_id=` | `rules` | query `batch_id?` (same default as #11) | `{batch_id, batch_status, items: [{farm_id, batch_id, decision, results: RuleResult[], tag}] (one per farm, same order as #10), tag}` | `compatibility.json` |
+| 30 | GET | `/api/rules` | `rules` | – | `[{rule_id, family, source_type, parameter, limit, limit_min, unit, batch_fields, crops, crops_to_verify, severity_if_failed, legal_ref, tag, text_en, text_fr}]` (see docs/rules.md) | `rules.json` |
 
 **QATRA Lite scope:** endpoints marked **CUT FROM MVP** (#9, #13, #18, #24) stay documented and their router stubs stay registered, but they are not built for the demo.
 Router files `savings.py` and `business.py` do not exist yet; they are added with A-14.

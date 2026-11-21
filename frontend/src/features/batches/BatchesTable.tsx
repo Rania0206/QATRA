@@ -1,5 +1,6 @@
 import type { Batch } from "../../api/types";
-import { COMPLIANCE_BADGE, fmtDate, fmtNumber } from "./format";
+import ComplianceBadge from "./ComplianceBadge";
+import { fmtDate, fmtNumber } from "./format";
 import StatusBadge from "./StatusBadge";
 import TagChip from "../../components/TagChip";
 
@@ -55,16 +56,7 @@ export default function BatchesTable({ batches, selectedId, showRowTags, onSelec
                 <StatusBadge status={b.analysis_status} />
               </td>
               <td className={TD}>
-                {COMPLIANCE_BADGE[b.status] ? (
-                  <span
-                    title={COMPLIANCE_BADGE[b.status].title}
-                    className={`inline-block whitespace-nowrap rounded-md px-2.5 py-1 text-sm font-semibold ${COMPLIANCE_BADGE[b.status].cls}`}
-                  >
-                    {COMPLIANCE_BADGE[b.status].label}
-                  </span>
-                ) : (
-                  <span className="text-slate-400">—</span>
-                )}
+                <ComplianceBadge status={b.status} />
               </td>
             </tr>
           ))}

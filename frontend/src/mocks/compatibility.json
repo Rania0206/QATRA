@@ -1,0 +1,1326 @@
+{
+  "batch_id": "SSUD-20260829",
+  "batch_status": "compliant",
+  "items": [
+    {
+      "farm_id": "A",
+      "batch_id": "SSUD-20260829",
+      "decision": "conditional",
+      "results": [
+        {
+          "rule_id": "R-ANALYSIS",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Required analyses present and valid",
+          "reason_fr": "Analyses obligatoires presentes et valides",
+          "legal_ref": "Decree 89-1047 Art.3 (monitoring frequencies)"
+        },
+        {
+          "rule_id": "R-LIMIT-PH",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "pH 7.8 within 6.5–8.5 (NT 106.03)",
+          "reason_fr": "pH 7.8 dans 6.5–8.5 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-EC",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "EC 3.71 dS/m within limit 7 (NT 106.03)",
+          "reason_fr": "EC 3.71 dS/m sous la limite 7 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-COD",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "COD 77.2 mg O2/L (24h mean) within limit 90 (NT 106.03)",
+          "reason_fr": "COD 77.2 mg O2/L (24h mean) sous la limite 90 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-BOD5",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "BOD5 20.9 mg O2/L (24h mean) within limit 30 (NT 106.03)",
+          "reason_fr": "BOD5 20.9 mg O2/L (24h mean) sous la limite 30 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-TSS",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "TSS 15.7 mg/L within limit 30 (NT 106.03)",
+          "reason_fr": "TSS 15.7 mg/L sous la limite 30 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-CHLORIDE",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Chloride 696 mg/L within limit 2000 (NT 106.03)",
+          "reason_fr": "Chloride 696 mg/L sous la limite 2000 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-NEMATODE",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Nematode eggs 0.11 eggs/L within limit 1 (NT 106.03)",
+          "reason_fr": "Oeufs de nematodes 0.11 oeufs/L sous la limite 1 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-NOT-MEASURED",
+          "passed": true,
+          "severity": "info",
+          "source_type": "tunisian_law",
+          "reason_en": "Not measured in this batch, not checked: Fluoride, Organochlorines, Arsenic, Boron, Cadmium, Cobalt, Chromium, Copper, Iron, Manganese, Mercury, Nickel, Lead, Selenium, Zinc (metals: once per semester)",
+          "reason_fr": "Non mesures pour ce lot, non verifies : Fluoride, Organochlorines, Arsenic, Boron, Cadmium, Cobalt, Chromium, Copper, Iron, Manganese, Mercury, Nickel, Lead, Selenium, Zinc (metaux : une fois par semestre)",
+          "legal_ref": "NT 106.03 (1989); Decree 89-1047 Art.3b"
+        },
+        {
+          "rule_id": "R-CROP-ALLOWED",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Alfalfa allowed by interpretation, not named in the 1994 list (to verify)",
+          "reason_fr": "Alfalfa autorise par interpretation, absent de la liste de 1994 (a verifier)",
+          "legal_ref": "Arrete du Ministre de l'Agriculture du 21 juin 1994 (Decree 89-1047 Art.7)"
+        },
+        {
+          "rule_id": "R-RAW-EATEN",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Alfalfa is not eaten raw",
+          "reason_fr": "Alfalfa ne se consomme pas cru",
+          "legal_ref": "Decree 89-1047 Art.5"
+        },
+        {
+          "rule_id": "R-GRAZING",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "No direct grazing on this plot",
+          "reason_fr": "Pas de paturage direct sur cette parcelle",
+          "legal_ref": "Decree 89-1047 Art.6"
+        },
+        {
+          "rule_id": "R-GRAZING-FODDER",
+          "passed": true,
+          "severity": "info",
+          "source_type": "tunisian_law",
+          "reason_en": "Fodder crop: cut-and-carry only, no direct grazing",
+          "reason_fr": "Culture fourragere : fauche et affouragement uniquement, pas de paturage direct",
+          "legal_ref": "Decree 89-1047 Art.6"
+        },
+        {
+          "rule_id": "R-SALINITY-ALFALFA",
+          "passed": false,
+          "severity": "condition",
+          "source_type": "agronomic_advice",
+          "reason_en": "Soil ECe 1.9 dS/m ≥ 80% of alfalfa threshold 2 dS/m: irrigate with leaching, watch soil salinity",
+          "reason_fr": "ECe du sol 1.9 dS/m ≥ 80 % du seuil alfalfa 2 dS/m : irriguer avec lessivage, suivre la salinite",
+          "legal_ref": "FAO-29 (agronomic guidance)"
+        }
+      ],
+      "tag": {
+        "status": "ESTIMATE",
+        "source": "rules_config: NT 106.03, Decree 89-1047, 1994 order, FAO-29"
+      }
+    },
+    {
+      "farm_id": "B",
+      "batch_id": "SSUD-20260829",
+      "decision": "compatible",
+      "results": [
+        {
+          "rule_id": "R-ANALYSIS",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Required analyses present and valid",
+          "reason_fr": "Analyses obligatoires presentes et valides",
+          "legal_ref": "Decree 89-1047 Art.3 (monitoring frequencies)"
+        },
+        {
+          "rule_id": "R-LIMIT-PH",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "pH 7.8 within 6.5–8.5 (NT 106.03)",
+          "reason_fr": "pH 7.8 dans 6.5–8.5 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-EC",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "EC 3.71 dS/m within limit 7 (NT 106.03)",
+          "reason_fr": "EC 3.71 dS/m sous la limite 7 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-COD",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "COD 77.2 mg O2/L (24h mean) within limit 90 (NT 106.03)",
+          "reason_fr": "COD 77.2 mg O2/L (24h mean) sous la limite 90 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-BOD5",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "BOD5 20.9 mg O2/L (24h mean) within limit 30 (NT 106.03)",
+          "reason_fr": "BOD5 20.9 mg O2/L (24h mean) sous la limite 30 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-TSS",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "TSS 15.7 mg/L within limit 30 (NT 106.03)",
+          "reason_fr": "TSS 15.7 mg/L sous la limite 30 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-CHLORIDE",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Chloride 696 mg/L within limit 2000 (NT 106.03)",
+          "reason_fr": "Chloride 696 mg/L sous la limite 2000 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-NEMATODE",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Nematode eggs 0.11 eggs/L within limit 1 (NT 106.03)",
+          "reason_fr": "Oeufs de nematodes 0.11 oeufs/L sous la limite 1 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-NOT-MEASURED",
+          "passed": true,
+          "severity": "info",
+          "source_type": "tunisian_law",
+          "reason_en": "Not measured in this batch, not checked: Fluoride, Organochlorines, Arsenic, Boron, Cadmium, Cobalt, Chromium, Copper, Iron, Manganese, Mercury, Nickel, Lead, Selenium, Zinc (metals: once per semester)",
+          "reason_fr": "Non mesures pour ce lot, non verifies : Fluoride, Organochlorines, Arsenic, Boron, Cadmium, Cobalt, Chromium, Copper, Iron, Manganese, Mercury, Nickel, Lead, Selenium, Zinc (metaux : une fois par semestre)",
+          "legal_ref": "NT 106.03 (1989); Decree 89-1047 Art.3b"
+        },
+        {
+          "rule_id": "R-CROP-ALLOWED",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Olive allowed by interpretation, not named in the 1994 list (to verify)",
+          "reason_fr": "Olive autorise par interpretation, absent de la liste de 1994 (a verifier)",
+          "legal_ref": "Arrete du Ministre de l'Agriculture du 21 juin 1994 (Decree 89-1047 Art.7)"
+        },
+        {
+          "rule_id": "R-RAW-EATEN",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Olive is not eaten raw",
+          "reason_fr": "Olive ne se consomme pas cru",
+          "legal_ref": "Decree 89-1047 Art.5"
+        },
+        {
+          "rule_id": "R-GRAZING",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "No direct grazing on this plot",
+          "reason_fr": "Pas de paturage direct sur cette parcelle",
+          "legal_ref": "Decree 89-1047 Art.6"
+        },
+        {
+          "rule_id": "R-SALINITY-NONE",
+          "passed": true,
+          "severity": "info",
+          "source_type": "agronomic_advice",
+          "reason_en": "No FAO salinity threshold for this crop — salinity not assessed",
+          "reason_fr": "Pas de seuil FAO de salinité pour cette culture — salinité non évaluée",
+          "legal_ref": "FAO-29 (agronomic guidance)"
+        }
+      ],
+      "tag": {
+        "status": "ESTIMATE",
+        "source": "rules_config: NT 106.03, Decree 89-1047, 1994 order, FAO-29"
+      }
+    },
+    {
+      "farm_id": "C",
+      "batch_id": "SSUD-20260829",
+      "decision": "blocked",
+      "results": [
+        {
+          "rule_id": "R-ANALYSIS",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Required analyses present and valid",
+          "reason_fr": "Analyses obligatoires presentes et valides",
+          "legal_ref": "Decree 89-1047 Art.3 (monitoring frequencies)"
+        },
+        {
+          "rule_id": "R-LIMIT-PH",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "pH 7.8 within 6.5–8.5 (NT 106.03)",
+          "reason_fr": "pH 7.8 dans 6.5–8.5 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-EC",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "EC 3.71 dS/m within limit 7 (NT 106.03)",
+          "reason_fr": "EC 3.71 dS/m sous la limite 7 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-COD",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "COD 77.2 mg O2/L (24h mean) within limit 90 (NT 106.03)",
+          "reason_fr": "COD 77.2 mg O2/L (24h mean) sous la limite 90 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-BOD5",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "BOD5 20.9 mg O2/L (24h mean) within limit 30 (NT 106.03)",
+          "reason_fr": "BOD5 20.9 mg O2/L (24h mean) sous la limite 30 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-TSS",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "TSS 15.7 mg/L within limit 30 (NT 106.03)",
+          "reason_fr": "TSS 15.7 mg/L sous la limite 30 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-CHLORIDE",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Chloride 696 mg/L within limit 2000 (NT 106.03)",
+          "reason_fr": "Chloride 696 mg/L sous la limite 2000 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-NEMATODE",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Nematode eggs 0.11 eggs/L within limit 1 (NT 106.03)",
+          "reason_fr": "Oeufs de nematodes 0.11 oeufs/L sous la limite 1 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-NOT-MEASURED",
+          "passed": true,
+          "severity": "info",
+          "source_type": "tunisian_law",
+          "reason_en": "Not measured in this batch, not checked: Fluoride, Organochlorines, Arsenic, Boron, Cadmium, Cobalt, Chromium, Copper, Iron, Manganese, Mercury, Nickel, Lead, Selenium, Zinc (metals: once per semester)",
+          "reason_fr": "Non mesures pour ce lot, non verifies : Fluoride, Organochlorines, Arsenic, Boron, Cadmium, Cobalt, Chromium, Copper, Iron, Manganese, Mercury, Nickel, Lead, Selenium, Zinc (metaux : une fois par semestre)",
+          "legal_ref": "NT 106.03 (1989); Decree 89-1047 Art.3b"
+        },
+        {
+          "rule_id": "R-CROP-ALLOWED",
+          "passed": false,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Lettuce is not on the allowed crop list (1994 order)",
+          "reason_fr": "Lettuce ne figure pas sur la liste des cultures autorisees (arrete de 1994)",
+          "legal_ref": "Arrete du Ministre de l'Agriculture du 21 juin 1994 (Decree 89-1047 Art.7)"
+        },
+        {
+          "rule_id": "R-RAW-EATEN",
+          "passed": false,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Lettuce is eaten raw: forbidden (Decree 89-1047 Art. 5)",
+          "reason_fr": "Lettuce se consomme cru : interdit (decret 89-1047 art. 5)",
+          "legal_ref": "Decree 89-1047 Art.5"
+        },
+        {
+          "rule_id": "R-GRAZING",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "No direct grazing on this plot",
+          "reason_fr": "Pas de paturage direct sur cette parcelle",
+          "legal_ref": "Decree 89-1047 Art.6"
+        },
+        {
+          "rule_id": "R-SALINITY-LETTUCE",
+          "passed": false,
+          "severity": "condition",
+          "source_type": "agronomic_advice",
+          "reason_en": "Soil ECe 1.4 dS/m ≥ 80% of lettuce threshold 1.3 dS/m: irrigate with leaching, watch soil salinity",
+          "reason_fr": "ECe du sol 1.4 dS/m ≥ 80 % du seuil lettuce 1.3 dS/m : irriguer avec lessivage, suivre la salinite",
+          "legal_ref": "FAO-29 (agronomic guidance)"
+        }
+      ],
+      "tag": {
+        "status": "ESTIMATE",
+        "source": "rules_config: NT 106.03, Decree 89-1047, 1994 order, FAO-29"
+      }
+    },
+    {
+      "farm_id": "D",
+      "batch_id": "SSUD-20260829",
+      "decision": "compatible",
+      "results": [
+        {
+          "rule_id": "R-ANALYSIS",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Required analyses present and valid",
+          "reason_fr": "Analyses obligatoires presentes et valides",
+          "legal_ref": "Decree 89-1047 Art.3 (monitoring frequencies)"
+        },
+        {
+          "rule_id": "R-LIMIT-PH",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "pH 7.8 within 6.5–8.5 (NT 106.03)",
+          "reason_fr": "pH 7.8 dans 6.5–8.5 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-EC",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "EC 3.71 dS/m within limit 7 (NT 106.03)",
+          "reason_fr": "EC 3.71 dS/m sous la limite 7 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-COD",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "COD 77.2 mg O2/L (24h mean) within limit 90 (NT 106.03)",
+          "reason_fr": "COD 77.2 mg O2/L (24h mean) sous la limite 90 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-BOD5",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "BOD5 20.9 mg O2/L (24h mean) within limit 30 (NT 106.03)",
+          "reason_fr": "BOD5 20.9 mg O2/L (24h mean) sous la limite 30 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-TSS",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "TSS 15.7 mg/L within limit 30 (NT 106.03)",
+          "reason_fr": "TSS 15.7 mg/L sous la limite 30 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-CHLORIDE",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Chloride 696 mg/L within limit 2000 (NT 106.03)",
+          "reason_fr": "Chloride 696 mg/L sous la limite 2000 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-NEMATODE",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Nematode eggs 0.11 eggs/L within limit 1 (NT 106.03)",
+          "reason_fr": "Oeufs de nematodes 0.11 oeufs/L sous la limite 1 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-NOT-MEASURED",
+          "passed": true,
+          "severity": "info",
+          "source_type": "tunisian_law",
+          "reason_en": "Not measured in this batch, not checked: Fluoride, Organochlorines, Arsenic, Boron, Cadmium, Cobalt, Chromium, Copper, Iron, Manganese, Mercury, Nickel, Lead, Selenium, Zinc (metals: once per semester)",
+          "reason_fr": "Non mesures pour ce lot, non verifies : Fluoride, Organochlorines, Arsenic, Boron, Cadmium, Cobalt, Chromium, Copper, Iron, Manganese, Mercury, Nickel, Lead, Selenium, Zinc (metaux : une fois par semestre)",
+          "legal_ref": "NT 106.03 (1989); Decree 89-1047 Art.3b"
+        },
+        {
+          "rule_id": "R-CROP-ALLOWED",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Olive allowed by interpretation, not named in the 1994 list (to verify)",
+          "reason_fr": "Olive autorise par interpretation, absent de la liste de 1994 (a verifier)",
+          "legal_ref": "Arrete du Ministre de l'Agriculture du 21 juin 1994 (Decree 89-1047 Art.7)"
+        },
+        {
+          "rule_id": "R-RAW-EATEN",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Olive is not eaten raw",
+          "reason_fr": "Olive ne se consomme pas cru",
+          "legal_ref": "Decree 89-1047 Art.5"
+        },
+        {
+          "rule_id": "R-GRAZING",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "No direct grazing on this plot",
+          "reason_fr": "Pas de paturage direct sur cette parcelle",
+          "legal_ref": "Decree 89-1047 Art.6"
+        },
+        {
+          "rule_id": "R-SALINITY-NONE",
+          "passed": true,
+          "severity": "info",
+          "source_type": "agronomic_advice",
+          "reason_en": "No FAO salinity threshold for this crop — salinity not assessed",
+          "reason_fr": "Pas de seuil FAO de salinité pour cette culture — salinité non évaluée",
+          "legal_ref": "FAO-29 (agronomic guidance)"
+        }
+      ],
+      "tag": {
+        "status": "ESTIMATE",
+        "source": "rules_config: NT 106.03, Decree 89-1047, 1994 order, FAO-29"
+      }
+    },
+    {
+      "farm_id": "E",
+      "batch_id": "SSUD-20260829",
+      "decision": "compatible",
+      "results": [
+        {
+          "rule_id": "R-ANALYSIS",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Required analyses present and valid",
+          "reason_fr": "Analyses obligatoires presentes et valides",
+          "legal_ref": "Decree 89-1047 Art.3 (monitoring frequencies)"
+        },
+        {
+          "rule_id": "R-LIMIT-PH",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "pH 7.8 within 6.5–8.5 (NT 106.03)",
+          "reason_fr": "pH 7.8 dans 6.5–8.5 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-EC",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "EC 3.71 dS/m within limit 7 (NT 106.03)",
+          "reason_fr": "EC 3.71 dS/m sous la limite 7 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-COD",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "COD 77.2 mg O2/L (24h mean) within limit 90 (NT 106.03)",
+          "reason_fr": "COD 77.2 mg O2/L (24h mean) sous la limite 90 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-BOD5",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "BOD5 20.9 mg O2/L (24h mean) within limit 30 (NT 106.03)",
+          "reason_fr": "BOD5 20.9 mg O2/L (24h mean) sous la limite 30 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-TSS",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "TSS 15.7 mg/L within limit 30 (NT 106.03)",
+          "reason_fr": "TSS 15.7 mg/L sous la limite 30 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-CHLORIDE",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Chloride 696 mg/L within limit 2000 (NT 106.03)",
+          "reason_fr": "Chloride 696 mg/L sous la limite 2000 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-NEMATODE",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Nematode eggs 0.11 eggs/L within limit 1 (NT 106.03)",
+          "reason_fr": "Oeufs de nematodes 0.11 oeufs/L sous la limite 1 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-NOT-MEASURED",
+          "passed": true,
+          "severity": "info",
+          "source_type": "tunisian_law",
+          "reason_en": "Not measured in this batch, not checked: Fluoride, Organochlorines, Arsenic, Boron, Cadmium, Cobalt, Chromium, Copper, Iron, Manganese, Mercury, Nickel, Lead, Selenium, Zinc (metals: once per semester)",
+          "reason_fr": "Non mesures pour ce lot, non verifies : Fluoride, Organochlorines, Arsenic, Boron, Cadmium, Cobalt, Chromium, Copper, Iron, Manganese, Mercury, Nickel, Lead, Selenium, Zinc (metaux : une fois par semestre)",
+          "legal_ref": "NT 106.03 (1989); Decree 89-1047 Art.3b"
+        },
+        {
+          "rule_id": "R-CROP-ALLOWED",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Barley fodder is on the allowed crop list (1994 order)",
+          "reason_fr": "Barley fodder figure sur la liste des cultures autorisees (arrete de 1994)",
+          "legal_ref": "Arrete du Ministre de l'Agriculture du 21 juin 1994 (Decree 89-1047 Art.7)"
+        },
+        {
+          "rule_id": "R-RAW-EATEN",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Barley fodder is not eaten raw",
+          "reason_fr": "Barley fodder ne se consomme pas cru",
+          "legal_ref": "Decree 89-1047 Art.5"
+        },
+        {
+          "rule_id": "R-GRAZING",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "No direct grazing on this plot",
+          "reason_fr": "Pas de paturage direct sur cette parcelle",
+          "legal_ref": "Decree 89-1047 Art.6"
+        },
+        {
+          "rule_id": "R-GRAZING-FODDER",
+          "passed": true,
+          "severity": "info",
+          "source_type": "tunisian_law",
+          "reason_en": "Fodder crop: cut-and-carry only, no direct grazing",
+          "reason_fr": "Culture fourragere : fauche et affouragement uniquement, pas de paturage direct",
+          "legal_ref": "Decree 89-1047 Art.6"
+        },
+        {
+          "rule_id": "R-SALINITY-BARLEY-FODDER",
+          "passed": true,
+          "severity": "condition",
+          "source_type": "agronomic_advice",
+          "reason_en": "Soil ECe 3.8 dS/m below 80% of barley fodder threshold 6 dS/m",
+          "reason_fr": "ECe du sol 3.8 dS/m sous 80 % du seuil barley fodder 6 dS/m",
+          "legal_ref": "FAO-29 (agronomic guidance)"
+        }
+      ],
+      "tag": {
+        "status": "ESTIMATE",
+        "source": "rules_config: NT 106.03, Decree 89-1047, 1994 order, FAO-29"
+      }
+    },
+    {
+      "farm_id": "F",
+      "batch_id": "SSUD-20260829",
+      "decision": "compatible",
+      "results": [
+        {
+          "rule_id": "R-ANALYSIS",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Required analyses present and valid",
+          "reason_fr": "Analyses obligatoires presentes et valides",
+          "legal_ref": "Decree 89-1047 Art.3 (monitoring frequencies)"
+        },
+        {
+          "rule_id": "R-LIMIT-PH",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "pH 7.8 within 6.5–8.5 (NT 106.03)",
+          "reason_fr": "pH 7.8 dans 6.5–8.5 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-EC",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "EC 3.71 dS/m within limit 7 (NT 106.03)",
+          "reason_fr": "EC 3.71 dS/m sous la limite 7 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-COD",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "COD 77.2 mg O2/L (24h mean) within limit 90 (NT 106.03)",
+          "reason_fr": "COD 77.2 mg O2/L (24h mean) sous la limite 90 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-BOD5",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "BOD5 20.9 mg O2/L (24h mean) within limit 30 (NT 106.03)",
+          "reason_fr": "BOD5 20.9 mg O2/L (24h mean) sous la limite 30 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-TSS",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "TSS 15.7 mg/L within limit 30 (NT 106.03)",
+          "reason_fr": "TSS 15.7 mg/L sous la limite 30 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-CHLORIDE",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Chloride 696 mg/L within limit 2000 (NT 106.03)",
+          "reason_fr": "Chloride 696 mg/L sous la limite 2000 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-NEMATODE",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Nematode eggs 0.11 eggs/L within limit 1 (NT 106.03)",
+          "reason_fr": "Oeufs de nematodes 0.11 oeufs/L sous la limite 1 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-NOT-MEASURED",
+          "passed": true,
+          "severity": "info",
+          "source_type": "tunisian_law",
+          "reason_en": "Not measured in this batch, not checked: Fluoride, Organochlorines, Arsenic, Boron, Cadmium, Cobalt, Chromium, Copper, Iron, Manganese, Mercury, Nickel, Lead, Selenium, Zinc (metals: once per semester)",
+          "reason_fr": "Non mesures pour ce lot, non verifies : Fluoride, Organochlorines, Arsenic, Boron, Cadmium, Cobalt, Chromium, Copper, Iron, Manganese, Mercury, Nickel, Lead, Selenium, Zinc (metaux : une fois par semestre)",
+          "legal_ref": "NT 106.03 (1989); Decree 89-1047 Art.3b"
+        },
+        {
+          "rule_id": "R-CROP-ALLOWED",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Wheat is on the allowed crop list (1994 order)",
+          "reason_fr": "Wheat figure sur la liste des cultures autorisees (arrete de 1994)",
+          "legal_ref": "Arrete du Ministre de l'Agriculture du 21 juin 1994 (Decree 89-1047 Art.7)"
+        },
+        {
+          "rule_id": "R-RAW-EATEN",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Wheat is not eaten raw",
+          "reason_fr": "Wheat ne se consomme pas cru",
+          "legal_ref": "Decree 89-1047 Art.5"
+        },
+        {
+          "rule_id": "R-GRAZING",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "No direct grazing on this plot",
+          "reason_fr": "Pas de paturage direct sur cette parcelle",
+          "legal_ref": "Decree 89-1047 Art.6"
+        },
+        {
+          "rule_id": "R-SALINITY-WHEAT",
+          "passed": true,
+          "severity": "condition",
+          "source_type": "agronomic_advice",
+          "reason_en": "Soil ECe 2.2 dS/m below 80% of wheat threshold 6 dS/m",
+          "reason_fr": "ECe du sol 2.2 dS/m sous 80 % du seuil wheat 6 dS/m",
+          "legal_ref": "FAO-29 (agronomic guidance)"
+        }
+      ],
+      "tag": {
+        "status": "ESTIMATE",
+        "source": "rules_config: NT 106.03, Decree 89-1047, 1994 order, FAO-29"
+      }
+    },
+    {
+      "farm_id": "G",
+      "batch_id": "SSUD-20260829",
+      "decision": "compatible",
+      "results": [
+        {
+          "rule_id": "R-ANALYSIS",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Required analyses present and valid",
+          "reason_fr": "Analyses obligatoires presentes et valides",
+          "legal_ref": "Decree 89-1047 Art.3 (monitoring frequencies)"
+        },
+        {
+          "rule_id": "R-LIMIT-PH",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "pH 7.8 within 6.5–8.5 (NT 106.03)",
+          "reason_fr": "pH 7.8 dans 6.5–8.5 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-EC",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "EC 3.71 dS/m within limit 7 (NT 106.03)",
+          "reason_fr": "EC 3.71 dS/m sous la limite 7 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-COD",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "COD 77.2 mg O2/L (24h mean) within limit 90 (NT 106.03)",
+          "reason_fr": "COD 77.2 mg O2/L (24h mean) sous la limite 90 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-BOD5",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "BOD5 20.9 mg O2/L (24h mean) within limit 30 (NT 106.03)",
+          "reason_fr": "BOD5 20.9 mg O2/L (24h mean) sous la limite 30 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-TSS",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "TSS 15.7 mg/L within limit 30 (NT 106.03)",
+          "reason_fr": "TSS 15.7 mg/L sous la limite 30 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-CHLORIDE",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Chloride 696 mg/L within limit 2000 (NT 106.03)",
+          "reason_fr": "Chloride 696 mg/L sous la limite 2000 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-NEMATODE",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Nematode eggs 0.11 eggs/L within limit 1 (NT 106.03)",
+          "reason_fr": "Oeufs de nematodes 0.11 oeufs/L sous la limite 1 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-NOT-MEASURED",
+          "passed": true,
+          "severity": "info",
+          "source_type": "tunisian_law",
+          "reason_en": "Not measured in this batch, not checked: Fluoride, Organochlorines, Arsenic, Boron, Cadmium, Cobalt, Chromium, Copper, Iron, Manganese, Mercury, Nickel, Lead, Selenium, Zinc (metals: once per semester)",
+          "reason_fr": "Non mesures pour ce lot, non verifies : Fluoride, Organochlorines, Arsenic, Boron, Cadmium, Cobalt, Chromium, Copper, Iron, Manganese, Mercury, Nickel, Lead, Selenium, Zinc (metaux : une fois par semestre)",
+          "legal_ref": "NT 106.03 (1989); Decree 89-1047 Art.3b"
+        },
+        {
+          "rule_id": "R-CROP-ALLOWED",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Oat fodder is on the allowed crop list (1994 order)",
+          "reason_fr": "Oat fodder figure sur la liste des cultures autorisees (arrete de 1994)",
+          "legal_ref": "Arrete du Ministre de l'Agriculture du 21 juin 1994 (Decree 89-1047 Art.7)"
+        },
+        {
+          "rule_id": "R-RAW-EATEN",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Oat fodder is not eaten raw",
+          "reason_fr": "Oat fodder ne se consomme pas cru",
+          "legal_ref": "Decree 89-1047 Art.5"
+        },
+        {
+          "rule_id": "R-GRAZING",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "No direct grazing on this plot",
+          "reason_fr": "Pas de paturage direct sur cette parcelle",
+          "legal_ref": "Decree 89-1047 Art.6"
+        },
+        {
+          "rule_id": "R-GRAZING-FODDER",
+          "passed": true,
+          "severity": "info",
+          "source_type": "tunisian_law",
+          "reason_en": "Fodder crop: cut-and-carry only, no direct grazing",
+          "reason_fr": "Culture fourragere : fauche et affouragement uniquement, pas de paturage direct",
+          "legal_ref": "Decree 89-1047 Art.6"
+        },
+        {
+          "rule_id": "R-SALINITY-NONE",
+          "passed": true,
+          "severity": "info",
+          "source_type": "agronomic_advice",
+          "reason_en": "No FAO salinity threshold for this crop — salinity not assessed",
+          "reason_fr": "Pas de seuil FAO de salinité pour cette culture — salinité non évaluée",
+          "legal_ref": "FAO-29 (agronomic guidance)"
+        }
+      ],
+      "tag": {
+        "status": "ESTIMATE",
+        "source": "rules_config: NT 106.03, Decree 89-1047, 1994 order, FAO-29"
+      }
+    },
+    {
+      "farm_id": "H",
+      "batch_id": "SSUD-20260829",
+      "decision": "compatible",
+      "results": [
+        {
+          "rule_id": "R-ANALYSIS",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Required analyses present and valid",
+          "reason_fr": "Analyses obligatoires presentes et valides",
+          "legal_ref": "Decree 89-1047 Art.3 (monitoring frequencies)"
+        },
+        {
+          "rule_id": "R-LIMIT-PH",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "pH 7.8 within 6.5–8.5 (NT 106.03)",
+          "reason_fr": "pH 7.8 dans 6.5–8.5 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-EC",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "EC 3.71 dS/m within limit 7 (NT 106.03)",
+          "reason_fr": "EC 3.71 dS/m sous la limite 7 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-COD",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "COD 77.2 mg O2/L (24h mean) within limit 90 (NT 106.03)",
+          "reason_fr": "COD 77.2 mg O2/L (24h mean) sous la limite 90 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-BOD5",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "BOD5 20.9 mg O2/L (24h mean) within limit 30 (NT 106.03)",
+          "reason_fr": "BOD5 20.9 mg O2/L (24h mean) sous la limite 30 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-TSS",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "TSS 15.7 mg/L within limit 30 (NT 106.03)",
+          "reason_fr": "TSS 15.7 mg/L sous la limite 30 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-CHLORIDE",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Chloride 696 mg/L within limit 2000 (NT 106.03)",
+          "reason_fr": "Chloride 696 mg/L sous la limite 2000 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-NEMATODE",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Nematode eggs 0.11 eggs/L within limit 1 (NT 106.03)",
+          "reason_fr": "Oeufs de nematodes 0.11 oeufs/L sous la limite 1 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-NOT-MEASURED",
+          "passed": true,
+          "severity": "info",
+          "source_type": "tunisian_law",
+          "reason_en": "Not measured in this batch, not checked: Fluoride, Organochlorines, Arsenic, Boron, Cadmium, Cobalt, Chromium, Copper, Iron, Manganese, Mercury, Nickel, Lead, Selenium, Zinc (metals: once per semester)",
+          "reason_fr": "Non mesures pour ce lot, non verifies : Fluoride, Organochlorines, Arsenic, Boron, Cadmium, Cobalt, Chromium, Copper, Iron, Manganese, Mercury, Nickel, Lead, Selenium, Zinc (metaux : une fois par semestre)",
+          "legal_ref": "NT 106.03 (1989); Decree 89-1047 Art.3b"
+        },
+        {
+          "rule_id": "R-CROP-ALLOWED",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Olive allowed by interpretation, not named in the 1994 list (to verify)",
+          "reason_fr": "Olive autorise par interpretation, absent de la liste de 1994 (a verifier)",
+          "legal_ref": "Arrete du Ministre de l'Agriculture du 21 juin 1994 (Decree 89-1047 Art.7)"
+        },
+        {
+          "rule_id": "R-RAW-EATEN",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Olive is not eaten raw",
+          "reason_fr": "Olive ne se consomme pas cru",
+          "legal_ref": "Decree 89-1047 Art.5"
+        },
+        {
+          "rule_id": "R-GRAZING",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "No direct grazing on this plot",
+          "reason_fr": "Pas de paturage direct sur cette parcelle",
+          "legal_ref": "Decree 89-1047 Art.6"
+        },
+        {
+          "rule_id": "R-SALINITY-NONE",
+          "passed": true,
+          "severity": "info",
+          "source_type": "agronomic_advice",
+          "reason_en": "No FAO salinity threshold for this crop — salinity not assessed",
+          "reason_fr": "Pas de seuil FAO de salinité pour cette culture — salinité non évaluée",
+          "legal_ref": "FAO-29 (agronomic guidance)"
+        }
+      ],
+      "tag": {
+        "status": "ESTIMATE",
+        "source": "rules_config: NT 106.03, Decree 89-1047, 1994 order, FAO-29"
+      }
+    },
+    {
+      "farm_id": "I",
+      "batch_id": "SSUD-20260829",
+      "decision": "compatible",
+      "results": [
+        {
+          "rule_id": "R-ANALYSIS",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Required analyses present and valid",
+          "reason_fr": "Analyses obligatoires presentes et valides",
+          "legal_ref": "Decree 89-1047 Art.3 (monitoring frequencies)"
+        },
+        {
+          "rule_id": "R-LIMIT-PH",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "pH 7.8 within 6.5–8.5 (NT 106.03)",
+          "reason_fr": "pH 7.8 dans 6.5–8.5 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-EC",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "EC 3.71 dS/m within limit 7 (NT 106.03)",
+          "reason_fr": "EC 3.71 dS/m sous la limite 7 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-COD",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "COD 77.2 mg O2/L (24h mean) within limit 90 (NT 106.03)",
+          "reason_fr": "COD 77.2 mg O2/L (24h mean) sous la limite 90 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-BOD5",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "BOD5 20.9 mg O2/L (24h mean) within limit 30 (NT 106.03)",
+          "reason_fr": "BOD5 20.9 mg O2/L (24h mean) sous la limite 30 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-TSS",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "TSS 15.7 mg/L within limit 30 (NT 106.03)",
+          "reason_fr": "TSS 15.7 mg/L sous la limite 30 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-CHLORIDE",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Chloride 696 mg/L within limit 2000 (NT 106.03)",
+          "reason_fr": "Chloride 696 mg/L sous la limite 2000 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-NEMATODE",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Nematode eggs 0.11 eggs/L within limit 1 (NT 106.03)",
+          "reason_fr": "Oeufs de nematodes 0.11 oeufs/L sous la limite 1 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-NOT-MEASURED",
+          "passed": true,
+          "severity": "info",
+          "source_type": "tunisian_law",
+          "reason_en": "Not measured in this batch, not checked: Fluoride, Organochlorines, Arsenic, Boron, Cadmium, Cobalt, Chromium, Copper, Iron, Manganese, Mercury, Nickel, Lead, Selenium, Zinc (metals: once per semester)",
+          "reason_fr": "Non mesures pour ce lot, non verifies : Fluoride, Organochlorines, Arsenic, Boron, Cadmium, Cobalt, Chromium, Copper, Iron, Manganese, Mercury, Nickel, Lead, Selenium, Zinc (metaux : une fois par semestre)",
+          "legal_ref": "NT 106.03 (1989); Decree 89-1047 Art.3b"
+        },
+        {
+          "rule_id": "R-CROP-ALLOWED",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Alfalfa allowed by interpretation, not named in the 1994 list (to verify)",
+          "reason_fr": "Alfalfa autorise par interpretation, absent de la liste de 1994 (a verifier)",
+          "legal_ref": "Arrete du Ministre de l'Agriculture du 21 juin 1994 (Decree 89-1047 Art.7)"
+        },
+        {
+          "rule_id": "R-RAW-EATEN",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Alfalfa is not eaten raw",
+          "reason_fr": "Alfalfa ne se consomme pas cru",
+          "legal_ref": "Decree 89-1047 Art.5"
+        },
+        {
+          "rule_id": "R-GRAZING",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "No direct grazing on this plot",
+          "reason_fr": "Pas de paturage direct sur cette parcelle",
+          "legal_ref": "Decree 89-1047 Art.6"
+        },
+        {
+          "rule_id": "R-GRAZING-FODDER",
+          "passed": true,
+          "severity": "info",
+          "source_type": "tunisian_law",
+          "reason_en": "Fodder crop: cut-and-carry only, no direct grazing",
+          "reason_fr": "Culture fourragere : fauche et affouragement uniquement, pas de paturage direct",
+          "legal_ref": "Decree 89-1047 Art.6"
+        },
+        {
+          "rule_id": "R-SALINITY-ALFALFA",
+          "passed": true,
+          "severity": "condition",
+          "source_type": "agronomic_advice",
+          "reason_en": "Soil ECe 1.2 dS/m below 80% of alfalfa threshold 2 dS/m",
+          "reason_fr": "ECe du sol 1.2 dS/m sous 80 % du seuil alfalfa 2 dS/m",
+          "legal_ref": "FAO-29 (agronomic guidance)"
+        }
+      ],
+      "tag": {
+        "status": "ESTIMATE",
+        "source": "rules_config: NT 106.03, Decree 89-1047, 1994 order, FAO-29"
+      }
+    },
+    {
+      "farm_id": "J",
+      "batch_id": "SSUD-20260829",
+      "decision": "compatible",
+      "results": [
+        {
+          "rule_id": "R-ANALYSIS",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Required analyses present and valid",
+          "reason_fr": "Analyses obligatoires presentes et valides",
+          "legal_ref": "Decree 89-1047 Art.3 (monitoring frequencies)"
+        },
+        {
+          "rule_id": "R-LIMIT-PH",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "pH 7.8 within 6.5–8.5 (NT 106.03)",
+          "reason_fr": "pH 7.8 dans 6.5–8.5 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-EC",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "EC 3.71 dS/m within limit 7 (NT 106.03)",
+          "reason_fr": "EC 3.71 dS/m sous la limite 7 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-COD",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "COD 77.2 mg O2/L (24h mean) within limit 90 (NT 106.03)",
+          "reason_fr": "COD 77.2 mg O2/L (24h mean) sous la limite 90 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-BOD5",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "BOD5 20.9 mg O2/L (24h mean) within limit 30 (NT 106.03)",
+          "reason_fr": "BOD5 20.9 mg O2/L (24h mean) sous la limite 30 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-TSS",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "TSS 15.7 mg/L within limit 30 (NT 106.03)",
+          "reason_fr": "TSS 15.7 mg/L sous la limite 30 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-CHLORIDE",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Chloride 696 mg/L within limit 2000 (NT 106.03)",
+          "reason_fr": "Chloride 696 mg/L sous la limite 2000 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-NEMATODE",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Nematode eggs 0.11 eggs/L within limit 1 (NT 106.03)",
+          "reason_fr": "Oeufs de nematodes 0.11 oeufs/L sous la limite 1 (NT 106.03)",
+          "legal_ref": "NT 106.03 (1989)"
+        },
+        {
+          "rule_id": "R-LIMIT-NOT-MEASURED",
+          "passed": true,
+          "severity": "info",
+          "source_type": "tunisian_law",
+          "reason_en": "Not measured in this batch, not checked: Fluoride, Organochlorines, Arsenic, Boron, Cadmium, Cobalt, Chromium, Copper, Iron, Manganese, Mercury, Nickel, Lead, Selenium, Zinc (metals: once per semester)",
+          "reason_fr": "Non mesures pour ce lot, non verifies : Fluoride, Organochlorines, Arsenic, Boron, Cadmium, Cobalt, Chromium, Copper, Iron, Manganese, Mercury, Nickel, Lead, Selenium, Zinc (metaux : une fois par semestre)",
+          "legal_ref": "NT 106.03 (1989); Decree 89-1047 Art.3b"
+        },
+        {
+          "rule_id": "R-CROP-ALLOWED",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Barley is on the allowed crop list (1994 order)",
+          "reason_fr": "Barley figure sur la liste des cultures autorisees (arrete de 1994)",
+          "legal_ref": "Arrete du Ministre de l'Agriculture du 21 juin 1994 (Decree 89-1047 Art.7)"
+        },
+        {
+          "rule_id": "R-RAW-EATEN",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "Barley is not eaten raw",
+          "reason_fr": "Barley ne se consomme pas cru",
+          "legal_ref": "Decree 89-1047 Art.5"
+        },
+        {
+          "rule_id": "R-GRAZING",
+          "passed": true,
+          "severity": "block",
+          "source_type": "tunisian_law",
+          "reason_en": "No direct grazing on this plot",
+          "reason_fr": "Pas de paturage direct sur cette parcelle",
+          "legal_ref": "Decree 89-1047 Art.6"
+        },
+        {
+          "rule_id": "R-SALINITY-BARLEY",
+          "passed": true,
+          "severity": "condition",
+          "source_type": "agronomic_advice",
+          "reason_en": "Soil ECe 4.5 dS/m below 80% of barley threshold 8 dS/m",
+          "reason_fr": "ECe du sol 4.5 dS/m sous 80 % du seuil barley 8 dS/m",
+          "legal_ref": "FAO-29 (agronomic guidance)"
+        }
+      ],
+      "tag": {
+        "status": "ESTIMATE",
+        "source": "rules_config: NT 106.03, Decree 89-1047, 1994 order, FAO-29"
+      }
+    }
+  ],
+  "tag": {
+    "status": "ESTIMATE",
+    "source": "rules_config: NT 106.03, Decree 89-1047, 1994 order, FAO-29"
+  }
+}

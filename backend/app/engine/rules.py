@@ -87,15 +87,18 @@ def _limit(rule: Rule, values: dict[str, float]) -> Optional[RuleResult]:
         unit = "eggs/L"  # 1 egg per 1000 mL
     unit = "" if unit in ("", "-") else f" {unit}"
     unit_lim = unit if rule.parameter != "pH" else ""
-    name = "Nematode eggs" if rule.rule_id == "R-NEMATODE" else rule.parameter
+    name = name_fr = rule.parameter
+    unit_fr = unit
+    if rule.rule_id == "R-NEMATODE":
+        name, name_fr, unit_fr = "Nematode eggs", "Oeufs de nematodes", " oeufs/L"
     if lo is not None:
         ok = lo <= v <= lim
         en = f"{name} {_g(v)}{unit} {'within' if ok else 'outside'} {_g(lo)}–{_g(lim)}{unit_lim}"
-        fr = f"{name} {_g(v)}{unit} {'dans' if ok else 'hors de'} {_g(lo)}–{_g(lim)}{unit_lim}"
+        fr = f"{name_fr} {_g(v)}{unit_fr} {'dans' if ok else 'hors de'} {_g(lo)}–{_g(lim)}{unit_lim}"
     else:
         ok = v <= lim
         en = f"{name} {_g(v)}{unit} {'within' if ok else 'above'} limit {_g(lim)}"
-        fr = f"{name} {_g(v)}{unit} {'sous la' if ok else 'au-dessus de la'} limite {_g(lim)}"
+        fr = f"{name_fr} {_g(v)}{unit_fr} {'sous la' if ok else 'au-dessus de la'} limite {_g(lim)}"
     return _res(rule, ok, f"{en} (NT 106.03)", f"{fr} (NT 106.03)")
 
 

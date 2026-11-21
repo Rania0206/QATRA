@@ -66,6 +66,25 @@ export interface RuleResult {
   legal_ref: string;
 }
 
+export type Decision = "compatible" | "conditional" | "blocked";
+
+/** GET /api/farms/{id}/compatibility (and one item of GET /api/compatibility). */
+export interface FarmCompatibility {
+  farm_id: string;
+  batch_id: string;
+  decision: Decision;
+  results: RuleResult[];
+  tag: Tag;
+}
+
+/** GET /api/compatibility?batch_id= : every farm against one batch. */
+export interface AllFarmsCompatibility {
+  batch_id: string;
+  batch_status: string; // Batch.status: compliant | conditional | non_compliant | analysis_invalid
+  items: FarmCompatibility[]; // same order as GET /api/farms
+  tag: Tag;
+}
+
 export interface AllocationItem {
   farm_id: string;
   status: string;

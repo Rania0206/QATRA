@@ -1,0 +1,763 @@
+[
+  {
+    "rule_id": "R-ANALYSIS",
+    "family": "analysis",
+    "source_type": "tunisian_law",
+    "parameter": null,
+    "limit": null,
+    "limit_min": null,
+    "unit": null,
+    "batch_fields": [],
+    "crops": [],
+    "crops_to_verify": [],
+    "severity_if_failed": "block",
+    "legal_ref": "Decree 89-1047 Art.3 (monitoring frequencies)",
+    "tag": {
+      "status": "REPORTED",
+      "source": "https://faolex.fao.org/docs/pdf/tun204032.pdf"
+    },
+    "text_en": "Required analyses (physico-chemical, parasite eggs) must be present and still valid (Batch.analysis_status = valid). Art.3a: pH, BOD5, COD, TSS, chloride, sodium, ammonium-N, electrical conductivity at least once per month; Art.3b: As, B, Cd, Cr, Co, Cu, Fe, fluoride, Mn, Hg, Ni, organochlorines, Se, Pb, Zn at least once per semester; Art.3c: parasite eggs once every 15 days.",
+    "text_fr": "Les analyses obligatoires (physico-chimiques, oeufs de parasites) doivent etre presentes et encore valides (frequences du decret 89-1047, art. 3)."
+  },
+  {
+    "rule_id": "R-LIMIT-PH",
+    "family": "water_limit",
+    "source_type": "tunisian_law",
+    "parameter": "pH",
+    "limit": 8.5,
+    "limit_min": 6.5,
+    "unit": "-",
+    "batch_fields": [
+      "pH"
+    ],
+    "crops": [],
+    "crops_to_verify": [],
+    "severity_if_failed": "block",
+    "legal_ref": "NT 106.03 (1989)",
+    "tag": {
+      "status": "REPORTED",
+      "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)'"
+    },
+    "text_en": "pH must be 6.5 - 8.5 (NT 106.03).",
+    "text_fr": "pH doit etre 6.5 - 8.5 (NT 106.03)."
+  },
+  {
+    "rule_id": "R-LIMIT-EC",
+    "family": "water_limit",
+    "source_type": "tunisian_law",
+    "parameter": "EC",
+    "limit": 7000.0,
+    "limit_min": null,
+    "unit": "uS/cm",
+    "batch_fields": [
+      "EC_dS_m"
+    ],
+    "crops": [],
+    "crops_to_verify": [],
+    "severity_if_failed": "block",
+    "legal_ref": "NT 106.03 (1989)",
+    "tag": {
+      "status": "REPORTED",
+      "source": "Benabdallah S. (2003) 'La reutilisation des eaux usees traitees en Tunisie', Tableau 10 p.15"
+    },
+    "text_en": "EC must be <= 7000 uS/cm (NT 106.03).",
+    "text_fr": "EC doit etre <= 7000 uS/cm (NT 106.03)."
+  },
+  {
+    "rule_id": "R-LIMIT-COD",
+    "family": "water_limit",
+    "source_type": "tunisian_law",
+    "parameter": "COD",
+    "limit": 90.0,
+    "limit_min": null,
+    "unit": "mg O2/L (24h mean)",
+    "batch_fields": [
+      "COD_mg_L"
+    ],
+    "crops": [],
+    "crops_to_verify": [],
+    "severity_if_failed": "block",
+    "legal_ref": "NT 106.03 (1989)",
+    "tag": {
+      "status": "REPORTED",
+      "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)'"
+    },
+    "text_en": "COD must be <= 90 mg O2/L (24h mean) (NT 106.03).",
+    "text_fr": "COD doit etre <= 90 mg O2/L (24h mean) (NT 106.03)."
+  },
+  {
+    "rule_id": "R-LIMIT-BOD5",
+    "family": "water_limit",
+    "source_type": "tunisian_law",
+    "parameter": "BOD5",
+    "limit": 30.0,
+    "limit_min": null,
+    "unit": "mg O2/L (24h mean)",
+    "batch_fields": [
+      "BOD5_mg_L"
+    ],
+    "crops": [],
+    "crops_to_verify": [],
+    "severity_if_failed": "block",
+    "legal_ref": "NT 106.03 (1989)",
+    "tag": {
+      "status": "REPORTED",
+      "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)'"
+    },
+    "text_en": "BOD5 must be <= 30 mg O2/L (24h mean) (NT 106.03).",
+    "text_fr": "BOD5 doit etre <= 30 mg O2/L (24h mean) (NT 106.03)."
+  },
+  {
+    "rule_id": "R-LIMIT-TSS",
+    "family": "water_limit",
+    "source_type": "tunisian_law",
+    "parameter": "TSS",
+    "limit": 30.0,
+    "limit_min": null,
+    "unit": "mg/L",
+    "batch_fields": [
+      "TSS_mg_L"
+    ],
+    "crops": [],
+    "crops_to_verify": [],
+    "severity_if_failed": "block",
+    "legal_ref": "NT 106.03 (1989)",
+    "tag": {
+      "status": "REPORTED",
+      "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)'"
+    },
+    "text_en": "TSS must be <= 30 mg/L (NT 106.03).",
+    "text_fr": "TSS doit etre <= 30 mg/L (NT 106.03)."
+  },
+  {
+    "rule_id": "R-LIMIT-CHLORIDE",
+    "family": "water_limit",
+    "source_type": "tunisian_law",
+    "parameter": "Chloride",
+    "limit": 2000.0,
+    "limit_min": null,
+    "unit": "mg/L",
+    "batch_fields": [
+      "Cl_mg_L"
+    ],
+    "crops": [],
+    "crops_to_verify": [],
+    "severity_if_failed": "block",
+    "legal_ref": "NT 106.03 (1989)",
+    "tag": {
+      "status": "REPORTED",
+      "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)'"
+    },
+    "text_en": "Chloride must be <= 2000 mg/L (NT 106.03).",
+    "text_fr": "Chloride doit etre <= 2000 mg/L (NT 106.03)."
+  },
+  {
+    "rule_id": "R-LIMIT-FLUORIDE",
+    "family": "water_limit",
+    "source_type": "tunisian_law",
+    "parameter": "Fluoride",
+    "limit": 3.0,
+    "limit_min": null,
+    "unit": "mg/L",
+    "batch_fields": [],
+    "crops": [],
+    "crops_to_verify": [],
+    "severity_if_failed": "block",
+    "legal_ref": "NT 106.03 (1989)",
+    "tag": {
+      "status": "REPORTED",
+      "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)'"
+    },
+    "text_en": "Fluoride must be <= 3 mg/L (NT 106.03).",
+    "text_fr": "Fluoride doit etre <= 3 mg/L (NT 106.03)."
+  },
+  {
+    "rule_id": "R-LIMIT-ORGANOCHLORINES",
+    "family": "water_limit",
+    "source_type": "tunisian_law",
+    "parameter": "Organochlorines",
+    "limit": 0.001,
+    "limit_min": null,
+    "unit": "mg/L",
+    "batch_fields": [],
+    "crops": [],
+    "crops_to_verify": [],
+    "severity_if_failed": "block",
+    "legal_ref": "NT 106.03 (1989)",
+    "tag": {
+      "status": "REPORTED",
+      "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)'"
+    },
+    "text_en": "Organochlorines must be <= 0.001 mg/L (NT 106.03).",
+    "text_fr": "Organochlorines doit etre <= 0.001 mg/L (NT 106.03)."
+  },
+  {
+    "rule_id": "R-LIMIT-ARSENIC",
+    "family": "water_limit",
+    "source_type": "tunisian_law",
+    "parameter": "Arsenic",
+    "limit": 0.1,
+    "limit_min": null,
+    "unit": "mg/L",
+    "batch_fields": [
+      "As_mg_L"
+    ],
+    "crops": [],
+    "crops_to_verify": [],
+    "severity_if_failed": "block",
+    "legal_ref": "NT 106.03 (1989)",
+    "tag": {
+      "status": "REPORTED",
+      "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)'"
+    },
+    "text_en": "Arsenic must be <= 0.1 mg/L (NT 106.03).",
+    "text_fr": "Arsenic doit etre <= 0.1 mg/L (NT 106.03)."
+  },
+  {
+    "rule_id": "R-LIMIT-BORON",
+    "family": "water_limit",
+    "source_type": "tunisian_law",
+    "parameter": "Boron",
+    "limit": 3.0,
+    "limit_min": null,
+    "unit": "mg/L",
+    "batch_fields": [
+      "B_mg_L"
+    ],
+    "crops": [],
+    "crops_to_verify": [],
+    "severity_if_failed": "block",
+    "legal_ref": "NT 106.03 (1989)",
+    "tag": {
+      "status": "REPORTED",
+      "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)'"
+    },
+    "text_en": "Boron must be <= 3 mg/L (NT 106.03).",
+    "text_fr": "Boron doit etre <= 3 mg/L (NT 106.03)."
+  },
+  {
+    "rule_id": "R-LIMIT-CADMIUM",
+    "family": "water_limit",
+    "source_type": "tunisian_law",
+    "parameter": "Cadmium",
+    "limit": 0.01,
+    "limit_min": null,
+    "unit": "mg/L",
+    "batch_fields": [
+      "Cd_mg_L"
+    ],
+    "crops": [],
+    "crops_to_verify": [],
+    "severity_if_failed": "block",
+    "legal_ref": "NT 106.03 (1989)",
+    "tag": {
+      "status": "REPORTED",
+      "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)'"
+    },
+    "text_en": "Cadmium must be <= 0.01 mg/L (NT 106.03).",
+    "text_fr": "Cadmium doit etre <= 0.01 mg/L (NT 106.03)."
+  },
+  {
+    "rule_id": "R-LIMIT-COBALT",
+    "family": "water_limit",
+    "source_type": "tunisian_law",
+    "parameter": "Cobalt",
+    "limit": 0.1,
+    "limit_min": null,
+    "unit": "mg/L",
+    "batch_fields": [],
+    "crops": [],
+    "crops_to_verify": [],
+    "severity_if_failed": "block",
+    "legal_ref": "NT 106.03 (1989)",
+    "tag": {
+      "status": "REPORTED",
+      "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)'"
+    },
+    "text_en": "Cobalt must be <= 0.1 mg/L (NT 106.03).",
+    "text_fr": "Cobalt doit etre <= 0.1 mg/L (NT 106.03)."
+  },
+  {
+    "rule_id": "R-LIMIT-CHROMIUM",
+    "family": "water_limit",
+    "source_type": "tunisian_law",
+    "parameter": "Chromium",
+    "limit": 0.1,
+    "limit_min": null,
+    "unit": "mg/L",
+    "batch_fields": [
+      "Cr_mg_L"
+    ],
+    "crops": [],
+    "crops_to_verify": [],
+    "severity_if_failed": "block",
+    "legal_ref": "NT 106.03 (1989)",
+    "tag": {
+      "status": "REPORTED",
+      "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)'"
+    },
+    "text_en": "Chromium must be <= 0.1 mg/L (NT 106.03).",
+    "text_fr": "Chromium doit etre <= 0.1 mg/L (NT 106.03)."
+  },
+  {
+    "rule_id": "R-LIMIT-COPPER",
+    "family": "water_limit",
+    "source_type": "tunisian_law",
+    "parameter": "Copper",
+    "limit": 0.5,
+    "limit_min": null,
+    "unit": "mg/L",
+    "batch_fields": [
+      "Cu_mg_L"
+    ],
+    "crops": [],
+    "crops_to_verify": [],
+    "severity_if_failed": "block",
+    "legal_ref": "NT 106.03 (1989)",
+    "tag": {
+      "status": "REPORTED",
+      "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)'"
+    },
+    "text_en": "Copper must be <= 0.5 mg/L (NT 106.03).",
+    "text_fr": "Copper doit etre <= 0.5 mg/L (NT 106.03)."
+  },
+  {
+    "rule_id": "R-LIMIT-IRON",
+    "family": "water_limit",
+    "source_type": "tunisian_law",
+    "parameter": "Iron",
+    "limit": 5.0,
+    "limit_min": null,
+    "unit": "mg/L",
+    "batch_fields": [],
+    "crops": [],
+    "crops_to_verify": [],
+    "severity_if_failed": "block",
+    "legal_ref": "NT 106.03 (1989)",
+    "tag": {
+      "status": "REPORTED",
+      "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)'"
+    },
+    "text_en": "Iron must be <= 5 mg/L (NT 106.03).",
+    "text_fr": "Iron doit etre <= 5 mg/L (NT 106.03)."
+  },
+  {
+    "rule_id": "R-LIMIT-MANGANESE",
+    "family": "water_limit",
+    "source_type": "tunisian_law",
+    "parameter": "Manganese",
+    "limit": 0.5,
+    "limit_min": null,
+    "unit": "mg/L",
+    "batch_fields": [],
+    "crops": [],
+    "crops_to_verify": [],
+    "severity_if_failed": "block",
+    "legal_ref": "NT 106.03 (1989)",
+    "tag": {
+      "status": "REPORTED",
+      "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)'"
+    },
+    "text_en": "Manganese must be <= 0.5 mg/L (NT 106.03).",
+    "text_fr": "Manganese doit etre <= 0.5 mg/L (NT 106.03)."
+  },
+  {
+    "rule_id": "R-LIMIT-MERCURY",
+    "family": "water_limit",
+    "source_type": "tunisian_law",
+    "parameter": "Mercury",
+    "limit": 0.001,
+    "limit_min": null,
+    "unit": "mg/L",
+    "batch_fields": [
+      "Hg_mg_L"
+    ],
+    "crops": [],
+    "crops_to_verify": [],
+    "severity_if_failed": "block",
+    "legal_ref": "NT 106.03 (1989)",
+    "tag": {
+      "status": "REPORTED",
+      "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)'"
+    },
+    "text_en": "Mercury must be <= 0.001 mg/L (NT 106.03).",
+    "text_fr": "Mercury doit etre <= 0.001 mg/L (NT 106.03)."
+  },
+  {
+    "rule_id": "R-LIMIT-NICKEL",
+    "family": "water_limit",
+    "source_type": "tunisian_law",
+    "parameter": "Nickel",
+    "limit": 0.2,
+    "limit_min": null,
+    "unit": "mg/L",
+    "batch_fields": [
+      "Ni_mg_L"
+    ],
+    "crops": [],
+    "crops_to_verify": [],
+    "severity_if_failed": "block",
+    "legal_ref": "NT 106.03 (1989)",
+    "tag": {
+      "status": "REPORTED",
+      "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)'"
+    },
+    "text_en": "Nickel must be <= 0.2 mg/L (NT 106.03).",
+    "text_fr": "Nickel doit etre <= 0.2 mg/L (NT 106.03)."
+  },
+  {
+    "rule_id": "R-LIMIT-LEAD",
+    "family": "water_limit",
+    "source_type": "tunisian_law",
+    "parameter": "Lead",
+    "limit": 1.0,
+    "limit_min": null,
+    "unit": "mg/L",
+    "batch_fields": [
+      "Pb_mg_L"
+    ],
+    "crops": [],
+    "crops_to_verify": [],
+    "severity_if_failed": "block",
+    "legal_ref": "NT 106.03 (1989)",
+    "tag": {
+      "status": "REPORTED",
+      "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)'"
+    },
+    "text_en": "Lead must be <= 1 mg/L (NT 106.03).",
+    "text_fr": "Lead doit etre <= 1 mg/L (NT 106.03)."
+  },
+  {
+    "rule_id": "R-LIMIT-SELENIUM",
+    "family": "water_limit",
+    "source_type": "tunisian_law",
+    "parameter": "Selenium",
+    "limit": 0.05,
+    "limit_min": null,
+    "unit": "mg/L",
+    "batch_fields": [],
+    "crops": [],
+    "crops_to_verify": [],
+    "severity_if_failed": "block",
+    "legal_ref": "NT 106.03 (1989)",
+    "tag": {
+      "status": "REPORTED",
+      "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)'"
+    },
+    "text_en": "Selenium must be <= 0.05 mg/L (NT 106.03).",
+    "text_fr": "Selenium doit etre <= 0.05 mg/L (NT 106.03)."
+  },
+  {
+    "rule_id": "R-LIMIT-ZINC",
+    "family": "water_limit",
+    "source_type": "tunisian_law",
+    "parameter": "Zinc",
+    "limit": 5.0,
+    "limit_min": null,
+    "unit": "mg/L",
+    "batch_fields": [
+      "Zn_mg_L"
+    ],
+    "crops": [],
+    "crops_to_verify": [],
+    "severity_if_failed": "block",
+    "legal_ref": "NT 106.03 (1989)",
+    "tag": {
+      "status": "REPORTED",
+      "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)'"
+    },
+    "text_en": "Zinc must be <= 5 mg/L (NT 106.03).",
+    "text_fr": "Zinc doit etre <= 5 mg/L (NT 106.03)."
+  },
+  {
+    "rule_id": "R-NEMATODE",
+    "family": "water_limit",
+    "source_type": "tunisian_law",
+    "parameter": "Intestinal nematode eggs (helminths)",
+    "limit": 1.0,
+    "limit_min": null,
+    "unit": "eggs per 1000 mL (<=)",
+    "batch_fields": [
+      "helminth_eggs_per_L",
+      "nematode_eggs_per_L"
+    ],
+    "crops": [],
+    "crops_to_verify": [],
+    "severity_if_failed": "block",
+    "legal_ref": "NT 106.03 (1989)",
+    "tag": {
+      "status": "REPORTED",
+      "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)'"
+    },
+    "text_en": "Intestinal nematode (helminth) eggs must be <= 1 egg per litre (NT 106.03).",
+    "text_fr": "Les oeufs de nematodes intestinaux doivent etre <= 1 oeuf par litre (NT 106.03)."
+  },
+  {
+    "rule_id": "R-CROP-ALLOWED",
+    "family": "crop",
+    "source_type": "tunisian_law",
+    "parameter": null,
+    "limit": null,
+    "limit_min": null,
+    "unit": null,
+    "batch_fields": [],
+    "crops": [
+      "cotton",
+      "tobacco",
+      "flax",
+      "jojoba",
+      "castor",
+      "safflower",
+      "wheat",
+      "barley",
+      "triticale",
+      "oat",
+      "berseem",
+      "maize",
+      "fodder sorghum",
+      "vetch",
+      "acacia",
+      "atriplex",
+      "date palm",
+      "citrus",
+      "vines",
+      "forest trees"
+    ],
+    "crops_to_verify": [
+      "olive",
+      "alfalfa"
+    ],
+    "severity_if_failed": "block",
+    "legal_ref": "Arrete du Ministre de l'Agriculture du 21 juin 1994 (Decree 89-1047 Art.7)",
+    "tag": {
+      "status": "REPORTED",
+      "source": "Arrete du Ministre de l'Agriculture du 21 juin 1994, as summarised in Benabdallah S. (2003) 'La reutilisation des eaux usees traitees en Tunisie', Tableau 10 p.15"
+    },
+    "text_en": "The crop must be on the list fixed by the 21 June 1994 order (industrial crops, cereals, fodder, fodder shrubs, forest trees; fruit trees only if not sprinkler-irrigated). Olive and alfalfa are allowed by interpretation (TO_VERIFY against the full order).",
+    "text_fr": "La culture doit figurer sur la liste de l'arrete du 21 juin 1994 (cultures industrielles, cereales, fourrages, arbustes fourragers, arbres forestiers ; arbres fruitiers seulement sans aspersion). Olivier et luzerne : par interpretation (A VERIFIER)."
+  },
+  {
+    "rule_id": "R-RAW-EATEN",
+    "family": "crop",
+    "source_type": "tunisian_law",
+    "parameter": null,
+    "limit": null,
+    "limit_min": null,
+    "unit": null,
+    "batch_fields": [],
+    "crops": [
+      "lettuce",
+      "tomato"
+    ],
+    "crops_to_verify": [],
+    "severity_if_failed": "block",
+    "legal_ref": "Decree 89-1047 Art.5",
+    "tag": {
+      "status": "REPORTED",
+      "source": "https://faolex.fao.org/docs/pdf/tun204032.pdf"
+    },
+    "text_en": "Vegetable crops (cultures maraicheres) and crops eaten raw (crudites) cannot be irrigated with treated wastewater.",
+    "text_fr": "L'irrigation des cultures maraicheres et des crudites par eaux usees traitees est interdite (decret 89-1047, art. 5)."
+  },
+  {
+    "rule_id": "R-GRAZING",
+    "family": "use",
+    "source_type": "tunisian_law",
+    "parameter": "direct_grazing",
+    "limit": null,
+    "limit_min": null,
+    "unit": null,
+    "batch_fields": [],
+    "crops": [],
+    "crops_to_verify": [],
+    "severity_if_failed": "block",
+    "legal_ref": "Decree 89-1047 Art.6",
+    "tag": {
+      "status": "REPORTED",
+      "source": "https://faolex.fao.org/docs/pdf/tun204032.pdf"
+    },
+    "text_en": "Direct grazing on plots irrigated with treated wastewater is prohibited.",
+    "text_fr": "Le paturage direct sur les parcelles irriguees par eaux usees traitees est interdit."
+  },
+  {
+    "rule_id": "R-GRAZING-FODDER",
+    "family": "use",
+    "source_type": "tunisian_law",
+    "parameter": null,
+    "limit": null,
+    "limit_min": null,
+    "unit": null,
+    "batch_fields": [],
+    "crops": [
+      "berseem",
+      "maize",
+      "fodder sorghum",
+      "vetch"
+    ],
+    "crops_to_verify": [
+      "alfalfa"
+    ],
+    "severity_if_failed": "info",
+    "legal_ref": "Decree 89-1047 Art.6",
+    "tag": {
+      "status": "REPORTED",
+      "source": "https://faolex.fao.org/docs/pdf/tun204032.pdf"
+    },
+    "text_en": "Fodder crop: cut-and-carry only, no direct grazing.",
+    "text_fr": "Culture fourragere : fauche et affouragement uniquement, pas de paturage direct."
+  },
+  {
+    "rule_id": "R-SALINITY-BARLEY",
+    "family": "salinity",
+    "source_type": "agronomic_advice",
+    "parameter": "soil_ece",
+    "limit": 8.0,
+    "limit_min": null,
+    "unit": "dS/m",
+    "batch_fields": [],
+    "crops": [
+      "barley"
+    ],
+    "crops_to_verify": [],
+    "severity_if_failed": "condition",
+    "legal_ref": "FAO-29 (agronomic guidance)",
+    "tag": {
+      "status": "ESTIMATE",
+      "source": "FAO-29 rev.1 (Ayers & Westcot 1985) Table 4, after Maas 1984"
+    },
+    "text_en": "barley: soil ECe at or above 80% of the FAO-29 crop threshold (8 dS/m, trigger 6.4) risks yield loss; irrigate with a leaching fraction.",
+    "text_fr": "barley : ECe du sol >= 80 % du seuil FAO-29 de la culture (8 dS/m) ; risque de perte de rendement, prevoir une fraction de lessivage."
+  },
+  {
+    "rule_id": "R-SALINITY-WHEAT",
+    "family": "salinity",
+    "source_type": "agronomic_advice",
+    "parameter": "soil_ece",
+    "limit": 6.0,
+    "limit_min": null,
+    "unit": "dS/m",
+    "batch_fields": [],
+    "crops": [
+      "wheat"
+    ],
+    "crops_to_verify": [],
+    "severity_if_failed": "condition",
+    "legal_ref": "FAO-29 (agronomic guidance)",
+    "tag": {
+      "status": "ESTIMATE",
+      "source": "FAO-29 rev.1 (Ayers & Westcot 1985) Table 4, after Maas 1984"
+    },
+    "text_en": "wheat: soil ECe at or above 80% of the FAO-29 crop threshold (6 dS/m, trigger 4.8) risks yield loss; irrigate with a leaching fraction.",
+    "text_fr": "wheat : ECe du sol >= 80 % du seuil FAO-29 de la culture (6 dS/m) ; risque de perte de rendement, prevoir une fraction de lessivage."
+  },
+  {
+    "rule_id": "R-SALINITY-ALFALFA",
+    "family": "salinity",
+    "source_type": "agronomic_advice",
+    "parameter": "soil_ece",
+    "limit": 2.0,
+    "limit_min": null,
+    "unit": "dS/m",
+    "batch_fields": [],
+    "crops": [
+      "alfalfa"
+    ],
+    "crops_to_verify": [],
+    "severity_if_failed": "condition",
+    "legal_ref": "FAO-29 (agronomic guidance)",
+    "tag": {
+      "status": "ESTIMATE",
+      "source": "FAO-29 rev.1 (Ayers & Westcot 1985) Table 4, after Maas 1984"
+    },
+    "text_en": "alfalfa: soil ECe at or above 80% of the FAO-29 crop threshold (2 dS/m, trigger 1.6) risks yield loss; irrigate with a leaching fraction.",
+    "text_fr": "alfalfa : ECe du sol >= 80 % du seuil FAO-29 de la culture (2 dS/m) ; risque de perte de rendement, prevoir une fraction de lessivage."
+  },
+  {
+    "rule_id": "R-SALINITY-LETTUCE",
+    "family": "salinity",
+    "source_type": "agronomic_advice",
+    "parameter": "soil_ece",
+    "limit": 1.3,
+    "limit_min": null,
+    "unit": "dS/m",
+    "batch_fields": [],
+    "crops": [
+      "lettuce"
+    ],
+    "crops_to_verify": [],
+    "severity_if_failed": "condition",
+    "legal_ref": "FAO-29 (agronomic guidance)",
+    "tag": {
+      "status": "ESTIMATE",
+      "source": "FAO-29 rev.1 (Ayers & Westcot 1985) Table 4, after Maas 1984"
+    },
+    "text_en": "lettuce: soil ECe at or above 80% of the FAO-29 crop threshold (1.3 dS/m, trigger 1.04) risks yield loss; irrigate with a leaching fraction.",
+    "text_fr": "lettuce : ECe du sol >= 80 % du seuil FAO-29 de la culture (1.3 dS/m) ; risque de perte de rendement, prevoir une fraction de lessivage."
+  },
+  {
+    "rule_id": "R-SALINITY-TOMATO",
+    "family": "salinity",
+    "source_type": "agronomic_advice",
+    "parameter": "soil_ece",
+    "limit": 2.5,
+    "limit_min": null,
+    "unit": "dS/m",
+    "batch_fields": [],
+    "crops": [
+      "tomato"
+    ],
+    "crops_to_verify": [],
+    "severity_if_failed": "condition",
+    "legal_ref": "FAO-29 (agronomic guidance)",
+    "tag": {
+      "status": "ESTIMATE",
+      "source": "FAO-29 rev.1 (Ayers & Westcot 1985) Table 4, after Maas 1984"
+    },
+    "text_en": "tomato: soil ECe at or above 80% of the FAO-29 crop threshold (2.5 dS/m, trigger 2) risks yield loss; irrigate with a leaching fraction.",
+    "text_fr": "tomato : ECe du sol >= 80 % du seuil FAO-29 de la culture (2.5 dS/m) ; risque de perte de rendement, prevoir une fraction de lessivage."
+  },
+  {
+    "rule_id": "R-SALINITY-CITRUS-ORANGE",
+    "family": "salinity",
+    "source_type": "agronomic_advice",
+    "parameter": "soil_ece",
+    "limit": 1.7,
+    "limit_min": null,
+    "unit": "dS/m",
+    "batch_fields": [],
+    "crops": [
+      "citrus_orange"
+    ],
+    "crops_to_verify": [],
+    "severity_if_failed": "condition",
+    "legal_ref": "FAO-29 (agronomic guidance)",
+    "tag": {
+      "status": "ESTIMATE",
+      "source": "FAO-29 rev.1 (Ayers & Westcot 1985) Table 4, after Maas 1984"
+    },
+    "text_en": "citrus_orange: soil ECe at or above 80% of the FAO-29 crop threshold (1.7 dS/m, trigger 1.36) risks yield loss; irrigate with a leaching fraction.",
+    "text_fr": "citrus_orange : ECe du sol >= 80 % du seuil FAO-29 de la culture (1.7 dS/m) ; risque de perte de rendement, prevoir une fraction de lessivage."
+  },
+  {
+    "rule_id": "R-SALINITY-BARLEY-FODDER",
+    "family": "salinity",
+    "source_type": "agronomic_advice",
+    "parameter": "soil_ece",
+    "limit": 6.0,
+    "limit_min": null,
+    "unit": "dS/m",
+    "batch_fields": [],
+    "crops": [
+      "barley_fodder"
+    ],
+    "crops_to_verify": [],
+    "severity_if_failed": "condition",
+    "legal_ref": "FAO-29 (agronomic guidance)",
+    "tag": {
+      "status": "ESTIMATE",
+      "source": "FAO-29 rev.1 (Ayers & Westcot 1985) Table 4, after Maas 1984"
+    },
+    "text_en": "barley_fodder: soil ECe at or above 80% of the FAO-29 crop threshold (6 dS/m, trigger 4.8) risks yield loss; irrigate with a leaching fraction.",
+    "text_fr": "barley_fodder : ECe du sol >= 80 % du seuil FAO-29 de la culture (6 dS/m) ; risque de perte de rendement, prevoir une fraction de lessivage."
+  }
+]
