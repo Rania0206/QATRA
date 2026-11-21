@@ -47,6 +47,8 @@ class Farm(BaseModel):
     fresh_source: str
     fresh_m3_season: float
     is_small_farm: bool
+    well_depth_m: Optional[float] = None
+    pump_efficiency: Optional[float] = None
     tag: Tag
 
 
@@ -81,6 +83,41 @@ class Allocation(BaseModel):
     solar_share: float
     fresh_replaced_m3: float
     warnings: list[str]
+
+
+class SavingsLine(BaseModel):
+    label: str
+    value: float
+    unit: str
+    tag: Tag
+
+
+class SavingsResult(BaseModel):
+    water_need_m3: float
+    well_kwh_avoided: float
+    well_cost_avoided_tnd: float
+    treated_water_cost_tnd: float
+    nitrogen_kg: float
+    fertiliser_kg_ammonium_nitrate: float
+    fertiliser_saved_tnd: float
+    net_saving_tnd: float
+    kwh_off_grid: float
+    well_water_kept_m3: float
+    compatibility_status: str
+    breakdown: list[SavingsLine]
+
+
+class BusinessView(BaseModel):
+    area_name: str
+    area_ha: float
+    farms: int
+    total_saving_tnd: float
+    qatra_share_pct: float
+    qatra_revenue_tnd: float
+    steg_kwh_avoided: float
+    steg_value_tnd: float
+    national_areas: int = 36
+    tag: Tag
 
 
 class HealthResponse(BaseModel):

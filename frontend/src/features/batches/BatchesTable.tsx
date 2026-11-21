@@ -25,7 +25,6 @@ export default function BatchesTable({ batches, selectedId, showRowTags, onSelec
             <th className={TH}>Treatment</th>
             <th className={TH}>Analyses</th>
             <th className={TH} title="Legal limits check (A-03)">Compliance</th>
-            <th className={TH} title="Risk model (A-08)">Risk</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-100">
@@ -55,7 +54,6 @@ export default function BatchesTable({ batches, selectedId, showRowTags, onSelec
               <td className={TD}>
                 <StatusBadge status={b.analysis_status} />
               </td>
-              <td className={`${TD} text-slate-400`}>—</td>
               <td className={`${TD} text-slate-400`}>—</td>
             </tr>
           ))}

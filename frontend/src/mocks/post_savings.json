@@ -1,0 +1,87 @@
+{
+  "water_need_m3": 12700.0,
+  "well_kwh_avoided": 5474,
+  "well_cost_avoided_tnd": 1591.3,
+  "treated_water_cost_tnd": 254.0,
+  "nitrogen_kg": 383.2,
+  "fertiliser_kg_ammonium_nitrate": 1143.9,
+  "fertiliser_saved_tnd": 1143.9,
+  "net_saving_tnd": 2481.2,
+  "kwh_off_grid": 5474,
+  "well_water_kept_m3": 12700.0,
+  "compatibility_status": "conditional",
+  "breakdown": [
+    {
+      "label": "Season water need (alfalfa, 2 ha)",
+      "value": 12700.0,
+      "unit": "m³",
+      "tag": {
+        "status": "SIMULATED",
+        "source": "data/simulated/sim_farms.csv"
+      }
+    },
+    {
+      "label": "Well pumping energy avoided (103 m, η 0.65)",
+      "value": 5474,
+      "unit": "kWh",
+      "tag": {
+        "status": "ESTIMATE",
+        "source": "E = 0.00272·H/η·V, data/clean/energy_params.json"
+      }
+    },
+    {
+      "label": "Well electricity cost avoided",
+      "value": 1591.3,
+      "unit": "TND",
+      "tag": {
+        "status": "ESTIMATE",
+        "source": "STEG average sale price 2025, 290.7 millimes/kWh; agricultural tariff TO_VERIFY"
+      }
+    },
+    {
+      "label": "Treated water cost",
+      "value": -254.0,
+      "unit": "TND",
+      "tag": {
+        "status": "ESTIMATE",
+        "source": "assumed 0.020 TND/m³, TO_VERIFY"
+      }
+    },
+    {
+      "label": "Nitrogen supplied by treated water",
+      "value": 383.2,
+      "unit": "kg N",
+      "tag": {
+        "status": "ESTIMATE",
+        "source": "mean total N 30.2 mg/L, sim_batches"
+      }
+    },
+    {
+      "label": "Ammonium nitrate replaced (33.5% N)",
+      "value": 1143.9,
+      "unit": "kg",
+      "tag": {
+        "status": "ESTIMATE",
+        "source": "N / 0.335"
+      }
+    },
+    {
+      "label": "Fertiliser saved",
+      "value": 1143.9,
+      "unit": "TND",
+      "tag": {
+        "status": "ESTIMATE",
+        "source": "assumed 1.0 TND/kg ammonium nitrate, TO_VERIFY"
+      }
+    },
+    {
+      "label": "Net saving for the season",
+      "value": 2481.2,
+      "unit": "TND",
+      "tag": {
+        "status": "ESTIMATE",
+        "source": "energy + fertiliser − treated water cost"
+      }
+    }
+  ]
+}

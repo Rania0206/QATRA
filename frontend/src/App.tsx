@@ -4,6 +4,7 @@ import MapTab from "./features/map";
 import BatchesTab from "./features/batches";
 import CompatibilityTab from "./features/compatibility";
 import AllocationTab from "./features/allocation";
+import SavingsTab from "./features/savings";
 import SoilTab from "./features/soil";
 import HeatwaveTab from "./features/heatwave";
 import MessagesTab from "./features/messages";
@@ -17,12 +18,14 @@ const TABS: { id: string; label: string; Component: ComponentType }[] = [
   { id: "batches", label: "Batches", Component: BatchesTab },
   { id: "compatibility", label: "Compatibility", Component: CompatibilityTab },
   { id: "allocation", label: "Allocation", Component: AllocationTab },
+  { id: "savings", label: "Savings", Component: SavingsTab },
   { id: "soil", label: "Soil", Component: SoilTab },
   { id: "heatwave", label: "Heatwave", Component: HeatwaveTab },
   { id: "messages", label: "Messages", Component: MessagesTab },
   { id: "impact", label: "Impact", Component: ImpactTab },
-  { id: "territory", label: "Territory", Component: TerritoryTab },
-  { id: "public", label: "Public", Component: PublicTab },
+  // QATRA Lite: next-version tabs stay at the end
+  { id: "territory", label: "Territory (next version)", Component: TerritoryTab },
+  { id: "public", label: "Public (next version)", Component: PublicTab },
 ];
 
 export default function App() {
