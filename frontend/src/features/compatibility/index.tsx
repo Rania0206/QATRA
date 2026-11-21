@@ -1,17 +1,15 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { get } from "../../api/client";
 import type { AllFarmsCompatibility, Batch, Decision, Farm } from "../../api/types";
-import ErrorBox from "../../components/ErrorBox";
-import Loading from "../../components/Loading";
 import TagChip from "../../components/TagChip";
 import { USE_MOCKS } from "../../config";
 import { useApi } from "../../hooks/useApi";
 import ComplianceBadge from "../batches/ComplianceBadge";
 import { COMPLIANCE_BADGE, fmtDate } from "../batches/format";
-import DecisionBadge from "./DecisionBadge";
-import FarmCard from "./FarmCard";
+import { Screen, SectionTitle, Segmented, Skeleton } from "../batches/ui";
+import FarmCard, { FarmCardSkeleton } from "./FarmCard";
 import FarmDrawer from "./FarmDrawer";
-import { T, type Lang, type RuleInfo } from "./format";
+import { DECISION, T, type Lang, type RuleInfo } from "./format";
 
 interface Static {
   farms: Farm[];
@@ -20,6 +18,7 @@ interface Static {
 }
 
 const newestFirst = (a: Batch, b: Batch) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id);
+const ORDER: Decision[] = ["compatible", "conditional", "blocked"];
 
 export default function CompatibilityTab() {
   const [lang, setLang] = useState<Lang>("en");
@@ -46,6 +45,7 @@ export default function CompatibilityTab() {
   const close = useCallback(() => setSelectedFarm(null), []);
   const shownBatch = batchId ?? compat.data?.batch_id ?? "";
   const batch = base.data?.batches.find((b) => b.id === shownBatch);
+  const batchStatus = batch?.status ?? compat.data?.batch_status;
   const byFarm = useMemo(() => new Map((compat.data?.items ?? []).map((i) => [i.farm_id, i])), [compat.data]);
   const counts = useMemo(() => {
     const c: Record<Decision, number> = { compatible: 0, conditional: 0, blocked: 0 };
@@ -54,90 +54,98 @@ export default function CompatibilityTab() {
   }, [compat.data]);
 
   const error = base.error ?? compat.error;
+  const loading = base.loading || compat.loading || !base.data || !compat.data;
   const farm = base.data?.farms.find((f) => f.id === selectedFarm);
   const farmResult = selectedFarm ? byFarm.get(selectedFarm) : undefined;
 
   return (
-    <div className="space-y-5">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div className="space-y-3">
-          <h2 className="text-2xl font-bold text-slate-900">{T.title[lang]}</h2>
-          <div className="flex flex-wrap items-center gap-3">
-            <label htmlFor="batch" className="text-lg font-medium text-slate-700">
-              {T.batch[lang]}
-            </label>
-            <select
-              id="batch"
-              value={shownBatch}
-              disabled={!base.data}
-              onChange={(e) => setBatchId(e.target.value)}
-              className="rounded-md border border-slate-300 bg-white px-3 py-2 font-mono text-base"
-            >
-              {!shownBatch && <option value="">…</option>}
-              {base.data?.batches.map((b) => (
-                <option key={b.id} value={b.id}>
-                  {b.id} · {fmtDate(b.date)} · {COMPLIANCE_BADGE[b.status]?.label ?? b.status}
-                </option>
-              ))}
-            </select>
-            {(batch?.status ?? compat.data?.batch_status) && (
-              <ComplianceBadge status={batch?.status ?? compat.data!.batch_status} large />
-            )}
-          </div>
+    <Screen>
+      <header className="flex flex-wrap items-start justify-between gap-4">
+        <div className="space-y-2">
+          <p className="q-label">{lang === "fr" ? "Compatibilité eau · ferme" : "Water × farm compatibility"}</p>
+          <h2 className="q-display text-[28px] sm:text-4xl">{T.title[lang]}</h2>
         </div>
+        <Segmented
+          label="Language"
+          value={lang}
+          onChange={setLang}
+          options={[
+            { id: "en", label: "EN" },
+            { id: "fr", label: "FR" },
+          ]}
+        />
+      </header>
 
-        <div className="flex flex-col items-end gap-2">
-          <div className="inline-flex rounded-lg ring-1 ring-slate-300" role="group" aria-label="Language">
-            {(["en", "fr"] as const).map((l) => (
-              <button
-                key={l}
-                type="button"
-                onClick={() => setLang(l)}
-                aria-pressed={lang === l}
-                className={`px-4 py-2 text-base font-semibold first:rounded-l-lg last:rounded-r-lg ${
-                  lang === l ? "bg-teal-700 text-white" : "bg-white text-slate-700 hover:bg-slate-50"
-                }`}
-              >
-                {l.toUpperCase()}
-              </button>
-            ))}
-          </div>
-          <div className="flex flex-wrap justify-end gap-2">
-            {compat.data && <TagChip tag={compat.data.tag} showSource={false} />}
-            {base.data?.farms[0] && <TagChip tag={base.data.farms[0].tag} />}
-          </div>
+      <div className="q-card flex flex-wrap items-center gap-x-4 gap-y-3 p-4">
+        <label htmlFor="batch" className="q-label" style={{ color: "var(--q-ink)" }}>
+          {T.batch[lang]}
+        </label>
+        <select
+          id="batch"
+          value={shownBatch}
+          disabled={!base.data}
+          onChange={(e) => setBatchId(e.target.value)}
+          className="q-mono min-w-0 flex-1 rounded-[2px] border border-[var(--q-ink)] bg-[var(--q-paper)] px-3 py-2 text-base font-semibold transition-colors hover:bg-[var(--q-hover)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--q-accent)] sm:flex-none"
+        >
+          {!shownBatch && <option value="">…</option>}
+          {base.data?.batches.map((b) => (
+            <option key={b.id} value={b.id}>
+              {b.id} · {fmtDate(b.date)} · {COMPLIANCE_BADGE[b.status]?.label ?? b.status}
+            </option>
+          ))}
+        </select>
+        {batchStatus ? <ComplianceBadge status={batchStatus} large /> : <Skeleton className="h-10 w-40" />}
+        <div className="flex flex-wrap gap-2 sm:ml-auto">
+          {compat.data && <TagChip tag={compat.data.tag} showSource={false} />}
+          {base.data?.farms[0] && <TagChip tag={base.data.farms[0].tag} />}
         </div>
       </div>
 
-      {USE_MOCKS && <p className="text-sm text-slate-500">{T.mockNote[lang]}</p>}
-
-      {compat.data && !compat.loading && (
-        <div className="flex flex-wrap gap-3 text-lg">
-          {(Object.keys(counts) as Decision[]).map((d) => (
+      {/* Legend + counts: readable in one glance on a projector */}
+      <SectionTitle>
+        <span className="flex flex-wrap items-center gap-x-6 gap-y-2 normal-case">
+          {ORDER.map((d) => (
             <span key={d} className="inline-flex items-center gap-2">
-              <DecisionBadge decision={d} lang={lang} /> <strong>{counts[d]}</strong>
+              <span aria-hidden="true">{DECISION[d].icon}</span>
+              <span className="q-title text-[20px]">{lang === "fr" ? DECISION[d].legendFr : DECISION[d].legendEn}</span>
+              {compat.data && !compat.loading && (
+                <span className="q-mono rounded-[2px] border border-[var(--q-ink)] px-2 text-lg font-semibold">{counts[d]}</span>
+              )}
             </span>
           ))}
-        </div>
-      )}
+        </span>
+      </SectionTitle>
+
+      {USE_MOCKS && <p className="q-mono text-base">{T.mockNote[lang]}</p>}
 
       {error ? (
-        <ErrorBox
-          error={error}
-          onRetry={() => {
-            base.reload();
-            compat.reload();
-          }}
-        />
-      ) : base.loading || compat.loading || !base.data || !compat.data ? (
-        <Loading label={lang === "fr" ? "Chargement…" : "Loading compatibility…"} />
-      ) : base.data.farms.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center text-lg text-slate-500">
-          {lang === "fr" ? "Aucune ferme." : "No farms yet."}
+        <div role="alert" className="q-card space-y-3 border-[var(--q-bad)] p-5">
+          <p className="q-title text-xl" style={{ color: "var(--q-bad)" }}>
+            {lang === "fr" ? "Chargement impossible" : "Could not load compatibility"}
+          </p>
+          <p className="q-mono text-base">{error.message}</p>
+          <button
+            type="button"
+            onClick={() => {
+              base.reload();
+              compat.reload();
+            }}
+            className="q-mono rounded-[2px] border border-[var(--q-ink)] bg-[var(--q-ink)] px-4 py-2 font-semibold uppercase text-[var(--q-paper)] transition-colors hover:bg-[var(--q-ink-2)]"
+          >
+            {lang === "fr" ? "Réessayer" : "Retry"}
+          </button>
         </div>
+      ) : loading ? (
+        <div className="grid auto-rows-fr gap-4 sm:grid-cols-2 lg:grid-cols-3" aria-busy="true">
+          {Array.from({ length: 6 }, (_, i) => (
+            <FarmCardSkeleton key={i} />
+          ))}
+        </div>
+      ) : base.data!.farms.length === 0 ? (
+        <div className="q-card border-dashed p-8 text-center text-lg">{lang === "fr" ? "Aucune ferme." : "No farms yet."}</div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {base.data.farms.map((f) => {
+        <div className="grid auto-rows-fr gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {base.data!.farms.map((f) => {
             const r = byFarm.get(f.id);
             return r ? (
               <FarmCard
@@ -156,6 +164,6 @@ export default function CompatibilityTab() {
       {farm && farmResult && base.data && (
         <FarmDrawer farm={farm} result={farmResult} rules={base.data.rules} lang={lang} onClose={close} />
       )}
-    </div>
+    </Screen>
   );
 }

@@ -41,16 +41,38 @@ export function fmtDate(iso: string): string {
   return d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" });
 }
 
-export const STATUS_BADGE: Record<AnalysisStatus, { label: string; cls: string }> = {
-  valid: { label: "Valid", cls: "bg-emerald-600 text-white" },
-  expired: { label: "Expired", cls: "bg-orange-500 text-white" },
-  missing: { label: "Missing", cls: "bg-red-600 text-white" },
+export type Tone = "ok" | "warn" | "bad" | "ink";
+
+export const STATUS_BADGE: Record<AnalysisStatus, { label: string; icon: string; tone: Tone }> = {
+  valid: { label: "Valid", icon: "✓", tone: "ok" },
+  expired: { label: "Expired", icon: "⏳", tone: "warn" },
+  missing: { label: "Missing", icon: "✕", tone: "bad" },
 };
 
 /** Batch.status (A-03b). Unknown values (older backends) render as a dash. */
-export const COMPLIANCE_BADGE: Record<string, { label: string; cls: string; title: string }> = {
-  compliant: { label: "Compliant", cls: "bg-emerald-600 text-white", title: "All measured values within NT 106.03" },
-  conditional: { label: "Conditional", cls: "bg-amber-500 text-white", title: "Usable with conditions" },
-  non_compliant: { label: "Non-compliant", cls: "bg-red-600 text-white", title: "A measured value is above an NT 106.03 limit" },
-  analysis_invalid: { label: "Analysis invalid", cls: "bg-slate-600 text-white", title: "Analysis expired or missing (Decree 89-1047 Art. 3)" },
+export const COMPLIANCE_BADGE: Record<string, { label: string; icon: string; tone: Tone; title: string }> = {
+  compliant: { label: "Compliant", icon: "✓", tone: "ok", title: "All measured values within NT 106.03" },
+  conditional: { label: "Conditional", icon: "⚠", tone: "warn", title: "Usable with conditions" },
+  non_compliant: { label: "Non-compliant", icon: "⛔", tone: "bad", title: "A measured value is above an NT 106.03 limit" },
+  analysis_invalid: { label: "Analysis invalid", icon: "⏳", tone: "ink", title: "Analysis expired or missing (Decree 89-1047 Art. 3)" },
 };
+
+/**
+ * Perimeter figures for the stat strip. Values from data/clean/tww_irrigated_areas.csv
+ * (Zaouiet Sousse row, 2023/24). No endpoint serves them yet (no new endpoints in A-15),
+ * so they are constants here, with their source tag.
+ */
+export const PERIMETER = {
+  name: "Zaouiet-Sousse",
+  equipped_ha: 257,
+  delivered_m3: 523280,
+  season: "2023/24",
+  tag: {
+    status: "REPORTED" as const,
+    source: "Agridata / data.gov.tn, TWW irrigated perimeters 2023/24",
+  },
+};
+
+const DAY = 86_400_000;
+export const daysBetween = (fromIso: string, toIso: string) =>
+  Math.round((Date.parse(toIso.slice(0, 10)) - Date.parse(fromIso.slice(0, 10))) / DAY);

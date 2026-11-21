@@ -1,17 +1,9 @@
 import { COMPLIANCE_BADGE } from "./format";
+import { Badge } from "./ui";
 
 /** Batch.status badge (Compliant / Conditional / Non-compliant / Analysis invalid). Unknown -> dash. */
 export default function ComplianceBadge({ status, large = false }: { status: string; large?: boolean }) {
   const b = COMPLIANCE_BADGE[status];
-  if (!b) return <span className="text-slate-400">—</span>;
-  return (
-    <span
-      title={b.title}
-      className={`inline-block whitespace-nowrap rounded-md font-semibold ${b.cls} ${
-        large ? "px-3 py-1.5 text-base" : "px-2.5 py-1 text-sm"
-      }`}
-    >
-      {b.label}
-    </span>
-  );
+  if (!b) return <span className="text-[var(--q-ink-2)]">—</span>;
+  return <Badge tone={b.tone} icon={b.icon} label={b.label} title={b.title} size={large ? "lg" : "md"} />;
 }

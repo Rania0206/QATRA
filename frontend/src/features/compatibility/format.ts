@@ -1,4 +1,5 @@
 import type { Decision, RuleResult, SourceType, Tag } from "../../api/types";
+import type { Tone } from "../batches/format";
 
 export type Lang = "en" | "fr";
 
@@ -10,11 +11,25 @@ export interface RuleInfo {
   tag: Tag;
 }
 
-export const DECISION: Record<Decision, { icon: string; en: string; fr: string; cls: string; ring: string }> = {
-  compatible: { icon: "✅", en: "Compatible", fr: "Compatible", cls: "bg-emerald-600 text-white", ring: "ring-emerald-300" },
-  conditional: { icon: "⚠️", en: "Conditional", fr: "Sous conditions", cls: "bg-orange-500 text-white", ring: "ring-orange-300" },
-  blocked: { icon: "⛔", en: "Blocked", fr: "Bloqué", cls: "bg-red-600 text-white", ring: "ring-red-300" },
+export const DECISION: Record<Decision, { icon: string; en: string; fr: string; legendEn: string; legendFr: string; tone: Tone }> = {
+  compatible: { icon: "✅", en: "Compatible", fr: "Compatible", legendEn: "Compatible", legendFr: "Compatible", tone: "ok" },
+  conditional: { icon: "⚠️", en: "With conditions", fr: "Sous conditions", legendEn: "With conditions", legendFr: "Sous conditions", tone: "warn" },
+  blocked: { icon: "⛔", en: "Blocked", fr: "Bloqué", legendEn: "Blocked by law", legendFr: "Bloqué par la loi", tone: "bad" },
 };
+
+const CROP_ICON: Record<string, string> = {
+  alfalfa: "🌿",
+  olive: "🫒",
+  lettuce: "🥬",
+  tomato: "🍅",
+  wheat: "🌾",
+  barley: "🌾",
+  barley_fodder: "🌾",
+  oat_fodder: "🌾",
+  citrus_orange: "🍊",
+  pomegranate: "🍎",
+};
+export const cropIcon = (crop: string) => CROP_ICON[crop] ?? "🌱";
 
 export const GROUPS: { id: SourceType; en: string; fr: string }[] = [
   { id: "tunisian_law", en: "Tunisian law", fr: "Loi tunisienne" },

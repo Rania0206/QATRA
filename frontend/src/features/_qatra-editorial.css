@@ -1,0 +1,86 @@
+/* QATRA editorial style (A-15 proposal). Tokens: features/_shared-style-proposal.ts.
+   NOTE: the Google Fonts @import is global once this file is loaded (Archivo, Inter, IBM Plex Mono).
+   Every rule below is scoped to .q-screen so the shell and other tabs are untouched. */
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@500;800&family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;600&display=swap");
+
+.q-screen {
+  --q-cream: #f4ede3;
+  --q-paper: #fbf8f3;
+  --q-paper-alt: #f7f1e8;
+  --q-hover: #efe5d6;
+  --q-ink: #141414;
+  --q-ink-2: #4a4a4a;
+  --q-accent: #e4572e;
+  --q-ok: #2e7d4f;
+  --q-warn: #d98e04;
+  --q-bad: #c0392b;
+
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--q-ink);
+  background: var(--q-cream);
+}
+
+.q-display {
+  font-family: "Archivo", system-ui, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+}
+
+.q-title {
+  font-family: "Archivo", system-ui, sans-serif;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.q-mono {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.q-label {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 15px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--q-ink-2);
+}
+
+.q-dash {
+  border-top: 1px dashed var(--q-ink);
+}
+
+.q-card {
+  background: var(--q-paper);
+  border: 1px solid var(--q-ink);
+  border-radius: 2px;
+  transition: background-color 150ms ease-out, transform 150ms ease-out;
+}
+
+.q-skeleton {
+  border-radius: 2px;
+  background: linear-gradient(90deg, #e9e0d3 25%, #f4ede3 50%, #e9e0d3 75%);
+  background-size: 200% 100%;
+  animation: q-shimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes q-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .q-skeleton,
+  .q-card {
+    animation: none;
+    transition: none;
+  }
+}
