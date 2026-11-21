@@ -8,14 +8,16 @@
     "lon": 10.613871,
     "soil_texture": "clay loam",
     "soil_ece": 1.9,
-    "head_m": 103,
+    "head_m": 103.0,
     "distance_km": 8.17,
     "fresh_source": "well",
     "fresh_m3_season": 12700.0,
     "is_small_farm": true,
+    "well_depth_m": null,
+    "pump_efficiency": 0.52,
     "tag": {
       "status": "SIMULATED",
-      "source": "data/simulated/sim_farms.csv"
+      "source": "data/simulated/sim_farms"
     }
   },
   {
@@ -27,14 +29,16 @@
     "lon": 10.597947,
     "soil_texture": "sandy loam",
     "soil_ece": 1.1,
-    "head_m": 54,
+    "head_m": 54.0,
     "distance_km": 4.57,
     "fresh_source": "borehole",
     "fresh_m3_season": 18700.0,
     "is_small_farm": false,
+    "well_depth_m": null,
+    "pump_efficiency": 0.5,
     "tag": {
       "status": "SIMULATED",
-      "source": "data/simulated/sim_farms.csv"
+      "source": "data/simulated/sim_farms"
     }
   },
   {
@@ -51,9 +55,11 @@
     "fresh_source": "network",
     "fresh_m3_season": 6700.0,
     "is_small_farm": true,
+    "well_depth_m": null,
+    "pump_efficiency": 0.54,
     "tag": {
       "status": "SIMULATED",
-      "source": "data/simulated/sim_farms.csv"
+      "source": "data/simulated/sim_farms"
     }
   },
   {
@@ -65,14 +71,16 @@
     "lon": 10.595148,
     "soil_texture": "clay loam",
     "soil_ece": 2.6,
-    "head_m": 56,
+    "head_m": 56.0,
     "distance_km": 4.99,
     "fresh_source": "borehole",
     "fresh_m3_season": 30300.0,
     "is_small_farm": false,
+    "well_depth_m": null,
+    "pump_efficiency": 0.5,
     "tag": {
       "status": "SIMULATED",
-      "source": "data/simulated/sim_farms.csv"
+      "source": "data/simulated/sim_farms"
     }
   },
   {
@@ -84,14 +92,16 @@
     "lon": 10.602977,
     "soil_texture": "clay loam",
     "soil_ece": 3.8,
-    "head_m": 93,
+    "head_m": 93.0,
     "distance_km": 4.35,
     "fresh_source": "well",
     "fresh_m3_season": 23000.0,
     "is_small_farm": false,
+    "well_depth_m": null,
+    "pump_efficiency": 0.55,
     "tag": {
       "status": "SIMULATED",
-      "source": "data/simulated/sim_farms.csv"
+      "source": "data/simulated/sim_farms"
     }
   },
   {
@@ -103,14 +113,16 @@
     "lon": 10.580993,
     "soil_texture": "clay loam",
     "soil_ece": 2.2,
-    "head_m": 92,
+    "head_m": 92.0,
     "distance_km": 6.08,
     "fresh_source": "well",
     "fresh_m3_season": 38300.0,
     "is_small_farm": false,
+    "well_depth_m": null,
+    "pump_efficiency": 0.55,
     "tag": {
       "status": "SIMULATED",
-      "source": "data/simulated/sim_farms.csv"
+      "source": "data/simulated/sim_farms"
     }
   },
   {
@@ -122,14 +134,16 @@
     "lon": 10.591433,
     "soil_texture": "clay loam",
     "soil_ece": 2.9,
-    "head_m": 104,
+    "head_m": 104.0,
     "distance_km": 5.09,
     "fresh_source": "well",
     "fresh_m3_season": 6100.0,
     "is_small_farm": true,
+    "well_depth_m": null,
+    "pump_efficiency": 0.59,
     "tag": {
       "status": "SIMULATED",
-      "source": "data/simulated/sim_farms.csv"
+      "source": "data/simulated/sim_farms"
     }
   },
   {
@@ -146,9 +160,11 @@
     "fresh_source": "network",
     "fresh_m3_season": 2800.0,
     "is_small_farm": true,
+    "well_depth_m": null,
+    "pump_efficiency": 0.55,
     "tag": {
       "status": "SIMULATED",
-      "source": "data/simulated/sim_farms.csv"
+      "source": "data/simulated/sim_farms"
     }
   },
   {
@@ -160,14 +176,16 @@
     "lon": 10.575422,
     "soil_texture": "clay loam",
     "soil_ece": 1.2,
-    "head_m": 47,
+    "head_m": 47.0,
     "distance_km": 6.26,
     "fresh_source": "borehole",
     "fresh_m3_season": 9500.0,
     "is_small_farm": true,
+    "well_depth_m": null,
+    "pump_efficiency": 0.5,
     "tag": {
       "status": "SIMULATED",
-      "source": "data/simulated/sim_farms.csv"
+      "source": "data/simulated/sim_farms"
     }
   },
   {
@@ -179,14 +197,16 @@
     "lon": 10.584047,
     "soil_texture": "clay loam",
     "soil_ece": 4.5,
-    "head_m": 63,
+    "head_m": 63.0,
     "distance_km": 5.76,
     "fresh_source": "borehole",
     "fresh_m3_season": 61300.0,
     "is_small_farm": false,
+    "well_depth_m": null,
+    "pump_efficiency": 0.53,
     "tag": {
       "status": "SIMULATED",
-      "source": "data/simulated/sim_farms.csv"
+      "source": "data/simulated/sim_farms"
     }
   }
 ]
