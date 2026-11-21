@@ -1,4 +1,4 @@
-"""QATRA+ data loaders - one function per dataset.
+"""QATRA data loaders - one function per dataset.
 
     from scripts.load_data import *          # or: sys.path.insert(0, "scripts"); import load_data
     farms = sim_farms(); rules = nt106003_rules()

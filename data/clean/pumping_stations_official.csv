@@ -1,4 +1,4 @@
 entity,scope,item,value,unit,date,status,source_url,note
 ONAS,Sousse + Hammam Sousse,"10 wastewater pumping stations, equipment rate 99%",10.0,stations,2026-10,REPORTED (press),https://www.lapresse.tn/?p=4365046,No locations/specs published.
 ONAS/SUEZ PPP,lot (4 regions),"14 WWTPs, 106 pumping stations, 1,900 km sewer",106.0,stations,TO_VERIFY,TO_VERIFY,https://managers.tn/2023/04/26/onas-suez-construction-de-14-stations-depuration-dans-4-regions/,"Contract scope, not national inventory."
-ONAS / SONEDE / CRDA Sousse,Sousse,Official public list of pumping stations with coordinates/specs,,,,NOT FOUND (public),,Finding: pump/network data is fragmented and not published openly. QATRA+ uses OSM (incomplete) + simulated specs.
+ONAS / SONEDE / CRDA Sousse,Sousse,Official public list of pumping stations with coordinates/specs,,,,NOT FOUND (public),,Finding: pump/network data is fragmented and not published openly. QATRA uses OSM (incomplete) + simulated specs.

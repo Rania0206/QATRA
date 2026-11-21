@@ -84,7 +84,7 @@ def map_preview():
                         "soil_ECe": r.soil_ECe_dS_m, "texture": r.soil_texture, "status": "SIMULATED"}} for r in farms.itertuples()]}
     layers = {"plants": fc("plants_tunisia.geojson", 25), "pumps": fc("pumps_sousse.geojson"), "storage": fc("storage_sousse.geojson"),
               "pipes": fc("pipes_canals_sousse.geojson"), "farmland": fc("farmland_sousse.geojson", 12), "solar": fc("solar_sousse.geojson"), "farms": farm_fc}
-    html = """<!doctype html><html><head><meta charset="utf-8"><title>QATRA+ data map</title>
+    html = """<!doctype html><html><head><meta charset="utf-8"><title>QATRA data map</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -105,7 +105,7 @@ const ov={
  'Solar (OSM)':pts(L_.solar,'#fbc02d',5).addTo(m),
  'Demo farms (SIMULATED)':L.geoJSON(L_.farms,{pointToLayer:(f,ll)=>L.marker(ll,{title:f.properties.farm_id}).bindTooltip(f.properties.farm_id,{permanent:true,direction:'right'}),onEachFeature:(f,l)=>l.bindPopup(pop(f.properties))}).addTo(m)};
 L.control.layers(null,ov,{collapsed:false}).addTo(m);
-const lg=L.control({position:'bottomleft'});lg.onAdd=()=>{const d=L.DomUtil.create('div','lg');d.innerHTML='<b>QATRA+ data preview</b><br><i style="background:#6a1b9a"></i>WWTP<br><i style="background:#e65100"></i>pump / well<br><i style="background:#00838f"></i>storage<br><i style="background:#fbc02d"></i>solar<br>Pins = 10 SIMULATED demo farms<br><small>OSM = REPORTED but incomplete</small>';return d};lg.addTo(m);
+const lg=L.control({position:'bottomleft'});lg.onAdd=()=>{const d=L.DomUtil.create('div','lg');d.innerHTML='<b>QATRA data preview</b><br><i style="background:#6a1b9a"></i>WWTP<br><i style="background:#e65100"></i>pump / well<br><i style="background:#00838f"></i>storage<br><i style="background:#fbc02d"></i>solar<br>Pins = 10 SIMULATED demo farms<br><small>OSM = REPORTED but incomplete</small>';return d};lg.addTo(m);
 </script></body></html>"""
     html = html.replace("__LAYERS__", json.dumps(layers)).replace("__LAT__", str(DEMO_LAT)).replace("__LON__", str(DEMO_LON))
     (ROOT / "data" / "map_preview.html").write_text(html, encoding="utf-8")

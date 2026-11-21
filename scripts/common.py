@@ -1,4 +1,4 @@
-"""Shared helpers for QATRA+ data scripts (no geopandas dependency)."""
+"""Shared helpers for QATRA data scripts (no geopandas dependency)."""
 import json, math, time, os
 from pathlib import Path
 import requests
