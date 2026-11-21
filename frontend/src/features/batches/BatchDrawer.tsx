@@ -1,5 +1,4 @@
 import type { Analysis, AnalysisType, Batch } from "../../api/types";
-import TagChip from "../../components/TagChip";
 import { Drawer } from "../../components/ui";
 import { ANALYSIS_LABEL, REQUIRED_TYPES, daysBetween, fmtDate, fmtNumber, paramInfo } from "./format";
 import { AnalysisPill, CompliancePill } from "./pills";
@@ -84,7 +83,6 @@ export default function BatchDrawer({ batch, onClose }: Props) {
           </p>
           <div className="flex flex-wrap items-center gap-2">
             <CompliancePill status={batch.status} />
-            <TagChip tag={batch.tag} showSource={false} />
           </div>
         </div>
       }

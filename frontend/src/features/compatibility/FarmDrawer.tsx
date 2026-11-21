@@ -1,5 +1,4 @@
 import type { Farm, FarmCompatibility, RuleResult } from "../../api/types";
-import TagChip from "../../components/TagChip";
 import { Dot, Drawer } from "../../components/ui";
 import { fmtNumber } from "../batches/format";
 import { DecisionPill } from "./FarmCard";
@@ -13,7 +12,7 @@ interface Props {
   onClose: () => void;
 }
 
-function ResultRow({ r, rule, lang }: { r: RuleResult; rule?: RuleInfo; lang: Lang }) {
+function ResultRow({ r, lang }: { r: RuleResult; lang: Lang }) {
   const failed = !r.passed;
   const tone = r.passed ? "neutral" : r.severity === "block" ? "bad" : "warn";
   return (
@@ -26,7 +25,6 @@ function ResultRow({ r, rule, lang }: { r: RuleResult; rule?: RuleInfo; lang: La
         {isWho(r) && <p className="inline-block border border-bad px-2 py-0.5 font-mono text-[15px] text-bad">{T.who[lang]}</p>}
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
           <span className="font-medium">{r.legal_ref}</span>
-          {rule && <TagChip tag={rule.tag} showSource={false} />}
           <span className="font-mono text-[15px] text-ink-soft">{r.rule_id}</span>
         </div>
       </div>
@@ -48,11 +46,10 @@ export default function FarmDrawer({ farm, result, rules, lang, onClose }: Props
           <h2 className="text-4xl">{farm.name.replace(/^Ferme [A-Z] - /, "")}</h2>
           <div className="flex flex-wrap items-center gap-2">
             <DecisionPill decision={result.decision} lang={lang} large />
-            <TagChip tag={result.tag} showSource={false} />
           </div>
           <p className="font-mono text-[15px]">
             {T.crop[lang]}: {cropLabel(farm.crop)} · {T.area[lang]}: {fmtNumber(farm.area_ha)} ha · {T.soil[lang]}:{" "}
-            {fmtNumber(farm.soil_ece)} dS/m <TagChip tag={farm.tag} showSource={false} />
+            {fmtNumber(farm.soil_ece)} dS/m
           </p>
         </div>
       }
@@ -67,7 +64,7 @@ export default function FarmDrawer({ farm, result, rules, lang, onClose }: Props
             ) : (
               <ul>
                 {items.map((r) => (
-                  <ResultRow key={r.rule_id} r={r} rule={rules.get(r.rule_id)} lang={lang} />
+                  <ResultRow key={r.rule_id} r={r} lang={lang} />
                 ))}
               </ul>
             )}

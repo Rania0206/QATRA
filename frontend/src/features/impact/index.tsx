@@ -3,7 +3,6 @@ import { get } from "../../api/client";
 import type { Tag } from "../../api/types";
 import ErrorBox from "../../components/ErrorBox";
 import Loading from "../../components/Loading";
-import TagChip from "../../components/TagChip";
 import { Band, Intro } from "../../components/ui";
 import { useApi } from "../../hooks/useApi";
 
@@ -15,7 +14,7 @@ interface Impact {
   tag: Tag;
 }
 
-// Usage example of useApi + Loading + ErrorBox + TagChip. B-xx replaces the body later.
+// Usage example of useApi + Loading + ErrorBox. B-xx replaces the body later.
 export default function ImpactTab() {
   const [simulateFailure, setSimulateFailure] = useState(false);
   const { data, loading, error, reload } = useApi<Impact>(() =>
@@ -41,7 +40,6 @@ export default function ImpactTab() {
               <span className="ml-2 text-3xl">m³</span>
             </p>
             <p>of fresh water saved</p>
-            <TagChip tag={data.tag} />
           </div>
         )}
         <label className="mt-12 flex items-center justify-center gap-3 font-mono text-[15px]">

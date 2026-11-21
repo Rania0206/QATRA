@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { get } from "../../api/client";
 import type { AllFarmsCompatibility, Batch, Decision, Farm } from "../../api/types";
 import ErrorBox from "../../components/ErrorBox";
-import TagChip from "../../components/TagChip";
 import { Band, Dot, Intro, Segmented, Skeleton } from "../../components/ui";
 import { USE_MOCKS } from "../../config";
 import { useApi } from "../../hooks/useApi";
@@ -124,10 +123,6 @@ export default function CompatibilityTab() {
                 {compat.data && !compat.loading && <span className="font-mono">({counts[d]})</span>}
               </span>
             ))}
-          </p>
-          <p className="mt-5 flex flex-wrap justify-center gap-2">
-            {compat.data && <TagChip tag={compat.data.tag} showSource={false} />}
-            {base.data?.farms[0] && <TagChip tag={base.data.farms[0].tag} />}
           </p>
           {USE_MOCKS && <p className="mt-4 font-mono text-[15px]">{T.mockNote[lang]}</p>}
         </Intro>

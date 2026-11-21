@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react
 import { get } from "../../api/client";
 import type { Batch, Tag } from "../../api/types";
 import ErrorBox from "../../components/ErrorBox";
-import TagChip from "../../components/TagChip";
 import { Band, Intro, Segmented, Skeleton } from "../../components/ui";
 import BatchDrawer from "./BatchDrawer";
 import BatchesTable, { TableSkeleton } from "./BatchesTable";
@@ -25,7 +24,7 @@ function distinctTags(batches: Batch[]): Tag[] {
   return [...seen.values()];
 }
 
-function Figure({ value, unit, caption, children }: { value: string; unit: string; caption: string; children: ReactNode }) {
+function Figure({ value, unit, caption, children }: { value: string; unit: string; caption: string; children?: ReactNode }) {
   return (
     <div className="flex flex-col items-center gap-4 px-4 text-center">
       <p className="font-serif text-6xl leading-none tabular-nums md:text-7xl">
@@ -81,16 +80,11 @@ export default function BatchesTab() {
       {/* Key figures */}
       <Band tone="blush" wide>
         <div className="grid gap-14 md:grid-cols-3 md:gap-6">
-          <Figure value={fmtNumber(PERIMETER.equipped_ha)} unit="ha" caption={`${PERIMETER.name}, equipped for treated water`}>
-            <TagChip tag={PERIMETER.tag} showSource={false} />
-          </Figure>
-          <Figure value={fmtNumber(PERIMETER.delivered_m3)} unit="m³" caption={`Delivered to farms in ${PERIMETER.season}`}>
-            <TagChip tag={PERIMETER.tag} showSource={false} />
-          </Figure>
+          <Figure value={fmtNumber(PERIMETER.equipped_ha)} unit="ha" caption={`${PERIMETER.name}, equipped for treated water`} />
+          <Figure value={fmtNumber(PERIMETER.delivered_m3)} unit="m³" caption={`Delivered to farms in ${PERIMETER.season}`} />
           {latest ? (
             <Figure value={fmtNumber(latest.volume_m3)} unit="m³" caption={`Today's batch · ${fmtDate(latest.date)}`}>
               <CompliancePill status={latest.status} />
-              <TagChip tag={latest.tag} showSource={false} />
             </Figure>
           ) : (
             <div className="flex flex-col items-center gap-4">
@@ -127,11 +121,6 @@ export default function BatchesTab() {
               ),
             }))}
           />
-          <div className="flex flex-wrap gap-2">
-            {tags.map((t) => (
-              <TagChip key={`${t.status}|${t.source}`} tag={t} />
-            ))}
-          </div>
         </div>
 
         <div className="mt-6">

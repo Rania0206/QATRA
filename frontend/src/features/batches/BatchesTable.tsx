@@ -1,5 +1,4 @@
 import type { Batch } from "../../api/types";
-import TagChip from "../../components/TagChip";
 import { Skeleton } from "../../components/ui";
 import { fmtDate, fmtNumber } from "./format";
 import { AnalysisPill, CompliancePill } from "./pills";
@@ -8,7 +7,7 @@ interface Props {
   batches: Batch[];
   latestId?: string;
   selectedId?: string;
-  showRowTags: boolean; // true when batches come from more than one source
+  showRowTags?: boolean; // unused since tags were removed from the UI
   onSelect: (b: Batch) => void;
 }
 
@@ -25,7 +24,7 @@ export function TableSkeleton() {
   );
 }
 
-export default function BatchesTable({ batches, latestId, selectedId, showRowTags, onSelect }: Props) {
+export default function BatchesTable({ batches, latestId, selectedId, onSelect }: Props) {
   return (
     <div className="max-h-[70vh] overflow-auto border-y border-ink">
       <table className="w-full border-collapse text-[17px]">
@@ -61,11 +60,6 @@ export default function BatchesTable({ batches, latestId, selectedId, showRowTag
                 </td>
                 <td className={`${TD} whitespace-nowrap font-mono text-[16px]`}>
                   {b.id}
-                  {showRowTags && (
-                    <span className="ml-2">
-                      <TagChip tag={b.tag} showSource={false} />
-                    </span>
-                  )}
                 </td>
                 <td className={`${TD} text-right tabular-nums`}>{fmtNumber(b.volume_m3)}</td>
                 <td className={`${TD} max-w-52 truncate`} title={b.treatment_level}>
