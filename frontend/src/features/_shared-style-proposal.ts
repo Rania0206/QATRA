@@ -5,45 +5,46 @@
  * and helper classes in features/_qatra-editorial.css (scoped under `.q-screen`).
  * If the team adopts them, move them to the global theme (index.css @theme) and the Shell.
  *
- * Principles: one font, sentence case, light surfaces, thin grey borders, colour only for status.
+ * Principles: light serif titles, sans body, small mono labels, sentence case,
+ * off-white surfaces, thin warm-grey lines, ONE accent (olive), colour only for status.
  */
 
 export const colors = {
-  page: "#F8FAFC", // page background
+  page: "#FBF8F3", // warm off-white page
   surface: "#FFFFFF", // cards, drawers, table
-  surfaceAlt: "#F9FAFB", // zebra rows, muted (blocked) cards
-  hover: "#F3F4F6",
-  line: "#E5E7EB", // 1px borders and dividers
-  ink: "#111827", // text, primary buttons
-  ink2: "#4B5563", // secondary text (stays dark enough for a projector)
-  accent: "#0F766E", // teal, same family as the shell header; focus rings, latest-batch marker
+  surfaceAlt: "#F6F2EA", // zebra rows, muted (blocked) cards
+  hover: "#F1ECE3",
+  line: "#E2DBCF", // 1px borders and dividers
+  ink: "#1C1C1A", // text, active segmented control, outlined buttons
+  ink2: "#55524C", // secondary text (still dark enough for a projector)
+  accent: "#6B8547", // muted olive: focus rings, latest-batch marker, selected card
   status: {
-    ok: { text: "#166534", bg: "#F0FDF4", border: "#BBF7D0", dot: "#16A34A" }, // compatible / valid / compliant
-    warn: { text: "#92400E", bg: "#FFFBEB", border: "#FDE68A", dot: "#D97706" }, // conditional / expired
-    bad: { text: "#991B1B", bg: "#FEF2F2", border: "#FECACA", dot: "#DC2626" }, // blocked / missing / non-compliant
-    neutral: { text: "#374151", bg: "#F3F4F6", border: "#E5E7EB", dot: "#6B7280" }, // analysis invalid
-  },
+    ok: "#4F6B2F", // compatible / valid / compliant
+    warn: "#9A6212", // conditional / expired
+    bad: "#9B2C2C", // blocked / missing / non-compliant
+    neutral: "#55524C", // analysis invalid
+  }, // shown as thin outlined pills with a dot, never as filled blocks
 } as const;
 
-export const font = {
-  family: "'Inter', system-ui, sans-serif", // everything; numbers use tabular figures
-  mono: "ui-monospace, 'SF Mono', Consolas, monospace", // batch IDs only
-  weights: [400, 500, 600], // no 700/800
+export const fonts = {
+  display: "'Cormorant Garamond', Georgia, serif", // titles + key figures, weight 500, lining numerals
+  body: "'Inter', system-ui, sans-serif", // body text, weights 400 / 500
+  mono: "'IBM Plex Mono', ui-monospace, monospace", // small labels, IDs, buttons, weight 400
 } as const;
 
 /** px. Body never below 16 on screens shown to the jury. */
 export const fontSize = {
-  label: 15,
+  label: 15, // mono labels, table headers, pills
   body: 16,
-  title: 18, // section titles
-  h2: 24, // screen titles
-  figure: 30, // key figures in the stat strip
+  section: 26, // serif section titles
+  h2: 48, // serif screen titles (36 on small screens)
+  figure: 48, // serif key figures in the stat strip
 } as const;
 
 export const shape = {
-  radius: 8, // cards; 6 for badges and inputs
+  radius: 2, // square-ish corners everywhere
   border: `1px solid ${colors.line}`,
-  shadow: "0 1px 2px rgb(17 24 39 / 0.04)",
+  button: `1px solid ${colors.ink}`, // outlined button; fills ink on hover
 } as const;
 
 export const motion = {
