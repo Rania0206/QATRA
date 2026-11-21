@@ -146,6 +146,47 @@ export interface BusinessView {
   tag: Tag;
 }
 
+export interface SoilPoint {
+  day: number; // legacy: year * 365
+  ece: number;
+}
+
+export interface SoilPolicy {
+  series: number[]; // ECe (dS/m) at the start of each year, index = year (0..years)
+  first_year_over: number | null; // first year ECe > threshold, null if never
+  water_used_m3_season: number;
+  yield_loss_pct_30y: number | null; // null when the crop has no published yield slope
+}
+
+export interface SoilQatraPolicy extends SoilPolicy {
+  leaching_fraction: number;
+}
+
+export interface SoilSimulation {
+  farm_id: string;
+  batch_id: string;
+  crop: string;
+  threshold_ece: number;
+  ecw: number;
+  years: number[]; // [0..N]
+  naive: SoilPolicy;
+  qatra: SoilQatraPolicy;
+  // legacy fields: `series` is the QATRA curve, `leaching_fraction` = qatra.leaching_fraction
+  series: SoilPoint[];
+  leaching_fraction: number;
+  warning?: string | null;
+  tag: Tag;
+}
+
+export interface SoilSimulateRequest {
+  farm_id: string;
+  batch_id: string;
+  days?: number; // legacy, ignored
+  years?: number; // default 30
+  soil_ece?: number; // override the farm's soil ECe
+  ecw?: number; // override the batch EC
+}
+
 export interface Health {
   status: string;
   datasets: Record<string, number>;

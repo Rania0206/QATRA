@@ -191,3 +191,83 @@ def cap_volume(farm: dict, ecw: float, *, ecf: float = FRESH_EC_DS_M, lf_max: fl
                f"{crop} tolerates ECe {thr:g} dS/m: only {f:.0%} of the water can be TWW "
                f"(blend {mix:.2f} dS/m, leaching fraction {lf:.2f})",
                lf=lf, lr=lr, f=f, mix=mix)
+
+
+# ---------------------------------------------------------------- full simulation for the API (B-03c)
+SALT_DATASET = "crop_salt_tolerance"
+DAYS_PER_YEAR = 365  # the legacy `series` field is in days; year t maps to day t * 365
+
+
+def crop_slope(crop: str) -> float | None:
+    """Yield decline (% per dS/m above the threshold) from crop_salt_tolerance.csv, None when the file has none
+    (olive, pomegranate, oat_fodder). Never replaced by a default: the yield loss is then reported as null."""
+    df = get_store()[SALT_DATASET]
+    row = df[df["crop"] == crop]
+    if row.empty:
+        return None
+    v = row.iloc[0]["yield_decline_pct_per_dS_m"]
+    return None if v != v else float(v)  # NaN != NaN
+
+
+def yield_loss_pct(ece_final: float, thr: float, slope: float | None) -> float | None:
+    """slope * (ECe_final - threshold) clipped to [0, 100]; None when the slope is unknown."""
+    if slope is None:
+        return None
+    return round(min(max(slope * (ece_final - thr), 0.0), 100.0), 2)
+
+
+def irrigation_water_m3(need_m3: float, lf: float, lf_naive: float) -> float:
+    """Irrigation water per season for a leaching fraction `lf`, crediting the rain that already leaches.
+
+    Water crossing the root zone = need / (1 - LF). In the naive case the rain share is need * LFn / (1 - LFn) and the
+    farmer applies exactly the need. If the managed LF is higher, irrigation supplies the rest:
+        I = need * (1 / (1 - LF) - LFn / (1 - LFn))      (I = need when LF = LFn). ESTIMATE."""
+    return need_m3 * (1.0 / (1.0 - lf) - lf_naive / (1.0 - lf_naive))
+
+
+def simulate_farm(farm: dict, ecw: float, *, ece0: float | None = None, years: int = 30) -> dict:
+    """30-year (or `years`) salinity simulation of one farm under the naive and the QATRA policy.
+
+    naive: no managed leaching, LF = LF_naive from rain only. qatra: LF = max(LR, LF_naive) capped at soil.LF_MAX.
+    The water is the TWW itself (ECw), unmixed. `ece0` overrides the farm's soil ECe (judge slider).
+    Returns the dict behind the SoilSimulation response (see docs/api-contract.md, endpoint 15)."""
+    crop = str(farm["crop"])
+    _check_crop(crop)
+    area = float(farm["area_ha"])
+    if ece0 is None:
+        ece0 = float(farm["soil_ece"] if "soil_ece" in farm else farm["soil_ECe_dS_m"])
+    thr, thr_status = soil.crop_threshold(crop)
+    inp = season_inputs(crop)
+    need = inp["etc_season_mm"] * area * 10.0
+    cmp = soil.compare_policies(ece0, ecw, thr, inp["lf_naive"], years=years)
+    slope = crop_slope(crop)
+
+    naive, qatra = cmp["naive"], cmp["qatra"]
+    warnings = []
+    if (why := _blocked_reason(crop)) is not None:
+        warnings.append(f"{crop} cannot receive treated wastewater: {why}")
+    if soil.SALTY_WATER_FLAG in qatra["flags"]:
+        warnings.append(f"{soil.SALTY_WATER_FLAG}: no leaching fraction keeps ECe under {thr:g} dS/m")
+    elif soil.CAP_FLAG in qatra["flags"]:
+        warnings.append(f"leaching requirement {cmp['leaching_requirement']:.2f} exceeds the maximum leaching fraction "
+                        f"{soil.LF_MAX:g}: ECe stays above {thr:g} dS/m even with managed leaching")
+    if ece0 > thr + soil.EPS:
+        warnings.append(f"soil ECe {ece0:g} dS/m is already above the {crop} threshold {thr:g} dS/m")
+    if thr_status == "TO_VERIFY":
+        warnings.append(f"{crop} salt threshold {thr:g} dS/m is a TO_VERIFY placeholder")
+    if slope is None:
+        warnings.append(f"no published yield slope for {crop}: yield loss not computed")
+
+    def policy(p: dict, water: float) -> dict:
+        return {"series": [round(v, 4) for v in p["series"]], "first_year_over": p["first_year_over"],
+                "water_used_m3_season": round(water, 1),
+                "yield_loss_pct_30y": yield_loss_pct(p["series"][-1], thr, slope)}
+
+    out_naive = policy(naive, need)  # the farmer applies exactly the crop need
+    out_qatra = policy(qatra, irrigation_water_m3(need, qatra["lf"], inp["lf_naive"]))
+    out_qatra["leaching_fraction"] = round(qatra["lf"], 4)
+    return {"crop": crop, "threshold_ece": thr, "ecw": ecw, "years": list(range(years + 1)),
+            "naive": out_naive, "qatra": out_qatra, "warning": "; ".join(warnings) or None,
+            "tag": {"status": "TO_VERIFY" if thr_status == "TO_VERIFY" else "ESTIMATE",
+                    "source": "QATRA yearly model on FAO-29 (tau 3 y), soil ECe SIMULATED"
+                              + ("; threshold TO_VERIFY" if thr_status == "TO_VERIFY" else "")}}
