@@ -1,0 +1,39 @@
+{
+ "pump_energy_formula": {
+  "formula": "E_kWh_per_m3 = 0.00272 * H_m / eta",
+  "derivation": "rho*g/3.6e6 = 1000*9.81/3.6e6 = 0.002725 kWh/(m3*m)",
+  "status": "REPORTED (physics)",
+  "source": "Standard hydraulic power P = rho g Q H / eta"
+ },
+ "eta_wire_to_water": {
+  "min": 0.5,
+  "typical": 0.65,
+  "max": 0.75,
+  "status": "ESTIMATE",
+  "source": "Typical irrigation pumping plant efficiency ranges (FAO/ASABE pumping plant performance criteria) - TO_VERIFY"
+ },
+ "pv_formula": {
+  "formula": "E_kWh = kWp * GHI_W_m2/1000 * PR * dt_h",
+  "PR": 0.8,
+  "status": "ESTIMATE",
+  "note": "horizontal GHI; tilted array gives ~+5-15% annual"
+ },
+ "grid_emission_factor_kgCO2_kWh": {
+  "value": null,
+  "status": "TO_VERIFY",
+  "note": "Tunisian grid ~70% natural gas; use IEA/IFI factor when sourced"
+ },
+ "steg_average_sale_price_2025": {
+  "value": 290.7,
+  "unit": "millimes/kWh",
+  "status": "REPORTED (press)",
+  "definition": "STEG average selling price, all customers",
+  "source": "https://www.webmanagercenter.com/2025/07/21/549443/production-delectricite-quasi-stable-dont-6-a-partir-des-energies-renouvelables/"
+ },
+ "steg_average_production_cost_2025": {
+  "value": 456.3,
+  "unit": "millimes/kWh",
+  "status": "REPORTED (press)",
+  "source": "idem"
+ }
+}

@@ -1,0 +1,701 @@
+{
+  "version": 0.6,
+  "generator": "Overpass API 0.7.62.11 87bfad18",
+  "osm3s": {
+    "timestamp_osm_base": "2026-11-21T16:35:11Z",
+    "timestamp_areas_base": "2026-11-21T13:43:20Z",
+    "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+  },
+  "elements": [
+
+{
+  "type": "node",
+  "id": 6446632769,
+  "lat": 36.7346173,
+  "lon": 9.2209016,
+  "tags": {
+    "man_made": "wastewater_plant",
+    "name": "ONAS",
+    "operator": "ONAS",
+    "website": "http://www.onas.nat.tn"
+  }
+},
+{
+  "type": "node",
+  "id": 8266132029,
+  "lat": 35.7296698,
+  "lon": 10.8166606,
+  "tags": {
+    "man_made": "wastewater_plant",
+    "name": "ONAS Frina"
+  }
+},
+{
+  "type": "node",
+  "id": 9327601910,
+  "lat": 36.7155737,
+  "lon": 10.4850042,
+  "tags": {
+    "man_made": "wastewater_plant",
+    "name": "ONAS Station d'épuration Soliman",
+    "name:fr": "ONAS Station d'épuration Soliman",
+    "operator": "ONAS"
+  }
+},
+{
+  "type": "node",
+  "id": 12526689343,
+  "lat": 35.8586401,
+  "lon": 9.5939446,
+  "tags": {
+    "man_made": "wastewater_plant",
+    "name": "ONAS S.T.E.P"
+  }
+},
+{
+  "type": "node",
+  "id": 12526689344,
+  "lat": 35.8586401,
+  "lon": 9.5939446,
+  "tags": {
+    "man_made": "wastewater_plant",
+    "name": "ONAS S.T.E.P"
+  }
+},
+{
+  "type": "way",
+  "id": 27943379,
+  "center": {
+    "lat": 35.8696888,
+    "lon": 10.6008057
+  },
+  "tags": {
+    "man_made": "wastewater_plant",
+    "name": "Station traitement des eaux ONAS"
+  }
+},
+{
+  "type": "way",
+  "id": 27944541,
+  "center": {
+    "lat": 35.7947191,
+    "lon": 10.6446773
+  },
+  "tags": {
+    "man_made": "wastewater_plant",
+    "operator": "ONAS"
+  }
+},
+{
+  "type": "way",
+  "id": 28167238,
+  "center": {
+    "lat": 35.9646453,
+    "lon": 10.4501193
+  },
+  "tags": {
+    "man_made": "wastewater_plant",
+    "operator": "ONAS"
+  }
+},
+{
+  "type": "way",
+  "id": 28652965,
+  "center": {
+    "lat": 35.7473437,
+    "lon": 10.6033727
+  },
+  "tags": {
+    "man_made": "wastewater_plant",
+    "name": "Station d'épuration Msaken",
+    "operator": "ONAS",
+    "operator:wikidata": "Q3349645"
+  }
+},
+{
+  "type": "way",
+  "id": 102880759,
+  "center": {
+    "lat": 36.7420985,
+    "lon": 10.2646159
+  },
+  "tags": {
+    "barrier": "wall",
+    "landuse": "industrial",
+    "man_made": "wastewater_plant",
+    "name": "Station d'épuration de Radès"
+  }
+},
+{
+  "type": "way",
+  "id": 102892852,
+  "center": {
+    "lat": 36.8405748,
+    "lon": 10.2098880
+  },
+  "tags": {
+    "addr:city": "أريانة",
+    "landuse": "industrial",
+    "man_made": "wastewater_plant",
+    "name": "محطات معالجة مياه الصرف",
+    "name:ar": "محطات معالجة مياه الصرف",
+    "name:fr": "Station d'épuration"
+  }
+},
+{
+  "type": "way",
+  "id": 124333205,
+  "center": {
+    "lat": 35.7980179,
+    "lon": 9.8002056
+  },
+  "tags": {
+    "man_made": "wastewater_plant"
+  }
+},
+{
+  "type": "way",
+  "id": 173921396,
+  "center": {
+    "lat": 36.8962570,
+    "lon": 10.2006955
+  },
+  "tags": {
+    "barrier": "fence",
+    "fence_type": "barbed_wire",
+    "man_made": "wastewater_plant"
+  }
+},
+{
+  "type": "way",
+  "id": 180501595,
+  "center": {
+    "lat": 34.0008852,
+    "lon": 10.0070009
+  },
+  "tags": {
+    "barrier": "fence",
+    "man_made": "wastewater_plant",
+    "name": "Station d'épurations des eaux usées",
+    "operator": "ONAS"
+  }
+},
+{
+  "type": "way",
+  "id": 188832802,
+  "center": {
+    "lat": 34.5181960,
+    "lon": 10.4925617
+  },
+  "tags": {
+    "barrier": "fence",
+    "man_made": "wastewater_plant",
+    "name": "Station ONAS Mahrès",
+    "name:fr": "Station ONAS Mahrès",
+    "operator": "ONAS"
+  }
+},
+{
+  "type": "way",
+  "id": 197647377,
+  "center": {
+    "lat": 36.8362662,
+    "lon": 11.0854653
+  },
+  "tags": {
+    "man_made": "wastewater_plant",
+    "name": "ONAS"
+  }
+},
+{
+  "type": "way",
+  "id": 198662108,
+  "center": {
+    "lat": 34.8601626,
+    "lon": 9.8052336
+  },
+  "tags": {
+    "man_made": "wastewater_plant"
+  }
+},
+{
+  "type": "way",
+  "id": 208546184,
+  "center": {
+    "lat": 36.5679190,
+    "lon": 10.8259589
+  },
+  "tags": {
+    "man_made": "wastewater_plant"
+  }
+},
+{
+  "type": "way",
+  "id": 238113539,
+  "center": {
+    "lat": 33.8460276,
+    "lon": 10.9694574
+  },
+  "tags": {
+    "landuse": "industrial",
+    "man_made": "wastewater_plant",
+    "name": "Station ONAS Mezraya",
+    "operator": "ONAS"
+  }
+},
+{
+  "type": "way",
+  "id": 254040244,
+  "center": {
+    "lat": 37.0256470,
+    "lon": 9.6257383
+  },
+  "tags": {
+    "man_made": "wastewater_plant"
+  }
+},
+{
+  "type": "way",
+  "id": 259249435,
+  "center": {
+    "lat": 36.7266673,
+    "lon": 10.0814496
+  },
+  "tags": {
+    "landuse": "industrial",
+    "man_made": "wastewater_plant",
+    "name": "ONAS STEP El Attar",
+    "operator": "ONAS"
+  }
+},
+{
+  "type": "way",
+  "id": 260300916,
+  "center": {
+    "lat": 33.6549726,
+    "lon": 10.3698746
+  },
+  "tags": {
+    "landuse": "industrial",
+    "man_made": "wastewater_plant",
+    "operator": "ONAS"
+  }
+},
+{
+  "type": "way",
+  "id": 264779877,
+  "center": {
+    "lat": 35.5178358,
+    "lon": 11.0431215
+  },
+  "tags": {
+    "man_made": "wastewater_plant",
+    "name": "Onas"
+  }
+},
+{
+  "type": "way",
+  "id": 272553767,
+  "center": {
+    "lat": 33.7000188,
+    "lon": 10.9370937
+  },
+  "tags": {
+    "barrier": "wall",
+    "landuse": "industrial",
+    "man_made": "wastewater_plant"
+  }
+},
+{
+  "type": "way",
+  "id": 278870461,
+  "center": {
+    "lat": 36.4640650,
+    "lon": 9.2701784
+  },
+  "tags": {
+    "barrier": "fence",
+    "man_made": "wastewater_plant",
+    "name": "Station d'epuration Teboursouk",
+    "operator": "ONAS"
+  }
+},
+{
+  "type": "way",
+  "id": 315843128,
+  "center": {
+    "lat": 37.2545703,
+    "lon": 9.7900033
+  },
+  "tags": {
+    "landuse": "industrial",
+    "man_made": "wastewater_plant"
+  }
+},
+{
+  "type": "way",
+  "id": 386064503,
+  "center": {
+    "lat": 33.8468095,
+    "lon": 10.9738722
+  },
+  "tags": {
+    "landuse": "industrial",
+    "man_made": "wastewater_plant",
+    "operator": "ONAS"
+  }
+},
+{
+  "type": "way",
+  "id": 391587608,
+  "center": {
+    "lat": 34.6887798,
+    "lon": 10.7330141
+  },
+  "tags": {
+    "man_made": "wastewater_plant",
+    "name": "ONAS Sfax Sud"
+  }
+},
+{
+  "type": "way",
+  "id": 408621722,
+  "center": {
+    "lat": 33.7642797,
+    "lon": 10.7356824
+  },
+  "tags": {
+    "barrier": "wall",
+    "landuse": "industrial",
+    "man_made": "wastewater_plant"
+  }
+},
+{
+  "type": "way",
+  "id": 512605500,
+  "center": {
+    "lat": 37.0495954,
+    "lon": 9.6912926
+  },
+  "tags": {
+    "addr:city": "ماطر",
+    "addr:city:ar": "ماطر",
+    "brand": "الديوان الوطني للتطهير",
+    "brand:ar": "الديوان الوطني للتطهير",
+    "brand:website": "http://www.onas.nat.tn/Ar/",
+    "brand:wikidata": "Q3349645",
+    "brand:wikipedia": "ar:الديوان الوطني للتطهير (تونس)",
+    "landuse": "industrial",
+    "man_made": "wastewater_plant",
+    "name": "الديوان الوطني للتطهير ماطر الشمالية",
+    "name:ar": "الديوان الوطني للتطهير ماطر الشمالية",
+    "name:fr": "ONAS Mateur Nord",
+    "operator": "الديوان الوطني للتطهير",
+    "operator:ar": "الديوان الوطني للتطهير",
+    "operator:website": "http://www.onas.nat.tn/Ar/",
+    "operator:wikidata": "Q3349645",
+    "operator:wikipedia": "ar:الديوان الوطني للتطهير (تونس)"
+  }
+},
+{
+  "type": "way",
+  "id": 519760231,
+  "center": {
+    "lat": 36.1292851,
+    "lon": 10.4591446
+  },
+  "tags": {
+    "man_made": "wastewater_plant",
+    "name": "Station d'épuration Enfidha",
+    "operator": "ONAS"
+  }
+},
+{
+  "type": "way",
+  "id": 609950811,
+  "center": {
+    "lat": 36.7498809,
+    "lon": 9.9403089
+  },
+  "tags": {
+    "man_made": "wastewater_plant",
+    "operator": "ONAS",
+    "operator:wikidata": "Q3349645"
+  }
+},
+{
+  "type": "way",
+  "id": 671719940,
+  "center": {
+    "lat": 35.7744436,
+    "lon": 10.6852904
+  },
+  "tags": {
+    "man_made": "wastewater_plant"
+  }
+},
+{
+  "type": "way",
+  "id": 671719942,
+  "center": {
+    "lat": 35.7780585,
+    "lon": 10.6799522
+  },
+  "tags": {
+    "man_made": "wastewater_plant"
+  }
+},
+{
+  "type": "way",
+  "id": 687671381,
+  "center": {
+    "lat": 36.7344991,
+    "lon": 9.2210117
+  },
+  "tags": {
+    "man_made": "wastewater_plant",
+    "name": "ONAS",
+    "operator": "ONAS",
+    "website": "http://www.onas.nat.tn"
+  }
+},
+{
+  "type": "way",
+  "id": 689988312,
+  "center": {
+    "lat": 36.4520633,
+    "lon": 10.7666672
+  },
+  "tags": {
+    "man_made": "wastewater_plant",
+    "name": "Office National d'Assainissement",
+    "operator": "SONEDE"
+  }
+},
+{
+  "type": "way",
+  "id": 749015966,
+  "center": {
+    "lat": 33.9241664,
+    "lon": 8.1316951
+  },
+  "tags": {
+    "man_made": "wastewater_plant"
+  }
+},
+{
+  "type": "way",
+  "id": 850997552,
+  "center": {
+    "lat": 34.8623188,
+    "lon": 9.1691106
+  },
+  "tags": {
+    "man_made": "wastewater_plant",
+    "name": "ONAS STEP Jelma",
+    "operator": "ONAS"
+  }
+},
+{
+  "type": "way",
+  "id": 883873399,
+  "center": {
+    "lat": 34.7134293,
+    "lon": 10.5468901
+  },
+  "tags": {
+    "addr:city": "عقارب",
+    "man_made": "wastewater_plant",
+    "name": "ONAS Station d'assainissement Agareb",
+    "name:fr": "ONAS Station d'assainissement Agareb",
+    "operator": "ONAS",
+    "operator:wikidata": "Q3349645"
+  }
+},
+{
+  "type": "way",
+  "id": 884655386,
+  "center": {
+    "lat": 35.7300253,
+    "lon": 10.1144928
+  },
+  "tags": {
+    "man_made": "wastewater_plant",
+    "name": "محطة التطهير بالقيروان",
+    "name:ar": "محطة التطهير بالقيروان",
+    "name:fr": "ONAS Kairouan",
+    "operator": "ONAS",
+    "operator:wikidata": "Q3349645"
+  }
+},
+{
+  "type": "way",
+  "id": 967222522,
+  "center": {
+    "lat": 33.9034735,
+    "lon": 9.7551558
+  },
+  "tags": {
+    "man_made": "wastewater_plant"
+  }
+},
+{
+  "type": "way",
+  "id": 968589058,
+  "center": {
+    "lat": 33.4854478,
+    "lon": 11.1056264
+  },
+  "tags": {
+    "man_made": "wastewater_plant",
+    "name": "Station d'épuration de Zarzis",
+    "operator": "ONAS",
+    "operator:wikidata": "Q3349645"
+  }
+},
+{
+  "type": "way",
+  "id": 1021619996,
+  "center": {
+    "lat": 33.8910594,
+    "lon": 10.8385984
+  },
+  "tags": {
+    "man_made": "wastewater_plant"
+  }
+},
+{
+  "type": "way",
+  "id": 1085066359,
+  "center": {
+    "lat": 36.1198666,
+    "lon": 9.3825253
+  },
+  "tags": {
+    "man_made": "wastewater_plant",
+    "name": "Station d'Epuration des Eaux Usées de Siliana",
+    "name:fr": "Station d'Epuration des Eaux Usées de Siliana",
+    "operator": "ONAS"
+  }
+},
+{
+  "type": "way",
+  "id": 1091213305,
+  "center": {
+    "lat": 35.9254503,
+    "lon": 10.0283171
+  },
+  "tags": {
+    "man_made": "wastewater_plant"
+  }
+},
+{
+  "type": "way",
+  "id": 1119186433,
+  "center": {
+    "lat": 35.3191778,
+    "lon": 10.7079119
+  },
+  "tags": {
+    "man_made": "wastewater_plant"
+  }
+},
+{
+  "type": "way",
+  "id": 1124282504,
+  "center": {
+    "lat": 35.7306448,
+    "lon": 10.8155275
+  },
+  "tags": {
+    "man_made": "wastewater_plant"
+  }
+},
+{
+  "type": "way",
+  "id": 1133083692,
+  "center": {
+    "lat": 35.1366396,
+    "lon": 10.7463094
+  },
+  "tags": {
+    "man_made": "wastewater_plant",
+    "name": "Station d'épuration El Hencha",
+    "name:fr": "Station d'épuration El Hencha",
+    "operator": "ONAS"
+  }
+},
+{
+  "type": "way",
+  "id": 1191386064,
+  "center": {
+    "lat": 35.6813228,
+    "lon": 10.8673104
+  },
+  "tags": {
+    "man_made": "wastewater_plant",
+    "name": "Station d'épuration Sayada Lamta Bouhjar"
+  }
+},
+{
+  "type": "way",
+  "id": 1251978336,
+  "center": {
+    "lat": 35.4838741,
+    "lon": 11.0235359
+  },
+  "tags": {
+    "man_made": "wastewater_plant"
+  }
+},
+{
+  "type": "way",
+  "id": 1314117038,
+  "center": {
+    "lat": 35.4834168,
+    "lon": 11.0489440
+  },
+  "tags": {
+    "man_made": "wastewater_plant",
+    "name": "STEP ONAS"
+  }
+},
+{
+  "type": "way",
+  "id": 1329371302,
+  "center": {
+    "lat": 35.8371968,
+    "lon": 10.5633769
+  },
+  "tags": {
+    "man_made": "wastewater_plant"
+  }
+},
+{
+  "type": "way",
+  "id": 1356963051,
+  "center": {
+    "lat": 36.8141611,
+    "lon": 10.9800236
+  },
+  "tags": {
+    "man_made": "wastewater_plant"
+  }
+},
+{
+  "type": "way",
+  "id": 1577654523,
+  "center": {
+    "lat": 35.6253173,
+    "lon": 10.7596347
+  },
+  "tags": {
+    "man_made": "wastewater_plant",
+    "name": "Office National de l'Assainissement (ONAS) jemmel",
+    "operator": "ONAS",
+    "operator:wikidata": "Q3349645"
+  }
+}
+
+  ]
+}

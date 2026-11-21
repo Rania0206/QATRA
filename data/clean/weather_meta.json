@@ -1,0 +1,9 @@
+{
+ "location": {
+  "latitude": 35.79,
+  "longitude": 10.62,
+  "timezone": "Africa/Tunis"
+ },
+ "historical_source": "NASA POWER (community AG, MERRA-2/CERES based, ~0.5 deg) with FAO-56 PM ET0 computed locally",
+ "pv_formula": "E_kWh = kWp * GHI(W/m2)/1000 * PR * 1h ; PR=0.8, kWp=50 default (configurable)"
+}

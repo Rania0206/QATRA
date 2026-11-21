@@ -1,0 +1,8 @@
+item,value,unit,status,source,note
+Zaouiet Sousse perimeter irrigated with TWW since ~1987-1995,,,REPORTED,https://erudit.org/en/revue/rseau/2010/v23/n2/039905ar.html,Study exists on Zaouit Sousse soils under TWW; values not extracted in time-box -> TO_VERIFY
+"Coastal Sahel perimeters (Sousse, Monastir, Mahdia, Sfax) classed as saline",,,REPORTED (1989),https://horizon.documentation.ird.fr/exl-doc/pleins_textes/doc34-06/40530.pdf,IRD 1989; qualitative
+Sfax El Hajeb: fluvisol (4 yrs TWW) more salinised than calcisol (15 yrs),,,REPORTED,https://www.afes.fr/wp-content/uploads/2023/04/EGS_24_1_louati.pdf,Qualitative; magnitudes TO_VERIFY
+Soukra: only slight salinisation after TWW irrigation,,,REPORTED (1997),https://ressources.ciheam.org/ressources/om/pdf/a31/CI971541.pdf,Qualitative
+Typical ECe of TWW-irrigated Tunisian coastal soils (0-30 cm),1.5-6,dS/m,ESTIMATE / TO_VERIFY,"Order-of-magnitude from steady-state ECe ~ 1.5 x ECw (FAO-29, LF 15-20%) with ECw 1-4 dS/m",Used to parametrise simulated farms
+"FAO HWSD v2 (has EC / salinity attributes, ~1 km)",,,TO_VERIFY (not downloaded),https://www.fao.org/soils-portal/data-hub/soil-maps-and-databases/harmonized-world-soil-database-v20/en/,Requires desktop raster+MDB download (~GB); skipped in time-box
+"SoilFER-VACS Tunisia (FAO, funded by Japan MOFA, USD 6M, May 2023-May 2027)",>3000 soil samples collected (Mar 2026),,REPORTED (no public maps yet),https://www.fao.org/in-action/soilfer/countries/detail/tunisia/en,"National maps (SOC, pH, texture, BD) planned; no public download found as of 2026-11. Contact soilfer@fao.org"

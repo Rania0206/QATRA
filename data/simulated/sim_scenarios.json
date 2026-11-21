@@ -1,0 +1,33 @@
+{
+ "status": "SIMULATED",
+ "scenarios": [
+  {
+   "id": "default",
+   "label": "Normal day - 1,000 m3 batch",
+   "date": "2026-07-08",
+   "batch_id": "SSUD-20260708",
+   "batch_volume_m3": 1000,
+   "weather_source": "weather_summer2026_sousse.csv (date row)",
+   "grid_outage_windows": [],
+   "pv_kWp": 60,
+   "basin_initial_m3": 1200
+  },
+  {
+   "id": "heatwave_outage",
+   "label": "Summer 2026 heatwave + 13:00-17:00 grid outage",
+   "date": "2026-08-26",
+   "batch_id": "SSUD-20260826",
+   "batch_volume_m3": 1800,
+   "weather_source": "weather_summer2026_sousse.csv (2026-08-26, hottest local day in series)",
+   "grid_outage_windows": [
+    [
+     "13:00",
+     "17:00"
+    ]
+   ],
+   "pv_kWp": 60,
+   "basin_initial_m3": 600,
+   "basis": "HRW 2026-10-06: outages concentrated 13:00-17:00 (CF26); INM: hottest summer since 1950 (CF23)"
+  }
+ ]
+}

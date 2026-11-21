@@ -1,0 +1,6 @@
+metric,value,unit,date,status,source_url,definition,note
+"Olive orchard area, Sousse governorate",78000,ha,"TO_VERIFY (press, ~2023-2025)",REPORTED (press),https://en.africanmanager.com/?p=238901,Area under olive trees,Stated as 55% of governorate area (TO_VERIFY wording) and 8% of national olive area
+"Olive trees, Sousse governorate",5500000,trees,TO_VERIFY,REPORTED (press),https://www.leconomistemaghrebin.com/?p=541722,Number of trees,Another source gives 4.3 million: use with caution
+"Olive harvest forecast, Sousse, 2025/26 season",130000,t olives,2025,REPORTED (CRDA via press),https://africanmanager.com/?p=513936,Forecast olive harvest,"~26,000 t oil; vs 37,000 t olives in 2023"
+"TWW-irrigated perimeters, Sousse (2023/24)",Zaouiet Sousse 257 ha; Msaken 185 ha; Sousse Sud/Ksiba 200 ha,ha equipped,2023/2024,REPORTED,https://catalog.data.gov.tn/fr/dataset/repartition-regionale-des-ppi-irrigues-par-les-eaux-usees-traitees,Area equipped,Crop mix per perimeter not in dataset
+"Other crops (cereals, fodder, vegetables) area, Sousse",,ha,,TO_VERIFY,https://catalog.agridata.tn,,Agridata/ONAGRI regional statistics not extracted in time-box

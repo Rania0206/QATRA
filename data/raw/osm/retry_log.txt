@@ -1,0 +1,8 @@
+plants_tunisia 54
+  pumps_tunisia: https://overpass.private.coffee/api/interpreter HTTP 504
+  pumps_tunisia: 18 elements from https://overpass-api.de/api/interpreter
+pumps_tunisia 18
+{'well': 2, 'wastewater_plant': 8, 'storage': 67, 'water_works': 1}
+  sousse_lines: 70 elements from https://overpass.private.coffee/api/interpreter
+lines 70
+farmland 103

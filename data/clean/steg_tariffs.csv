@@ -1,0 +1,4 @@
+tariff,value,unit,date,status,source_url,note
+Low-voltage 'pompage agricole / irrigation',,millimes/kWh,,TO_VERIFY,https://www.steg.com.tn,"Tariff exists (STEG debt-rescheduling for LV irrigation-pumping subscribers, May 2025) but current grid not found in time-box"
+STEG average sale price (all customers) 2025,290.7,millimes/kWh,2025,REPORTED (press),https://www.webmanagercenter.com/2025/07/21/549443/production-delectricite-quasi-stable-dont-6-a-partir-des-energies-renouvelables/,NOT the agricultural tariff
+STEG average production cost 2025,456.3,millimes/kWh,2025,REPORTED (press),idem,"Cost, not tariff"

@@ -1,0 +1,945 @@
+{
+  "version": 0.6,
+  "generator": "Overpass API 0.7.62.11 87bfad18",
+  "osm3s": {
+    "timestamp_osm_base": "2026-11-21T17:04:51Z",
+    "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+  },
+  "elements": [
+
+{
+  "type": "node",
+  "id": 1340005332,
+  "lat": 35.7372094,
+  "lon": 10.8105518,
+  "tags": {
+    "man_made": "water_well"
+  }
+},
+{
+  "type": "node",
+  "id": 8266132029,
+  "lat": 35.7296698,
+  "lon": 10.8166606,
+  "tags": {
+    "man_made": "wastewater_plant",
+    "name": "ONAS Frina"
+  }
+},
+{
+  "type": "way",
+  "id": 26564096,
+  "center": {
+    "lat": 35.7703525,
+    "lon": 10.7000309
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 26564186,
+  "center": {
+    "lat": 35.7587535,
+    "lon": 10.7116631
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 26564193,
+  "center": {
+    "lat": 35.7577384,
+    "lon": 10.7143623
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 26564198,
+  "center": {
+    "lat": 35.7564683,
+    "lon": 10.7178379
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 26564203,
+  "center": {
+    "lat": 35.7583819,
+    "lon": 10.7227692
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 26564204,
+  "center": {
+    "lat": 35.7557920,
+    "lon": 10.7208987
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 26564205,
+  "center": {
+    "lat": 35.7548731,
+    "lon": 10.7260857
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 26564209,
+  "center": {
+    "lat": 35.7571554,
+    "lon": 10.7282477
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 26564221,
+  "center": {
+    "lat": 35.7533936,
+    "lon": 10.7292178
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 26564223,
+  "center": {
+    "lat": 35.7539267,
+    "lon": 10.7329561
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 26564226,
+  "center": {
+    "lat": 35.7541357,
+    "lon": 10.7348127
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 26564228,
+  "center": {
+    "lat": 35.7525418,
+    "lon": 10.7324558
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 26564234,
+  "center": {
+    "lat": 35.7532110,
+    "lon": 10.7356156
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 26564236,
+  "center": {
+    "lat": 35.7515521,
+    "lon": 10.7317157
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 26564240,
+  "center": {
+    "lat": 35.7513940,
+    "lon": 10.7341973
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 26564244,
+  "center": {
+    "lat": 35.7526780,
+    "lon": 10.7377370
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 26564250,
+  "center": {
+    "lat": 35.7509172,
+    "lon": 10.7373847
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 26564252,
+  "center": {
+    "lat": 35.7518540,
+    "lon": 10.7417630
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 26564255,
+  "center": {
+    "lat": 35.7499002,
+    "lon": 10.7425576
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 26564265,
+  "center": {
+    "lat": 35.7526911,
+    "lon": 10.7460821
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 26564307,
+  "center": {
+    "lat": 35.7528758,
+    "lon": 10.7644042
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 26564323,
+  "center": {
+    "lat": 35.7487482,
+    "lon": 10.7655799
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 26564326,
+  "center": {
+    "lat": 35.7452658,
+    "lon": 10.7649798
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 26564363,
+  "center": {
+    "lat": 35.7556291,
+    "lon": 10.7685060
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 26564369,
+  "center": {
+    "lat": 35.7563822,
+    "lon": 10.7730688
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 26564384,
+  "center": {
+    "lat": 35.7578204,
+    "lon": 10.7796724
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 26564501,
+  "center": {
+    "lat": 35.7708876,
+    "lon": 10.7779320
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 27943379,
+  "center": {
+    "lat": 35.8696888,
+    "lon": 10.6008057
+  },
+  "tags": {
+    "man_made": "wastewater_plant",
+    "name": "Station traitement des eaux ONAS"
+  }
+},
+{
+  "type": "way",
+  "id": 27944541,
+  "center": {
+    "lat": 35.7947191,
+    "lon": 10.6446773
+  },
+  "tags": {
+    "man_made": "wastewater_plant",
+    "operator": "ONAS"
+  }
+},
+{
+  "type": "way",
+  "id": 28361250,
+  "center": {
+    "lat": 35.8901075,
+    "lon": 10.5841741
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 28361259,
+  "center": {
+    "lat": 35.8961203,
+    "lon": 10.5855166
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 28361264,
+  "center": {
+    "lat": 35.8983482,
+    "lon": 10.5840035
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 28380935,
+  "center": {
+    "lat": 35.7808422,
+    "lon": 10.6851866
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 28381003,
+  "center": {
+    "lat": 35.7797699,
+    "lon": 10.6843283
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 28652965,
+  "center": {
+    "lat": 35.7473437,
+    "lon": 10.6033727
+  },
+  "tags": {
+    "man_made": "wastewater_plant",
+    "name": "Station d'épuration Msaken",
+    "operator": "ONAS",
+    "operator:wikidata": "Q3349645"
+  }
+},
+{
+  "type": "way",
+  "id": 96253047,
+  "center": {
+    "lat": 35.7594583,
+    "lon": 10.7450178
+  },
+  "tags": {
+    "building": "yes",
+    "man_made": "storage_tank"
+  }
+},
+{
+  "type": "way",
+  "id": 96253056,
+  "center": {
+    "lat": 35.7588937,
+    "lon": 10.7429693
+  },
+  "tags": {
+    "building": "yes",
+    "man_made": "storage_tank"
+  }
+},
+{
+  "type": "way",
+  "id": 96253178,
+  "center": {
+    "lat": 35.7587766,
+    "lon": 10.7430441
+  },
+  "tags": {
+    "building": "yes",
+    "man_made": "storage_tank"
+  }
+},
+{
+  "type": "way",
+  "id": 96253201,
+  "center": {
+    "lat": 35.7589408,
+    "lon": 10.7431776
+  },
+  "tags": {
+    "building": "yes",
+    "man_made": "storage_tank"
+  }
+},
+{
+  "type": "way",
+  "id": 96253202,
+  "center": {
+    "lat": 35.7594380,
+    "lon": 10.7449293
+  },
+  "tags": {
+    "building": "yes",
+    "man_made": "storage_tank"
+  }
+},
+{
+  "type": "way",
+  "id": 96314465,
+  "center": {
+    "lat": 35.7729179,
+    "lon": 10.7012929
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 96314477,
+  "center": {
+    "lat": 35.7715465,
+    "lon": 10.7025630
+  },
+  "tags": {
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 111440917,
+  "center": {
+    "lat": 35.7853092,
+    "lon": 10.6809675
+  },
+  "tags": {
+    "building": "yes",
+    "content": "gasm",
+    "man_made": "storage_tank"
+  }
+},
+{
+  "type": "way",
+  "id": 115432387,
+  "center": {
+    "lat": 35.8915776,
+    "lon": 10.5584196
+  },
+  "tags": {
+    "man_made": "water_tower"
+  }
+},
+{
+  "type": "way",
+  "id": 115432389,
+  "center": {
+    "lat": 35.8915626,
+    "lon": 10.5579092
+  },
+  "tags": {
+    "man_made": "water_tower"
+  }
+},
+{
+  "type": "way",
+  "id": 117366717,
+  "center": {
+    "lat": 35.8006990,
+    "lon": 10.5796163
+  },
+  "tags": {
+    "man_made": "water_tower"
+  }
+},
+{
+  "type": "way",
+  "id": 117366720,
+  "center": {
+    "lat": 35.8006302,
+    "lon": 10.5802158
+  },
+  "tags": {
+    "man_made": "water_tower"
+  }
+},
+{
+  "type": "way",
+  "id": 117366725,
+  "center": {
+    "lat": 35.8006021,
+    "lon": 10.5791306
+  },
+  "tags": {
+    "man_made": "water_tower"
+  }
+},
+{
+  "type": "way",
+  "id": 117366742,
+  "center": {
+    "lat": 35.8006157,
+    "lon": 10.5807914
+  },
+  "tags": {
+    "man_made": "water_tower"
+  }
+},
+{
+  "type": "way",
+  "id": 126795563,
+  "center": {
+    "lat": 35.8887710,
+    "lon": 10.5678057
+  },
+  "tags": {
+    "man_made": "water_tower"
+  }
+},
+{
+  "type": "way",
+  "id": 126795564,
+  "center": {
+    "lat": 35.8889744,
+    "lon": 10.5681312
+  },
+  "tags": {
+    "man_made": "water_tower"
+  }
+},
+{
+  "type": "way",
+  "id": 156824731,
+  "center": {
+    "lat": 35.6902531,
+    "lon": 10.6147007
+  },
+  "tags": {
+    "man_made": "water_well"
+  }
+},
+{
+  "type": "way",
+  "id": 319327305,
+  "center": {
+    "lat": 35.7951313,
+    "lon": 10.6452379
+  },
+  "tags": {
+    "natural": "water",
+    "water": "reservoir"
+  }
+},
+{
+  "type": "way",
+  "id": 319327306,
+  "center": {
+    "lat": 35.7948290,
+    "lon": 10.6443223
+  },
+  "tags": {
+    "natural": "water",
+    "water": "reservoir"
+  }
+},
+{
+  "type": "way",
+  "id": 319327307,
+  "center": {
+    "lat": 35.7943239,
+    "lon": 10.6447736
+  },
+  "tags": {
+    "natural": "water",
+    "water": "reservoir"
+  }
+},
+{
+  "type": "way",
+  "id": 319327308,
+  "center": {
+    "lat": 35.7948154,
+    "lon": 10.6451431
+  },
+  "tags": {
+    "natural": "water",
+    "water": "reservoir"
+  }
+},
+{
+  "type": "way",
+  "id": 319327309,
+  "center": {
+    "lat": 35.7945766,
+    "lon": 10.6450007
+  },
+  "tags": {
+    "natural": "water",
+    "water": "reservoir"
+  }
+},
+{
+  "type": "way",
+  "id": 319327310,
+  "center": {
+    "lat": 35.7950698,
+    "lon": 10.6444587
+  },
+  "tags": {
+    "natural": "water",
+    "water": "reservoir"
+  }
+},
+{
+  "type": "way",
+  "id": 671719940,
+  "center": {
+    "lat": 35.7744436,
+    "lon": 10.6852904
+  },
+  "tags": {
+    "man_made": "wastewater_plant"
+  }
+},
+{
+  "type": "way",
+  "id": 671719942,
+  "center": {
+    "lat": 35.7780585,
+    "lon": 10.6799522
+  },
+  "tags": {
+    "man_made": "wastewater_plant"
+  }
+},
+{
+  "type": "way",
+  "id": 878126166,
+  "center": {
+    "lat": 35.7907662,
+    "lon": 10.6472965
+  },
+  "tags": {
+    "name": "سبخة الحمادة الشرقية",
+    "name:ar": "سبخة الحمادة الشرقية",
+    "name:fr": "Sabkhet El Hmada Echarguia",
+    "natural": "water",
+    "water": "pond"
+  }
+},
+{
+  "type": "way",
+  "id": 1124282504,
+  "center": {
+    "lat": 35.7306448,
+    "lon": 10.8155275
+  },
+  "tags": {
+    "man_made": "wastewater_plant"
+  }
+},
+{
+  "type": "way",
+  "id": 1320494879,
+  "center": {
+    "lat": 35.7756162,
+    "lon": 10.6548948
+  },
+  "tags": {
+    "man_made": "water_works"
+  }
+},
+{
+  "type": "way",
+  "id": 1322328845,
+  "center": {
+    "lat": 35.7832054,
+    "lon": 10.6342069
+  },
+  "tags": {
+    "natural": "water",
+    "water": "reservoir"
+  }
+},
+{
+  "type": "way",
+  "id": 1322330213,
+  "center": {
+    "lat": 35.7938118,
+    "lon": 10.6442066
+  },
+  "tags": {
+    "intermittent": "yes",
+    "natural": "water",
+    "water": "reservoir"
+  }
+},
+{
+  "type": "way",
+  "id": 1322330214,
+  "center": {
+    "lat": 35.7940475,
+    "lon": 10.6445405
+  },
+  "tags": {
+    "intermittent": "yes",
+    "natural": "water",
+    "water": "reservoir"
+  }
+},
+{
+  "type": "way",
+  "id": 1322330215,
+  "center": {
+    "lat": 35.7945025,
+    "lon": 10.6442588
+  },
+  "tags": {
+    "intermittent": "yes",
+    "natural": "water",
+    "water": "reservoir"
+  }
+},
+{
+  "type": "way",
+  "id": 1322330216,
+  "center": {
+    "lat": 35.7953061,
+    "lon": 10.6447310
+  },
+  "tags": {
+    "intermittent": "yes",
+    "natural": "water",
+    "water": "reservoir"
+  }
+},
+{
+  "type": "way",
+  "id": 1329371302,
+  "center": {
+    "lat": 35.8371968,
+    "lon": 10.5633769
+  },
+  "tags": {
+    "man_made": "wastewater_plant"
+  }
+},
+{
+  "type": "way",
+  "id": 1329371303,
+  "center": {
+    "lat": 35.8373245,
+    "lon": 10.5637422
+  },
+  "tags": {
+    "intermittent": "yes",
+    "natural": "water",
+    "water": "reservoir"
+  }
+},
+{
+  "type": "way",
+  "id": 1329371304,
+  "center": {
+    "lat": 35.8373380,
+    "lon": 10.5640451
+  },
+  "tags": {
+    "intermittent": "yes",
+    "natural": "water",
+    "water": "reservoir"
+  }
+},
+{
+  "type": "way",
+  "id": 1329371305,
+  "center": {
+    "lat": 35.8373207,
+    "lon": 10.5642561
+  },
+  "tags": {
+    "intermittent": "yes",
+    "natural": "water",
+    "water": "basin"
+  }
+},
+{
+  "type": "way",
+  "id": 1547681124,
+  "center": {
+    "lat": 35.7655704,
+    "lon": 10.7620520
+  },
+  "tags": {
+    "natural": "water",
+    "water": "pond"
+  }
+},
+{
+  "type": "way",
+  "id": 1547681127,
+  "center": {
+    "lat": 35.7659023,
+    "lon": 10.7616456
+  },
+  "tags": {
+    "intermittent": "yes",
+    "natural": "water",
+    "water": "pond"
+  }
+},
+{
+  "type": "way",
+  "id": 1547681128,
+  "center": {
+    "lat": 35.7651242,
+    "lon": 10.7620922
+  },
+  "tags": {
+    "intermittent": "yes",
+    "natural": "water",
+    "water": "pond"
+  }
+},
+{
+  "type": "relation",
+  "id": 1388368,
+  "center": {
+    "lat": 35.7488689,
+    "lon": 10.7776566
+  },
+  "tags": {
+    "natural": "water",
+    "type": "multipolygon",
+    "water": "basin"
+  }
+}
+
+  ]
+}

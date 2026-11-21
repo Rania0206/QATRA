@@ -1,0 +1,9 @@
+{
+ "api_base": null,
+ "errors": [
+  "https://catalog.data.gov.tn: GET failed https://catalog.data.gov.tn/api/3/action/package_search: HTTPSConnectionPool(host='catalog.data.gov.tn', port=443): Max retries exceeded with url: /api/3/action/package_search?q=eau&rows=1 (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)')))",
+  "https://data.gov.tn: GET failed https://data.gov.tn/api/3/action/package_search: HTTPSConnectionPool(host='data.gov.tn', port=443): Max retries exceeded with url: /api/3/action/package_search?q=eau&rows=1 (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)')))",
+  "http://www.data.gov.tn: GET failed http://www.data.gov.tn/api/3/action/package_search: HTTPSConnectionPool(host='www.data.gov.tn', port=443): Max retries exceeded with url: /api/3/action/package_search?q=eau&rows=1 (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1028)')))"
+ ],
+ "results": {}
+}

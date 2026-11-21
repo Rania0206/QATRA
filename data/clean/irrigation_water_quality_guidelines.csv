@@ -1,0 +1,17 @@
+problem,parameter,unit,none,slight_to_moderate,severe,status,source
+Salinity,ECw,dS/m,<0.7,0.7-3.0,>3.0,REPORTED,FAO-29 rev.1 (Ayers & Westcot 1985) Table 1 - https://www.fao.org/4/t0234e/t0234e00.htm
+Salinity,TDS,mg/L,<450,450-2000,>2000,REPORTED,FAO-29 rev.1 (Ayers & Westcot 1985) Table 1 - https://www.fao.org/4/t0234e/t0234e00.htm
+Infiltration,SAR 0-3 with ECw,dS/m,>0.7,0.7-0.2,<0.2,REPORTED,FAO-29 rev.1 (Ayers & Westcot 1985) Table 1 - https://www.fao.org/4/t0234e/t0234e00.htm
+Infiltration,SAR 3-6 with ECw,dS/m,>1.2,1.2-0.3,<0.3,REPORTED,FAO-29 rev.1 (Ayers & Westcot 1985) Table 1 - https://www.fao.org/4/t0234e/t0234e00.htm
+Infiltration,SAR 6-12 with ECw,dS/m,>1.9,1.9-0.5,<0.5,REPORTED,FAO-29 rev.1 (Ayers & Westcot 1985) Table 1 - https://www.fao.org/4/t0234e/t0234e00.htm
+Infiltration,SAR 12-20 with ECw,dS/m,>2.9,2.9-1.3,<1.3,REPORTED,FAO-29 rev.1 (Ayers & Westcot 1985) Table 1 - https://www.fao.org/4/t0234e/t0234e00.htm
+Infiltration,SAR 20-40 with ECw,dS/m,>5.0,5.0-2.9,<2.9,REPORTED,FAO-29 rev.1 (Ayers & Westcot 1985) Table 1 - https://www.fao.org/4/t0234e/t0234e00.htm
+Sodium toxicity,surface irrigation SAR,-,<3,3-9,>9,REPORTED,FAO-29 rev.1 (Ayers & Westcot 1985) Table 1 - https://www.fao.org/4/t0234e/t0234e00.htm
+Sodium toxicity,sprinkler Na,meq/L,<3,>3,-,REPORTED,FAO-29 rev.1 (Ayers & Westcot 1985) Table 1 - https://www.fao.org/4/t0234e/t0234e00.htm
+Chloride toxicity,surface irrigation Cl,meq/L,<4,4-10,>10,REPORTED,FAO-29 rev.1 (Ayers & Westcot 1985) Table 1 - https://www.fao.org/4/t0234e/t0234e00.htm
+Chloride toxicity,sprinkler Cl,meq/L,<3,>3,-,REPORTED,FAO-29 rev.1 (Ayers & Westcot 1985) Table 1 - https://www.fao.org/4/t0234e/t0234e00.htm
+Boron toxicity,B,mg/L,<0.7,0.7-3.0,>3.0,REPORTED,FAO-29 rev.1 (Ayers & Westcot 1985) Table 1 - https://www.fao.org/4/t0234e/t0234e00.htm
+Misc.,NO3-N,mg/L,<5,5-30,>30,REPORTED,FAO-29 rev.1 (Ayers & Westcot 1985) Table 1 - https://www.fao.org/4/t0234e/t0234e00.htm
+Misc.,HCO3 (overhead sprinkling),meq/L,<1.5,1.5-8.5,>8.5,REPORTED,FAO-29 rev.1 (Ayers & Westcot 1985) Table 1 - https://www.fao.org/4/t0234e/t0234e00.htm
+Misc.,pH,-,normal range 6.5-8.4,,,REPORTED,FAO-29 rev.1 (Ayers & Westcot 1985) Table 1 - https://www.fao.org/4/t0234e/t0234e00.htm
+Leaching requirement,LR,fraction,LR = ECw / (5*ECe - ECw)  (surface/sprinkler; ECe = crop threshold),drip/high-frequency: LR = ECw / (2*max ECe),,REPORTED,FAO-29 eq. (7) and (8) - https://www.fao.org/4/t0234e/t0234e00.htm

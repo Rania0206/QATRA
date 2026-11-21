@@ -1,0 +1,134 @@
+{
+ "status": "SIMULATED",
+ "based_on": [
+  "pump_specs_reference.csv",
+  "energy_params.json",
+  "SRTM elevations",
+  "OSM storage_sousse.geojson"
+ ],
+ "plant": {
+  "osm_id": "w27944541",
+  "name_osm": null,
+  "lat": 35.794719,
+  "lon": 10.644677,
+  "elevation_m": 13.0,
+  "assumed_identity": "Sousse Sud WWTP (serves Zaouiet Sousse perimeter per Agridata) - nearest OSM wastewater_plant to demo point; identity TO_VERIFY"
+ },
+ "transfer_pumps": [
+  {
+   "id": "TP1",
+   "flow_m3_h": 150,
+   "head_m": 71.1,
+   "efficiency": 0.65,
+   "power_kW": 44.6,
+   "energy_kWh_per_m3": 0.2975,
+   "head_method": "basin_elev - plant_elev + 3 m/km * median distance + 5 m residual"
+  },
+  {
+   "id": "TP2 (standby)",
+   "flow_m3_h": 150,
+   "head_m": 71.1,
+   "efficiency": 0.6,
+   "power_kW": 48.3
+  }
+ ],
+ "storage_basin": {
+  "id": "BASIN-1",
+  "capacity_m3": 3000,
+  "initial_level_m3": 1200,
+  "elevation_m": 64.0,
+  "nearest_real_osm_storage": {
+   "osm_id": "w1322328845",
+   "distance_km": 1.49,
+   "name": null
+  },
+  "evaporation_mm_d_summer": 8
+ },
+ "pv_array": {
+  "kWp": 60,
+  "performance_ratio": 0.8,
+  "note": "~1.3x of 45 kW pumping load; see pv_estimate_sousse.csv"
+ },
+ "farm_well_pumps": [
+  {
+   "farm_id": "A",
+   "source": "well",
+   "head_m": 103,
+   "flow_m3_h": 24,
+   "efficiency": 0.52,
+   "energy_kWh_per_m3": 0.539
+  },
+  {
+   "farm_id": "B",
+   "source": "borehole",
+   "head_m": 54,
+   "flow_m3_h": 18,
+   "efficiency": 0.5,
+   "energy_kWh_per_m3": 0.294
+  },
+  {
+   "farm_id": "C",
+   "source": "network",
+   "head_m": null,
+   "flow_m3_h": 20,
+   "efficiency": 0.54,
+   "energy_kWh_per_m3": null
+  },
+  {
+   "farm_id": "D",
+   "source": "borehole",
+   "head_m": 56,
+   "flow_m3_h": 8,
+   "efficiency": 0.5,
+   "energy_kWh_per_m3": 0.305
+  },
+  {
+   "farm_id": "E",
+   "source": "well",
+   "head_m": 93,
+   "flow_m3_h": 12,
+   "efficiency": 0.55,
+   "energy_kWh_per_m3": 0.46
+  },
+  {
+   "farm_id": "F",
+   "source": "well",
+   "head_m": 92,
+   "flow_m3_h": 18,
+   "efficiency": 0.55,
+   "energy_kWh_per_m3": 0.455
+  },
+  {
+   "farm_id": "G",
+   "source": "well",
+   "head_m": 104,
+   "flow_m3_h": 22,
+   "efficiency": 0.59,
+   "energy_kWh_per_m3": 0.479
+  },
+  {
+   "farm_id": "H",
+   "source": "network",
+   "head_m": null,
+   "flow_m3_h": 8,
+   "efficiency": 0.55,
+   "energy_kWh_per_m3": null
+  },
+  {
+   "farm_id": "I",
+   "source": "borehole",
+   "head_m": 47,
+   "flow_m3_h": 9,
+   "efficiency": 0.5,
+   "energy_kWh_per_m3": 0.256
+  },
+  {
+   "farm_id": "J",
+   "source": "borehole",
+   "head_m": 63,
+   "flow_m3_h": 23,
+   "efficiency": 0.53,
+   "energy_kWh_per_m3": 0.323
+  }
+ ]
+}

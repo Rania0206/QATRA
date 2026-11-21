@@ -1,0 +1,220 @@
+{
+  "version": 0.6,
+  "generator": "Overpass API 0.7.62.11 87bfad18",
+  "osm3s": {
+    "timestamp_osm_base": "2026-11-21T17:14:51Z",
+    "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+  },
+  "elements": [
+
+{
+  "type": "node",
+  "id": 8236986925,
+  "lat": 35.1049681,
+  "lon": 10.2689821,
+  "tags": {
+    "man_made": "pumping_station",
+    "name": "Station de Reprise Bouthadi"
+  }
+},
+{
+  "type": "node",
+  "id": 9169730988,
+  "lat": 36.1281735,
+  "lon": 10.2779381,
+  "tags": {
+    "man_made": "pumping_station",
+    "name": "SONEDE Forage Ain Garci A2",
+    "name:fr": "SONEDE Forage Ain Garci A2"
+  }
+},
+{
+  "type": "node",
+  "id": 11773111051,
+  "lat": 34.6716750,
+  "lon": 10.4406002,
+  "tags": {
+    "man_made": "pumping_station",
+    "operator": "SONEDE"
+  }
+},
+{
+  "type": "node",
+  "id": 12927613116,
+  "lat": 33.6601433,
+  "lon": 10.3256591,
+  "tags": {
+    "man_made": "pumping_station"
+  }
+},
+{
+  "type": "node",
+  "id": 13315994286,
+  "lat": 34.4004859,
+  "lon": 8.1823584,
+  "tags": {
+    "man_made": "pumping_station",
+    "name": "Station Tarfaya 2",
+    "operator": "SONEDE"
+  }
+},
+{
+  "type": "way",
+  "id": 634600248,
+  "center": {
+    "lat": 35.2560462,
+    "lon": 11.0848481
+  },
+  "tags": {
+    "barrier": "wall",
+    "man_made": "pumping_station",
+    "operator": "SONEDE"
+  }
+},
+{
+  "type": "way",
+  "id": 676825731,
+  "center": {
+    "lat": 36.5598974,
+    "lon": 10.5186173
+  },
+  "tags": {
+    "man_made": "pumping_station",
+    "name": "Station De Pompage Des Eaux Du Nord"
+  }
+},
+{
+  "type": "way",
+  "id": 783115349,
+  "center": {
+    "lat": 35.4713813,
+    "lon": 10.6407796
+  },
+  "tags": {
+    "man_made": "pumping_station",
+    "name": "محطة الضخ بكركر",
+    "name:ar": "محطة الضخ بكركر",
+    "name:fr": "Station de Pompage de Kerker",
+    "operator": "SONEDE"
+  }
+},
+{
+  "type": "way",
+  "id": 930560381,
+  "center": {
+    "lat": 34.9908667,
+    "lon": 10.7422050
+  },
+  "tags": {
+    "man_made": "pumping_station",
+    "name": "SONEDE Station Dokhane",
+    "operator": "SONEDE"
+  }
+},
+{
+  "type": "way",
+  "id": 1068812865,
+  "center": {
+    "lat": 32.8558283,
+    "lon": 10.2890261
+  },
+  "tags": {
+    "man_made": "pumping_station"
+  }
+},
+{
+  "type": "way",
+  "id": 1069287373,
+  "center": {
+    "lat": 32.9100917,
+    "lon": 10.2614013
+  },
+  "tags": {
+    "addr:city": "شنني",
+    "addr:postcode": "3274‏",
+    "man_made": "pumping_station",
+    "name": "SONEDE"
+  }
+},
+{
+  "type": "way",
+  "id": 1133083675,
+  "center": {
+    "lat": 35.0567427,
+    "lon": 10.8633192
+  },
+  "tags": {
+    "man_made": "pumping_station",
+    "operator": "SONEDE"
+  }
+},
+{
+  "type": "way",
+  "id": 1176720182,
+  "center": {
+    "lat": 36.6028365,
+    "lon": 8.1840215
+  },
+  "tags": {
+    "man_made": "pumping_station"
+  }
+},
+{
+  "type": "way",
+  "id": 1191384418,
+  "center": {
+    "lat": 35.6953591,
+    "lon": 10.8361605
+  },
+  "tags": {
+    "man_made": "pumping_station",
+    "name": "Station de pompage des eaux usées"
+  }
+},
+{
+  "type": "way",
+  "id": 1441845977,
+  "center": {
+    "lat": 36.5794180,
+    "lon": 8.1666812
+  },
+  "tags": {
+    "man_made": "pumping_station"
+  }
+},
+{
+  "type": "way",
+  "id": 1460531998,
+  "center": {
+    "lat": 36.6695395,
+    "lon": 8.2463769
+  },
+  "tags": {
+    "man_made": "pumping_station"
+  }
+},
+{
+  "type": "way",
+  "id": 1460531999,
+  "center": {
+    "lat": 36.6596573,
+    "lon": 8.2397481
+  },
+  "tags": {
+    "man_made": "pumping_station"
+  }
+},
+{
+  "type": "way",
+  "id": 1460532000,
+  "center": {
+    "lat": 36.6296160,
+    "lon": 8.2046474
+  },
+  "tags": {
+    "man_made": "pumping_station"
+  }
+}
+
+  ]
+}

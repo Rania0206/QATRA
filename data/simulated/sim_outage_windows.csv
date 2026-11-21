@@ -1,0 +1,13 @@
+date,start,end,trigger,basis,status
+2026-07-12,13:00,17:00,Tmax>=38C (NASA POWER hourly),HRW Oct 2026 reporting (outages concentrated 13:00-17:00); no official STEG schedule published,SIMULATED
+2026-07-17,13:00,17:00,Tmax>=38C (NASA POWER hourly),HRW Oct 2026 reporting (outages concentrated 13:00-17:00); no official STEG schedule published,SIMULATED
+2026-07-18,13:00,17:00,Tmax>=38C (NASA POWER hourly),HRW Oct 2026 reporting (outages concentrated 13:00-17:00); no official STEG schedule published,SIMULATED
+2026-07-19,13:00,17:00,Tmax>=38C (NASA POWER hourly),HRW Oct 2026 reporting (outages concentrated 13:00-17:00); no official STEG schedule published,SIMULATED
+2026-07-20,13:00,17:00,Tmax>=38C (NASA POWER hourly),HRW Oct 2026 reporting (outages concentrated 13:00-17:00); no official STEG schedule published,SIMULATED
+2026-07-21,13:00,17:00,Tmax>=38C (NASA POWER hourly),HRW Oct 2026 reporting (outages concentrated 13:00-17:00); no official STEG schedule published,SIMULATED
+2026-07-22,13:00,17:00,Tmax>=38C (NASA POWER hourly),HRW Oct 2026 reporting (outages concentrated 13:00-17:00); no official STEG schedule published,SIMULATED
+2026-08-23,13:00,17:00,Tmax>=38C (NASA POWER hourly),HRW Oct 2026 reporting (outages concentrated 13:00-17:00); no official STEG schedule published,SIMULATED
+2026-08-25,13:00,17:00,Tmax>=38C (NASA POWER hourly),HRW Oct 2026 reporting (outages concentrated 13:00-17:00); no official STEG schedule published,SIMULATED
+2026-08-26,13:00,17:00,Tmax>=38C (NASA POWER hourly),HRW Oct 2026 reporting (outages concentrated 13:00-17:00); no official STEG schedule published,SIMULATED
+2026-08-27,13:00,17:00,Tmax>=38C (NASA POWER hourly),HRW Oct 2026 reporting (outages concentrated 13:00-17:00); no official STEG schedule published,SIMULATED
+2026-08-28,13:00,17:00,Tmax>=38C (NASA POWER hourly),HRW Oct 2026 reporting (outages concentrated 13:00-17:00); no official STEG schedule published,SIMULATED

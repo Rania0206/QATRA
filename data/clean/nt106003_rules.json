@@ -1,0 +1,256 @@
+{
+ "standard": "NT 106.03 (1989) - Tunisian standard for agricultural reuse of treated wastewater",
+ "note": "A revision of the reuse regulation and a decree classifying TWW quality by use are reported as in preparation (2026 press); values below are the 1989 standard.",
+ "parameters": [
+  {
+   "parameter": "pH",
+   "limit": "6.5 - 8.5",
+   "unit": "-",
+   "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)' - https://www.environnement.gov.tn/fileadmin/Bibliotheque/Projets_acheves/PISEAU_II/Programmes_formation-sensibilisation/Presentation_EIE.pdf",
+   "status": "REPORTED"
+  },
+  {
+   "parameter": "EC",
+   "limit": 7000,
+   "unit": "uS/cm",
+   "source": "Benabdallah S. (2003) 'La reutilisation des eaux usees traitees en Tunisie', Tableau 10 p.15 - https://www.files.ethz.ch/isn/27892/2003-11.pdf",
+   "status": "REPORTED"
+  },
+  {
+   "parameter": "COD",
+   "limit": 90,
+   "unit": "mg O2/L (24h mean)",
+   "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)' - https://www.environnement.gov.tn/fileadmin/Bibliotheque/Projets_acheves/PISEAU_II/Programmes_formation-sensibilisation/Presentation_EIE.pdf",
+   "status": "REPORTED"
+  },
+  {
+   "parameter": "BOD5",
+   "limit": 30,
+   "unit": "mg O2/L (24h mean)",
+   "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)' - https://www.environnement.gov.tn/fileadmin/Bibliotheque/Projets_acheves/PISEAU_II/Programmes_formation-sensibilisation/Presentation_EIE.pdf",
+   "status": "REPORTED"
+  },
+  {
+   "parameter": "TSS",
+   "limit": 30,
+   "unit": "mg/L",
+   "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)' - https://www.environnement.gov.tn/fileadmin/Bibliotheque/Projets_acheves/PISEAU_II/Programmes_formation-sensibilisation/Presentation_EIE.pdf",
+   "status": "REPORTED"
+  },
+  {
+   "parameter": "Chloride",
+   "limit": 2000,
+   "unit": "mg/L",
+   "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)' - https://www.environnement.gov.tn/fileadmin/Bibliotheque/Projets_acheves/PISEAU_II/Programmes_formation-sensibilisation/Presentation_EIE.pdf",
+   "status": "REPORTED"
+  },
+  {
+   "parameter": "Fluoride",
+   "limit": 3,
+   "unit": "mg/L",
+   "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)' - https://www.environnement.gov.tn/fileadmin/Bibliotheque/Projets_acheves/PISEAU_II/Programmes_formation-sensibilisation/Presentation_EIE.pdf",
+   "status": "REPORTED"
+  },
+  {
+   "parameter": "Organochlorines",
+   "limit": 0.001,
+   "unit": "mg/L",
+   "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)' - https://www.environnement.gov.tn/fileadmin/Bibliotheque/Projets_acheves/PISEAU_II/Programmes_formation-sensibilisation/Presentation_EIE.pdf",
+   "status": "REPORTED"
+  },
+  {
+   "parameter": "Arsenic",
+   "limit": 0.1,
+   "unit": "mg/L",
+   "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)' - https://www.environnement.gov.tn/fileadmin/Bibliotheque/Projets_acheves/PISEAU_II/Programmes_formation-sensibilisation/Presentation_EIE.pdf",
+   "status": "REPORTED"
+  },
+  {
+   "parameter": "Boron",
+   "limit": 3,
+   "unit": "mg/L",
+   "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)' - https://www.environnement.gov.tn/fileadmin/Bibliotheque/Projets_acheves/PISEAU_II/Programmes_formation-sensibilisation/Presentation_EIE.pdf",
+   "status": "REPORTED"
+  },
+  {
+   "parameter": "Cadmium",
+   "limit": 0.01,
+   "unit": "mg/L",
+   "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)' - https://www.environnement.gov.tn/fileadmin/Bibliotheque/Projets_acheves/PISEAU_II/Programmes_formation-sensibilisation/Presentation_EIE.pdf",
+   "status": "REPORTED"
+  },
+  {
+   "parameter": "Cobalt",
+   "limit": 0.1,
+   "unit": "mg/L",
+   "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)' - https://www.environnement.gov.tn/fileadmin/Bibliotheque/Projets_acheves/PISEAU_II/Programmes_formation-sensibilisation/Presentation_EIE.pdf",
+   "status": "REPORTED"
+  },
+  {
+   "parameter": "Chromium",
+   "limit": 0.1,
+   "unit": "mg/L",
+   "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)' - https://www.environnement.gov.tn/fileadmin/Bibliotheque/Projets_acheves/PISEAU_II/Programmes_formation-sensibilisation/Presentation_EIE.pdf",
+   "status": "REPORTED"
+  },
+  {
+   "parameter": "Copper",
+   "limit": 0.5,
+   "unit": "mg/L",
+   "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)' - https://www.environnement.gov.tn/fileadmin/Bibliotheque/Projets_acheves/PISEAU_II/Programmes_formation-sensibilisation/Presentation_EIE.pdf",
+   "status": "REPORTED"
+  },
+  {
+   "parameter": "Iron",
+   "limit": 5,
+   "unit": "mg/L",
+   "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)' - https://www.environnement.gov.tn/fileadmin/Bibliotheque/Projets_acheves/PISEAU_II/Programmes_formation-sensibilisation/Presentation_EIE.pdf",
+   "status": "REPORTED"
+  },
+  {
+   "parameter": "Manganese",
+   "limit": 0.5,
+   "unit": "mg/L",
+   "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)' - https://www.environnement.gov.tn/fileadmin/Bibliotheque/Projets_acheves/PISEAU_II/Programmes_formation-sensibilisation/Presentation_EIE.pdf",
+   "status": "REPORTED"
+  },
+  {
+   "parameter": "Mercury",
+   "limit": 0.001,
+   "unit": "mg/L",
+   "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)' - https://www.environnement.gov.tn/fileadmin/Bibliotheque/Projets_acheves/PISEAU_II/Programmes_formation-sensibilisation/Presentation_EIE.pdf",
+   "status": "REPORTED"
+  },
+  {
+   "parameter": "Nickel",
+   "limit": 0.2,
+   "unit": "mg/L",
+   "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)' - https://www.environnement.gov.tn/fileadmin/Bibliotheque/Projets_acheves/PISEAU_II/Programmes_formation-sensibilisation/Presentation_EIE.pdf",
+   "status": "REPORTED"
+  },
+  {
+   "parameter": "Lead",
+   "limit": 1,
+   "unit": "mg/L",
+   "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)' - https://www.environnement.gov.tn/fileadmin/Bibliotheque/Projets_acheves/PISEAU_II/Programmes_formation-sensibilisation/Presentation_EIE.pdf",
+   "status": "REPORTED"
+  },
+  {
+   "parameter": "Selenium",
+   "limit": 0.05,
+   "unit": "mg/L",
+   "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)' - https://www.environnement.gov.tn/fileadmin/Bibliotheque/Projets_acheves/PISEAU_II/Programmes_formation-sensibilisation/Presentation_EIE.pdf",
+   "status": "REPORTED"
+  },
+  {
+   "parameter": "Zinc",
+   "limit": 5,
+   "unit": "mg/L",
+   "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)' - https://www.environnement.gov.tn/fileadmin/Bibliotheque/Projets_acheves/PISEAU_II/Programmes_formation-sensibilisation/Presentation_EIE.pdf",
+   "status": "REPORTED"
+  },
+  {
+   "parameter": "Intestinal nematode eggs (helminths)",
+   "limit": 1,
+   "unit": "eggs per 1000 mL (<=)",
+   "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)' - https://www.environnement.gov.tn/fileadmin/Bibliotheque/Projets_acheves/PISEAU_II/Programmes_formation-sensibilisation/Presentation_EIE.pdf",
+   "status": "REPORTED"
+  },
+  {
+   "parameter": "Faecal coliforms",
+   "limit": null,
+   "unit": "CFU/100 mL",
+   "source": "Benabdallah S. (2003) 'La reutilisation des eaux usees traitees en Tunisie', Tableau 10 p.15 - https://www.files.ethz.ch/isn/27892/2003-11.pdf (states NT 106.03 only regulates nematode eggs microbiologically)",
+   "status": "REPORTED (no limit in NT 106.03)",
+   "who_2006_reference": "WHO 2006: E. coli <=1e3-1e4 /100 mL depending on crop/exposure (restricted irrigation ~ <=1e4-1e5 with health-protection measures); TO_VERIFY exact table",
+   "fallback_used_by_engine": 1000,
+   "fallback_status": "TO_VERIFY (WHO-derived design value, not Tunisian law)"
+  }
+ ],
+ "decree_89_1047": {
+  "title": "Decret n. 89-1047 du 28 juillet 1989 fixant les conditions d'utilisation des eaux usees traitees a des fins agricoles (JORT n.55, 11-15 aout 1989, p.1218); modifie par decret n. 93-2447 du 13 decembre 1993",
+  "source": "https://faolex.fao.org/docs/pdf/tun204032.pdf",
+  "status": "REPORTED",
+  "authorisation": "Art.1: authorisation by Minister of Agriculture after agreement of Public Health (and environment authority).",
+  "monitoring_frequency": [
+   {
+    "what": "pH, BOD5, COD, TSS, chloride, sodium, ammonium-N, electrical conductivity",
+    "frequency": "at least once per month",
+    "sample": "24h composite",
+    "article": "Art.3a"
+   },
+   {
+    "what": "As, B, Cd, Cr, Co, Cu, Fe, fluoride, Mn, Hg, Ni, organochlorines, Se, Pb, Zn",
+    "frequency": "at least once per semester",
+    "sample": "24h composite",
+    "article": "Art.3b"
+   },
+   {
+    "what": "parasite eggs",
+    "frequency": "once every 15 days",
+    "sample": "24h composite",
+    "article": "Art.3c"
+   }
+  ],
+  "forbidden": [
+   "Art.5: irrigation of vegetable crops (cultures maraicheres) and crops eaten raw (crudites) is forbidden",
+   "Art.6: direct grazing on TWW-irrigated plots is prohibited"
+  ],
+  "conditions": [
+   "Art.7: only crops whose products are not directly consumed by humans (list fixed by arrete of Min. Agriculture); no other crop in the perimeter may be contaminated",
+   "Art.9: sign 'eau impropre a la consommation' mandatory on every TWW irrigation tap",
+   "Art.10: sprinkler-irrigated perimeters must be sufficiently far from roads, settlements and drinking-water wells (no distance specified)",
+   "Art.11: no water ponding, odours, mosquito breeding sites or groundwater contamination",
+   "Art.12: cahier des charges sets specific conditions per use"
+  ]
+ },
+ "allowed_crops_arrete_21_06_1994": {
+  "source": "Arrete du Ministre de l'Agriculture du 21 juin 1994, as summarised in Benabdallah S. (2003) 'La reutilisation des eaux usees traitees en Tunisie', Tableau 10 p.15 - https://www.files.ethz.ch/isn/27892/2003-11.pdf p.15",
+  "status": "REPORTED (secondary source)",
+  "industrial": [
+   "cotton",
+   "tobacco",
+   "flax",
+   "jojoba",
+   "castor",
+   "safflower"
+  ],
+  "cereals": [
+   "wheat",
+   "barley",
+   "triticale",
+   "oat"
+  ],
+  "fodder": [
+   "berseem",
+   "maize",
+   "fodder sorghum",
+   "vetch"
+  ],
+  "fruit_trees": "date palm, citrus, vines - on condition they are NOT sprinkler-irrigated",
+  "fodder_shrubs": [
+   "acacia",
+   "atriplex"
+  ],
+  "forest_trees": true,
+  "note": "List continues in source (ornamentals/golf etc. not captured). Olive is commonly irrigated with TWW in Tunisian perimeters as a fruit tree; alfalfa as fodder - engine treats both as allowed (fruit tree drip/surface; fodder) - TO_VERIFY against full arrete text."
+ },
+ "cahier_des_charges_1995": {
+  "status": "TO_VERIFY",
+  "note": "Text not located online within time-box."
+ },
+ "engine_rule_mapping": {
+  "blocked": [
+   "vegetables eaten raw (lettuce, tomato as fresh vegetable)",
+   "direct grazing"
+  ],
+  "allowed": [
+   "cereals",
+   "fodder (alfalfa, oat, barley fodder)",
+   "industrial crops",
+   "fruit trees (no sprinkler)",
+   "olive (as fruit tree)"
+  ],
+  "status": "ESTIMATE (QATRA+ interpretation of decree + arrete)"
+ }
+}

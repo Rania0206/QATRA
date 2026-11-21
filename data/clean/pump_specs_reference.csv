@@ -1,0 +1,5 @@
+pump_type,flow_m3_h_min,flow_m3_h_max,head_m_min,head_m_max,power_kW_min,power_kW_max,efficiency_min,efficiency_max,status,source,pv_kwp_per_pump_kw_min,pv_kwp_per_pump_kw_max
+transfer centrifugal (plant->basin),50.0,300.0,10.0,60.0,5.0,75.0,0.6,0.8,ESTIMATE,Hydraulic power P=rho g Q H/eta; typical end-suction pump efficiency ranges (Europump/Hydraulic Institute); manufacturer catalogues - TO_VERIFY specific model,,
+farm borehole submersible (Sahel TN),5.0,40.0,30.0,150.0,2.2,30.0,0.45,0.7,ESTIMATE,"Sahel aquifer depths ~20-120 m (TO_VERIFY with DGRE); submersible pump curves (e.g. 4""/6"" catalogues)",,
+surface farm pump (basin->drip),5.0,50.0,15.0,40.0,0.75,7.5,0.45,0.7,ESTIMATE,Drip systems need ~10-20 m operating pressure + losses,,
+solar PV pumping sizing,,,,,,,,,ESTIMATE,Rule of thumb: PV array kWp = 1.2-1.5 x pump motor kW (FAO/GIZ 'Solar Powered Irrigation Systems' toolbox) - TO_VERIFY,1.2,1.5
