@@ -25,7 +25,7 @@ Shared between backend (FastAPI, `backend/app`) and frontend (React, `frontend/s
 | `Allocation` | `batch_id`, `items`: `[{farm_id, status, m3, cap_reason?}]`, `schedule`: `[{hour, pump_kw, source: "solar" \| "grid" \| "basin" \| "off", basin_m3}]`, `energy_kwh`, `solar_share` (0..1), `fresh_replaced_m3`, `warnings`: `string[]` |
 
 Conventions used in mocks (free strings, agree before adding values):
-- `Batch.status`: `received`, `on_hold` (analysis expired), `blocked` (quality fails), `allocated`.
+- `Batch.status` (A-03b, compliance with NT 106.03 / Decree 89-1047): `compliant`, `conditional`, `non_compliant` (a measured value above a limit), `analysis_invalid` (analysis expired or missing).
 - `AllocationItem.status`: `allocated`, `conditional`, `capped`, `blocked`.
 - Faecal coliforms are stored in the `physico_chemical` analysis `values` (no separate microbiology type yet).
 

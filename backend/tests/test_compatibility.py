@@ -2,7 +2,8 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from app.engine.compatibility import Compatibility, compatibility, decide
+from app.engine.compatibility import Compatibility, compatibility
+from app.engine.rules import overall as decide
 from app.main import app
 from app.schemas import RuleResult
 from app.store import get_store, init_store
@@ -60,7 +61,7 @@ def test_problem_batches_fail_the_right_rule(batch_id, rule):
 
 def test_ec_is_converted_to_us_cm():
     ec = next(r for r in compatibility("B", BATCH).results if r.rule_id == "R-LIMIT-EC")
-    assert ec.passed and "3660 uS/cm" in ec.reason_en
+    assert ec.passed and ec.reason_en.startswith("EC 3.66 dS/m within limit 7")
 
 
 def test_unmeasured_metals_are_info_not_pass_or_fail():

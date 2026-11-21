@@ -33,7 +33,7 @@
     }
   ],
   "analysis_status": "valid",
-  "status": "received",
+  "status": "compliant",
   "risk_colour": "green",
   "warnings": [
     "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."

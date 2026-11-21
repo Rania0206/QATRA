@@ -1,5 +1,5 @@
 import type { Batch } from "../../api/types";
-import { fmtDate, fmtNumber } from "./format";
+import { COMPLIANCE_BADGE, fmtDate, fmtNumber } from "./format";
 import StatusBadge from "./StatusBadge";
 import TagChip from "../../components/TagChip";
 
@@ -24,7 +24,7 @@ export default function BatchesTable({ batches, selectedId, showRowTags, onSelec
             <th className={`${TH} text-right`}>Volume (m³)</th>
             <th className={TH}>Treatment</th>
             <th className={TH}>Analyses</th>
-            <th className={TH} title="Legal limits check (A-03)">Compliance</th>
+            <th className={TH} title="NT 106.03 limits and Decree 89-1047 analyses">Compliance</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-100">
@@ -54,7 +54,18 @@ export default function BatchesTable({ batches, selectedId, showRowTags, onSelec
               <td className={TD}>
                 <StatusBadge status={b.analysis_status} />
               </td>
-              <td className={`${TD} text-slate-400`}>—</td>
+              <td className={TD}>
+                {COMPLIANCE_BADGE[b.status] ? (
+                  <span
+                    title={COMPLIANCE_BADGE[b.status].title}
+                    className={`inline-block whitespace-nowrap rounded-md px-2.5 py-1 text-sm font-semibold ${COMPLIANCE_BADGE[b.status].cls}`}
+                  >
+                    {COMPLIANCE_BADGE[b.status].label}
+                  </span>
+                ) : (
+                  <span className="text-slate-400">—</span>
+                )}
+              </td>
             </tr>
           ))}
         </tbody>
