@@ -126,3 +126,11 @@ def compare_policies(ece0: float, ecw: float, ece_thr: float, lf_naive: float, y
         p["water_used_m3"] = None if net_need_m3 is None else water_used_m3(net_need_m3, p["lf"])
     return {"leaching_requirement": leaching_requirement(ecw, ece_thr), "naive": naive, "qatra": qatra,
             "tag": {"status": "ESTIMATE", "source": "QATRA yearly model on FAO-29 (tau 3 y, LF cap 0.5)"}}
+
+
+# ---------------------------------------------------------------- data-backed cap (B-03b)
+def cap_volume(farm: dict, ecw: float, **kwargs) -> dict:
+    """Max TWW volume per season for a farm. Implemented in engine/soil_inputs.py (it needs the store);
+    imported lazily so this module stays numpy-only. Same signature: cap_volume(farm, ecw)."""
+    from app.engine.soil_inputs import cap_volume as _cap_volume
+    return _cap_volume(farm, ecw, **kwargs)
