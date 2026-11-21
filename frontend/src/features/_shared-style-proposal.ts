@@ -1,47 +1,52 @@
 /**
- * QATRA design tokens — PROPOSAL (A-15). Editorial & minimal, projector-first.
+ * QATRA design tokens — PROPOSAL (A-15). Minimal & professional, projector-first.
  *
  * Used for now only by features/batches and features/compatibility, through the CSS variables
  * and helper classes in features/_qatra-editorial.css (scoped under `.q-screen`).
  * If the team adopts them, move them to the global theme (index.css @theme) and the Shell.
+ *
+ * Principles: one font, sentence case, light surfaces, thin grey borders, colour only for status.
  */
 
 export const colors = {
-  cream: "#F4EDE3", // page background
-  paper: "#FBF8F3", // cards, drawers, table rows
-  paperAlt: "#F7F1E8", // zebra rows, muted (blocked) cards
-  hover: "#EFE5D6", // hover / pressed surfaces
-  ink: "#141414", // text, 1px borders, solid buttons
-  ink2: "#4A4A4A", // secondary text (no light grey: projector)
-  accent: "#E4572E", // the ONE accent: highlights, focus, latest batch. White text only at ≥ 18 px bold.
-  ok: "#2E7D4F", // ✅ compatible / valid / compliant (white text)
-  warn: "#D98E04", // ⚠️ conditional / expired (ink text: white fails contrast on this orange)
-  bad: "#C0392B", // ⛔ blocked / missing / non-compliant (white text)
+  page: "#F8FAFC", // page background
+  surface: "#FFFFFF", // cards, drawers, table
+  surfaceAlt: "#F9FAFB", // zebra rows, muted (blocked) cards
+  hover: "#F3F4F6",
+  line: "#E5E7EB", // 1px borders and dividers
+  ink: "#111827", // text, primary buttons
+  ink2: "#4B5563", // secondary text (stays dark enough for a projector)
+  accent: "#0F766E", // teal, same family as the shell header; focus rings, latest-batch marker
+  status: {
+    ok: { text: "#166534", bg: "#F0FDF4", border: "#BBF7D0", dot: "#16A34A" }, // compatible / valid / compliant
+    warn: { text: "#92400E", bg: "#FFFBEB", border: "#FDE68A", dot: "#D97706" }, // conditional / expired
+    bad: { text: "#991B1B", bg: "#FEF2F2", border: "#FECACA", dot: "#DC2626" }, // blocked / missing / non-compliant
+    neutral: { text: "#374151", bg: "#F3F4F6", border: "#E5E7EB", dot: "#6B7280" }, // analysis invalid
+  },
 } as const;
 
-export const fonts = {
-  display: "'Archivo', system-ui, sans-serif", // headings, weight 800; section titles UPPERCASE
-  body: "'Inter', system-ui, sans-serif", // body text, weights 400 / 600
-  mono: "'IBM Plex Mono', ui-monospace, monospace", // data, IDs, dates, m³, labels; weights 400 / 600
+export const font = {
+  family: "'Inter', system-ui, sans-serif", // everything; numbers use tabular figures
+  mono: "ui-monospace, 'SF Mono', Consolas, monospace", // batch IDs only
+  weights: [400, 500, 600], // no 700/800
 } as const;
 
 /** px. Body never below 16 on screens shown to the jury. */
 export const fontSize = {
-  label: 15, // mono uppercase labels / table headers
+  label: 15,
   body: 16,
-  lead: 18,
-  h2: 28, // screen titles
-  h3: 22, // section titles (uppercase)
-  hero: 64, // key figures ("257 HA"); 48 on small screens
+  title: 18, // section titles
+  h2: 24, // screen titles
+  figure: 30, // key figures in the stat strip
 } as const;
 
 export const shape = {
-  border: `1px solid ${colors.ink}`,
-  divider: `1px dashed ${colors.ink}`, // between sections, like a printed menu
-  radius: 2, // square-ish corners; no heavy shadows
+  radius: 8, // cards; 6 for badges and inputs
+  border: `1px solid ${colors.line}`,
+  shadow: "0 1px 2px rgb(17 24 39 / 0.04)",
 } as const;
 
 export const motion = {
   fast: "150ms ease-out", // hover, press
-  skeleton: "1.2s ease-in-out infinite", // shimmer; disabled with prefers-reduced-motion
+  skeleton: "1.2s ease-in-out infinite", // disabled with prefers-reduced-motion
 } as const;

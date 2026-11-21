@@ -8,9 +8,9 @@ import { Skeleton } from "./ui";
 function Stat({ value, unit, caption, tag, extra }: { value: string; unit: string; caption: string; tag: Tag; extra?: ReactNode }) {
   return (
     <div className="q-card flex flex-col justify-between gap-4 p-5">
-      <p className="q-display text-5xl xl:text-[64px]">
+      <p className="q-display text-5xl">
         {value}
-        <span className="ml-2 text-3xl xl:text-4xl">{unit}</span>
+        <span className="ml-2 text-2xl text-[var(--q-ink-2)]">{unit}</span>
       </p>
       <div className="space-y-2">
         <p className="q-label">{caption}</p>
@@ -28,20 +28,20 @@ export default function StatStrip({ latest }: { latest?: Batch }) {
     <div className="grid gap-4 md:grid-cols-3">
       <Stat
         value={fmtNumber(PERIMETER.equipped_ha)}
-        unit="HA"
+        unit="ha"
         caption={`${PERIMETER.name} · equipped for treated water`}
         tag={PERIMETER.tag}
       />
       <Stat
         value={fmtNumber(PERIMETER.delivered_m3)}
-        unit="M³"
+        unit="m³"
         caption={`Delivered to farms in ${PERIMETER.season}`}
         tag={PERIMETER.tag}
       />
       {latest ? (
         <Stat
           value={fmtNumber(latest.volume_m3)}
-          unit="M³"
+          unit="m³"
           caption={`Today's batch · ${fmtDate(latest.date)}`}
           tag={latest.tag}
           extra={<ComplianceBadge status={latest.status} />}

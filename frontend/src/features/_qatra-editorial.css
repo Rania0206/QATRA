@@ -1,69 +1,94 @@
-/* QATRA editorial style (A-15 proposal). Tokens: features/_shared-style-proposal.ts.
-   NOTE: the Google Fonts @import is global once this file is loaded (Archivo, Inter, IBM Plex Mono).
+/* QATRA minimal style (A-15 proposal). Tokens: features/_shared-style-proposal.ts.
+   Light serif headings, sans body, small mono labels, off-white surfaces, one olive accent.
+   NOTE: the Google Fonts @import is global once this file is loaded (Cormorant Garamond, Inter, IBM Plex Mono).
    Every rule below is scoped to .q-screen so the shell and other tabs are untouched. */
-@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@500;800&family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500&display=swap");
 
 .q-screen {
-  --q-cream: #f4ede3;
-  --q-paper: #fbf8f3;
-  --q-paper-alt: #f7f1e8;
-  --q-hover: #efe5d6;
-  --q-ink: #141414;
-  --q-ink-2: #4a4a4a;
-  --q-accent: #e4572e;
-  --q-ok: #2e7d4f;
-  --q-warn: #d98e04;
-  --q-bad: #c0392b;
+  --q-cream: #fbf8f3; /* page, warm off-white */
+  --q-paper: #ffffff; /* cards */
+  --q-paper-alt: #f6f2ea; /* zebra rows, muted cards */
+  --q-hover: #f1ece3;
+  --q-line: #e2dbcf; /* thin warm-grey lines */
+  --q-ink: #1c1c1a; /* text */
+  --q-ink-2: #55524c; /* secondary text, still dark for a projector */
+  --q-accent: #6b8547; /* muted olive: the single accent */
+  --q-ok: #4f6b2f;
+  --q-warn: #9a6212;
+  --q-bad: #9b2c2c;
 
   font-family: "Inter", system-ui, sans-serif;
   font-size: 16px;
-  line-height: 1.5;
+  line-height: 1.55;
   color: var(--q-ink);
   background: var(--q-cream);
 }
 
+/* light, elegant serif: titles and key figures */
 .q-display {
-  font-family: "Archivo", system-ui, sans-serif;
-  font-weight: 800;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 500;
   letter-spacing: -0.01em;
-  line-height: 1.05;
+  line-height: 1.1;
+  font-variant-numeric: lining-nums tabular-nums; /* "1,500", not old-style "I,500" */
 }
 
 .q-title {
-  font-family: "Archivo", system-ui, sans-serif;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-weight: 500;
+  font-size: 1.6rem;
+  line-height: 1.2;
 }
 
+/* numbers, dates, volumes: aligned digits */
 .q-mono {
+  font-variant-numeric: tabular-nums;
+}
+
+/* small typewriter labels, like the eyebrow text and links of the reference */
+.q-label {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--q-ink-2);
+}
+
+.q-code {
   font-family: "IBM Plex Mono", ui-monospace, monospace;
   font-variant-numeric: tabular-nums;
 }
 
-.q-label {
-  font-family: "IBM Plex Mono", ui-monospace, monospace;
-  font-size: 15px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--q-ink-2);
-}
-
 .q-dash {
-  border-top: 1px dashed var(--q-ink);
+  border-top: 1px solid var(--q-line);
 }
 
 .q-card {
   background: var(--q-paper);
+  border: 1px solid var(--q-line);
+  border-radius: 2px;
+  transition: background-color 150ms ease-out, border-color 150ms ease-out;
+}
+
+/* thin outlined button, square corners */
+.q-btn {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: 15px;
   border: 1px solid var(--q-ink);
   border-radius: 2px;
-  transition: background-color 150ms ease-out, transform 150ms ease-out;
+  padding: 0.5rem 1.25rem;
+  background: transparent;
+  color: var(--q-ink);
+  transition: background-color 150ms ease-out, color 150ms ease-out;
+}
+.q-btn:hover {
+  background: var(--q-ink);
+  color: var(--q-cream);
 }
 
 .q-skeleton {
   border-radius: 2px;
-  background: linear-gradient(90deg, #e9e0d3 25%, #f4ede3 50%, #e9e0d3 75%);
+  background: linear-gradient(90deg, #efe9df 25%, #f7f3ec 50%, #efe9df 75%);
   background-size: 200% 100%;
   animation: q-shimmer 1.2s ease-in-out infinite;
 }
@@ -79,7 +104,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .q-skeleton,
-  .q-card {
+  .q-card,
+  .q-btn {
     animation: none;
     transition: none;
   }

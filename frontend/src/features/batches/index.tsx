@@ -51,7 +51,7 @@ export default function BatchesTab() {
     <Screen>
       <header className="space-y-2">
         <p className="q-label">Sousse Sud plant → Zaouiet-Sousse irrigated area</p>
-        <h2 className="q-display text-[28px] uppercase sm:text-4xl">Treated-water batches</h2>
+        <h2 className="q-display text-4xl sm:text-5xl">Treated-water batches</h2>
       </header>
 
       <StatStrip latest={latest} />
@@ -69,7 +69,7 @@ export default function BatchesTab() {
       >
         Daily batches
         {batches && (
-          <span className="q-mono ml-3 text-lg font-semibold normal-case tracking-normal text-[var(--q-ink-2)]">
+          <span className="q-label ml-3">
             {all.length} batches · <span style={{ color: "var(--q-bad)" }}>{expired} expired</span>
             {missing > 0 && <> · {missing} missing</>}
           </span>
@@ -93,13 +93,13 @@ export default function BatchesTab() {
 
       {error ? (
         <div role="alert" className="q-card space-y-3 border-[var(--q-bad)] p-5">
-          <p className="q-title text-xl" style={{ color: "var(--q-bad)" }}>
+          <p className="q-title" style={{ color: "var(--q-bad)" }}>
             Could not load batches
           </p>
           <p className="q-mono text-base">{error}</p>
           <button
             onClick={load}
-            className="q-mono rounded-[2px] border border-[var(--q-ink)] bg-[var(--q-ink)] px-4 py-2 font-semibold uppercase text-[var(--q-paper)] transition-colors hover:bg-[var(--q-ink-2)]"
+            className="q-btn"
           >
             Retry
           </button>

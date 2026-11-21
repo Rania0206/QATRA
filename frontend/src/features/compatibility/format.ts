@@ -17,19 +17,6 @@ export const DECISION: Record<Decision, { icon: string; en: string; fr: string; 
   blocked: { icon: "⛔", en: "Blocked", fr: "Bloqué", legendEn: "Blocked by law", legendFr: "Bloqué par la loi", tone: "bad" },
 };
 
-const CROP_ICON: Record<string, string> = {
-  alfalfa: "🌿",
-  olive: "🫒",
-  lettuce: "🥬",
-  tomato: "🍅",
-  wheat: "🌾",
-  barley: "🌾",
-  barley_fodder: "🌾",
-  oat_fodder: "🌾",
-  citrus_orange: "🍊",
-  pomegranate: "🍎",
-};
-export const cropIcon = (crop: string) => CROP_ICON[crop] ?? "🌱";
 
 export const GROUPS: { id: SourceType; en: string; fr: string }[] = [
   { id: "tunisian_law", en: "Tunisian law", fr: "Loi tunisienne" },

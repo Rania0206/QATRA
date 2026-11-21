@@ -6,7 +6,7 @@ import { USE_MOCKS } from "../../config";
 import { useApi } from "../../hooks/useApi";
 import ComplianceBadge from "../batches/ComplianceBadge";
 import { COMPLIANCE_BADGE, fmtDate } from "../batches/format";
-import { Screen, SectionTitle, Segmented, Skeleton } from "../batches/ui";
+import { Dot, Screen, SectionTitle, Segmented, Skeleton } from "../batches/ui";
 import FarmCard, { FarmCardSkeleton } from "./FarmCard";
 import FarmDrawer from "./FarmDrawer";
 import { DECISION, T, type Lang, type RuleInfo } from "./format";
@@ -63,7 +63,7 @@ export default function CompatibilityTab() {
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div className="space-y-2">
           <p className="q-label">{lang === "fr" ? "Compatibilité eau · ferme" : "Water × farm compatibility"}</p>
-          <h2 className="q-display text-[28px] sm:text-4xl">{T.title[lang]}</h2>
+          <h2 className="q-display text-4xl sm:text-5xl">{T.title[lang]}</h2>
         </div>
         <Segmented
           label="Language"
@@ -85,7 +85,7 @@ export default function CompatibilityTab() {
           value={shownBatch}
           disabled={!base.data}
           onChange={(e) => setBatchId(e.target.value)}
-          className="q-mono min-w-0 flex-1 rounded-[2px] border border-[var(--q-ink)] bg-[var(--q-paper)] px-3 py-2 text-base font-semibold transition-colors hover:bg-[var(--q-hover)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--q-accent)] sm:flex-none"
+          className="q-code min-w-0 flex-1 rounded-[2px] border border-[var(--q-line)] bg-[var(--q-paper)] px-3 py-2 text-base transition-colors hover:bg-[var(--q-hover)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--q-accent)] sm:flex-none"
         >
           {!shownBatch && <option value="">…</option>}
           {base.data?.batches.map((b) => (
@@ -103,24 +103,24 @@ export default function CompatibilityTab() {
 
       {/* Legend + counts: readable in one glance on a projector */}
       <SectionTitle>
-        <span className="flex flex-wrap items-center gap-x-6 gap-y-2 normal-case">
+        <span className="flex flex-wrap items-center gap-x-6 gap-y-2 font-sans text-base">
           {ORDER.map((d) => (
             <span key={d} className="inline-flex items-center gap-2">
-              <span aria-hidden="true">{DECISION[d].icon}</span>
-              <span className="q-title text-[20px]">{lang === "fr" ? DECISION[d].legendFr : DECISION[d].legendEn}</span>
+              <Dot tone={DECISION[d].tone} />
+              <span className="text-base font-medium">{lang === "fr" ? DECISION[d].legendFr : DECISION[d].legendEn}</span>
               {compat.data && !compat.loading && (
-                <span className="q-mono rounded-[2px] border border-[var(--q-ink)] px-2 text-lg font-semibold">{counts[d]}</span>
+                <span className="q-label">{counts[d]}</span>
               )}
             </span>
           ))}
         </span>
       </SectionTitle>
 
-      {USE_MOCKS && <p className="q-mono text-base">{T.mockNote[lang]}</p>}
+      {USE_MOCKS && <p className="q-label">{T.mockNote[lang]}</p>}
 
       {error ? (
         <div role="alert" className="q-card space-y-3 border-[var(--q-bad)] p-5">
-          <p className="q-title text-xl" style={{ color: "var(--q-bad)" }}>
+          <p className="q-title" style={{ color: "var(--q-bad)" }}>
             {lang === "fr" ? "Chargement impossible" : "Could not load compatibility"}
           </p>
           <p className="q-mono text-base">{error.message}</p>
@@ -130,7 +130,7 @@ export default function CompatibilityTab() {
               base.reload();
               compat.reload();
             }}
-            className="q-mono rounded-[2px] border border-[var(--q-ink)] bg-[var(--q-ink)] px-4 py-2 font-semibold uppercase text-[var(--q-paper)] transition-colors hover:bg-[var(--q-ink-2)]"
+            className="q-btn"
           >
             {lang === "fr" ? "Réessayer" : "Retry"}
           </button>

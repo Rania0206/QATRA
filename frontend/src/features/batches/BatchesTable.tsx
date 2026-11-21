@@ -13,7 +13,7 @@ interface Props {
   onSelect: (b: Batch) => void;
 }
 
-const TH = "q-label sticky top-0 z-10 border-b border-[var(--q-ink)] bg-[var(--q-paper)] px-4 py-3 text-left";
+const TH = "q-label sticky top-0 z-10 border-b border-[var(--q-line)] bg-[var(--q-paper)] px-4 py-3 text-left font-normal";
 const TD = "px-4 py-3";
 
 export function TableSkeleton() {
@@ -54,19 +54,19 @@ export default function BatchesTable({ batches, latestId, selectedId, showRowTag
                 onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && onSelect(b)}
                 tabIndex={0}
                 aria-selected={selected}
-                className={`cursor-pointer border-b border-[var(--q-ink)]/15 transition-colors duration-150 odd:bg-[var(--q-paper)] even:bg-[var(--q-paper-alt)] hover:!bg-[var(--q-hover)] focus:outline-none focus-visible:!bg-[var(--q-hover)] ${
+                className={`cursor-pointer border-b border-[var(--q-line)] transition-colors duration-150 odd:bg-[var(--q-paper)] even:bg-[var(--q-paper-alt)] hover:!bg-[var(--q-hover)] focus:outline-none focus-visible:!bg-[var(--q-hover)] ${
                   selected ? "!bg-[var(--q-hover)]" : ""
-                } ${latest ? "shadow-[inset_6px_0_0_var(--q-accent)]" : ""}`}
+                } ${latest ? "shadow-[inset_3px_0_0_var(--q-accent)]" : ""}`}
               >
                 <td className={`${TD} q-mono whitespace-nowrap`}>
                   {fmtDate(b.date)}
                   {latest && (
-                    <span className="q-mono ml-2 rounded-[2px] bg-[var(--q-accent)] px-1.5 py-0.5 text-[15px] font-semibold uppercase text-white">
-                      Latest
+                    <span className="q-label ml-2 border border-[var(--q-accent)] px-1.5 py-0.5" style={{ color: "var(--q-accent)" }}>
+                      latest
                     </span>
                   )}
                 </td>
-                <td className={`${TD} q-mono whitespace-nowrap font-semibold`}>
+                <td className={`${TD} q-code whitespace-nowrap`}>
                   {b.id}
                   {showRowTags && (
                     <span className="ml-2">

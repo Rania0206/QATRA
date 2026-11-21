@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import "../_qatra-editorial.css";
 
-/** Editorial screen wrapper: cream page, scoped tokens (.q-screen). Bleeds over the shell's main padding. */
+/** Screen wrapper: off-white page, scoped tokens (.q-screen). Bleeds over the shell's main padding. */
 export function Screen({ children }: { children: ReactNode }) {
   return (
     <div className="q-screen -mx-3 -my-4 min-h-[calc(100vh-8rem)] px-4 py-6 sm:-mx-4 sm:-my-6 sm:px-6 sm:py-8">
@@ -12,49 +12,49 @@ export function Screen({ children }: { children: ReactNode }) {
 
 export type Tone = "ok" | "warn" | "bad" | "ink";
 
-const TONE: Record<Tone, string> = {
-  ok: "bg-[var(--q-ok)] text-white border-[var(--q-ok)]",
-  warn: "bg-[var(--q-warn)] text-[var(--q-ink)] border-[var(--q-warn)]", // ink text: white fails contrast on orange
-  bad: "bg-[var(--q-bad)] text-white border-[var(--q-bad)]",
-  ink: "bg-[var(--q-paper)] text-[var(--q-ink)] border-[var(--q-ink)]",
+/** Thin outlined pill; colour only carries the status. */
+const TONE: Record<Tone, { pill: string; dot: string }> = {
+  ok: { pill: "text-[var(--q-ok)] border-[var(--q-ok)]", dot: "bg-[var(--q-ok)]" },
+  warn: { pill: "text-[var(--q-warn)] border-[var(--q-warn)]", dot: "bg-[var(--q-warn)]" },
+  bad: { pill: "text-[var(--q-bad)] border-[var(--q-bad)]", dot: "bg-[var(--q-bad)]" },
+  ink: { pill: "text-[var(--q-ink-2)] border-[var(--q-ink-2)]", dot: "bg-[var(--q-ink-2)]" },
 };
 
-/** Square-ish status badge: icon + mono uppercase label. */
+/** Status badge: dot + label. `icon` is kept for call sites but not drawn (minimal style). */
 export function Badge({
   tone,
-  icon,
   label,
   title,
   size = "md",
 }: {
   tone: Tone;
-  icon: string;
+  icon?: string;
   label: string;
   title?: string;
   size?: "md" | "lg" | "xl";
 }) {
-  const sz =
-    size === "xl"
-      ? "w-full justify-center px-4 py-2.5 text-xl"
-      : size === "lg"
-        ? "px-3 py-1.5 text-lg"
-        : "px-2.5 py-1 text-base";
+  const sz = size === "md" ? "px-2.5 py-0.5 text-[15px]" : "px-3 py-1 text-base";
   return (
     <span
       title={title}
-      className={`q-mono inline-flex items-center gap-2 whitespace-nowrap rounded-[2px] border font-semibold uppercase tracking-wide ${TONE[tone]} ${sz}`}
+      className={`inline-flex items-center gap-2 whitespace-nowrap rounded-[2px] border bg-[var(--q-paper)] font-medium ${TONE[tone].pill} ${sz}`}
     >
-      <span aria-hidden="true">{icon}</span>
+      <span aria-hidden="true" className={`h-2 w-2 shrink-0 rounded-full ${TONE[tone].dot}`} />
       {label}
     </span>
   );
+}
+
+/** Coloured dot alone (legends, result rows). */
+export function Dot({ tone, className = "" }: { tone: Tone; className?: string }) {
+  return <span aria-hidden="true" className={`inline-block h-2.5 w-2.5 shrink-0 rounded-full ${TONE[tone].dot} ${className}`} />;
 }
 
 export function Skeleton({ className = "" }: { className?: string }) {
   return <div aria-hidden="true" className={`q-skeleton ${className}`} />;
 }
 
-/** Segmented control: 1px ink border, square corners, active = solid ink. */
+/** Segmented control: thin dark frame, square corners, mono labels; active = solid dark. */
 export function Segmented<T extends string>({
   options,
   value,
@@ -68,7 +68,7 @@ export function Segmented<T extends string>({
 }) {
   return (
     <div role="group" aria-label={label} className="inline-flex rounded-[2px] border border-[var(--q-ink)] bg-[var(--q-paper)]">
-      {options.map((o, i) => {
+      {options.map((o) => {
         const on = o.id === value;
         return (
           <button
@@ -76,9 +76,9 @@ export function Segmented<T extends string>({
             type="button"
             aria-pressed={on}
             onClick={() => onChange(o.id)}
-            className={`q-mono px-4 py-2 text-base font-semibold uppercase transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--q-accent)] ${
-              i > 0 ? "border-l border-[var(--q-ink)]" : ""
-            } ${on ? "bg-[var(--q-ink)] text-[var(--q-paper)]" : "text-[var(--q-ink)] hover:bg-[var(--q-hover)]"}`}
+            className={`q-code px-4 py-1.5 text-[15px] transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--q-accent)] ${
+              on ? "bg-[var(--q-ink)] text-[var(--q-cream)]" : "text-[var(--q-ink)] hover:bg-[var(--q-hover)]"
+            }`}
           >
             {o.label}
           </button>
@@ -88,11 +88,11 @@ export function Segmented<T extends string>({
   );
 }
 
-/** Section title: Archivo 800 uppercase over a dashed divider. */
+/** Section title over a thin divider. */
 export function SectionTitle({ children, right }: { children: ReactNode; right?: ReactNode }) {
   return (
-    <div className="q-dash flex flex-wrap items-end justify-between gap-3 pt-4">
-      <h3 className="q-title text-[22px]">{children}</h3>
+    <div className="q-dash flex flex-wrap items-center justify-between gap-3 pt-5">
+      <h3 className="q-title">{children}</h3>
       {right}
     </div>
   );
