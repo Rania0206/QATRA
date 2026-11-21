@@ -58,6 +58,16 @@ BATCH_FIELDS = {
     "BOD5": ["BOD5_mg_L"],
     "TSS": ["TSS_mg_L"],
     "Chloride": ["Cl_mg_L"],
+    # metals: only filled when a metals analysis exists (engine/batches.ANALYSIS_COLUMNS["metals"])
+    "Arsenic": ["As_mg_L"],
+    "Boron": ["B_mg_L"],
+    "Cadmium": ["Cd_mg_L"],
+    "Chromium": ["Cr_mg_L"],
+    "Copper": ["Cu_mg_L"],
+    "Mercury": ["Hg_mg_L"],
+    "Nickel": ["Ni_mg_L"],
+    "Lead": ["Pb_mg_L"],
+    "Zinc": ["Zn_mg_L"],
 }
 NEMATODE_FIELDS = ["helminth_eggs_per_L", "nematode_eggs_per_L"]  # 1 egg / 1000 mL = 1 egg / L
 

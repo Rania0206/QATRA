@@ -88,19 +88,24 @@ Router files `savings.py` and `business.py` do not exist yet; they are added wit
 }
 ```
 
-`GET /api/farms/C/compatibility?batch_id=SSUD-20260708` → one blocking `RuleResult`
+`GET /api/farms/C/compatibility?batch_id=SSUD-20260708` → blocked (excerpt: 2 of 13 results; full list in the mock)
 ```json
 {
   "farm_id": "C", "batch_id": "SSUD-20260708", "decision": "blocked",
   "results": [
-    {"rule_id": "R04_crop_allowed", "passed": false, "severity": "block",
-     "reason_en": "Lettuce is a vegetable eaten raw: irrigation with treated wastewater is prohibited.",
-     "reason_fr": "La laitue est un legume consomme cru : l'irrigation par EUT est interdite.",
-     "legal_ref": "Decret 89-1047 Art.5; Arrete MA 21/06/1994"}
+    {"rule_id": "R-CROP-ALLOWED", "passed": false, "severity": "block", "source_type": "tunisian_law",
+     "reason_en": "lettuce: not on the list of crops allowed by the 1994 order.",
+     "reason_fr": "lettuce : absent de la liste des cultures autorisees (arrete de 1994).",
+     "legal_ref": "Arrete du Ministre de l'Agriculture du 21 juin 1994 (Decree 89-1047 Art.7)"},
+    {"rule_id": "R-RAW-EATEN", "passed": false, "severity": "block", "source_type": "tunisian_law",
+     "reason_en": "lettuce is a vegetable eaten raw: treated wastewater is prohibited.",
+     "reason_fr": "lettuce est un legume consomme cru : les eaux usees traitees sont interdites.",
+     "legal_ref": "Decree 89-1047 Art.5"}
   ],
-  "tag": {"status": "ESTIMATE"}
+  "tag": {"status": "ESTIMATE", "source": "rules_config: NT 106.03, Decree 89-1047, 1994 order, FAO-29"}
 }
 ```
+Decision: any failed `block` → `blocked`; else any failed `condition` → `conditional`; else `compatible`. `info` results always pass. Rule list: `GET /api/rules`, `docs/rules.md`.
 
 `POST /api/allocate` with `{"batch_id": "SSUD-20260708"}` → `Allocation`
 (the default scenario in `sim_scenarios.json` allocates 1,000 m³ of this 1,200 m³ batch)

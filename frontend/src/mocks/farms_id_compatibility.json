@@ -4,53 +4,125 @@
   "decision": "blocked",
   "results": [
     {
-      "rule_id": "R01_analysis_valid",
+      "rule_id": "R-ANALYSIS",
       "passed": true,
       "severity": "block",
       "source_type": "tunisian_law",
-      "reason_en": "Physico-chemical analysis is less than 30 days old.",
-      "reason_fr": "L'analyse physico-chimique date de moins de 30 jours.",
-      "legal_ref": "Decret 89-1047 Art.3a (monthly)"
+      "reason_en": "Required analyses are present and still valid.",
+      "reason_fr": "Les analyses obligatoires sont presentes et encore valides.",
+      "legal_ref": "Decree 89-1047 Art.3 (monitoring frequencies)"
     },
     {
-      "rule_id": "R02_nt106_limits",
+      "rule_id": "R-LIMIT-PH",
       "passed": true,
       "severity": "block",
       "source_type": "tunisian_law",
-      "reason_en": "BOD5, COD, TSS, EC, pH and chloride are within NT 106.03 limits.",
-      "reason_fr": "DBO5, DCO, MES, CE, pH et chlorures respectent la NT 106.03.",
+      "reason_en": "pH = 7.34: within the NT 106.03 limit (6.5 - 8.5).",
+      "reason_fr": "pH = 7.34 : respecte la limite NT 106.03 (6.5 - 8.5).",
       "legal_ref": "NT 106.03 (1989)"
     },
     {
-      "rule_id": "R03_helminth_eggs",
+      "rule_id": "R-LIMIT-EC",
       "passed": true,
       "severity": "block",
       "source_type": "tunisian_law",
-      "reason_en": "Helminth eggs below 1 per litre.",
-      "reason_fr": "Oeufs d'helminthes inferieurs a 1 par litre.",
+      "reason_en": "EC = 3660 uS/cm: within the NT 106.03 limit (<= 7000).",
+      "reason_fr": "EC = 3660 uS/cm : respecte la limite NT 106.03 (<= 7000).",
       "legal_ref": "NT 106.03 (1989)"
     },
     {
-      "rule_id": "R04_crop_allowed",
+      "rule_id": "R-LIMIT-COD",
+      "passed": true,
+      "severity": "block",
+      "source_type": "tunisian_law",
+      "reason_en": "COD = 68.8 mg O2/L (24h mean): within the NT 106.03 limit (<= 90).",
+      "reason_fr": "COD = 68.8 mg O2/L (24h mean) : respecte la limite NT 106.03 (<= 90).",
+      "legal_ref": "NT 106.03 (1989)"
+    },
+    {
+      "rule_id": "R-LIMIT-BOD5",
+      "passed": true,
+      "severity": "block",
+      "source_type": "tunisian_law",
+      "reason_en": "BOD5 = 23.5 mg O2/L (24h mean): within the NT 106.03 limit (<= 30).",
+      "reason_fr": "BOD5 = 23.5 mg O2/L (24h mean) : respecte la limite NT 106.03 (<= 30).",
+      "legal_ref": "NT 106.03 (1989)"
+    },
+    {
+      "rule_id": "R-LIMIT-TSS",
+      "passed": true,
+      "severity": "block",
+      "source_type": "tunisian_law",
+      "reason_en": "TSS = 19.3 mg/L: within the NT 106.03 limit (<= 30).",
+      "reason_fr": "TSS = 19.3 mg/L : respecte la limite NT 106.03 (<= 30).",
+      "legal_ref": "NT 106.03 (1989)"
+    },
+    {
+      "rule_id": "R-LIMIT-CHLORIDE",
+      "passed": true,
+      "severity": "block",
+      "source_type": "tunisian_law",
+      "reason_en": "Chloride = 483 mg/L: within the NT 106.03 limit (<= 2000).",
+      "reason_fr": "Chloride = 483 mg/L : respecte la limite NT 106.03 (<= 2000).",
+      "legal_ref": "NT 106.03 (1989)"
+    },
+    {
+      "rule_id": "R-NEMATODE",
+      "passed": true,
+      "severity": "block",
+      "source_type": "tunisian_law",
+      "reason_en": "Intestinal nematode eggs (helminths) = 0.76 eggs per 1000 mL: within the NT 106.03 limit (<= 1).",
+      "reason_fr": "Intestinal nematode eggs (helminths) = 0.76 eggs per 1000 mL : respecte la limite NT 106.03 (<= 1).",
+      "legal_ref": "NT 106.03 (1989)"
+    },
+    {
+      "rule_id": "R-CROP-ALLOWED",
       "passed": false,
       "severity": "block",
       "source_type": "tunisian_law",
-      "reason_en": "Lettuce is a vegetable eaten raw: irrigation with treated wastewater is prohibited.",
-      "reason_fr": "La laitue est un legume consomme cru : l'irrigation par EUT est interdite.",
-      "legal_ref": "Decret 89-1047 Art.5; Arrete MA 21/06/1994"
+      "reason_en": "lettuce: not on the list of crops allowed by the 1994 order.",
+      "reason_fr": "lettuce : absent de la liste des cultures autorisees (arrete de 1994).",
+      "legal_ref": "Arrete du Ministre de l'Agriculture du 21 juin 1994 (Decree 89-1047 Art.7)"
     },
     {
-      "rule_id": "R05_soil_salinity",
+      "rule_id": "R-RAW-EATEN",
+      "passed": false,
+      "severity": "block",
+      "source_type": "tunisian_law",
+      "reason_en": "lettuce is a vegetable eaten raw: treated wastewater is prohibited.",
+      "reason_fr": "lettuce est un legume consomme cru : les eaux usees traitees sont interdites.",
+      "legal_ref": "Decree 89-1047 Art.5"
+    },
+    {
+      "rule_id": "R-GRAZING",
       "passed": true,
+      "severity": "block",
+      "source_type": "tunisian_law",
+      "reason_en": "No direct grazing declared on this plot.",
+      "reason_fr": "Pas de paturage direct declare sur cette parcelle.",
+      "legal_ref": "Decree 89-1047 Art.6"
+    },
+    {
+      "rule_id": "R-SALINITY-LETTUCE",
+      "passed": false,
       "severity": "condition",
       "source_type": "agronomic_advice",
-      "reason_en": "Soil ECe 1.4 dS/m: no leaching requirement for this batch.",
-      "reason_fr": "CEe du sol 1,4 dS/m : pas de besoin de lessivage pour ce lot.",
-      "legal_ref": "FAO-29 guidelines (ESTIMATE)"
+      "reason_en": "Soil ECe 1.4 dS/m is at or above 80% of the lettuce threshold (1.3 dS/m): irrigate with a leaching fraction and monitor soil salinity.",
+      "reason_fr": "ECe du sol 1.4 dS/m >= 80 % du seuil lettuce (1.3 dS/m) : prevoir une fraction de lessivage et suivre la salinite.",
+      "legal_ref": "FAO-29 (agronomic guidance)"
+    },
+    {
+      "rule_id": "R-LIMIT-NOT-MEASURED",
+      "passed": true,
+      "severity": "info",
+      "source_type": "tunisian_law",
+      "reason_en": "Not measured in this batch, not checked: Fluoride, Organochlorines, Arsenic, Boron, Cadmium, Cobalt, Chromium, Copper, Iron, Manganese, Mercury, Nickel, Lead, Selenium, Zinc (metals are required once per semester).",
+      "reason_fr": "Non mesures pour ce lot, non verifies : Fluoride, Organochlorines, Arsenic, Boron, Cadmium, Cobalt, Chromium, Copper, Iron, Manganese, Mercury, Nickel, Lead, Selenium, Zinc (metaux exiges une fois par semestre).",
+      "legal_ref": "NT 106.03 (1989); Decree 89-1047 Art.3b"
     }
   ],
   "tag": {
     "status": "ESTIMATE",
-    "source": "Decret 89-1047; Arrete MA 21/06/1994; NT 106.03"
+    "source": "rules_config: NT 106.03, Decree 89-1047, 1994 order, FAO-29"
   }
 }
