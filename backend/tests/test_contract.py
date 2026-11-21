@@ -2,7 +2,7 @@
 import json
 from pathlib import Path
 
-from app.schemas import Allocation, Batch, Farm, RuleResult
+from app.schemas import Allocation, Batch, BusinessView, Farm, RuleResult, SavingsResult
 
 MOCKS = Path(__file__).resolve().parents[2] / "frontend" / "src" / "mocks"
 
@@ -31,3 +31,20 @@ def test_compatibility_mock_matches_schema():
 def test_allocation_mocks_match_schema():
     Allocation.model_validate(load("post_allocate.json"))
     Allocation.model_validate(load("post_scenarios_heatwave.json")["allocation"])
+
+
+def _reject_constant(name):
+    raise ValueError(f"non-standard JSON constant {name}")
+
+
+def test_all_mocks_are_strict_json():
+    """Browsers reject NaN/Infinity; Python's json accepts them unless told not to."""
+    files = sorted(MOCKS.glob("*.json"))
+    assert files
+    for f in files:
+        json.loads(f.read_text(encoding="utf-8"), parse_constant=_reject_constant)
+
+
+def test_lite_mocks_match_schema():
+    SavingsResult.model_validate(load("post_savings.json"))
+    BusinessView.model_validate(load("business.json"))
