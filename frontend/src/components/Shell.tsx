@@ -1,7 +1,5 @@
 import { useEffect, useState, type ReactNode } from "react";
-import type { TagStatus } from "../api/types";
 import { PROJECT_NAME, USE_MOCKS } from "../config";
-import TagChip from "./TagChip";
 
 export interface ShellTab {
   id: string;
@@ -17,8 +15,6 @@ interface Props {
 
 export const DEMO_BANNER =
   "Demo data: simulated scenario inspired by Zaouiet-Sousse. Not real operations.";
-
-const LEGEND: TagStatus[] = ["REPORTED", "ESTIMATE", "PROJECTION", "SIMULATED", "TO_VERIFY"];
 
 function Burger({ open }: { open: boolean }) {
   return (
@@ -157,22 +153,9 @@ export default function Shell({ tabs, active, onSelect, children }: Props) {
 
       <main className="flex-1">{children}</main>
 
-      <footer className="grid md:grid-cols-2">
-        <div className="bg-blush px-8 py-16 text-center md:py-20">
-          <p className="font-serif text-5xl">{PROJECT_NAME}</p>
-          <p className="mx-auto mt-5 max-w-sm">Treated wastewater, safely and smartly reused in Tunisian agriculture.</p>
-        </div>
-        <div className="bg-cream px-8 py-16 text-center md:py-20">
-          <p className="eyebrow">Every figure carries its source</p>
-          <ul className="mx-auto mt-6 flex max-w-md flex-wrap justify-center gap-2">
-            {LEGEND.map((s) => (
-              <li key={s}>
-                <TagChip tag={{ status: s }} />
-              </li>
-            ))}
-          </ul>
-          <p className="mt-6 font-mono text-[15px]">{DEMO_BANNER}</p>
-        </div>
+      <footer className="bg-blush px-8 py-16 text-center">
+        <p className="font-serif text-4xl">{PROJECT_NAME}</p>
+        <p className="mx-auto mt-4 max-w-sm">Treated wastewater, safely reused in Tunisian agriculture.</p>
       </footer>
     </div>
   );
