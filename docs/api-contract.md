@@ -17,9 +17,11 @@ Shared between backend (FastAPI, `backend/app`) and frontend (React, `frontend/s
 |---|---|
 | `Tag` | `status`: `"REPORTED" \| "ESTIMATE" \| "PROJECTION" \| "SIMULATED" \| "TO_VERIFY"`, `source?`: string |
 | `Analysis` | `type`: `"physico_chemical" \| "parasite_eggs" \| "metals"`, `date`, `valid_until`, `is_valid`: bool, `values`: `{param: number}` |
-| `Batch` | `id`, `plant_id`, `date`, `volume_m3`, `treatment_level`, `analyses`: `Analysis[]`, `analysis_status`: `"valid" \| "expired" \| "missing"`, `status`, `risk_colour?`: `"green" \| "amber" \| "red"`, `tag` |
-| `Farm` | `id`, `name`, `crop`, `area_ha`, `lat`, `lon`, `soil_texture`, `soil_ece`, `head_m` (null if no own pump), `distance_km`, `fresh_source`, `fresh_m3_season`, `is_small_farm`, `tag` |
+| `Batch` | `id`, `plant_id`, `date`, `volume_m3`, `treatment_level`, `analyses`: `Analysis[]`, `analysis_status`: `"valid" \| "expired" \| "missing"`, `status`, `risk_colour?`: `"green" \| "amber" \| "red"`, `warnings?`: `string[]` (default `[]`), `tag` |
+| `Farm` | `id`, `name`, `crop`, `area_ha`, `lat`, `lon`, `soil_texture`, `soil_ece`, `head_m` (null if no own pump), `distance_km`, `fresh_source`, `fresh_m3_season`, `is_small_farm`, `well_depth_m?` (null default), `pump_efficiency?` (0..1, null default), `tag` |
 | `RuleResult` | `rule_id`, `passed`, `severity`: `"block" \| "condition" \| "info"`, `reason_en`, `reason_fr`, `legal_ref` |
+| `SavingsResult` | `water_need_m3`, `well_kwh_avoided`, `well_cost_avoided_tnd`, `treated_water_cost_tnd`, `nitrogen_kg`, `fertiliser_kg_ammonium_nitrate`, `fertiliser_saved_tnd`, `net_saving_tnd`, `kwh_off_grid`, `well_water_kept_m3`, `compatibility_status`, `breakdown`: `[{label, value, unit, tag}]` |
+| `BusinessView` | `area_name`, `area_ha`, `farms`, `total_saving_tnd`, `qatra_share_pct`, `qatra_revenue_tnd`, `steg_kwh_avoided`, `steg_value_tnd`, `national_areas` (36), `tag` |
 | `Allocation` | `batch_id`, `items`: `[{farm_id, status, m3, cap_reason?}]`, `schedule`: `[{hour, pump_kw, source: "solar" \| "grid" \| "basin" \| "off", basin_m3}]`, `energy_kwh`, `solar_share` (0..1), `fresh_replaced_m3`, `warnings`: `string[]` |
 
 Conventions used in mocks (free strings, agree before adding values):
@@ -39,24 +41,29 @@ Conventions used in mocks (free strings, agree before adding values):
 | 6 | GET | `/api/batches/{id}` | `batches` | – | `Batch` | `batches_id.json` |
 | 7 | POST | `/api/batches` | `batches` | `Batch` without `analysis_status`, `status`, `risk_colour` | `Batch` | `post_batches.json` |
 | 8 | GET | `/api/batches/{id}/passport` | `passport` | – | `{batch_id, plant, date, volume_m3, analysis_status, risk_colour, allowed_crops, blocked_crops, destinations, issued_at, qr_payload, tag}` | `batches_id_passport.json` |
-| 9 | GET | `/api/batches/{id}/risk` | `risk` | – | `{batch_id, risk_colour, score, factors: [{param, value, limit, ok}], tag}` | `batches_id_risk.json` |
+| 9 | GET | `/api/batches/{id}/risk` | **CUT FROM MVP** (QATRA Lite) · `risk` | – | `{batch_id, risk_colour, score, factors: [{param, value, limit, ok}], tag}` | `batches_id_risk.json` |
 | 10 | GET | `/api/farms` | `needs` | – | `Farm[]` | `farms.json` |
 | 11 | GET | `/api/farms/{id}/compatibility?batch_id=` | `rules` | query `batch_id` | `{farm_id, batch_id, decision: "compatible" \| "conditional" \| "blocked", results: RuleResult[], tag}` | `farms_id_compatibility.json` |
 | 12 | GET | `/api/forecast/needs` | `needs` | query `start?`, `days?` (default 7) | `{start, days, items: [{date, farm_id, et0_mm, kc, need_m3}], tag}` | `forecast_needs.json` |
-| 13 | GET | `/api/forecast/supply` | `supply` | query `start?`, `days?` | `{start, days, items: [{date, plant_id, volume_m3, batch_id}], tag}` | `forecast_supply.json` |
+| 13 | GET | `/api/forecast/supply` | **CUT FROM MVP** (QATRA Lite) · `supply` | query `start?`, `days?` | `{start, days, items: [{date, plant_id, volume_m3, batch_id}], tag}` | `forecast_supply.json` |
 | 14 | POST | `/api/allocate` | `optimiser` | `{batch_id, date?, farm_ids?}` | `Allocation` | `post_allocate.json` |
 | 15 | POST | `/api/soil/simulate` | `soil` | `{farm_id, batch_id, days}` | `{farm_id, series: [{day, ece}], leaching_fraction, warning?, tag}` | `post_soil_simulate.json` |
 | 16 | POST | `/api/scenarios/heatwave` | `heatwave` | `{scenario_id: "heatwave_outage"}` | `{scenario_id, label, date, allocation: Allocation, baseline: {energy_kwh, solar_share}, tag}` | `post_scenarios_heatwave.json` |
 | 17 | GET | `/api/impact` | `impact` | – | `{period, tww_allocated_m3, fresh_water_saved_m3, energy_kwh, solar_share, co2_avoided_kg, farms_served, small_farms_served, batches_blocked, tag}` | `impact.json` |
-| 18 | POST | `/api/explain` | `llm` | `{kind: "allocation" \| "compatibility", payload: object, lang?}` | `{text_en, text_fr, tag}` | `post_explain.json` |
+| 18 | POST | `/api/explain` | **CUT FROM MVP** (QATRA Lite) · `llm` | `{kind: "allocation" \| "compatibility", payload: object, lang?}` | `{text_en, text_fr, tag}` | `post_explain.json` |
 | 19 | GET | `/api/messages` | `messages` | query `farm_id?` | `[{id, farm_id, direction: "in" \| "out", channel, at, text? \| text_fr/text_ar}]` | `messages.json` |
 | 20 | POST | `/api/messages/reply` | `messages` | `{farm_id, text}` | message object | `post_messages_reply.json` |
 | 21 | POST | `/api/requests` | `requests` | `{farm_id, requested_m3, date}` | `{id, farm_id, requested_m3, date, status: "pending", created_at}` | `post_requests.json` |
 | 22 | GET | `/api/requests` | `requests` | query `status?` | request object[] | `requests.json` |
 | 23 | PATCH | `/api/requests/{id}` | `requests` | `{status: "approved" \| "rejected"}` | request object | `patch_requests_id.json` |
-| 24 | GET | `/api/anomalies` | `anomalies` | – | `[{batch_id, date, type: "stale_analysis" \| "quality", detail, severity: "warning" \| "critical", tag}]` | `anomalies.json` |
+| 24 | GET | `/api/anomalies` | **CUT FROM MVP** (QATRA Lite) · `anomalies` | – | `[{batch_id, date, type: "stale_analysis" \| "quality", detail, severity: "warning" \| "critical", tag}]` | `anomalies.json` |
 | 25 | GET | `/api/territory/layers` | `territory` | – | `{layers: [...]}` (same shape as #3) | `territory_layers.json` |
 | 26 | POST | `/api/infrastructure` | `territory` | `{type, lat, lon, capacity_m3?}` | `{id, type, lat, lon, capacity_m3, status: "proposed", tag}` | `post_infrastructure.json` |
+| 27 | POST | `/api/savings` | `savings` (Dev A) | `{farm_id?, crop, area_ha, well_depth_m, current_well_m3_season?, pump_efficiency?}` | `SavingsResult` | `post_savings.json` |
+| 28 | GET | `/api/business` | `business` (Dev A) | – | `BusinessView` | `business.json` |
+
+**QATRA Lite scope:** endpoints marked **CUT FROM MVP** (#9, #13, #18, #24) stay documented and their router stubs stay registered, but they are not built for the demo.
+Router files `savings.py` and `business.py` do not exist yet; they are added with A-14.
 
 ## Examples
 

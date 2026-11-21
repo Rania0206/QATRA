@@ -1,0 +1,15 @@
+{
+  "area_name": "Zaouiet-Sousse (Sousse Sud)",
+  "area_ha": 257.0,
+  "farms": 10,
+  "total_saving_tnd": 318834.0,
+  "qatra_share_pct": 10.0,
+  "qatra_revenue_tnd": 31883.0,
+  "steg_kwh_avoided": 703409.0,
+  "steg_value_tnd": 320966.0,
+  "national_areas": 36,
+  "tag": {
+    "status": "ESTIMATE",
+    "source": "farm A saving per ha × 257 ha equipped (Agridata, TO_VERIFY); STEG value at 2025 production cost 456.3 millimes/kWh"
+  }
+}

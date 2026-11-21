@@ -30,6 +30,7 @@ export interface Batch {
   analysis_status: AnalysisStatus;
   status: string;
   risk_colour?: RiskColour;
+  warnings?: string[]; // non-blocking notes, e.g. no metals analysis this semester
   tag: Tag;
 }
 
@@ -47,6 +48,8 @@ export interface Farm {
   fresh_source: string;
   fresh_m3_season: number;
   is_small_farm: boolean;
+  well_depth_m?: number | null; // default null
+  pump_efficiency?: number | null; // 0..1, default null
   tag: Tag;
 }
 
@@ -85,6 +88,41 @@ export interface Allocation {
   solar_share: number; // 0..1
   fresh_replaced_m3: number;
   warnings: string[];
+}
+
+export interface SavingsLine {
+  label: string;
+  value: number;
+  unit: string;
+  tag: Tag;
+}
+
+export interface SavingsResult {
+  water_need_m3: number;
+  well_kwh_avoided: number;
+  well_cost_avoided_tnd: number;
+  treated_water_cost_tnd: number;
+  nitrogen_kg: number;
+  fertiliser_kg_ammonium_nitrate: number;
+  fertiliser_saved_tnd: number;
+  net_saving_tnd: number;
+  kwh_off_grid: number;
+  well_water_kept_m3: number;
+  compatibility_status: string; // "compatible" | "conditional" | "blocked"
+  breakdown: SavingsLine[];
+}
+
+export interface BusinessView {
+  area_name: string;
+  area_ha: number;
+  farms: number;
+  total_saving_tnd: number;
+  qatra_share_pct: number;
+  qatra_revenue_tnd: number;
+  steg_kwh_avoided: number;
+  steg_value_tnd: number;
+  national_areas: number; // 36
+  tag: Tag;
 }
 
 export interface Health {
