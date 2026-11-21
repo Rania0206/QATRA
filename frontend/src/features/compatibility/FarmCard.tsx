@@ -1,8 +1,7 @@
-import type { Farm, FarmCompatibility } from "../../api/types";
-import { Skeleton } from "../batches/ui";
+import type { Decision, Farm, FarmCompatibility } from "../../api/types";
+import { Pill, Skeleton } from "../../components/ui";
 import { fmtNumber } from "../batches/format";
-import DecisionBadge from "./DecisionBadge";
-import { cropLabel, mainReason, type Lang } from "./format";
+import { DECISION, T, cropLabel, mainReason, type Lang } from "./format";
 
 interface Props {
   farm: Farm;
@@ -12,23 +11,32 @@ interface Props {
   onSelect: () => void;
 }
 
+export function DecisionPill({ decision, lang, large = false }: { decision: Decision; lang: Lang; large?: boolean }) {
+  const d = DECISION[decision];
+  return (
+    <Pill tone={d.tone} large={large}>
+      {d[lang]}
+    </Pill>
+  );
+}
+
+const TILE: Record<Decision, string> = {
+  compatible: "bg-olive",
+  conditional: "bg-blush",
+  blocked: "bg-sand",
+};
+
 export function FarmCardSkeleton() {
   return (
-    <div className="q-card flex h-full flex-col gap-4 p-5" aria-hidden="true">
-      <div className="flex items-center gap-4">
-        <Skeleton className="h-16 w-16" />
-        <div className="flex-1 space-y-2">
-          <Skeleton className="h-5 w-3/4" />
-          <Skeleton className="h-4 w-1/2" />
-        </div>
-      </div>
-      <Skeleton className="h-12 w-full" />
-      <Skeleton className="h-4 w-full" />
-      <Skeleton className="h-4 w-2/3" />
+    <div className="flex flex-col items-center gap-4" aria-hidden="true">
+      <Skeleton className="aspect-[4/3] w-full" />
+      <Skeleton className="h-7 w-2/3" />
+      <Skeleton className="h-5 w-1/2" />
     </div>
   );
 }
 
+/** Card in the spirit of an editorial gallery: a coloured tile with the farm letter, then name, status, reason. */
 export default function FarmCard({ farm, result, lang, selected, onSelect }: Props) {
   const blocked = result.decision === "blocked";
   return (
@@ -36,31 +44,29 @@ export default function FarmCard({ farm, result, lang, selected, onSelect }: Pro
       type="button"
       onClick={onSelect}
       aria-pressed={selected}
-      className={`q-card group flex h-full flex-col gap-4 p-5 text-left hover:border-[var(--q-ink-2)] focus:outline-none focus-visible:ring-4 focus-visible:ring-[var(--q-accent)] ${
-        selected ? "outline outline-2 outline-offset-2 outline-[var(--q-accent)]" : ""
-      } ${blocked ? "!border-dashed !bg-[var(--q-paper-alt)]" : ""}`}
+      className="group flex h-full flex-col items-center text-center focus:outline-none"
     >
-      <div className="flex items-center gap-4">
-        <span className={`q-display ${blocked ? "opacity-50" : ""} flex h-14 w-14 shrink-0 items-center justify-center rounded-[2px] border border-[var(--q-line)] bg-[var(--q-cream)] text-4xl text-[var(--q-ink)]`}>
-          {farm.id}
-        </span>
-        <div className="min-w-0 flex-1">
-          <p className="truncate text-lg font-medium" title={farm.name}>
-            {farm.name}
-          </p>
-          <p className="q-label flex items-center whitespace-nowrap">
-            <span className="truncate">
-              {cropLabel(farm.crop)} · {fmtNumber(farm.area_ha)} ha
-            </span>
-          </p>
-        </div>
-      </div>
-      <div>
-        <DecisionBadge decision={result.decision} lang={lang} size="lg" />
-      </div>
-      <p className={`line-clamp-3 min-h-[4.5em] text-base leading-normal ${blocked ? "font-medium" : "text-[var(--q-ink-2)]"}`}>
-        {mainReason(result.results, lang)}
-      </p>
+      <span
+        className={`relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden transition-transform duration-500 group-hover:scale-[1.02] group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-4 group-focus-visible:outline-ink ${
+          TILE[result.decision]
+        } ${selected ? "outline outline-2 outline-offset-4 outline-ink" : ""}`}
+      >
+        <span className={`font-serif text-[7rem] leading-none ${blocked ? "text-ink-soft" : ""}`}>{farm.id}</span>
+        {blocked && (
+          <span aria-hidden="true" className="absolute inset-x-8 top-1/2 h-px -rotate-12 bg-bad" />
+        )}
+      </span>
+      <span className="mt-6 font-serif text-3xl leading-tight">{farm.name.replace(/^Ferme [A-Z] - /, "")}</span>
+      <span className="mt-1 font-mono text-[15px]">
+        {cropLabel(farm.crop)} · {fmtNumber(farm.area_ha)} ha
+      </span>
+      <span className="mt-4">
+        <DecisionPill decision={result.decision} lang={lang} large />
+      </span>
+      <span className="mt-4 line-clamp-3 min-h-[3.2em] max-w-xs text-[18px] leading-snug">
+        {mainReason(result.results, lang, farm.crop)}
+      </span>
+      <span className="link mt-4 text-[16px]">{T.open[lang]}</span>
     </button>
   );
 }

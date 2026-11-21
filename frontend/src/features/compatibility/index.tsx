@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { get } from "../../api/client";
 import type { AllFarmsCompatibility, Batch, Decision, Farm } from "../../api/types";
+import ErrorBox from "../../components/ErrorBox";
 import TagChip from "../../components/TagChip";
+import { Band, Dot, Intro, Segmented, Skeleton } from "../../components/ui";
 import { USE_MOCKS } from "../../config";
 import { useApi } from "../../hooks/useApi";
-import ComplianceBadge from "../batches/ComplianceBadge";
-import { COMPLIANCE_BADGE, fmtDate } from "../batches/format";
-import { Dot, Screen, SectionTitle, Segmented, Skeleton } from "../batches/ui";
+import { COMPLIANCE, fmtDate } from "../batches/format";
+import { CompliancePill } from "../batches/pills";
 import FarmCard, { FarmCardSkeleton } from "./FarmCard";
 import FarmDrawer from "./FarmDrawer";
 import { DECISION, T, type Lang, type RuleInfo } from "./format";
@@ -59,111 +60,118 @@ export default function CompatibilityTab() {
   const farmResult = selectedFarm ? byFarm.get(selectedFarm) : undefined;
 
   return (
-    <Screen>
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div className="space-y-2">
-          <p className="q-label">{lang === "fr" ? "Compatibilité eau · ferme" : "Water × farm compatibility"}</p>
-          <h2 className="q-display text-4xl sm:text-5xl">{T.title[lang]}</h2>
+    <>
+      {/* Hero: the question, the batch picker, the language */}
+      <Band tone="olive" className="md:py-28">
+        <Intro as="h1" size="xl" eyebrow={T.eyebrow[lang]} title={T.title[lang]}>
+          <p>{T.lead[lang]}</p>
+          {compat.data && !compat.loading && (
+            <p className="mt-6 font-serif text-[26px] leading-snug">
+              {ORDER.map((d, i) => (
+                <span key={d}>
+                  {i > 0 && <span className="mx-2">·</span>}
+                  <span className="whitespace-nowrap">
+                    {counts[d]} {i === 0 ? `${T.farms[lang]} ` : ""}
+                    {lang === "fr" ? DECISION[d].legendFr : DECISION[d].legendEn}
+                  </span>
+                </span>
+              ))}
+            </p>
+          )}
+        </Intro>
+
+        <div className="fade-up mx-auto mt-10 flex max-w-2xl flex-col items-center gap-5">
+          <div className="flex w-full flex-wrap items-center justify-center gap-3">
+            <label htmlFor="batch" className="eyebrow">
+              {T.batch[lang]}
+            </label>
+            <select
+              id="batch"
+              value={shownBatch}
+              disabled={!base.data}
+              onChange={(e) => setBatchId(e.target.value)}
+              className="min-w-0 flex-1 border border-ink bg-transparent px-4 py-3 font-mono text-[16px] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink sm:max-w-sm"
+            >
+              {!shownBatch && <option value="">…</option>}
+              {base.data?.batches.map((b) => (
+                <option key={b.id} value={b.id}>
+                  {b.id} · {fmtDate(b.date)} · {COMPLIANCE[b.status]?.label ?? b.status}
+                </option>
+              ))}
+            </select>
+            {batchStatus ? <CompliancePill status={batchStatus} large /> : <Skeleton className="h-10 w-36" />}
+          </div>
+          <Segmented
+            label="Language"
+            value={lang}
+            onChange={setLang}
+            options={[
+              { id: "en", label: "English" },
+              { id: "fr", label: "Français" },
+            ]}
+          />
         </div>
-        <Segmented
-          label="Language"
-          value={lang}
-          onChange={setLang}
-          options={[
-            { id: "en", label: "EN" },
-            { id: "fr", label: "FR" },
-          ]}
-        />
-      </header>
+      </Band>
 
-      <div className="q-card flex flex-wrap items-center gap-x-4 gap-y-3 p-4">
-        <label htmlFor="batch" className="q-label" style={{ color: "var(--q-ink)" }}>
-          {T.batch[lang]}
-        </label>
-        <select
-          id="batch"
-          value={shownBatch}
-          disabled={!base.data}
-          onChange={(e) => setBatchId(e.target.value)}
-          className="q-code min-w-0 flex-1 rounded-[2px] border border-[var(--q-line)] bg-[var(--q-paper)] px-3 py-2 text-base transition-colors hover:bg-[var(--q-hover)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--q-accent)] sm:flex-none"
-        >
-          {!shownBatch && <option value="">…</option>}
-          {base.data?.batches.map((b) => (
-            <option key={b.id} value={b.id}>
-              {b.id} · {fmtDate(b.date)} · {COMPLIANCE_BADGE[b.status]?.label ?? b.status}
-            </option>
-          ))}
-        </select>
-        {batchStatus ? <ComplianceBadge status={batchStatus} large /> : <Skeleton className="h-10 w-40" />}
-        <div className="flex flex-wrap gap-2 sm:ml-auto">
-          {compat.data && <TagChip tag={compat.data.tag} showSource={false} />}
-          {base.data?.farms[0] && <TagChip tag={base.data.farms[0].tag} />}
-        </div>
-      </div>
-
-      {/* Legend + counts: readable in one glance on a projector */}
-      <SectionTitle>
-        <span className="flex flex-wrap items-center gap-x-6 gap-y-2 font-sans text-base">
-          {ORDER.map((d) => (
-            <span key={d} className="inline-flex items-center gap-2">
-              <Dot tone={DECISION[d].tone} />
-              <span className="text-base font-medium">{lang === "fr" ? DECISION[d].legendFr : DECISION[d].legendEn}</span>
-              {compat.data && !compat.loading && (
-                <span className="q-label">{counts[d]}</span>
-              )}
-            </span>
-          ))}
-        </span>
-      </SectionTitle>
-
-      {USE_MOCKS && <p className="q-label">{T.mockNote[lang]}</p>}
-
-      {error ? (
-        <div role="alert" className="q-card space-y-3 border-[var(--q-bad)] p-5">
-          <p className="q-title" style={{ color: "var(--q-bad)" }}>
-            {lang === "fr" ? "Chargement impossible" : "Could not load compatibility"}
+      {/* Farms */}
+      <Band tone="cream" wide>
+        <Intro eyebrow={T.farmsEyebrow[lang]} title={T.farmsTitle[lang]}>
+          <p className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+            {ORDER.map((d) => (
+              <span key={d} className="inline-flex items-center gap-2">
+                <Dot tone={DECISION[d].tone} />
+                {DECISION[d][lang]}
+                {compat.data && !compat.loading && <span className="font-mono">({counts[d]})</span>}
+              </span>
+            ))}
           </p>
-          <p className="q-mono text-base">{error.message}</p>
-          <button
-            type="button"
-            onClick={() => {
-              base.reload();
-              compat.reload();
-            }}
-            className="q-btn"
-          >
-            {lang === "fr" ? "Réessayer" : "Retry"}
-          </button>
+          <p className="mt-5 flex flex-wrap justify-center gap-2">
+            {compat.data && <TagChip tag={compat.data.tag} showSource={false} />}
+            {base.data?.farms[0] && <TagChip tag={base.data.farms[0].tag} />}
+          </p>
+          {USE_MOCKS && <p className="mt-4 font-mono text-[15px]">{T.mockNote[lang]}</p>}
+        </Intro>
+
+        <div className="mt-16">
+          {error ? (
+            <ErrorBox
+              error={error}
+              onRetry={() => {
+                base.reload();
+                compat.reload();
+              }}
+            />
+          ) : loading ? (
+            <div className="grid gap-x-10 gap-y-16 sm:grid-cols-2 lg:grid-cols-3" aria-busy="true">
+              {Array.from({ length: 6 }, (_, i) => (
+                <FarmCardSkeleton key={i} />
+              ))}
+            </div>
+          ) : base.data!.farms.length === 0 ? (
+            <p className="text-center font-serif text-3xl">{lang === "fr" ? "Aucune ferme." : "No farms yet."}</p>
+          ) : (
+            <div className="grid gap-x-10 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
+              {base.data!.farms.map((f) => {
+                const r = byFarm.get(f.id);
+                return r ? (
+                  <FarmCard
+                    key={f.id}
+                    farm={f}
+                    result={r}
+                    lang={lang}
+                    selected={selectedFarm === f.id}
+                    onSelect={() => setSelectedFarm(f.id)}
+                  />
+                ) : null;
+              })}
+            </div>
+          )}
         </div>
-      ) : loading ? (
-        <div className="grid auto-rows-fr gap-4 sm:grid-cols-2 lg:grid-cols-3" aria-busy="true">
-          {Array.from({ length: 6 }, (_, i) => (
-            <FarmCardSkeleton key={i} />
-          ))}
-        </div>
-      ) : base.data!.farms.length === 0 ? (
-        <div className="q-card border-dashed p-8 text-center text-lg">{lang === "fr" ? "Aucune ferme." : "No farms yet."}</div>
-      ) : (
-        <div className="grid auto-rows-fr gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {base.data!.farms.map((f) => {
-            const r = byFarm.get(f.id);
-            return r ? (
-              <FarmCard
-                key={f.id}
-                farm={f}
-                result={r}
-                lang={lang}
-                selected={selectedFarm === f.id}
-                onSelect={() => setSelectedFarm(f.id)}
-              />
-            ) : null;
-          })}
-        </div>
-      )}
+      </Band>
 
       {farm && farmResult && base.data && (
         <FarmDrawer farm={farm} result={farmResult} rules={base.data.rules} lang={lang} onClose={close} />
       )}
-    </Screen>
+    </>
   );
 }

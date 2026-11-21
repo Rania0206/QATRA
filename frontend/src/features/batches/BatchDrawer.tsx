@@ -1,9 +1,8 @@
-import { useEffect } from "react";
 import type { Analysis, AnalysisType, Batch } from "../../api/types";
 import TagChip from "../../components/TagChip";
-import ComplianceBadge from "./ComplianceBadge";
+import { Drawer } from "../../components/ui";
 import { ANALYSIS_LABEL, REQUIRED_TYPES, daysBetween, fmtDate, fmtNumber, paramInfo } from "./format";
-import StatusBadge from "./StatusBadge";
+import { AnalysisPill, CompliancePill } from "./pills";
 
 interface Props {
   batch: Batch;
@@ -11,59 +10,46 @@ interface Props {
 }
 
 /** Days left before the analysis expires, counted from the batch date (the demo's "today"). */
-function ValidityBar({ a, batchDate }: { a: Analysis; batchDate: string }) {
+function Validity({ a, batchDate }: { a: Analysis; batchDate: string }) {
   const total = Math.max(1, daysBetween(a.date, a.valid_until));
   const left = daysBetween(batchDate, a.valid_until);
-  const pct = Math.max(0, Math.min(100, (left / total) * 100));
-  const tone = left < 0 ? "var(--q-bad)" : pct <= 25 ? "var(--q-warn)" : "var(--q-ok)";
+  const pct = left < 0 ? 100 : Math.max(0, Math.min(100, (left / total) * 100));
+  const color = left < 0 ? "bg-bad" : pct <= 25 ? "bg-warn" : "bg-olive";
   const text =
-    left < 0
-      ? `Expired ${-left} day${left === -1 ? "" : "s"} before this batch`
-      : `${left} of ${total} days left on batch day`;
+    left < 0 ? `Expired ${-left} day${left === -1 ? "" : "s"} before this batch` : `${left} of ${total} days left on batch day`;
   return (
-    <div className="space-y-1.5">
-      <div
-        className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--q-line)]"
-        role="progressbar"
-        aria-valuemin={0}
-        aria-valuemax={total}
-        aria-valuenow={Math.max(0, left)}
-        aria-label={text}
-      >
-        <div className="h-full transition-[width] duration-300" style={{ width: `${left < 0 ? 100 : pct}%`, background: tone }} />
+    <div className="space-y-2">
+      <div className="h-px w-full bg-line" role="progressbar" aria-valuemin={0} aria-valuemax={total} aria-valuenow={Math.max(0, left)} aria-label={text}>
+        <div className={`h-[3px] -translate-y-px transition-[width] duration-500 ${color}`} style={{ width: `${pct}%` }} />
       </div>
-      <p className="q-label" style={{ color: left < 0 ? "var(--q-bad)" : "var(--q-ink-2)" }}>
-        {text}
-      </p>
+      <p className={`font-mono text-[15px] ${left < 0 ? "text-bad" : ""}`}>{text}</p>
     </div>
   );
 }
 
-function AnalysisCard({ a, batchDate }: { a: Analysis; batchDate: string }) {
+function AnalysisSection({ a, batchDate }: { a: Analysis; batchDate: string }) {
   return (
-    <section className="q-card space-y-4 p-4">
-      <div className="flex items-center justify-between gap-3">
-        <h3 className="q-title">{ANALYSIS_LABEL[a.type]}</h3>
-        <StatusBadge status={a.is_valid ? "valid" : "expired"} />
+    <section className="space-y-5">
+      <div className="flex items-baseline justify-between gap-3 border-b border-ink pb-3">
+        <h3 className="text-3xl">{ANALYSIS_LABEL[a.type]}</h3>
+        <AnalysisPill status={a.is_valid ? "valid" : "expired"} />
       </div>
-      <dl className="grid grid-cols-2 gap-x-4">
-        <dt className="q-label">Sampled</dt>
-        <dt className="q-label">Valid until</dt>
-        <dd className="q-mono text-lg">{fmtDate(a.date)}</dd>
-        <dd className="q-mono text-lg" style={a.is_valid ? undefined : { color: "var(--q-bad)" }}>
-          {fmtDate(a.valid_until)}
-        </dd>
+      <dl className="grid grid-cols-2 gap-x-6">
+        <dt className="eyebrow">Sampled</dt>
+        <dt className="eyebrow">Valid until</dt>
+        <dd className="text-[19px]">{fmtDate(a.date)}</dd>
+        <dd className={`text-[19px] ${a.is_valid ? "" : "text-bad"}`}>{fmtDate(a.valid_until)}</dd>
       </dl>
-      <ValidityBar a={a} batchDate={batchDate} />
-      <table className="q-dash w-full text-base">
+      <Validity a={a} batchDate={batchDate} />
+      <table className="w-full">
         <tbody>
           {Object.entries(a.values).map(([k, v]) => {
             const { label, unit } = paramInfo(k);
             return (
-              <tr key={k} className="border-b border-[var(--q-line)] last:border-0">
-                <td className="py-2 pr-2">{label}</td>
-                <td className="q-mono py-2 text-right font-medium">{fmtNumber(v)}</td>
-                <td className="q-label w-32 py-2 pl-3">{unit}</td>
+              <tr key={k} className="border-b border-line last:border-0">
+                <td className="py-2.5 pr-3">{label}</td>
+                <td className="py-2.5 text-right tabular-nums">{fmtNumber(v)}</td>
+                <td className="w-28 py-2.5 pl-3 font-mono text-[15px]">{unit}</td>
               </tr>
             );
           })}
@@ -73,101 +59,77 @@ function AnalysisCard({ a, batchDate }: { a: Analysis; batchDate: string }) {
   );
 }
 
-function MissingCard({ type }: { type: AnalysisType }) {
+function MissingSection({ type }: { type: AnalysisType }) {
   return (
-    <section className="q-card space-y-2 border-[var(--q-bad)] p-4">
-      <div className="flex items-center justify-between gap-3">
-        <h3 className="q-title">{ANALYSIS_LABEL[type]}</h3>
-        <StatusBadge status="missing" />
+    <section className="space-y-3">
+      <div className="flex items-baseline justify-between gap-3 border-b border-bad pb-3">
+        <h3 className="text-3xl">{ANALYSIS_LABEL[type]}</h3>
+        <AnalysisPill status="missing" />
       </div>
-      <p className="text-base font-semibold" style={{ color: "var(--q-bad)" }}>
-        No analysis on record for this batch.
-      </p>
+      <p className="text-bad">No analysis on record for this batch.</p>
     </section>
   );
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="space-y-1">
-      <dt className="q-label">{label}</dt>
-      <dd>{children}</dd>
-    </div>
-  );
-}
-
 export default function BatchDrawer({ batch, onClose }: Props) {
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
-
   const present = new Set(batch.analyses.map((a) => a.type));
   const missing = REQUIRED_TYPES.filter((t) => !present.has(t));
 
   return (
-    <div className="fixed inset-0 z-[1100] flex justify-end" role="dialog" aria-modal="true" aria-label={`Batch ${batch.id}`}>
-      <button className="absolute inset-0 bg-[var(--q-ink)]/40" onClick={onClose} aria-label="Close" />
-      <aside className="relative flex h-full w-full max-w-xl flex-col border-l border-[var(--q-line)] bg-[var(--q-cream)]">
-        <header className="flex items-start justify-between gap-4 border-b border-[var(--q-line)] bg-[var(--q-paper)] p-5">
-          <div className="space-y-2">
-            <p className="q-label">Batch</p>
-            <h2 className="q-code text-2xl">{batch.id}</h2>
-            <div className="flex flex-wrap items-center gap-2">
-              <ComplianceBadge status={batch.status} large />
-              <TagChip tag={batch.tag} />
-            </div>
+    <Drawer
+      label={`Batch ${batch.id}`}
+      onClose={onClose}
+      header={
+        <div className="space-y-4 pr-16">
+          <p className="eyebrow">Batch · {fmtDate(batch.date)}</p>
+          <h2 className="font-mono text-3xl tracking-normal">{batch.id}</h2>
+          <div className="flex flex-wrap items-center gap-2">
+            <CompliancePill status={batch.status} large />
+            <TagChip tag={batch.tag} />
           </div>
-          <button
-            onClick={onClose}
-            className="q-btn !px-3 !py-1 text-xl leading-none"
-            aria-label="Close"
-          >
-            ×
-          </button>
-        </header>
-
-        <div className="flex-1 space-y-5 overflow-y-auto p-5">
-          <dl className="grid grid-cols-2 gap-x-4 gap-y-4 text-base">
-            <Field label="Date">
-              <span className="q-mono text-lg">{fmtDate(batch.date)}</span>
-            </Field>
-            <Field label="Volume">
-              <span className="q-mono text-lg">{fmtNumber(batch.volume_m3)} m³</span>
-            </Field>
-            <Field label="Plant">
-              <span className="q-code">{batch.plant_id}</span>
-            </Field>
-            <Field label="Analyses">
-              <StatusBadge status={batch.analysis_status} />
-            </Field>
-            <div className="col-span-2">
-              <Field label="Treatment">{batch.treatment_level}</Field>
-            </div>
-          </dl>
-
-          {batch.warnings && batch.warnings.length > 0 && (
-            <section className="q-card border-[var(--q-warn)] p-4">
-              <h3 className="q-label" style={{ color: "var(--q-ink)" }}>
-                Warnings
-              </h3>
-              <ul className="mt-1 list-disc pl-5 text-base">
-                {batch.warnings.map((w) => (
-                  <li key={w}>{w}</li>
-                ))}
-              </ul>
-            </section>
-          )}
-
-          {missing.map((t) => (
-            <MissingCard key={t} type={t} />
-          ))}
-          {batch.analyses.map((a) => (
-            <AnalysisCard key={a.type} a={a} batchDate={batch.date} />
-          ))}
         </div>
-      </aside>
-    </div>
+      }
+    >
+      <dl className="grid grid-cols-2 gap-x-6 gap-y-5">
+        <div>
+          <dt className="eyebrow">Volume</dt>
+          <dd className="font-serif text-4xl">
+            {fmtNumber(batch.volume_m3)} <span className="text-2xl">m³</span>
+          </dd>
+        </div>
+        <div>
+          <dt className="eyebrow">Lab tests</dt>
+          <dd className="pt-2">
+            <AnalysisPill status={batch.analysis_status} />
+          </dd>
+        </div>
+        <div>
+          <dt className="eyebrow">Plant</dt>
+          <dd className="font-mono text-[16px]">{batch.plant_id}</dd>
+        </div>
+        <div>
+          <dt className="eyebrow">Treatment</dt>
+          <dd>{batch.treatment_level}</dd>
+        </div>
+      </dl>
+
+      {batch.warnings && batch.warnings.length > 0 && (
+        <section className="border-l-2 border-warn pl-5">
+          <p className="eyebrow text-warn">Note</p>
+          <ul className="mt-1 space-y-1">
+            {batch.warnings.map((w) => (
+              <li key={w}>{w}</li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {missing.map((t) => (
+        <MissingSection key={t} type={t} />
+      ))}
+      {batch.analyses.map((a) => (
+        <AnalysisSection key={a.type} a={a} batchDate={batch.date} />
+      ))}
+    </Drawer>
   );
 }

@@ -1,27 +1,25 @@
 import type { Batch } from "../../api/types";
 import TagChip from "../../components/TagChip";
-import ComplianceBadge from "./ComplianceBadge";
+import { Skeleton } from "../../components/ui";
 import { fmtDate, fmtNumber } from "./format";
-import StatusBadge from "./StatusBadge";
-import { Skeleton } from "./ui";
+import { AnalysisPill, CompliancePill } from "./pills";
 
 interface Props {
   batches: Batch[];
-  latestId?: string; // newest batch overall, highlighted
+  latestId?: string;
   selectedId?: string;
   showRowTags: boolean; // true when batches come from more than one source
   onSelect: (b: Batch) => void;
 }
 
-const TH = "q-label sticky top-0 z-10 border-b border-[var(--q-line)] bg-[var(--q-paper)] px-4 py-3 text-left font-normal";
-const TD = "px-4 py-3";
+const TH = "sticky top-0 z-10 border-b border-ink bg-cream px-4 py-4 text-left font-mono text-[15px] font-normal";
+const TD = "px-4 py-4";
 
 export function TableSkeleton() {
   return (
-    <div className="q-card space-y-3 p-4" aria-busy="true" aria-label="Loading batches">
-      <Skeleton className="h-6 w-full" />
+    <div className="space-y-3" aria-busy="true" aria-label="Loading batches">
       {Array.from({ length: 8 }, (_, i) => (
-        <Skeleton key={i} className="h-10 w-full" />
+        <Skeleton key={i} className="h-12 w-full" />
       ))}
     </div>
   );
@@ -29,44 +27,39 @@ export function TableSkeleton() {
 
 export default function BatchesTable({ batches, latestId, selectedId, showRowTags, onSelect }: Props) {
   return (
-    <div className="q-card max-h-[65vh] overflow-auto">
-      <table className="w-full border-collapse text-base">
+    <div className="max-h-[70vh] overflow-auto border-y border-ink">
+      <table className="w-full border-collapse text-[17px]">
         <thead>
           <tr>
             <th className={TH}>Date</th>
             <th className={TH}>Batch ID</th>
             <th className={`${TH} text-right`}>Volume (m³)</th>
             <th className={TH}>Treatment</th>
-            <th className={TH}>Analyses</th>
+            <th className={TH}>Lab tests</th>
             <th className={TH} title="NT 106.03 limits and Decree 89-1047 analyses">
-              Compliance
+              Water quality
             </th>
           </tr>
         </thead>
         <tbody>
           {batches.map((b) => {
             const latest = b.id === latestId;
-            const selected = b.id === selectedId;
             return (
               <tr
                 key={b.id}
                 onClick={() => onSelect(b)}
                 onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && onSelect(b)}
                 tabIndex={0}
-                aria-selected={selected}
-                className={`cursor-pointer border-b border-[var(--q-line)] transition-colors duration-150 odd:bg-[var(--q-paper)] even:bg-[var(--q-paper-alt)] hover:!bg-[var(--q-hover)] focus:outline-none focus-visible:!bg-[var(--q-hover)] ${
-                  selected ? "!bg-[var(--q-hover)]" : ""
-                } ${latest ? "shadow-[inset_3px_0_0_var(--q-accent)]" : ""}`}
+                aria-selected={b.id === selectedId}
+                className={`cursor-pointer border-b border-line transition-colors duration-200 hover:bg-sand focus:bg-sand focus:outline-none ${
+                  b.id === selectedId ? "bg-sand" : ""
+                }`}
               >
-                <td className={`${TD} q-mono whitespace-nowrap`}>
+                <td className={`${TD} whitespace-nowrap`}>
                   {fmtDate(b.date)}
-                  {latest && (
-                    <span className="q-label ml-2 border border-[var(--q-accent)] px-1.5 py-0.5" style={{ color: "var(--q-accent)" }}>
-                      latest
-                    </span>
-                  )}
+                  {latest && <span className="ml-3 font-serif text-[17px] italic">today</span>}
                 </td>
-                <td className={`${TD} q-code whitespace-nowrap`}>
+                <td className={`${TD} whitespace-nowrap font-mono text-[16px]`}>
                   {b.id}
                   {showRowTags && (
                     <span className="ml-2">
@@ -74,15 +67,15 @@ export default function BatchesTable({ batches, latestId, selectedId, showRowTag
                     </span>
                   )}
                 </td>
-                <td className={`${TD} q-mono text-right`}>{fmtNumber(b.volume_m3)}</td>
-                <td className={`${TD} max-w-56 truncate text-[var(--q-ink-2)]`} title={b.treatment_level}>
+                <td className={`${TD} text-right tabular-nums`}>{fmtNumber(b.volume_m3)}</td>
+                <td className={`${TD} max-w-52 truncate`} title={b.treatment_level}>
                   {b.treatment_level.split(" (")[0]}
                 </td>
                 <td className={TD}>
-                  <StatusBadge status={b.analysis_status} />
+                  <AnalysisPill status={b.analysis_status} />
                 </td>
                 <td className={TD}>
-                  <ComplianceBadge status={b.status} />
+                  <CompliancePill status={b.status} />
                 </td>
               </tr>
             );
