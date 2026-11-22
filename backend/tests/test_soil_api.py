@@ -97,3 +97,9 @@ def test_mock_keys_match_the_real_response(client):
     assert set(mock) == set(real)
     assert set(mock["naive"]) == set(real["naive"]) and set(mock["qatra"]) == set(real["qatra"])
     assert mock == real  # the mock is the real response for farm A / SSUD-20260713
+
+
+def test_blocked_reason_only_for_forbidden_crops(client):
+    c = post(client, farm_id="C", batch_id=LOW_EC_BATCH).json()
+    assert "Art. 5" in c["blocked_reason"]
+    assert post(client, farm_id="A", batch_id=LOW_EC_BATCH).json()["blocked_reason"] is None

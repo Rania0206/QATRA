@@ -244,7 +244,8 @@ def simulate_farm(farm: dict, ecw: float, *, ece0: float | None = None, years: i
 
     naive, qatra = cmp["naive"], cmp["qatra"]
     warnings = []
-    if (why := _blocked_reason(crop)) is not None:
+    blocked = _blocked_reason(crop)
+    if (why := blocked) is not None:
         warnings.append(f"{crop} cannot receive treated wastewater: {why}")
     if soil.SALTY_WATER_FLAG in qatra["flags"]:
         warnings.append(f"{soil.SALTY_WATER_FLAG}: no leaching fraction keeps ECe under {thr:g} dS/m")
@@ -267,7 +268,7 @@ def simulate_farm(farm: dict, ecw: float, *, ece0: float | None = None, years: i
     out_qatra = policy(qatra, irrigation_water_m3(need, qatra["lf"], inp["lf_naive"]))
     out_qatra["leaching_fraction"] = round(qatra["lf"], 4)
     return {"crop": crop, "threshold_ece": thr, "ecw": ecw, "years": list(range(years + 1)),
-            "naive": out_naive, "qatra": out_qatra, "warning": "; ".join(warnings) or None,
+            "naive": out_naive, "qatra": out_qatra, "blocked_reason": blocked, "warning": "; ".join(warnings) or None,
             "tag": {"status": "TO_VERIFY" if thr_status == "TO_VERIFY" else "ESTIMATE",
                     "source": "QATRA yearly model on FAO-29 (tau 3 y), soil ECe SIMULATED"
                               + ("; threshold TO_VERIFY" if thr_status == "TO_VERIFY" else "")}}

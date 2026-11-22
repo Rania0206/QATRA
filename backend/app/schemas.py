@@ -149,6 +149,7 @@ class SoilSimulation(BaseModel):
     # legacy fields (original contract): `series` is the QATRA curve, day = year * 365
     series: list[SoilPoint]
     leaching_fraction: float  # = qatra.leaching_fraction
+    blocked_reason: Optional[str] = None  # set when the crop cannot receive TWW by law: the UI shows no simulation
     warning: Optional[str] = None
     tag: Tag
 

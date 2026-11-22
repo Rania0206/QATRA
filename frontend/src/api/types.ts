@@ -174,6 +174,7 @@ export interface SoilSimulation {
   // legacy fields: `series` is the QATRA curve, `leaching_fraction` = qatra.leaching_fraction
   series: SoilPoint[];
   leaching_fraction: number;
+  blocked_reason?: string | null; // set when the crop cannot receive TWW by law: show no simulation
   warning?: string | null;
   tag: Tag;
 }

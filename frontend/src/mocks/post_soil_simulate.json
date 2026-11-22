@@ -241,6 +241,7 @@
     }
   ],
   "leaching_fraction": 0.3643,
+  "blocked_reason": null,
   "warning": null,
   "tag": {
     "status": "ESTIMATE",
