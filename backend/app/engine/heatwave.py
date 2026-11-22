@@ -1,45 +1,53 @@
-"""Heatwave + grid-outage scenario, naive policy (B-05a). Numbers only, no FastAPI.
+"""Heatwave + grid-outage scenario (B-05a naive policy, B-05b QATRA policy). Numbers only, no FastAPI.
 
-The naive policy irrigates straight from the grid, on demand: no storage basin and no solar shifting. When the
-grid is cut, nothing is delivered. This module measures how many hours the farms are left without water.
+Naive policy: irrigate straight from the grid on demand, with no basin and no solar shifting. When the grid is cut,
+nothing is delivered.
+QATRA policy: a rule-based hourly plan that uses the solar array and the storage basin so that the farms keep their
+water during the outage (see qatra_run for the rules).
 
-Sources: weather_summer2026_sousse (NASA POWER hourly + FAO-56 ET0), sim_outage_windows and sim_scenarios
-(13:00-17:00 outage on hot days), sim_pumps_basin (transfer pump TP1), crop_kc, sim_farms.
+Sources: weather_summer2026_sousse (NASA POWER hourly + FAO-56 ET0), pv_estimate_sousse (50 kWp, scaled to the
+array), sim_outage_windows and sim_scenarios (13:00-17:00 outage on hot days), sim_pumps_basin (transfer pump TP1,
+basin, PV array), crop_kc and sim_farms. The crop water need is Dev A's formula (engine/needs.py).
 Hours are hour-start labels: hour 13 is 13:00 to 14:00. The outage window "13:00-17:00" therefore covers hours 13 to 16.
 """
-from datetime import date as _date
 from typing import Optional
 
 import pandas as pd
 
-from app.engine import soil_inputs
+from app.engine import needs, soil_inputs
 from app.store import get_store
 
 WEATHER = "weather_summer2026_sousse"
+PV = "pv_estimate_sousse"
 OUTAGES = "sim_outage_windows"
 SCENARIOS = "sim_scenarios"
 PUMPS = "sim_pumps_basin"
 
 CAVEAT = "NASA POWER ~0.5 deg grid: coastal extremes smoothed"
 TAG_SOURCE = "data/simulated/sim_scenarios + sim_outage_windows + sim_pumps_basin; weather NASA POWER; demand = ESTIMATE"
+EPS = 1e-9
 
 # ---------------------------------------------------------------- demand model (ESTIMATE)
-# Peak-day irrigation demand of the farms that are actually growing in the month of the date:
-#   daily_m3 = ET0_day (mm) x sum(Kc_mid x area_ha) x 10 / EFFICIENCY      (1 mm over 1 ha = 10 m3)
-# No rain credit (peak day) and 0.9 application efficiency (the same efficiency as the season volumes of sim_farms).
-# Farms whose crop is outside its growing season (cereals in August) and crops forbidden for TWW (lettuce) need nothing.
-# The day's volume is spread evenly over the working hours 06:00-20:00 (hours 6 to 19): farmers irrigate when they work,
-# not when ET peaks. Both choices are assumptions.
+# Irrigation demand of the farms that are actually growing in the month of the date:
+#   need_i (m3)  = max(0, ET0 x Kc_i - 0.7 x rain) x area_i x 10          (Dev A's needs.water_need)
+#   daily_m3     = sum(need_i) / EFFICIENCY                                (0.9 application efficiency, as in sim_farms)
+# Farms whose crop is outside its growing season (cereals in August) and crops forbidden for treated water (lettuce)
+# need nothing. The day's volume is spread evenly over the working hours 06:00-20:00 (hours 6 to 19): farmers
+# irrigate when they work, not when ET peaks. These choices are assumptions.
 EFFICIENCY = 0.9
 IRRIGATION_HOURS = tuple(range(6, 20))  # 06:00 to 20:00
 DEMAND_STATUS = "ESTIMATE"
 
 
 # ---------------------------------------------------------------- inputs
+def _day_rows(day: str) -> pd.DataFrame:
+    df = get_store()[WEATHER]
+    return df[df["date"].astype(str).str[:10] == day].sort_values("datetime")
+
+
 def load_day(day: str) -> list[dict]:
     """24 hourly rows {hour, temp_c, radiation_w_m2} for `day` (YYYY-MM-DD). ValueError if the day is not in the series."""
-    df = get_store()[WEATHER]
-    rows = df[df["date"].astype(str).str[:10] == day].sort_values("datetime")
+    rows = _day_rows(day)
     if len(rows) != 24:
         raise ValueError(f"weather for {day}: expected 24 hourly rows, found {len(rows)}")
     return [{"hour": int(pd.Timestamp(r["datetime"]).hour), "temp_c": float(r["temperature_2m"]),
@@ -48,11 +56,17 @@ def load_day(day: str) -> list[dict]:
 
 def daily_et0(day: str) -> float:
     """FAO-56 reference evapotranspiration of the day (mm), as computed in the data pack."""
-    df = get_store()[WEATHER]
-    rows = df[df["date"].astype(str).str[:10] == day]
+    rows = _day_rows(day)
     if rows.empty:
         raise ValueError(f"no weather for {day}")
     return float(rows.iloc[0]["daily_et0_fao_evapotranspiration"])
+
+
+def daily_rain(day: str) -> float:
+    rows = _day_rows(day)
+    if rows.empty:
+        raise ValueError(f"no weather for {day}")
+    return float(rows.iloc[0]["daily_precipitation_sum"])
 
 
 def _hour(hhmm: str) -> int:
@@ -87,32 +101,51 @@ def default_pump() -> dict:
             "kwh_per_m3": float(tp["power_kW"]) / float(tp["flow_m3_h"])}
 
 
+def basin_params() -> dict:
+    b = get_store()[PUMPS]["storage_basin"]
+    return {"id": b["id"], "capacity_m3": float(b["capacity_m3"]), "initial_level_m3": float(b["initial_level_m3"]),
+            "evaporation_mm_d": float(b.get("evaporation_mm_d_summer", 0))}
+
+
+def pv_kw(day: str, kwp: float) -> list[float]:
+    """Solar power per hour (kW, equal to the kWh of the hour) of an array of `kwp`, from the 50 kWp estimate of the data pack."""
+    df = get_store()[PV]
+    rows = df[(df["datetime"].astype(str).str[:10] == day) & (df["period"] == "summer2026")].sort_values("datetime")
+    if len(rows) != 24:
+        raise ValueError(f"PV estimate for {day}: expected 24 hourly rows, found {len(rows)}")
+    return [float(r["pv_kwh"]) * kwp / float(r["pv_kwp"]) for _, r in rows.iterrows()]
+
+
 # ---------------------------------------------------------------- demand
 def growing_farms(day: str) -> list[dict]:
     """Demo farms that need irrigation on `day`: crop in season for the month, not forbidden for treated water."""
     month = int(day[5:7])
-    kc = get_store()["crop_kc"].set_index("crop")["kc_mid"]
     out = []
     for _, f in get_store()["sim_farms"].iterrows():
         crop = str(f["crop"])
-        if crop not in soil_inputs.CROP_SEASON_MONTHS or soil_inputs._blocked_reason(crop) is not None:
+        kc = needs.kc_for(crop, day)
+        if kc is None or crop not in soil_inputs.CROP_SEASON_MONTHS or soil_inputs._blocked_reason(crop) is not None:
             continue
         if month not in soil_inputs._months(soil_inputs.CROP_SEASON_MONTHS[crop]):
             continue
-        out.append({"farm_id": str(f["farm_id"]), "crop": crop, "area_ha": float(f["area_ha"]),
-                    "kc_mid": float(kc[soil_inputs.CROP_TO_KC[crop]])})
+        out.append({"farm_id": str(f["farm_id"]), "crop": crop, "area_ha": float(f["area_ha"]), "kc": float(kc)})
     return out
 
 
-def daily_demand_m3(et0_mm: float, farms: list[dict]) -> float:
-    """Peak-day irrigation demand: ET0 x sum(Kc x area) x 10 / efficiency (m3)."""
-    return et0_mm * sum(f["kc_mid"] * f["area_ha"] for f in farms) * 10.0 / EFFICIENCY
+def farm_needs(day: str) -> list[dict]:
+    """Daily water need of each growing farm (m3), with Dev A's formula (ET0 x Kc - effective rain)."""
+    et0, rain = daily_et0(day), daily_rain(day)
+    return [{**f, "need_m3": needs.water_need(et0, f["kc"], rain, f["area_ha"])["need_m3"]} for f in growing_farms(day)]
+
+
+def daily_demand_m3(day: str) -> float:
+    """Irrigation demand of the day: the farms' needs divided by the application efficiency (m3)."""
+    return sum(f["need_m3"] for f in farm_needs(day)) / EFFICIENCY
 
 
 def demand_profile(day: str) -> list[float]:
     """Irrigation demand per hour (m3), 24 values: the day's volume spread evenly over 06:00-20:00. ESTIMATE."""
-    total = daily_demand_m3(daily_et0(day), growing_farms(day))
-    per_hour = total / len(IRRIGATION_HOURS)
+    per_hour = daily_demand_m3(day) / len(IRRIGATION_HOURS)
     return [per_hour if h in IRRIGATION_HOURS else 0.0 for h in range(24)]
 
 
@@ -151,3 +184,148 @@ def naive_run(day: str, demand_m3_by_hour: list[float], pump: Optional[dict] = N
 def naive_day(day: str) -> dict:
     """The naive run of `day` with the modelled demand profile."""
     return naive_run(day, demand_profile(day))
+
+
+# ---------------------------------------------------------------- the QATRA run
+def qatra_run(day: str, demand_m3_by_hour: Optional[list[float]] = None, pump: Optional[dict] = None,
+              basin_initial_m3: Optional[float] = None, pv_kwp: Optional[float] = None,
+              batch_m3: Optional[float] = None) -> dict:
+    """QATRA policy: a rule-based hourly plan on solar and the storage basin.
+
+    Rules, applied hour by hour (pump TP1: flow and power are proportional, so a pump on part of the solar power
+    delivers the matching part of its flow; gravity flow from the basin to the farms is not limited):
+      1. Outside the outage, the pump irrigates on SOLAR first (up to the solar power of the hour).
+      2. What solar cannot give is taken from the BASIN by gravity, as long as the basin keeps the reserve the outage
+         will need (the demand of the outage hours still to come).
+      3. Only what is left is pumped from the GRID (backup). The grid never runs during the outage.
+      4. During the outage the farms are irrigated from the basin by gravity.
+      5. Solar surplus (what the farms do not use) pumps treated water into the basin, never above its capacity.
+    The plant supplies at most `batch_m3` of water in the day (None: no limit). Basin evaporation (8 mm/d) is not
+    applied: the basin area is not in the data and 8 mm on a basin of ~1,000 m2 is under 10 m3 a day."""
+    pump = pump or default_pump()
+    basin = basin_params()
+    cap = basin["capacity_m3"]
+    level = basin["initial_level_m3"] if basin_initial_m3 is None else float(basin_initial_m3)
+    demand = demand_profile(day) if demand_m3_by_hour is None else [float(x) for x in demand_m3_by_hour]
+    if len(demand) != 24:
+        raise ValueError("demand_m3_by_hour must have 24 values")
+    kwp = float(get_store()[PUMPS]["pv_array"]["kWp"]) if pv_kwp is None else float(pv_kwp)
+    solar = pv_kw(day, kwp)
+    out_hours = set(outage_hours(day))
+    k, flow = pump["kwh_per_m3"], pump["flow_m3_h"]
+    plant_left = float("inf") if batch_m3 is None else float(batch_m3)
+    hourly = []
+
+    for h in range(24):
+        d, outage = demand[h], h in out_hours
+        reserve = sum(demand[x] for x in out_hours if x > h)  # outage water still to come today
+        pv, direct_solar, from_basin, from_grid, pumped = solar[h], 0.0, 0.0, 0.0, 0.0
+        if outage:
+            from_basin = min(d, level)
+        else:
+            direct_solar = min(d, flow, pv / k, plant_left)  # 1. solar first
+            rest = d - direct_solar
+            if rest > EPS:
+                from_basin = min(rest, max(0.0, level - reserve))  # 2. basin, keeping the outage reserve
+                rest -= from_basin
+            if rest > EPS:  # 3. grid backup (never in an outage)
+                from_grid = min(rest, flow - direct_solar, plant_left - direct_solar)
+                from_grid = max(0.0, from_grid)
+        level -= from_basin
+        pumped_for_farms = direct_solar + from_grid
+        plant_left -= pumped_for_farms
+        solar_for_farms = direct_solar * k
+        # 5. solar surplus fills the basin
+        spare_flow = flow - pumped_for_farms
+        spare_pv = max(0.0, pv - solar_for_farms)
+        fill = max(0.0, min(spare_pv / k, spare_flow, cap - level, plant_left))
+        level += fill
+        plant_left -= fill
+        solar_kw = solar_for_farms + fill * k
+        grid_kw = from_grid * k
+        delivered = direct_solar + from_basin + from_grid
+        pump_kw = solar_kw + grid_kw
+        source = "grid" if grid_kw > EPS else "basin" if from_basin > EPS else "solar" if solar_kw > EPS else "off"
+        hourly.append({"hour": h, "outage": outage, "demand_m3": round(d, 3), "delivered_m3": round(delivered, 3),
+                       "unserved_m3": round(d - delivered, 3), "grid_kw": round(grid_kw, 3), "solar_kw": round(solar_kw, 3),
+                       "pump_kw": round(pump_kw, 3), "basin_m3": round(level, 3), "basin_out_m3": round(from_basin, 3),
+                       "basin_in_m3": round(fill, 3), "source": source})
+        level = min(max(level, 0.0), cap)
+
+    solar_kwh, grid_kwh = sum(r["solar_kw"] for r in hourly), sum(r["grid_kw"] for r in hourly)
+    return {
+        "date": day, "policy": "qatra", "outage_hours": sorted(out_hours), "hourly": hourly,
+        "hours_without_water": sum(1 for r in hourly if r["demand_m3"] > 0 and r["delivered_m3"] == 0),
+        "demand_m3": round(sum(r["demand_m3"] for r in hourly), 1),
+        "delivered_m3": round(sum(r["delivered_m3"] for r in hourly), 1),
+        "unserved_m3": round(sum(r["unserved_m3"] for r in hourly), 1),
+        "grid_kwh": round(grid_kwh, 1), "solar_kwh": round(solar_kwh, 1),
+        "solar_share": round(solar_kwh / (solar_kwh + grid_kwh), 3) if solar_kwh + grid_kwh > EPS else 0.0,
+        "basin_capacity_m3": cap, "basin_initial_m3": float(basin["initial_level_m3"] if basin_initial_m3 is None else basin_initial_m3),
+        "basin_final_m3": round(level, 1), "pv_kwp": kwp, "demand_status": DEMAND_STATUS, "pump": pump,
+        "tag": {"status": "SIMULATED", "source": TAG_SOURCE}, "caveat": CAVEAT,
+    }
+
+
+# ---------------------------------------------------------------- scenario result (POST /api/scenarios/heatwave)
+STUB_NOTE = ("Stub allocation: Dev A's rule-based plan (A-05) is not merged, so each growing farm receives its own daily need "
+             "(ET0 x Kc, scaled to what was delivered). Salinity caps are not applied.")
+
+
+def _allocation_items(day: str, delivered_m3: float) -> tuple[list[dict], list[str]]:
+    """Stub: split the delivered water between the growing farms by their daily need; blocked crops get 0."""
+    farms = farm_needs(day)
+    total = sum(f["need_m3"] for f in farms)
+    items = [{"farm_id": f["farm_id"], "status": "allocated",
+              "m3": round(delivered_m3 * f["need_m3"] / total, 1) if total > EPS else 0.0} for f in farms]
+    notes = []
+    for _, f in get_store()["sim_farms"].iterrows():
+        crop = str(f["crop"])
+        reason = soil_inputs._blocked_reason(crop) if crop in soil_inputs.CROP_SEASON_MONTHS else None
+        if reason:
+            items.append({"farm_id": str(f["farm_id"]), "status": "blocked", "m3": 0.0,
+                          "cap_reason": f"{crop.replace('_', ' ').capitalize()}: {reason}"})
+    idle = [str(f["farm_id"]) for _, f in get_store()["sim_farms"].iterrows()
+            if str(f["farm_id"]) not in {i["farm_id"] for i in items}]
+    if idle:
+        notes.append(f"Farms {', '.join(idle)} are not irrigated: their crop is not growing in this month.")
+    return sorted(items, key=lambda i: i["farm_id"]), notes
+
+
+def _series(run: dict, policy: str) -> dict:
+    """The hourly series the UI draws for one policy, in one shape for both."""
+    rows = []
+    for r in run["hourly"]:
+        rows.append({"hour": r["hour"], "outage": r["outage"], "demand_m3": r["demand_m3"], "delivered_m3": r["delivered_m3"],
+                     "unserved_m3": r["unserved_m3"], "grid_kw": r["grid_kw"], "solar_kw": r.get("solar_kw", 0.0),
+                     "basin_m3": r.get("basin_m3"), "source": r.get("source", "grid" if r["grid_kw"] > 0 else "off")})
+    return {"policy": policy, "hours_without_water": run["hours_without_water"], "unserved_m3": run["unserved_m3"],
+            "delivered_m3": run["delivered_m3"], "grid_kwh": run["grid_kwh"], "solar_kwh": run.get("solar_kwh", 0.0),
+            "hourly": rows}
+
+
+def run_scenario(scenario_id: str) -> dict:
+    """Contract shape of POST /api/scenarios/heatwave: the QATRA plan against the naive baseline, hour by hour."""
+    sc = get_scenario(scenario_id)  # KeyError for an unknown scenario
+    day = sc["date"]
+    demand = demand_profile(day)
+    naive = naive_run(day, demand)
+    qatra = qatra_run(day, demand, basin_initial_m3=sc.get("basin_initial_m3"), pv_kwp=sc.get("pv_kWp"),
+                      batch_m3=sc.get("batch_volume_m3"))
+    items, notes = _allocation_items(day, qatra["delivered_m3"])
+    warnings = [STUB_NOTE, *notes]
+    if qatra["outage_hours"]:
+        a, b = qatra["outage_hours"][0], qatra["outage_hours"][-1] + 1
+        warnings.insert(0, f"Grid outage {a:02d}:00-{b:02d}:00: irrigation moved to solar hours and the basin; the grid never runs in the outage.")
+    if qatra["unserved_m3"] > 0.05:
+        warnings.append(f"{qatra['unserved_m3']:.1f} m3 of the demand could not be delivered.")
+    warnings.append("Basin evaporation is not applied (basin area not in the data).")
+    warnings.append(CAVEAT)
+    schedule = [{"hour": r["hour"], "pump_kw": r["pump_kw"], "source": r["source"], "basin_m3": r["basin_m3"]} for r in qatra["hourly"]]
+    allocation = {"batch_id": sc["batch_id"], "items": items, "schedule": schedule,
+                  "energy_kwh": round(qatra["solar_kwh"] + qatra["grid_kwh"], 1), "solar_share": qatra["solar_share"],
+                  "fresh_replaced_m3": qatra["delivered_m3"], "warnings": warnings}
+    return {"scenario_id": sc["id"], "label": sc["label"], "date": day, "allocation": allocation,
+            "baseline": {"energy_kwh": naive["grid_kwh"], "solar_share": 0.0},
+            "naive": _series(naive, "naive"), "qatra": _series(qatra, "qatra"), "caveat": CAVEAT,
+            "tag": {"status": "SIMULATED", "source": "data/simulated/sim_scenarios.json"}}

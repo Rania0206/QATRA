@@ -24,6 +24,7 @@ Shared between backend (FastAPI, `backend/app`) and frontend (React, `frontend/s
 | `BusinessView` | `area_name`, `area_ha`, `farms`, `total_saving_tnd`, `qatra_share_pct`, `qatra_revenue_tnd`, `steg_kwh_avoided`, `steg_value_tnd`, `national_areas` (36), `tag` |
 | `SoilSimulation` | `farm_id`, `batch_id`, `crop`, `threshold_ece`, `ecw`, `years`: `[0..N]`, `naive`: `{series: number[], first_year_over: int \| null, water_used_m3_season, yield_loss_pct_30y: number \| null}`, `qatra`: same + `leaching_fraction`, legacy `series`: `[{day, ece}]` (= qatra curve, `day` = year x 365) and `leaching_fraction` (= `qatra.leaching_fraction`), `blocked_reason?` (string when the crop is forbidden for TWW, e.g. lettuce: the UI shows no simulation), `warning?`, `tag` |
 | `Passport` | `batch_id`, `plant`, `date`, `volume_m3`, `analysis_status`, `risk_colour?`, `allowed_crops`, `blocked_crops`, `destinations`: `[{farm_id, m3}]`, `issued_at`, `qr_payload`, `tag` (original fields) + B-12a: `quality_summary`: `[{param, label, value?, unit, limit_min?, limit_max?, ok?, legal_ref, tag}]`, `checks`: `[{type, required, present, analysed_on?, valid_until?, validity_days, is_valid?, legal_ref}]`, `timeline`: `[{at, event}]` |
+| `HeatwaveResult` | `scenario_id`, `label`, `date`, `allocation`: `Allocation`, `baseline`: `{energy_kwh, solar_share}`, `naive` and `qatra`: `{policy, hours_without_water, unserved_m3, delivered_m3, grid_kwh, solar_kwh, hourly: [{hour, outage, demand_m3, delivered_m3, unserved_m3, grid_kw, solar_kw, basin_m3?, source}] x24}`, `caveat`, `tag` |
 | `Allocation` | `batch_id`, `items`: `[{farm_id, status, m3, cap_reason?}]`, `schedule`: `[{hour, pump_kw, source: "solar" \| "grid" \| "basin" \| "off", basin_m3}]`, `energy_kwh`, `solar_share` (0..1), `fresh_replaced_m3`, `warnings`: `string[]` |
 
 Conventions used in mocks (free strings, agree before adding values):
@@ -50,7 +51,7 @@ Conventions used in mocks (free strings, agree before adding values):
 | 13 | GET | `/api/forecast/supply` | **CUT FROM MVP** (QATRA Lite) · `supply` | query `start?`, `days?` | `{start, days, items: [{date, plant_id, volume_m3, batch_id}], tag}` | `forecast_supply.json` |
 | 14 | POST | `/api/allocate` | `optimiser` | `{batch_id, date?, farm_ids?}` | `Allocation` | `post_allocate.json` |
 | 15 | POST | `/api/soil/simulate` | `soil` | `{farm_id, batch_id, days?, years?, soil_ece?, ecw?}` | `SoilSimulation` (see below) | `post_soil_simulate.json` |
-| 16 | POST | `/api/scenarios/heatwave` | `heatwave` | `{scenario_id: "heatwave_outage"}` | `{scenario_id, label, date, allocation: Allocation, baseline: {energy_kwh, solar_share}, tag}` | `post_scenarios_heatwave.json` |
+| 16 | POST | `/api/scenarios/heatwave` | `heatwave` | `{scenario_id}` (`"heatwave_outage"` or `"default"`) | `HeatwaveResult` (see below); 404 unknown scenario, 422 bad body | `post_scenarios_heatwave.json` |
 | 17 | GET | `/api/impact` | `impact` | – | `{period, tww_allocated_m3, fresh_water_saved_m3, energy_kwh, solar_share, co2_avoided_kg, farms_served, small_farms_served, batches_blocked, tag}` | `impact.json` |
 | 18 | POST | `/api/explain` | **CUT FROM MVP** (QATRA Lite) · `llm` | `{kind: "allocation" \| "compatibility", payload: object, lang?}` | `{text_en, text_fr, tag}` | `post_explain.json` |
 | 19 | GET | `/api/messages` | `messages` | query `farm_id?` | `[{id, farm_id, direction: "in" \| "out", channel, at, text? \| text_fr/text_ar}]` | `messages.json` |
@@ -87,6 +88,15 @@ Read from existing engines and the regulation pack; nothing is invented.
 - `allowed_crops`: the 21 June 1994 order (fruit trees only "no sprinkler"; olive and alfalfa flagged "(to verify)"). Empty when the batch is not usable (red). `blocked_crops`: crops eaten raw (Decree 89-1047 Art.5) and direct grazing (Art.6).
 - `destinations`: from the allocation (A-05). Until it exists the real endpoint returns `[]` (the mock keeps an illustrative list). The "delivered" timeline event is only added when there are destinations.
 - `timeline` dates: sampling = analysis date; checked = batch date; issued = `issued_at` (`{batch date}T07:00:00`, simulated convention). `qr_payload` = `qatra:passport:{id}`.
+
+### Heatwave scenario (endpoint 16, B-05b)
+The QATRA plan against the naive one, hour by hour (`engine/heatwave.py`). Extension of the original shape by agreement: `naive` and `qatra` (the hourly series the UI draws, with `hours_without_water`) and `caveat`; `allocation`, `baseline` and `tag` are unchanged.
+- `naive`: irrigates from the grid on demand, no basin, no solar. During the outage nothing is delivered, so `hours_without_water` is the outage hours where water was demanded (4 on 2026-08-26). `basin_m3` is `null`.
+- `qatra`: rule-based plan. Outside the outage: solar first, then the basin by gravity (keeping the reserve the outage needs), then the grid as backup. During the outage: the basin by gravity, **no grid**. Solar surplus fills the basin (never above its 3,000 m3). `hours_without_water` is 0 on 2026-08-26.
+- `allocation.schedule`: 24 slots. `pump_kw` is the electric power the pump draws (solar plus grid). `source`: `grid` if the grid runs, else `basin` if the farms are irrigated from the basin by gravity (the pump may still be filling it with solar), else `solar`, else `off`. `basin_m3` is the level at the end of the hour.
+- `baseline`: the naive run (`energy_kwh` = its grid energy, `solar_share` = 0). `allocation.energy_kwh` and `solar_share` are the QATRA plan.
+- **`allocation.items` is a stub**: Dev A's rule-based plan (A-05, `POST /api/allocate`) is not merged. Each growing farm gets its own daily need (ET0 x Kc, Dev A's formula) scaled to what was delivered; blocked crops (lettuce) get 0; farms whose crop is not growing that month are left out (listed in `warnings`). Salinity caps are not applied. This is said in `warnings`.
+- Demand is an ESTIMATE: the farms' needs divided by 0.9 efficiency, spread over 06:00-20:00. Basin evaporation is not applied (basin area not in the data). `caveat` = "NASA POWER ~0.5 deg grid: coastal extremes smoothed".
 
 ## Examples
 

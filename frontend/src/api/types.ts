@@ -284,6 +284,41 @@ export interface Passport {
   tag: Tag;
 }
 
+export interface HeatwaveHour {
+  hour: number;
+  outage: boolean;
+  demand_m3: number;
+  delivered_m3: number;
+  unserved_m3: number;
+  grid_kw: number;
+  solar_kw: number;
+  basin_m3: number | null; // null for the naive policy (no basin)
+  source: EnergySource;
+}
+
+export interface HeatwaveRun {
+  policy: "naive" | "qatra";
+  hours_without_water: number;
+  unserved_m3: number;
+  delivered_m3: number;
+  grid_kwh: number;
+  solar_kwh: number;
+  hourly: HeatwaveHour[]; // 24 rows
+}
+
+/** POST /api/scenarios/heatwave */
+export interface HeatwaveResult {
+  scenario_id: string;
+  label: string;
+  date: string;
+  allocation: Allocation;
+  baseline: { energy_kwh: number; solar_share: number }; // the naive run: all grid, no solar
+  naive: HeatwaveRun;
+  qatra: HeatwaveRun;
+  caveat: string; // "NASA POWER ~0.5 deg grid: coastal extremes smoothed"
+  tag: Tag;
+}
+
 export interface Health {
   status: string;
   datasets: Record<string, number>;
