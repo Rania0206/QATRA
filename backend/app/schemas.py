@@ -166,6 +166,7 @@ class SoilSimulation(BaseModel):
     crop: str
     threshold_ece: float
     ecw: float
+    soil_ece: Optional[float] = None  # soil ECe the simulation started from (the farm's, or the judge's override)
     years: list[int]  # [0..N]
     naive: SoilPolicy
     qatra: SoilQatraPolicy

@@ -45,4 +45,5 @@ def simulate(req: SoilSimulateRequest):
         raise HTTPException(422, str(e)) from e
     res["series"] = [{"day": y * soil_inputs.DAYS_PER_YEAR, "ece": v} for y, v in zip(res["years"], res["qatra"]["series"])]
     res["leaching_fraction"] = res["qatra"]["leaching_fraction"]
+    res["soil_ece"] = req.soil_ece if req.soil_ece is not None else farm.soil_ece
     return SoilSimulation(farm_id=farm.id, batch_id=batch.id, **res)

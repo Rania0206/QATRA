@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { CartesianGrid, Legend, Line, LineChart, ReferenceDot, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { post } from "../../api/client";
 import type { SoilSimulateRequest, SoilSimulation } from "../../api/types";
@@ -10,6 +10,8 @@ import { useApi } from "../../hooks/useApi";
 import { FARM, useLang } from "../../i18n";
 import { fmtNumber } from "../batches/format";
 import { cropName } from "../compatibility/format";
+import { useOperatorView } from "../compatibility/OperatorView";
+import BreakIt from "./BreakIt";
 import { S, blockedText, soilVerdict, yearText, yieldText } from "./texts";
 
 // the API answers 404 "Unknown farm" for a code that does not exist
@@ -33,14 +35,20 @@ function SquareDot({ cx, cy, index }: { cx?: number; cy?: number; index?: number
 /** The soil simulation for one farm only: the farmer's own code, never a list of farms. */
 export default function SoilTab() {
   const { lang } = useLang();
-  const [farmCode, setFarmCode] = useState<string | null>(getFarmCode);
+  const [savedCode, setFarmCode] = useState<string | null>(getFarmCode);
+  // Operator view (#/soil?view=operator, demo only): the "break it" panel works on farm A when no code was typed.
+  const operator = useOperatorView();
+  const farmCode = savedCode ?? (operator ? "A" : null);
+  const [ece, setEce] = useState<number | null>(null); // judge override of the soil salinity
+  const onEce = useCallback((v: number | null) => setEce(v), []);
+  useEffect(() => setEce(null), [farmCode]);
 
   const sim = useApi<SoilSimulation | null>(
     () =>
       farmCode
-        ? post<SoilSimulation>("/api/soil/simulate", { farm_id: farmCode, batch_id: DEMO_BATCH } satisfies SoilSimulateRequest)
+        ? post<SoilSimulation>("/api/soil/simulate", { farm_id: farmCode, batch_id: DEMO_BATCH, ...(ece !== null ? { soil_ece: ece } : {}) } satisfies SoilSimulateRequest)
         : Promise.resolve(null),
-    [farmCode],
+    [farmCode, ece],
   );
 
   const data = sim.data ?? undefined;
@@ -108,7 +116,7 @@ export default function SoilTab() {
           <p>{S.lead[lang]}</p>
         </Intro>
         {!farmCode && <FarmCodeForm onSubmit={choose} />}
-        {farmCode && data && (
+        {savedCode && data && (
           <p className="fade-up mt-8 text-center text-[length:calc(17px*var(--fs))]">
             {S.yourCrop[lang]}: <strong className="font-medium">{crop}</strong> ·{" "}
             <button type="button" onClick={change} className="link text-[length:calc(15px*var(--fs))]">
@@ -120,7 +128,10 @@ export default function SoilTab() {
 
       {farmCode && (
         <Band tone="cream" wide>
-          {sim.loading ? (
+          {operator && (
+            <BreakIt farmId={farmCode} soilEce={data?.soil_ece ?? undefined} farmEce={ece} onEce={onEce} lang={lang} />
+          )}
+          {sim.loading && (!sim.data || sim.data.farm_id !== farmCode) ? (
             <div className="space-y-4" aria-busy="true" aria-label={S.simulating[lang]}>
               <Skeleton className="h-16 w-full" />
               <Skeleton className="h-96 w-full" />

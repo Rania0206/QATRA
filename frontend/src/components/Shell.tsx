@@ -20,6 +20,9 @@ interface Props {
 /** English demo notice, kept for code that imports it; the strip itself is translated. */
 export const DEMO_BANNER = C.demo.en;
 
+/** Demo path on a phone when no role is chosen. */
+const PHONE_TABS = ["map", "soil", "heatwave", "messages"];
+
 function Burger({ open }: { open: boolean }) {
   return (
     <span aria-hidden="true" className="relative block h-5 w-9">
@@ -97,9 +100,11 @@ export default function Shell({ tabs, active, onSelect, role, onRole, children }
   const home = roleInfo ? tabs.find((t) => t.id === roleInfo.home) : undefined;
   const current = tabs.find((t) => t.id === active);
   const shortcut = tabs.find((t) => t.id === "compatibility");
+  // Phone bar: the four sections the role uses (or the demo path when there is no role) and a More button for the rest.
+  const barTabs = (relevant ? menuTabs : PHONE_TABS.map((id) => tabs.find((t) => t.id === id)).filter((t): t is ShellTab => !!t)).slice(0, 4);
 
   return (
-    <div className="flex min-h-screen flex-col bg-cream text-ink">
+    <div className="flex min-h-dvh flex-col bg-cream pb-[calc(4.25rem+env(safe-area-inset-bottom))] text-ink sm:pb-0">
       <header className="sticky top-0 z-[1000] border-b border-line bg-cream">
         {/* phones: menu + wordmark on the first line, role and language wrap onto a second one (no sideways scroll); from sm: the original 3-column row */}
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-4 gap-y-1 px-5 py-2 sm:grid sm:h-20 sm:grid-cols-[1fr_auto_1fr] sm:py-0 sm:px-8">
@@ -242,6 +247,35 @@ export default function Shell({ tabs, active, onSelect, role, onRole, children }
         <p className="font-display text-4xl">{PROJECT_NAME}</p>
         <p className="mx-auto mt-4 max-w-sm">{C.tagline[lang]}</p>
       </footer>
+      <nav
+        aria-label={C.mainTabs[lang]}
+        className="fixed inset-x-0 bottom-0 z-[1100] flex border-t border-line bg-cream pb-[env(safe-area-inset-bottom)] sm:hidden"
+      >
+        {barTabs.map((t) => (
+          <a
+            key={t.id}
+            href={`#/${t.id}`}
+            onClick={(e) => {
+              e.preventDefault();
+              go(t.id);
+            }}
+            aria-current={active === t.id ? "page" : undefined}
+            className={`flex min-h-14 flex-1 flex-col items-center justify-center gap-1 px-1 text-[13px] leading-tight ${active === t.id ? "font-medium text-ink" : "text-ink-soft"}`}
+          >
+            <span aria-hidden="true" className={`h-1 w-6 rounded-full ${active === t.id ? "bg-ink" : "bg-transparent"}`} />
+            <span className="max-w-full truncate">{label(t)}</span>
+          </a>
+        ))}
+        <button
+          type="button"
+          onClick={() => setMenuOpen(true)}
+          aria-expanded={menuOpen}
+          className="flex min-h-14 flex-1 flex-col items-center justify-center gap-1 px-1 text-[13px] leading-tight text-ink-soft"
+        >
+          <span aria-hidden="true" className="h-1 w-6 rounded-full bg-transparent" />
+          <span>{C.more[lang]}</span>
+        </button>
+      </nav>
     </div>
   );
 }

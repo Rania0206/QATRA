@@ -103,7 +103,7 @@ export default function RequestsTab() {
           {power.send &&
             (farms.data ? <RequestForm lang={lang} farms={farms.data} compat={compat.data ?? null} onCreate={create} /> : <Skeleton className="mx-auto h-96 max-w-3xl" />)}
 
-          <section aria-label={RQ.listTitle[lang]} className="space-y-4">
+          <section aria-label={RQ.listTitle[lang]} className="min-w-0 space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <h2 className="text-3xl">{RQ.listTitle[lang]}</h2>
               <Segmented<Filter>
@@ -131,7 +131,7 @@ export default function RequestsTab() {
               <p className="py-8 text-ink-soft">{RQ.empty[lang]}</p>
             ) : (
               <div className="overflow-x-auto border border-line bg-white">
-                <table className="w-full text-[length:calc(16px*var(--fs))]">
+                <table className="w-full min-w-[34rem] text-[length:calc(16px*var(--fs))]">
                   <thead>
                     <tr className="border-b border-ink text-start text-[length:calc(14px*var(--fs))] uppercase tracking-wide text-ink-soft">
                       <th className="px-3 py-2 text-start font-normal">{RQ.colId[lang]}</th>
