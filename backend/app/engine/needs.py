@@ -6,8 +6,9 @@
     need (m3)      = need (mm) x area (ha) x 10     (1 mm on 1 ha = 10 m3)
 
 Weather: the data pack forecast (data/clean/weather_forecast_sousse, daily ET0 and rain), read through
-the store. Kc: data/clean/crop_kc. No ML, no weather API call. Blocked crops (e.g. lettuce) still get a
-need value: this module only says how much a crop would need; the plan decides who receives water.
+the store. Kc: data/clean/crop_kc (Kc_ini / Kc_mid / Kc_end) moved through the year by CROP_CALENDAR below.
+No ML, no weather API call. Blocked crops (e.g. lettuce) still get a need value: this module only says how much a
+crop would need; the plan decides who receives water.
 """
 from datetime import date as Date
 from datetime import timedelta
@@ -31,7 +32,7 @@ M3_PER_MM_HA = 10.0  # 1 mm of water on 1 ha = 10 m3
 # Farm crop codes that have no row of their own in crop_kc. Fodder barley is barley (same FAO-56 row).
 KC_ALIAS = {"barley_fodder": "barley", "citrus_orange": "citrus"}
 
-TAG = Tag(status="PROJECTION", source="Open-Meteo forecast (data pack), else historical weather, x FAO-56 Kc (mid-season)")
+TAG = Tag(status="PROJECTION", source="Open-Meteo forecast (data pack), else historical weather, x FAO-56 Kc of the month (simplified calendar, ESTIMATE)")
 
 
 class NeedItem(BaseModel):
@@ -100,8 +101,9 @@ def weather_for(day: str) -> Optional[tuple[float, float, str]]:
 
 
 @lru_cache(maxsize=1)
-def _kc_mid() -> dict[str, float]:
-    return {str(r["crop"]): float(r["kc_mid"]) for _, r in get_store()[KC_DATASET].iterrows()}
+def _kc_table() -> dict[str, tuple[float, float, float]]:
+    """crop -> (Kc_ini, Kc_mid, Kc_end) from crop_kc."""
+    return {str(r["crop"]): (float(r["kc_ini"]), float(r["kc_mid"]), float(r["kc_end"])) for _, r in get_store()[KC_DATASET].iterrows()}
 
 
 def forecast_dates() -> list[str]:
@@ -109,13 +111,58 @@ def forecast_dates() -> list[str]:
     return sorted(_weather())
 
 
-def kc_for(crop: str, on: Optional[str] = None) -> Optional[float]:
-    """Crop coefficient for a crop on a date; None for an unknown crop.
+# ---------------------------------------------------------------- crop calendar (the ONE place that says what grows when)
+# SIMPLIFIED CALENDAR, tag ESTIMATE. Source: FAO-56 typical stages (Kc_ini, development, Kc_mid, Kc_end from crop_kc);
+# sowing dates are not in the data, so the months below are typical Mediterranean ones. TO VERIFY with CRDA.
+# One entry per month, January to December:
+#   "off"  not growing (need 0)      "ini" Kc_ini      "mid" Kc_mid      "end" Kc_end
+#   a number 0..1 = development: Kc_ini + number x (Kc_mid - Kc_ini)
+# Keys are crop_kc rows (barley_fodder is barley, see KC_ALIAS). A crop of crop_kc that has no calendar here (citrus,
+# pomegranate, tomato: not on the demo farms) keeps its Kc_mid all year.
+_WINTER_CEREAL = [0.33, 0.67, "mid", "mid", "end", "off", "off", "off", "off", "off", "ini", "ini"]  # sown Nov-Dec, harvested end of May
+_PERENNIAL = ["ini", "ini", 0.5, "mid", "mid", "mid", "mid", "mid", "mid", "mid", 0.5, "ini"]  # cool / dormant Dec-Feb, full season Apr-Oct
+CROP_CALENDAR: dict[str, list] = {
+    "wheat": _WINTER_CEREAL,
+    "barley": _WINTER_CEREAL,
+    "oat_fodder": _WINTER_CEREAL,
+    "olive": _PERENNIAL,
+    "alfalfa": _PERENNIAL,
+    "lettuce": ["mid", "mid", "mid", "end", "off", "off", "off", "off", "ini", 0.5, "mid", "mid"],  # grown Sep-Apr only
+}
 
-    sim_farms has no planting date or growth stage, so every crop uses its MID-SEASON Kc (demo
-    simplification). `on` is kept so growth stages can be added later without changing callers.
+
+def _month_of(on: Optional[str]) -> Optional[int]:
+    try:
+        return Date.fromisoformat(str(on)).month if on else None
+    except ValueError:
+        return None
+
+
+def kc_for(crop: str, on: Optional[str] = None) -> Optional[float]:
+    """Crop coefficient of a crop on a date (YYYY-MM-DD), by CROP_CALENDAR.
+
+    None only for a crop crop_kc does not know. 0.0 when the crop is not growing that month (no water needed).
+    Without a date (or a crop with no calendar) the mid-season Kc is returned.
     """
-    return _kc_mid().get(KC_ALIAS.get(crop, crop))
+    row = KC_ALIAS.get(crop, crop)
+    if row not in _kc_table():
+        return None
+    ini, mid, end = _kc_table()[row]
+    month, cal = _month_of(on), CROP_CALENDAR.get(row)
+    if month is None or cal is None:
+        return mid
+    stage = cal[month - 1]
+    if stage == "off":
+        return 0.0
+    if isinstance(stage, str):
+        return {"ini": ini, "mid": mid, "end": end}[stage]
+    return ini + stage * (mid - ini)
+
+
+def is_growing(crop: str, on: Optional[str] = None) -> bool:
+    """True if the crop needs irrigation water that month. Used by the plan and by the heatwave screen (one rule)."""
+    kc = kc_for(crop, on)
+    return kc is not None and kc > 0
 
 
 # ---------------------------------------------------------------- the formula (pure)

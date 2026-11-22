@@ -21,11 +21,11 @@ def pilot():
 
 def test_allocation_and_savings_show_the_same_water_and_money(pilot):
     a, s, _ = pilot
-    assert sum(i.m3 for i in a.items) == pytest.approx(s.day.m3, abs=0.05)  # 799.3
+    assert sum(i.m3 for i in a.items) == pytest.approx(s.day.m3, abs=0.05)  # 392.8
     assert a.fresh_replaced_m3 == pytest.approx(s.day.m3, abs=0.05)
-    assert s.day.farmer_net_tnd == pytest.approx(97.23, abs=0.005)
-    assert s.season.farmer_net_tnd == pytest.approx(s.day.farmer_net_tnd * DAYS, abs=0.01)  # 14,584.5, shown as 14,585
-    assert s.season.m3 == pytest.approx(s.day.m3 * DAYS, abs=0.1)  # 119,895
+    assert s.day.farmer_net_tnd == pytest.approx(45.43, abs=0.005)
+    assert s.season.farmer_net_tnd == pytest.approx(s.day.farmer_net_tnd * DAYS, abs=0.01)  # 6,814.5, shown as 6,815
+    assert s.season.m3 == pytest.approx(s.day.m3 * DAYS, abs=0.1)  # 58,920
 
 
 def test_business_per_hectare_pilot_agrees_with_the_savings_totals_to_its_rounding(pilot):

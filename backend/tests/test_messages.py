@@ -21,9 +21,13 @@ def store():
 
 @pytest.fixture(autouse=True)
 def clean_replies():
+    global SMALL_BATCH
+    SMALL_BATCH = _small_batch()  # other test modules empty the operator batches, so it is created again for every test
     m.reset_replies()
     yield
     m.reset_replies()
+    from app.engine import batches
+    batches._operator_batches.pop(SMALL_BATCH, None)  # the operator batch must not leak into the tests that list every batch
 
 
 @pytest.fixture(scope="module")
@@ -249,7 +253,17 @@ def test_mock_matches_the_real_shape(client):
 
 
 # ================================================================ B-08c: the farmers answer 1 / 2 / 3 / 4
-SMALL_BATCH = "SSUD-20260827"  # 700 m3: smaller than the total need, so the sharing binds and a refusal frees water for the others
+def _small_batch() -> str:
+    """A 250 m3 operator batch (analyses copied from SSUD-20260827). With the crop calendar the total need of 21 Nov is
+    about 390 m3, so no real batch (700 m3 at the least) is short any more: this one is, so the sharing binds and a
+    refusal frees water for the others."""
+    from app.engine.batches import create_batch, get_batch
+    src = get_batch("SSUD-20260827")
+    return create_batch(plant_id=src.plant_id, batch_date=src.date, volume_m3=250.0, treatment_level=src.treatment_level,
+                        analyses=[{"type": a.type, "date": a.date, "values": a.values} for a in src.analyses]).id
+
+
+SMALL_BATCH = ""  # set by the clean_replies fixture
 
 
 def volumes(alloc):
@@ -387,13 +401,13 @@ def test_a_blocked_farm_has_nothing_to_accept_or_refuse(plan_calls):
     assert len(plan_calls) == n and m.current_allocation(SMALL_BATCH) is alloc and "C" not in m._state_for(SMALL_BATCH).refused
 
 
-def test_on_a_large_batch_nobody_gets_more_and_the_water_stays_in_the_basin():
+def test_on_a_large_batch_nobody_gets_more_and_the_water_stays_at_the_plant():
     before = volumes(m.current_allocation())  # default batch: 1,500 m3, every farm is already at its own cap
     m.add_reply("B", "2")
     after = volumes(m.current_allocation())
     assert after["B"] == 0 and all(after[f] == before[f] for f in after if f != "B")
     assert not [x for x in m.list_messages() if "-U" in x["id"]]  # no "volume added" message when nothing was added
-    assert any("not allocated" in w and "basin" in w for w in m.current_allocation().warnings)
+    assert any("not sent today" in w and "stays at the plant" in w for w in m.current_allocation().warnings)
 
 
 def test_new_arabic_templates_are_flagged_and_listed_for_review():

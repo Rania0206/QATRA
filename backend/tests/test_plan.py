@@ -2,6 +2,7 @@
 import pytest
 
 from app.engine import plan as plan_mod
+from app.engine import soil
 from app.engine.batches import get_batch
 from app.engine.farms import get_farm, list_farms
 from app.engine.needs import forecast_dates
@@ -40,8 +41,23 @@ def test_conditional_farm_is_capped_with_a_reason():
 
 def test_unconstrained_farms_get_their_full_need():
     items = by_farm(allocate(get_batch(GOOD)))
-    for fid in "BDEFGHIJ":
+    for fid in "BDEFGHJ":
         assert items[fid].status == "allocated" and items[fid].m3 == pytest.approx(items[fid].need_m3, abs=0.11)
+
+
+def test_soil_cap_applies_to_every_farm_not_only_the_conditional_ones():
+    """Farm I (alfalfa, ECe 1.2) is "compatible" by the rules, but the soil model still limits alfalfa on this batch."""
+    items = by_farm(allocate(get_batch(GOOD)))
+    i = items["I"]
+    assert i.compat_status == "compatible" and i.status == "capped"
+    assert 0 < i.m3 < i.need_m3 and i.cap_reason.startswith("soil salinity: limited volume")
+    ecw = [a.values["EC_dS_m"] for a in get_batch(GOOD).analyses if "EC_dS_m" in a.values][0]
+    farm = get_farm("I")
+    cap = soil.cap_volume({"id": "I", "crop": farm.crop, "area_ha": farm.area_ha, "soil_ece": farm.soil_ece,
+                           "soil_texture": farm.soil_texture}, ecw)
+    assert i.m3 <= i.need_m3 * cap["max_m3_season"] / cap["need_m3_season"] + 0.05  # never above the soil model's cap
+    a = items["A"]  # farm A is unchanged: same crop, same water, same ratio of its need
+    assert a.status == "conditional" and a.m3 / a.need_m3 == pytest.approx(i.m3 / i.need_m3, abs=0.01)
 
 
 def test_total_allocated_never_exceeds_the_batch_and_leftover_is_reported():
@@ -49,7 +65,8 @@ def test_total_allocated_never_exceeds_the_batch_and_leftover_is_reported():
     assert p.total_allocated_m3 == pytest.approx(sum(i.m3 for i in p.items))
     assert p.total_allocated_m3 <= p.batch_volume_m3
     assert p.fresh_replaced_m3 == p.total_allocated_m3
-    assert any("not allocated: kept in the basin" in w for w in p.warnings)
+    assert any("not sent today: stays at the plant" in w for w in p.warnings)
+    assert not any("kept in the basin" in w for w in p.warnings)
 
 
 def test_anti_rebound_never_exceeds_current_well_use(monkeypatch):
@@ -65,13 +82,13 @@ def test_anti_rebound_never_exceeds_current_well_use(monkeypatch):
 
 def test_proportional_sharing_when_the_batch_is_short():
     full = allocate(get_batch(GOOD))
-    short = allocate(get_batch(GOOD).model_copy(update={"volume_m3": 400.0}))
-    assert 399.0 <= short.total_allocated_m3 <= 400.0
+    short = allocate(get_batch(GOOD).model_copy(update={"volume_m3": 200.0}))  # the total need of 21 Nov is ~390 m3
+    assert 199.0 <= short.total_allocated_m3 <= 200.0
     ratios = [i.m3 / i.capped_m3 for i in short.items if i.capped_m3 > 0]
     assert max(ratios) - min(ratios) < 0.01  # everybody gets the same share of their capped need
-    assert ratios[0] == pytest.approx(400.0 / sum(i.capped_m3 for i in full.items), abs=0.01)
+    assert ratios[0] == pytest.approx(200.0 / sum(i.capped_m3 for i in full.items), abs=0.01)
     assert all(i.status in ("capped", "conditional") for i in short.items if i.compat_status != "blocked")
-    assert not any("kept in the basin" in w for w in short.warnings)  # nothing left over
+    assert not any("not sent today" in w for w in short.warnings)  # nothing left over
 
 
 def test_expired_analysis_gives_a_warning_not_a_crash():

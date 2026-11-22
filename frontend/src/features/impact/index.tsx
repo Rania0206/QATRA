@@ -136,7 +136,7 @@ export default function ImpactTab() {
 
   const est = Im.estimate[lang];
   const proj = Im.projection[lang];
-  // m3 and kWh by the day keep one decimal (799.3), money by the day two (97.23); seasons are whole numbers
+  // m3 and kWh by the day keep one decimal (392.8), money by the day two (45.43); seasons are whole numbers
   const mk = (key: string, label: string, day: number, season: number, unit: string, dayDec: number, fixedDay = false): RowData => ({
     key, label, day, season, unit, dayTag: est, seasonTag: proj, dayDec, seasonDec: 0, fixedDay,
   });

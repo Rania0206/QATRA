@@ -143,7 +143,7 @@ def test_endpoint_contract_shape_and_speed():
         elapsed = time.perf_counter() - t0
         assert r.status_code == 200 and elapsed < 1.0, elapsed
         Allocation.model_validate(r.json())
-        assert set(r.json()) == {"batch_id", "items", "schedule", "energy_kwh", "solar_share", "fresh_replaced_m3", "warnings"}
+        assert set(r.json()) == {"batch_id", "date", "items", "schedule", "energy_kwh", "solar_share", "fresh_replaced_m3", "warnings"}
         assert set(r.json()["schedule"][0]) == {"hour", "pump_kw", "source", "basin_m3"}
         assert r.json()["solar_share"] > 0  # default date
         assert c.post("/api/allocate", json={}).json()["batch_id"] == "SSUD-20260829"  # all fields optional
