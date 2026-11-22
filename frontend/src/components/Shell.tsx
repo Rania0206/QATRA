@@ -91,7 +91,10 @@ export default function Shell({ tabs, active, onSelect, role, onRole, children }
     return () => window.removeEventListener("keydown", onKey);
   }, [menuOpen]);
 
-  const relevant = ROLES.find((r) => r.id === role)?.tabs ?? null; // null: no role, nothing is dimmed
+  const roleInfo = ROLES.find((r) => r.id === role);
+  const relevant = roleInfo?.tabs ?? null; // null: no role, every tab is listed
+  const menuTabs = relevant ? tabs.filter((t) => relevant.includes(t.id)) : tabs;
+  const home = roleInfo ? tabs.find((t) => t.id === roleInfo.home) : undefined;
   const current = tabs.find((t) => t.id === active);
   const shortcut = tabs.find((t) => t.id === "compatibility");
 
@@ -161,10 +164,28 @@ export default function Shell({ tabs, active, onSelect, role, onRole, children }
         </div>
       </header>
 
-      {role && (
-        <p role="note" className="bg-sand px-4 py-2 text-center text-[15px] text-ink-soft">
-          <span className="text-ink">{ROLES.find((r) => r.id === role)?.label[lang]}</span> · {RT.notice[lang]}
-        </p>
+      {roleInfo && (
+        <div role="note" className="bg-sand px-4 py-2 text-center text-[15px] text-ink-soft">
+          <p>
+            <span className="font-medium text-ink">{roleInfo.label[lang]}</span> · {roleInfo.about[lang]}{" "}
+            <span className="whitespace-nowrap">({roleInfo.operator ? RT.allFarms[lang] : RT.oneFarm[lang]})</span>
+          </p>
+          {relevant && !relevant.includes(active) && home && (
+            <p className="mt-1 text-bad">
+              {RT.notMine[lang]}{" "}
+              <a
+                href={`#/${home.id}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  go(home.id);
+                }}
+                className="link"
+              >
+                {RT.goTo[lang]} {label(home)}
+              </a>
+            </p>
+          )}
+        </div>
       )}
 
       {menuOpen && (
@@ -183,11 +204,11 @@ export default function Shell({ tabs, active, onSelect, role, onRole, children }
           </div>
           <nav aria-label="Main sections" className="flex flex-1 items-center justify-center px-5 py-10">
             <ol className="grid w-full max-w-4xl gap-x-16 gap-y-4 md:grid-cols-2">
-              {tabs.map((t, i) => (
+              {menuTabs.map((t, i) => (
                 <li
                   key={t.id}
-                  className={`fade-up transition-opacity ${relevant && !relevant.includes(t.id) ? "opacity-40" : ""}`}
-                  data-relevant={relevant ? String(relevant.includes(t.id)) : undefined}
+                  className="fade-up"
+                  data-relevant={relevant ? "true" : undefined}
                   style={{ animationDelay: `${i * 35}ms` }}
                 >
                   <a
@@ -207,7 +228,6 @@ export default function Shell({ tabs, active, onSelect, role, onRole, children }
                     >
                       {label(t)}
                     </span>
-                    {relevant?.includes(t.id) && <span className="ms-auto text-[15px]">● {RT.relevant[lang]}</span>}
                   </a>
                 </li>
               ))}

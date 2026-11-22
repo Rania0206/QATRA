@@ -5,6 +5,7 @@ import ErrorBox from "../../components/ErrorBox";
 import { Band, Drawer, Intro, Pill, Skeleton } from "../../components/ui";
 import { useApi } from "../../hooks/useApi";
 import { useLang } from "../../i18n";
+import { OPERATOR_ROLES } from "../../roles";
 import { COMPLIANCE } from "../batches/format";
 import DayPicker from "./DayPicker";
 import FarmCard, { FarmCardSkeleton } from "./FarmCard";
@@ -16,8 +17,16 @@ import { DECISION, T, type RuleInfo } from "./format";
  * It is NOT access control: it is hidden by default and turns on with #/compatibility?view=operator
  * (or VITE_DEMO_OPERATOR=true in the build). A real version needs logins and a server-side role check.
  */
-const flag = () => new URLSearchParams(window.location.hash.split("?")[1] ?? "").get("view");
-const isOperator = () => (flag() === "operator" ? true : flag() === "farmer" ? false : import.meta.env.VITE_DEMO_OPERATOR === "true");
+const param = (name: string) => new URLSearchParams(window.location.hash.split("?")[1] ?? "").get(name);
+// ?view=operator / ?view=farmer win; else the demo role decides (ONAS and CRDA see all farms); else the build flag.
+const isOperator = () => {
+  const view = param("view");
+  if (view === "operator") return true;
+  if (view === "farmer") return false;
+  const role = param("role");
+  if (role && OPERATOR_ROLES.includes(role)) return true;
+  return import.meta.env.VITE_DEMO_OPERATOR === "true";
+};
 
 export function useOperatorView(): boolean {
   const [on, setOn] = useState(isOperator);

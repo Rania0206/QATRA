@@ -2,6 +2,7 @@ import type { ComponentType } from "react";
 import Shell from "./components/Shell";
 import { useHashTab } from "./hooks/useHashTab";
 import { useHashRole } from "./hooks/useHashRole";
+import { ROLES } from "./roles";
 import MapTab from "./features/map";
 import BatchesTab from "./features/batches";
 import CompatibilityTab from "./features/compatibility";
@@ -49,7 +50,7 @@ function TabsApp() {
   const { Component } = TABS.find((t) => t.id === active)!;
 
   return (
-    <Shell tabs={TABS} active={active} onSelect={setActive} role={role} onRole={setRole}>
+    <Shell tabs={TABS} active={active} onSelect={setActive} role={role} onRole={(r) => setRole(r, r ? ROLES.find((x) => x.id === r)?.home : undefined)}>
       <Component />
     </Shell>
   );
