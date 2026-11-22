@@ -128,58 +128,12 @@ def _osm_plants_layer() -> MapLayer:
                     tag=Tag(status="REPORTED", source=OSM_SOURCE), features=feats)
 
 
-def _farmland_geometries() -> dict[str, dict]:
-    """OSM id -> GeoJSON polygon, from the farmland dataset."""
-    out = {}
-    for _, r in get_store()["farmland_sousse"].iterrows():
-        geom = _geojson(r["geometry"])
-        if geom is not None:
-            out[str(r["osm_id"])] = geom
-    return out
-
-
 def _farms_layer() -> MapLayer:
-    """Demo farms. Each farm carries the OSM polygon it sits on (`geometry`, null when there is no match) and the
-    `expected_decision` of the data pack (only farms A, B, C have one): the map falls back on it when the live
-    compatibility endpoint is unavailable."""
     df = get_store()["sim_farms"]
-    polygons = _farmland_geometries()
-    feats = []
-    for _, r in df.iterrows():
-        poly_id = _clean(r.get("osm_polygon_id"))
-        feats.append({"id": str(r["farm_id"]), "name": str(r["name"]), "lat": _num(r["lat"]), "lon": _num(r["lon"]),
-                      "crop": str(r["crop"]), "osm_polygon_id": poly_id,
-                      "expected_decision": _clean(r.get("expected_decision")),
-                      "geometry": polygons.get(str(poly_id))})
+    feats = [{"id": str(r["farm_id"]), "name": str(r["name"]), "lat": _num(r["lat"]), "lon": _num(r["lon"]),
+              "crop": str(r["crop"])} for _, r in df.iterrows()]
     return MapLayer(id="farms", label="Demo farms",
                     tag=Tag(status="SIMULATED", source="data/simulated/sim_farms.csv"), features=feats)
-
-
-def _wells_sim_layer() -> MapLayer:
-    """Simulated farm wells (sim_pumps_basin). The data has no well coordinates: each one is drawn at its farm's
-    location, which is an assumption (SIMULATED), not a surveyed position."""
-    store = get_store()
-    farms = {str(r["farm_id"]): r for _, r in store["sim_farms"].iterrows()}
-    feats = []
-    for p in store["sim_pumps_basin"].get("farm_well_pumps", []):
-        farm = farms.get(str(p["farm_id"]))
-        if farm is None:
-            continue
-        feats.append({"id": f"SIM-WELL-{p['farm_id']}", "name": f"Simulated {p.get('source', 'well')} (farm {p['farm_id']})",
-                      "lat": _num(farm["lat"]), "lon": _num(farm["lon"]), "head_m": _num(p.get("head_m")),
-                      "flow_m3_h": _num(p.get("flow_m3_h")), "source": p.get("source")})
-    return MapLayer(id="wells_sim", label="Farm wells (simulated)",
-                    tag=Tag(status="SIMULATED", source="data/simulated/sim_pumps_basin.json; position = farm location (assumed)"),
-                    features=feats)
-
-
-def _pumps_osm_layer() -> MapLayer:
-    """Real OSM wells / pumps near Sousse (REPORTED but incomplete)."""
-    df = get_store()["pumps_sousse"]
-    feats = [{"id": str(r["osm_id"]), "name": f"OSM {str(r.get('category') or 'well')} ({r['osm_id']})",
-              "lat": _num(r["lat"]), "lon": _num(r["lon"])} for _, r in df.iterrows()]
-    return MapLayer(id="pumps_osm", label="Wells and pumps (OSM)",
-                    tag=Tag(status="REPORTED", source=OSM_SOURCE), features=feats)
 
 
 def _basin_layer() -> MapLayer:
@@ -224,5 +178,4 @@ def _farmland_layer() -> MapLayer:
 @router.get("/map/layers", response_model=MapLayersResponse)
 def map_layers():
     return MapLayersResponse(layers=[_plant_layer(), _irrigated_layer(), _osm_plants_layer(),
-                                     _farmland_layer(), _farms_layer(), _wells_sim_layer(),
-                                     _pumps_osm_layer(), _basin_layer()])
+                                     _farmland_layer(), _farms_layer(), _basin_layer()])

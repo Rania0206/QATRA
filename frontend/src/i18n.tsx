@@ -73,6 +73,19 @@ export const TAB_LABEL: Record<string, Tr> = {
   public: { en: "Public (next version)", fr: "Public (prochaine version)", ar: "العموم (النسخة القادمة)" },
 };
 
+/** Farm-code form (farmer-facing screens). */
+export const FARM = {
+  codeLabel: { en: "Your farm code", fr: "Code de votre ferme", ar: "رمز مزرعتك" },
+  codeHint: {
+    en: "You received it by SMS. Demo codes: A to J.",
+    fr: "Vous l'avez reçu par SMS. Codes de démo : A à J.",
+    ar: "وصلك في رسالة قصيرة. رموز التجربة: من A إلى J.",
+  },
+  see: { en: "See my farm", fr: "Voir ma ferme", ar: "عرض مزرعتي" },
+  notFound: { en: "No farm with this code.", fr: "Aucune ferme avec ce code.", ar: "لا توجد مزرعة بهذا الرمز." },
+  change: { en: "Not your farm? Change", fr: "Pas votre ferme ? Changer", ar: "ليست مزرعتك؟ غيّرها" },
+} satisfies Record<string, Tr>;
+
 /** Texts shared by the shell and common components. */
 export const C = {
   demo: {

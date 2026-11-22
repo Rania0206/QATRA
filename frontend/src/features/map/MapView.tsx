@@ -1,8 +1,10 @@
-import { useState } from "react";
-import { CircleMarker, LayerGroup, LayersControl, MapContainer, Polygon, Popup, TileLayer, Tooltip } from "react-leaflet";
+import { useEffect, useState } from "react";
+import { CircleMarker, LayerGroup, LayersControl, MapContainer, Polygon, Popup, TileLayer, Tooltip, ZoomControl, useMap } from "react-leaflet";
 import type { LatLngTuple } from "leaflet";
-import type { Decision, MapFeature, MapLayer, Plant } from "../../api/types";
-import TagChip from "../../components/TagChip";
+import type { MapFeature, MapLayer, Plant } from "../../api/types";
+import { isRtl, useLang, type Lang } from "../../i18n";
+import { cropName } from "../compatibility/format";
+import { LAYER_LABEL, M } from "./texts";
 
 // Zaouiet-Sousse (same centre and zoom as data/map_preview.html).
 const CENTRE: LatLngTuple = [35.79, 10.62];
@@ -13,27 +15,24 @@ const ESRI_ATTR = "Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geog
 const OSM = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
 const OSM_ATTR = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
-export type DecisionKey = Decision | "unknown";
-
-// Farm colour = compatibility decision. The word is always shown too (tooltip, card, legend).
-export const DECISION_STYLE: Record<DecisionKey, { colour: string; label: string }> = {
-  compatible: { colour: "#16a34a", label: "Compatible" },
-  conditional: { colour: "#f59e0b", label: "Conditional" },
-  blocked: { colour: "#dc2626", label: "Blocked" },
-  unknown: { colour: "#94a3b8", label: "Unknown" },
+// Colour + radius per layer id. Light, earthy colours that stay readable on satellite imagery.
+// Circles and polygons, no marker images (avoids the Vite icon-path issue).
+export const STYLE: Record<string, { colour: string; radius: number }> = {
+  plants: { colour: "#ffffff", radius: 11 },
+  osm_plants: { colour: "#e2d9c3", radius: 7 },
+  my_farm: { colour: "#f2c14e", radius: 11 }, // the farmer's own farm, stands out from the rest
+  basin: { colour: "#8fd3e8", radius: 8 },
+  farmland: { colour: "#b9d86b", radius: 0 },
 };
+export const FALLBACK = { colour: "#f3ebe0", radius: 6 };
+const OUTLINE = "#1b1b1a";
+const LABEL = "!rounded-none !border-ink !bg-cream !px-2 !py-0.5 !text-[14px] !text-ink !shadow-none";
 
-// Colour + radius per layer id. Circles and polygons, no marker images (avoids the Vite icon-path issue).
-// SIMULATED layers are drawn hollow with a dashed outline, real (REPORTED) ones solid with a white outline.
-const STYLE: Record<string, { colour: string; radius: number }> = {
-  plants: { colour: "#a21caf", radius: 11 },
-  osm_plants: { colour: "#e879f9", radius: 7 },
-  wells_sim: { colour: "#22d3ee", radius: 14 }, // ring around the farm marker it is drawn at
-  pumps_osm: { colour: "#0e7490", radius: 7 },
-  basin: { colour: "#22d3ee", radius: 11 },
-  farmland: { colour: "#a3e635", radius: 0 },
-};
-const FALLBACK = { colour: "#e2e8f0", radius: 6 };
+/** OpenStreetMap leaves some plants unnamed; the server then makes up "Unnamed OSM wastewater plant (id)". Never show that id. */
+const isUnnamed = (f: MapFeature) => f.name.startsWith("Unnamed OSM");
+const displayName = (f: MapFeature, lang: Lang) => (isUnnamed(f) ? M.unnamed[lang] : f.name);
+
+export const layerLabel = (l: MapLayer, lang: Lang) => LAYER_LABEL[l.id]?.[lang] ?? l.label;
 
 export const hasCoords = (f: MapFeature): f is MapFeature & { lat: number; lon: number } =>
   typeof f.lat === "number" && typeof f.lon === "number" && Number.isFinite(f.lat) && Number.isFinite(f.lon);
@@ -54,84 +53,65 @@ export function polygonPositions(f: MapFeature): LatLngTuple[][] | null {
 
 export const isDrawable = (f: MapFeature) => hasCoords(f) || polygonPositions(f) !== null;
 
-function FeaturePopup({ f, layer, plant }: { f: MapFeature; layer: MapLayer; plant?: Plant }) {
-  const tag = plant ? plant.tag : layer.tag;
+function FeaturePopup({ f, layer, plant, lang }: { f: MapFeature; layer: MapLayer; plant?: Plant; lang: Lang }) {
+  const source = (plant ? plant.tag : layer.tag).source;
   return (
-    <div className="min-w-48 space-y-1.5 text-sm">
-      <p className="text-base font-semibold text-slate-900">{f.name}</p>
-      <p className="text-xs text-slate-500">
-        {layer.label} · {f.id}
-      </p>
+    <div dir={isRtl(lang) ? "rtl" : "ltr"} className="min-w-52 space-y-1.5 text-[15px]">
+      <p className="font-display text-xl leading-tight">{displayName(f, lang)}</p>
+      <p className="text-[14px] text-ink-soft">{layerLabel(layer, lang)}</p>
       {plant ? (
-        <ul className="space-y-0.5 text-slate-700">
+        <ul className="space-y-1">
           <li>
-            Capacity: {plant.capacity_m3_d === null ? "unknown" : `${plant.capacity_m3_d.toLocaleString()} m³/day`}
-            <span className="block text-xs text-slate-500">Treatment capacity, not the volume available to farmers.</span>
+            {M.capacity[lang]}:{" "}
+            {plant.capacity_m3_d === null ? M.unknown[lang] : `${plant.capacity_m3_d.toLocaleString("en-US")} ${M.perDay[lang]}`}
+            <span className="block text-[14px] text-ink-soft">{M.capacityNote[lang]}</span>
           </li>
-          <li>Treatment level: {plant.treatment_level}</li>
-          {plant.serves_perimeter && <li>Serves: {plant.serves_perimeter}</li>}
+          <li>
+            {M.treatment[lang]}: {plant.treatment_level}
+          </li>
+          {plant.serves_perimeter && (
+            <li>
+              {M.serves[lang]}: {plant.serves_perimeter}
+            </li>
+          )}
         </ul>
       ) : (
-        <ul className="space-y-0.5 text-slate-700">
-          {f.crop && <li>Crop: {f.crop.replace(/_/g, " ")}</li>}
-          {f.landuse && <li>Land use: {f.landuse}</li>}
-          {typeof f.area_ha === "number" && <li>Area: {f.area_ha} ha</li>}
-          {typeof f.capacity_m3 === "number" && <li>Capacity: {f.capacity_m3.toLocaleString()} m³</li>}
-          {typeof f.head_m === "number" && <li>Head: {f.head_m} m</li>}
-          {typeof f.flow_m3_h === "number" && <li>Flow: {f.flow_m3_h} m³/h</li>}
+        <ul className="space-y-1">
+          {f.crop && (
+            <li>
+              {M.crop[lang]}: {cropName(f.crop, lang)}
+            </li>
+          )}
+          {f.landuse && (
+            <li>
+              {M.landUse[lang]}: {f.landuse}
+            </li>
+          )}
+          {typeof f.area_ha === "number" && (
+            <li>
+              {M.area[lang]}: {f.area_ha} ha
+            </li>
+          )}
+          {typeof f.capacity_m3 === "number" && (
+            <li>
+              {M.capacity[lang]}: {f.capacity_m3.toLocaleString("en-US")} m³
+            </li>
+          )}
         </ul>
       )}
-      <TagChip tag={tag} showSource={false} />
-      {tag.source && <p className="break-words text-xs text-slate-500">{tag.source}</p>}
+      {source && <p className="break-words text-[13px] text-ink-soft">{source}</p>}
     </div>
   );
 }
 
-interface FarmProps {
-  decisions: Record<string, DecisionKey>;
-  selectedFarm: string | null;
-  onSelectFarm: (id: string) => void;
-}
-
-/** Farms: the OSM polygon (when there is one) plus a marker at lat/lon, both coloured by decision. Click selects the farm. */
-function FarmFeatures({ layer, decisions, selectedFarm, onSelectFarm }: { layer: MapLayer } & FarmProps) {
-  return (
-    <LayerGroup>
-      {layer.features.map((f) => {
-        const decision = decisions[f.id] ?? "unknown";
-        const { colour, label } = DECISION_STYLE[decision];
-        const selected = f.id === selectedFarm;
-        const polygon = polygonPositions(f);
-        const tip = `Farm ${f.id}${f.crop ? ` · ${f.crop.replace(/_/g, " ")}` : ""} · ${label}`;
-        const handlers = { click: () => onSelectFarm(f.id) };
-        return (
-          <LayerGroup key={f.id}>
-            {polygon && (
-              <Polygon positions={polygon} eventHandlers={handlers}
-                pathOptions={{ color: colour, weight: selected ? 4 : 2, fillColor: colour, fillOpacity: selected ? 0.55 : 0.4 }} />
-            )}
-            {hasCoords(f) && (
-              <CircleMarker center={[f.lat, f.lon]} radius={selected ? 11 : 8} eventHandlers={handlers}
-                pathOptions={{ color: selected ? "#0f172a" : "#ffffff", weight: selected ? 3 : 2, fillColor: colour, fillOpacity: 1 }}>
-                <Tooltip direction="right" offset={[8, 0]}>{tip}</Tooltip>
-              </CircleMarker>
-            )}
-          </LayerGroup>
-        );
-      })}
-    </LayerGroup>
-  );
-}
-
-function LayerFeatures({ layer, plants }: { layer: MapLayer; plants: Plant[] }) {
+function LayerFeatures({ layer, plants, lang }: { layer: MapLayer; plants: Plant[]; lang: Lang }) {
   const style = STYLE[layer.id] ?? FALLBACK;
-  const simulated = layer.tag.status === "SIMULATED";
   return (
     <LayerGroup>
       {layer.features.map((f) => {
         const popup = (
           <Popup maxWidth={320}>
-            <FeaturePopup f={f} layer={layer} plant={layer.id === "plants" ? plants.find((p) => p.id === f.id) : undefined} />
+            <FeaturePopup f={f} layer={layer} lang={lang} plant={layer.id === "plants" ? plants.find((p) => p.id === f.id) : undefined} />
           </Popup>
         );
         const polygon = polygonPositions(f);
@@ -148,12 +128,18 @@ function LayerFeatures({ layer, plants }: { layer: MapLayer; plants: Plant[] }) 
             key={f.id}
             center={[f.lat, f.lon]}
             radius={style.radius}
-            pathOptions={
-              simulated
-                ? { color: style.colour, weight: 3, dashArray: "4 3", fillColor: style.colour, fillOpacity: 0.15 }
-                : { color: "#ffffff", weight: 2, fillColor: style.colour, fillOpacity: 0.95 }
-            }
+            pathOptions={{ color: OUTLINE, weight: 2, fillColor: style.colour, fillOpacity: 0.95 }}
           >
+            {layer.id === "my_farm" && (
+              <Tooltip direction="right" permanent offset={[12, 0]} className={LABEL}>
+                {M.yourFarm[lang]}
+              </Tooltip>
+            )}
+            {(layer.id === "plants" || layer.id === "basin" || (layer.id === "osm_plants" && !isUnnamed(f))) && (
+              <Tooltip direction="top" permanent offset={[0, -10]} className={LABEL}>
+                {f.name}
+              </Tooltip>
+            )}
             {popup}
           </CircleMarker>
         );
@@ -162,37 +148,86 @@ function LayerFeatures({ layer, plants }: { layer: MapLayer; plants: Plant[] }) 
   );
 }
 
-export default function MapView({ layers, plants, decisions, selectedFarm, onSelectFarm }: { layers: MapLayer[]; plants: Plant[] } & FarmProps) {
-  const [tilesFailed, setTilesFailed] = useState(false);
+/** Farmer view: frame his own farm together with the treatment plants, so he sees where his water comes from. */
+function FitToFarm({ points }: { points: LatLngTuple[] }) {
+  const map = useMap();
+  useEffect(() => {
+    if (points.length >= 2) map.fitBounds(points, { padding: [80, 80], maxZoom: 13, animate: false });
+    // once, when the map is created (it is remounted when the language changes)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [map]);
+  return null;
+}
+
+/** Colour key on the map itself (top-left): which colour is which layer. */
+function MapKey({ layers, lang }: { layers: MapLayer[]; lang: Lang }) {
+  const drawn = layers.filter((l) => l.features.some(isDrawable));
   return (
-    <div className="space-y-2">
+    <ul
+      dir={isRtl(lang) ? "rtl" : "ltr"}
+      className="absolute left-3 top-3 z-10 space-y-1.5 border border-line bg-cream/95 px-3 py-2.5 text-[15px] shadow-sm"
+    >
+      {drawn.map((l) => (
+        <li key={l.id} className="flex items-center gap-2.5">
+          <span
+            aria-hidden="true"
+            className="h-3.5 w-3.5 shrink-0 rounded-full border border-ink"
+            style={{ background: (STYLE[l.id] ?? FALLBACK).colour }}
+          />
+          {layerLabel(l, lang)}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+export default function MapView({ layers, plants }: { layers: MapLayer[]; plants: Plant[] }) {
+  const { lang } = useLang();
+  const [tilesFailed, setTilesFailed] = useState(false);
+  const mine = layers.find((l) => l.id === "my_farm")?.features.find(hasCoords);
+  const framing: LatLngTuple[] = mine
+    ? [
+        [mine.lat, mine.lon],
+        ...layers.filter((l) => l.id === "plants").flatMap((l) => l.features.filter(hasCoords).map((f): LatLngTuple => [f.lat, f.lon])),
+      ]
+    : [];
+  return (
+    <div className="space-y-3">
       {tilesFailed && (
-        <p role="status" className="rounded bg-amber-50 p-2 text-sm text-amber-900">
-          Basemap tiles could not be loaded (offline?). The QATRA layers below are still shown.
+        <p role="status" className="border border-warn px-4 py-2 text-[15px] text-warn">
+          {M.tilesFailed[lang]}
         </p>
       )}
-      <MapContainer center={CENTRE} zoom={ZOOM} scrollWheelZoom className="isolate h-[65vh] min-h-96 w-full rounded-lg border border-slate-200 bg-slate-200">
-        <LayersControl position="topright">
-          <LayersControl.BaseLayer checked name="Satellite (Esri)">
-            <TileLayer url={ESRI} attribution={ESRI_ATTR} maxZoom={19} eventHandlers={{ tileerror: () => setTilesFailed(true) }} />
-          </LayersControl.BaseLayer>
-          <LayersControl.BaseLayer name="OpenStreetMap">
-            <TileLayer url={OSM} attribution={OSM_ATTR} maxZoom={19} eventHandlers={{ tileerror: () => setTilesFailed(true) }} />
-          </LayersControl.BaseLayer>
-          {/* farms last, so their decision colour is never hidden by the layers drawn at the same place */}
-          {[...layers.filter((l) => l.id !== "farms"), ...layers.filter((l) => l.id === "farms")]
-            .filter((l) => l.features.some(isDrawable))
-            .map((l) => (
-              <LayersControl.Overlay key={l.id} checked name={l.label}>
-                {l.id === "farms" ? (
-                  <FarmFeatures layer={l} decisions={decisions} selectedFarm={selectedFarm} onSelectFarm={onSelectFarm} />
-                ) : (
-                  <LayerFeatures layer={l} plants={plants} />
-                )}
-              </LayersControl.Overlay>
-            ))}
-        </LayersControl>
-      </MapContainer>
+      {/* the map itself always reads left-to-right (Leaflet controls); popups switch back for Arabic */}
+      <div dir="ltr" className="relative">
+        <MapContainer
+          key={lang /* layer names are read once: remount when the language changes */}
+          center={CENTRE}
+          zoom={ZOOM}
+          scrollWheelZoom
+          zoomControl={false}
+          className="isolate h-[68vh] min-h-96 w-full border border-line bg-sand"
+        >
+          <ZoomControl position="bottomright" />
+          <FitToFarm points={framing} />
+          <LayersControl position="topright">
+            <LayersControl.BaseLayer checked name={M.satellite[lang]}>
+              <TileLayer url={ESRI} attribution={ESRI_ATTR} maxZoom={19} eventHandlers={{ tileerror: () => setTilesFailed(true) }} />
+            </LayersControl.BaseLayer>
+            <LayersControl.BaseLayer name={M.streets[lang]}>
+              <TileLayer url={OSM} attribution={OSM_ATTR} maxZoom={19} eventHandlers={{ tileerror: () => setTilesFailed(true) }} />
+            </LayersControl.BaseLayer>
+            {layers
+              .filter((l) => l.features.some(isDrawable))
+              .map((l) => (
+                <LayersControl.Overlay key={l.id} checked name={layerLabel(l, lang)}>
+                  <LayerFeatures layer={l} plants={plants} lang={lang} />
+                </LayersControl.Overlay>
+              ))}
+          </LayersControl>
+        </MapContainer>
+        <MapKey layers={layers} lang={lang} />
+      </div>
     </div>
   );
 }
