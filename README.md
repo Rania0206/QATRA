@@ -48,19 +48,15 @@ _Last updated: 2026-11-22. Updated by whoever merges into `dev`; keep it current
 | Restyle, farm code, operator view | Dev A | Map and Soil in the new look, farm-code fixes, hidden operator view with all farms (`#/compatibility?view=operator`) |
 | A-04 | Dev A | Daily water need per farm (`engine/needs.py`: ET0 × Kc − 0.7 × rain), `GET /api/forecast/needs` |
 | A-05 | Dev A | Rule-based allocation per farm (`engine/plan.py`: legal block, soil cap, anti-rebound, sharing) and the 24-hour pump schedule (`engine/schedule.py`), `POST /api/allocate` |
+| A-14a | Dev A | Savings engine (`engine/savings.py`): well electricity saved, fertiliser value of the nitrogen in treated water, water cost, QATRA fee; `POST /api/savings` |
 | B-01 | Dev B | App shell (hash tabs, demo banner), shared `TagChip`, `Loading`, `ErrorBox`, `useApi` |
 | B-13 | Dev B | `GET /api/plants`, `GET /api/map/layers` (plants, irrigated area, OSM plants, farmland, farms, basin) |
 | B-02 | Dev B | Map tab: Esri satellite and OSM basemaps, plant popup with tag, farmland polygons |
 | B-03 | Dev B | Soil engine: `engine/soil.py`, `engine/soil_inputs.py` (`cap_volume`), `POST /api/soil/simulate` (naive vs managed leaching over 30 years) |
 | B-04 | Dev B | Soil tab: chart, year slider with Play, summary cards, blocked-by-law state |
 | B-05 | Dev B | Heatwave and grid outage: `engine/heatwave.py` (naive policy: 4 hours without water on 2026-08-26; QATRA policy on solar and the basin: 0) and `POST /api/scenarios/heatwave`. Volumes come from Dev A's plan (A-05) through an optional `need_fn` added to `plan.allocate` |
+| B-06 | Dev B | Heatwave tab: "Without QATRA" and "With QATRA" 24-hour panels (pump power by source, basin level, outage shading, shared axes), a day picker over the 12 outage days and a very large animated "hours without irrigation" counter. `POST /api/scenarios/heatwave` takes an optional `date` and returns `dates` and `allocated_m3`. English, French, Arabic |
 | B-12 | Dev B | `GET /api/batches/{id}/passport` (quality summary, analysis checks, crops, timeline), passport page `/passport/{id}` for phones, reusable `<PassportQR>`, LAN scripts |
-
-### In progress (on a branch, not merged yet)
-
-| Task | Owner | State |
-|---|---|---|
-| B-06a, B-06b | Dev B | Heatwave tab: two 24-hour panels, "Without QATRA" and "With QATRA" (pump power bars by source, basin level line, outage shaded 13:00-17:00, same axes on both), a day picker over the 12 outage days and a very large "hours without irrigation" counter that animates when the day changes. `POST /api/scenarios/heatwave` takes an optional `date` and returns `dates` and `allocated_m3`. English, French, Arabic. Branch `feature/B-06-heatwave-ui` |
 
 ### Not done yet
 
@@ -69,12 +65,12 @@ _Last updated: 2026-11-22. Updated by whoever merges into `dev`; keep it current
 | Allocation tab | Next. The API exists (`POST /api/allocate`), the tab is still a placeholder |
 | A-05 solar threshold | Open point for Dev A: the pump schedule calls solar only if PV ≥ the full pump power (44.6 kW); the 60 kWp array peaks at 44.3 kW on the heatwave day, so it plans 7 % solar there (`SOLAR_MIN_FRACTION`). The heatwave model uses a pump power proportional to its flow |
 | Supply forecast (cut from the MVP), risk score (A-08), anomalies, impact, messages, requests, territory, LLM explain | Router stubs. The Impact tab only shows a small example |
-| Allocation, Savings, Messages, Public, Territory tabs | Placeholders |
+| Allocation, Savings, Messages, Public, Territory tabs | Placeholders. The Savings API exists (`POST /api/savings`), the business view (A-14c) does not |
 | Passport `destinations` | Still empty: it can now be filled from `POST /api/allocate` (A-05) |
 | Map: the version with all farms coloured by decision (B-02b) | Not merged: `dev` deliberately shows only the farmer's own farm. The code is in git history (`b733d53`, branch `feature/B-02b-map-farms`) |
 | Map and Soil texts | English, French and Arabic. Passport page: English only |
 
-Tests: 224 backend tests on `dev` (234 with the day picker), frontend build (`npm run build`) passes.
+Tests: 246 backend tests (`pytest`), frontend build (`npm run build`) passes.
 
 Formulas below are labelled **Implemented** (in code today), **Data pipeline** (computed by a script to produce a dataset), or **Planned** (design agreed, not coded yet).
 
@@ -416,7 +412,7 @@ Read from the existing engines and the regulation pack; nothing is invented.
 - **Crops**: allowed = the 21 June 1994 order (fruit trees only without sprinklers; olive and alfalfa flagged "to verify"); empty when the batch is red. Blocked = crops eaten raw (Art. 5) and direct grazing (Art. 6).
 - **QR code**: encodes `{page origin}/passport/{batch id}`.
 
-### 10. Heatwave and grid outage — *Implemented* (B-05: `engine/heatwave.py`)
+### 10. Heatwave and grid outage — *Implemented* (B-05 and B-06: `engine/heatwave.py`, Heatwave tab)
 
 The naive policy irrigates straight from the grid on demand: **no storage basin and no solar shifting**. Hours are hour-start labels: hour 13 is 13:00 to 14:00, so the window 13:00-17:00 covers hours 13 to 16. Outage days come from `sim_outage_windows.csv` (hot days, based on Human Rights Watch Oct 2026; no official STEG schedule exists) and from the scenario file.
 
@@ -454,6 +450,22 @@ every hour:          5. solar surplus pumps water into the basin, never above 3,
 The plant supplies at most the batch of the day (1,800 m³). Basin evaporation (8 mm/d) is not applied: the basin area is not in the data. Result on 2026-08-26: **0 hours without water**, 0 kWh from the grid, 325 kWh of solar (share 100 %; it includes the surplus pumped into the basin for the next days), basin level between 583 and 1,339 m³, against 87 kWh of grid and 117.4 m³ unserved for the naive policy.
 
 `POST /api/scenarios/heatwave` returns both hourly series, the 24-slot schedule (`solar`, `grid`, `basin` or `off`) and the naive run as `baseline`. **`allocation.items` are Dev A's plan** (A-05a): lettuce blocked (0), alfalfa conditional (soil cap), anti-rebound caps on the others, only the farms growing in August (A, B, D, H, I). It receives the need of the heatwave day through the optional `need_fn` of `plan.allocate`, because the forecast file does not cover that summer day. The hourly schedule is the heatwave model's, not the A-05 pump schedule (whose solar rule needs PV ≥ 44.6 kW, above the 44.3 kW peak of that day).
+
+### 11. Savings per farm — *Implemented* (A-14a: `engine/savings.py`)
+
+For each farm and one day of the plan (the m³ per farm come from the allocation, formula 6). A blocked farm gets 0 and a reason; a conditional farm uses its capped m³; a farm on the public network has no pump of its own and saves no electricity.
+
+```
+well_kwh_per_m³       = 0.00272 × well_depth_m / pump_efficiency
+electricity_saved     = m³ × well_kwh_per_m³ × electricity_price             the farm stops pumping that water
+N_kg                  = m³ × N_mg_per_L / 1000                               1 mg/L = 1 g/m³
+fertiliser_value      = N_kg / 0.335 × fertiliser_price × availability       ammonium nitrate is 33.5 % N; availability 0.5 (ESTIMATE)
+water_cost            = m³ × treated_water_price
+net_saving            = electricity_saved + fertiliser_value − water_cost
+qatra_fee             = qatra_fee_pct % × net_saving                         only when net_saving > 0 (10 %, ESTIMATE)
+farmer_net            = net_saving − qatra_fee
+```
+The electricity price (290.7 millimes/kWh, STEG average sale price) and the nitrogen of the water come from the data pack. The fertiliser price (1.0 TND/kg) and the treated-water tariff (0.020 TND/m³) are `TO_VERIFY` assumptions. Season and year figures are `PROJECTION`s (daily total × 150 irrigation days × 1 season per year) and are never mixed with the daily ones. Prices can be overridden in the request.
 
 ---
 
