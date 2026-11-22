@@ -237,6 +237,58 @@ export interface SoilSimulateRequest {
   ecw?: number; // override the batch EC
 }
 
+export interface PassportQuality {
+  param: string; // EC, BOD5, COD, TSS, pH, helminth_eggs, faecal_coliforms
+  label: string;
+  value: number | null; // null: not measured
+  unit: string;
+  limit_min: number | null; // only ranges (pH)
+  limit_max: number | null;
+  ok: boolean | null; // null: not measured
+  legal_ref: string;
+  tag: Tag; // faecal coliforms: TO_VERIFY (WHO-derived fallback, not Tunisian law)
+}
+
+export interface PassportCheck {
+  type: AnalysisType;
+  required: boolean; // metals are not required per batch
+  present: boolean;
+  analysed_on: string | null;
+  valid_until: string | null;
+  validity_days: number; // 30 / 15 / 182 (Decree 89-1047 Art.3)
+  is_valid: boolean | null; // null: not applicable
+  legal_ref: string;
+}
+
+export interface PassportEvent {
+  at: string; // ISO date or datetime
+  event: string;
+}
+
+export interface PassportDestination {
+  farm_id: string;
+  m3: number;
+}
+
+/** GET /api/batches/{id}/passport */
+export interface Passport {
+  batch_id: string;
+  plant: string;
+  date: string;
+  volume_m3: number;
+  analysis_status: AnalysisStatus;
+  risk_colour: RiskColour | null;
+  allowed_crops: string[]; // the 1994 order; empty when the batch is not usable
+  blocked_crops: string[];
+  destinations: PassportDestination[]; // from the allocation; [] until it exists
+  issued_at: string;
+  qr_payload: string; // "qatra:passport:{id}"
+  quality_summary: PassportQuality[];
+  checks: PassportCheck[];
+  timeline: PassportEvent[];
+  tag: Tag;
+}
+
 export interface Health {
   status: string;
   datasets: Record<string, number>;

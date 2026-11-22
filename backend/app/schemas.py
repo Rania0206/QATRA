@@ -154,6 +154,57 @@ class SoilSimulation(BaseModel):
     tag: Tag
 
 
+class PassportQuality(BaseModel):
+    param: str  # EC, BOD5, COD, TSS, pH, helminth_eggs, faecal_coliforms
+    label: str
+    value: Optional[float] = None  # null when the parameter was not measured
+    unit: str
+    limit_min: Optional[float] = None  # only for ranges (pH)
+    limit_max: Optional[float] = None
+    ok: Optional[bool] = None  # null when not measured
+    legal_ref: str
+    tag: Tag  # faecal coliforms: TO_VERIFY (WHO-derived fallback, not Tunisian law)
+
+
+class PassportCheck(BaseModel):
+    type: Literal["physico_chemical", "parasite_eggs", "metals"]
+    required: bool  # metals are not required per batch (once per semester)
+    present: bool
+    analysed_on: Optional[str] = None
+    valid_until: Optional[str] = None
+    validity_days: int  # 30, 15, 182 (Decree 89-1047 Art.3)
+    is_valid: Optional[bool] = None  # null when not applicable (no metals analysis)
+    legal_ref: str
+
+
+class PassportEvent(BaseModel):
+    at: str  # ISO date or datetime
+    event: str
+
+
+class PassportDestination(BaseModel):
+    farm_id: str
+    m3: float
+
+
+class Passport(BaseModel):
+    batch_id: str
+    plant: str
+    date: str
+    volume_m3: float
+    analysis_status: Literal["valid", "expired", "missing"]
+    risk_colour: Optional[Literal["green", "amber", "red"]] = None
+    allowed_crops: list[str]  # the 1994 order; empty when the batch is not usable
+    blocked_crops: list[str]
+    destinations: list[PassportDestination]  # from the allocation; [] until it exists
+    issued_at: str
+    qr_payload: str
+    quality_summary: list[PassportQuality]
+    checks: list[PassportCheck]
+    timeline: list[PassportEvent]
+    tag: Tag
+
+
 class HealthResponse(BaseModel):
     status: str
     datasets: dict[str, int]
