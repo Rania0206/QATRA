@@ -13,7 +13,7 @@ export default function TagChip({ tag, showSource = true }: { tag: Tag; showSour
   const s = STYLES[tag.status];
   return (
     <span
-      className={`inline-flex max-w-full items-baseline gap-1.5 rounded-full px-3 py-0.5 text-[15px] ${s.cls}`}
+      className={`inline-flex max-w-full items-baseline gap-1.5 rounded-full px-3 py-0.5 text-[length:calc(15px*var(--fs))] ${s.cls}`}
       title={tag.source ? `${s.label}: ${tag.source}` : s.label}
     >
       <span aria-hidden="true">{s.icon}</span>

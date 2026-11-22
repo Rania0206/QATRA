@@ -25,13 +25,13 @@ export default function Controls({ scenario, onScenario, day, onDay, forecastDat
     <section aria-label={A.ctlTitle[lang]} className="mx-auto mb-8 max-w-4xl border border-line bg-white px-4 py-4 sm:px-6">
       <div className="mb-3 flex items-center justify-between gap-3">
         <p className="eyebrow">{A.ctlTitle[lang]}</p>
-        <span role="status" aria-live="polite" className={`text-[14px] text-ink-soft transition-opacity duration-200 ${busy ? "opacity-100" : "opacity-0"}`}>
+        <span role="status" aria-live="polite" className={`text-[length:calc(14px*var(--fs))] text-ink-soft transition-opacity duration-200 ${busy ? "opacity-100" : "opacity-0"}`}>
           {busy ? A.updating[lang] : " "}
         </span>
       </div>
       <div className="flex flex-wrap items-end gap-x-8 gap-y-4">
         <div className="flex flex-col gap-1.5">
-          <span className="text-[15px] text-ink-soft">{A.ctlScenario[lang]}</span>
+          <span className="text-[length:calc(15px*var(--fs))] text-ink-soft">{A.ctlScenario[lang]}</span>
           <Segmented<Scenario>
             label={A.ctlScenario[lang]}
             value={scenario}
@@ -43,7 +43,7 @@ export default function Controls({ scenario, onScenario, day, onDay, forecastDat
           />
         </div>
         <div className="flex flex-col gap-1.5">
-          <span className="text-[15px] text-ink-soft">{A.ctlDay[lang]}</span>
+          <span className="text-[length:calc(15px*var(--fs))] text-ink-soft">{A.ctlDay[lang]}</span>
           <div className="flex flex-wrap items-center gap-3">
             <Segmented<string>
               label={A.ctlDay[lang]}
@@ -54,21 +54,21 @@ export default function Controls({ scenario, onScenario, day, onDay, forecastDat
                 { id: "heatwave", label: `${A.ctlHeatwave[lang]} (${short(heatwaveDate)})` },
               ]}
             />
-            <label className="flex items-center gap-2 text-[15px]">
+            <label className="flex items-center gap-2 text-[length:calc(15px*var(--fs))]">
               <span className="text-ink-soft">{A.ctlOther[lang]}</span>
               <input
                 type="date"
                 dir="ltr"
                 value={day.kind === "custom" ? day.date : ""}
                 onChange={(e) => (e.target.value ? onDay({ kind: "custom", date: e.target.value }) : onDay({ kind: "forecast" }))}
-                className="border border-ink bg-cream px-2 py-1.5 text-[15px] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+                className="border border-ink bg-cream px-2 py-1.5 text-[length:calc(15px*var(--fs))] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
               />
             </label>
           </div>
-          {day.kind === "custom" && <span className="text-[14px] text-ink-soft">{fmtDateL(day.date, lang)}</span>}
+          {day.kind === "custom" && <span className="text-[length:calc(14px*var(--fs))] text-ink-soft">{fmtDateL(day.date, lang)}</span>}
         </div>
       </div>
-      {USE_MOCKS && <p className="mt-3 text-[14px] text-ink-soft">{A.mockCtl[lang]}</p>}
+      {USE_MOCKS && <p className="mt-3 text-[length:calc(14px*var(--fs))] text-ink-soft">{A.mockCtl[lang]}</p>}
     </section>
   );
 }

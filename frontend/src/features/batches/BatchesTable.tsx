@@ -12,7 +12,7 @@ interface Props {
   onSelect: (b: Batch) => void;
 }
 
-const TH = "sticky top-0 z-10 border-b border-ink bg-cream px-4 py-4 text-start text-[15px] font-normal";
+const TH = "sticky top-0 z-10 border-b border-ink bg-cream px-4 py-4 text-start text-[length:calc(15px*var(--fs))] font-normal";
 const TD = "px-4 py-4";
 
 export function TableSkeleton() {
@@ -29,7 +29,7 @@ export default function BatchesTable({ batches, latestId, selectedId, onSelect }
   const { lang } = useLang();
   return (
     <div className="max-h-[70vh] overflow-auto border-y border-ink">
-      <table className="w-full border-collapse text-[17px]">
+      <table className="w-full border-collapse text-[length:calc(17px*var(--fs))]">
         <thead>
           <tr>
             <th className={TH}>{B.date[lang]}</th>
@@ -59,10 +59,10 @@ export default function BatchesTable({ batches, latestId, selectedId, onSelect }
                 <td className={`${TD} whitespace-nowrap`}>
                   {fmtDate(b.date, lang)}
                   {latest && (
-                    <span className="ms-3 rounded-sm bg-olive px-2 py-0.5 text-[14px] font-medium text-ink">{B.today[lang]}</span>
+                    <span className="ms-3 rounded-sm bg-olive px-2 py-0.5 text-[length:calc(14px*var(--fs))] font-medium text-ink">{B.today[lang]}</span>
                   )}
                 </td>
-                <td dir="ltr" className={`${TD} whitespace-nowrap text-start text-[16px]`}>
+                <td dir="ltr" className={`${TD} whitespace-nowrap text-start text-[length:calc(16px*var(--fs))]`}>
                   {b.id}
                 </td>
                 <td className={`${TD} text-end tabular-nums`}>{fmtNumber(b.volume_m3)}</td>

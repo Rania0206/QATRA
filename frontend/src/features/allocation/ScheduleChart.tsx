@@ -58,7 +58,7 @@ function Tip({ active, payload, lang, cut }: TipProps) {
   if (!s) return null;
   const solarOnly = cut && inCut(s.hour) && s.source === "solar";
   return (
-    <div className="border border-ink bg-cream px-3 py-2 text-[15px] shadow-sm">
+    <div className="border border-ink bg-cream px-3 py-2 text-[length:calc(15px*var(--fs))] shadow-sm">
       <p className="font-medium">
         {A.hour[lang]} <span dir="ltr">{hh(s.hour)}</span>
       </p>
@@ -92,10 +92,10 @@ export default function ScheduleChart({ allocation, scenario, lang }: { allocati
     <figure className="mx-auto max-w-4xl" aria-label={A.chartAria[lang]}>
       <figcaption className="text-center">
         <h2 className="text-3xl sm:text-4xl">{A.chartTitle[lang]}</h2>
-        <p className="mt-2 text-[16px] text-ink-soft">{A.chartLead[lang]}</p>
+        <p className="mt-2 text-[length:calc(16px*var(--fs))] text-ink-soft">{A.chartLead[lang]}</p>
       </figcaption>
 
-      <ul className="mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[15px]">
+      <ul className="mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[length:calc(15px*var(--fs))]">
         <li className="flex items-center gap-2">
           <Swatch kind="solar" /> {A.srcSolar[lang]}
         </li>
@@ -156,9 +156,9 @@ export default function ScheduleChart({ allocation, scenario, lang }: { allocati
           </BarChart>
         </ResponsiveContainer>
       </div>
-      <p className="mt-1 text-center text-[14px] text-ink-soft">kW · {A.hour[lang]}</p>
+      <p className="mt-1 text-center text-[length:calc(14px*var(--fs))] text-ink-soft">kW · {A.hour[lang]}</p>
 
-      <p className="mx-auto mt-4 max-w-2xl text-center text-[17px] leading-snug">{scheduleSentence(allocation, scenario, lang)}</p>
+      <p className="mx-auto mt-4 max-w-2xl text-center text-[length:calc(17px*var(--fs))] leading-snug">{scheduleSentence(allocation, scenario, lang)}</p>
     </figure>
   );
 }

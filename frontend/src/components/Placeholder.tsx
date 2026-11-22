@@ -19,7 +19,7 @@ export default function Placeholder({ title, endpoints }: Props) {
         </Intro>
       </Band>
       <Band tone="cream">
-        <ul dir="ltr" className="mx-auto max-w-md space-y-3 text-center text-[16px]">
+        <ul dir="ltr" className="mx-auto max-w-md space-y-3 text-center text-[length:calc(16px*var(--fs))]">
           {endpoints.map((e) => (
             <li key={e} className="border-b border-line pb-3 last:border-0">
               {e}

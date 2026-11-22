@@ -43,22 +43,22 @@ export default function FarmCard({ farm, result, lang, selected, onSelect }: Pro
         selected ? "border-ink" : "border-line"
       }`}
     >
-      <span className={`flex items-center gap-2 px-4 py-2 font-display text-[17px] font-medium text-white ${v.bg}`}>
+      <span className={`flex items-center gap-2 px-4 py-2 font-display text-[length:calc(17px*var(--fs))] font-medium text-white ${v.bg}`}>
         <span
           aria-hidden="true"
-          className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-[1.5px] border-white text-[12px] leading-none"
+          className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-[1.5px] border-white text-[length:calc(12px*var(--fs))] leading-none"
         >
           {v.symbol}
         </span>
         {DECISION[result.decision][lang]}
       </span>
       <span className="flex flex-1 flex-col px-4 pb-4 pt-3">
-        <span className="font-display text-[21px] font-medium leading-tight">{farm.name.replace(/^Ferme [A-Z] - /, "")}</span>
-        <span className="text-[15px] text-ink-soft">
+        <span className="font-display text-[length:calc(21px*var(--fs))] font-medium leading-tight">{farm.name.replace(/^Ferme [A-Z] - /, "")}</span>
+        <span className="text-[length:calc(15px*var(--fs))] text-ink-soft">
           {cropName(farm.crop, lang)} · {fmtNumber(farm.area_ha)} ha
         </span>
-        <span className="mt-2 text-[16px] leading-snug">{mainReason(result.results, lang, farm.crop)}</span>
-        <span className="mt-auto pt-3 text-[15px] font-medium underline decoration-1 underline-offset-4 group-hover:decoration-2">
+        <span className="mt-2 text-[length:calc(16px*var(--fs))] leading-snug">{mainReason(result.results, lang, farm.crop)}</span>
+        <span className="mt-auto pt-3 text-[length:calc(15px*var(--fs))] font-medium underline decoration-1 underline-offset-4 group-hover:decoration-2">
           {T.open[lang]}
         </span>
       </span>

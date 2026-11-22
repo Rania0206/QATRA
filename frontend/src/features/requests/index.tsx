@@ -94,7 +94,7 @@ export default function RequestsTab() {
           </Intro>
         </Band>
         <Band tone="cream">
-          <p className="text-center text-[17px]">{RQ.noteNone[lang]}</p>
+          <p className="text-center text-[length:calc(17px*var(--fs))]">{RQ.noteNone[lang]}</p>
         </Band>
       </>
     );
@@ -114,12 +114,12 @@ export default function RequestsTab() {
           {power.send && (
           <form onSubmit={submit} className="space-y-5" aria-label={RQ.formTitle[lang]}>
             <h2 className="text-3xl">{RQ.formTitle[lang]}</h2>
-            <label className="block text-[17px]">
+            <label className="block text-[length:calc(17px*var(--fs))]">
               {RQ.farm[lang]}
               <select
                 value={farm}
                 onChange={(e) => setFarmId(e.target.value)}
-                className="mt-1 block w-full border border-ink bg-cream px-3 py-2 text-[17px] focus:outline-none focus-visible:outline-2 focus-visible:outline-ink"
+                className="mt-1 block w-full border border-ink bg-cream px-3 py-2 text-[length:calc(17px*var(--fs))] focus:outline-none focus-visible:outline-2 focus-visible:outline-ink"
               >
                 {(farms.data ?? []).map((f) => (
                   <option key={f.id} value={f.id}>
@@ -128,7 +128,7 @@ export default function RequestsTab() {
                 ))}
               </select>
             </label>
-            <label className="block text-[17px]">
+            <label className="block text-[length:calc(17px*var(--fs))]">
               {RQ.volume[lang]}
               <input
                 type="number"
@@ -137,16 +137,16 @@ export default function RequestsTab() {
                 inputMode="decimal"
                 value={m3}
                 onChange={(e) => setM3(e.target.value)}
-                className="mt-1 block w-full border border-ink bg-cream px-3 py-2 text-[17px] focus:outline-none focus-visible:outline-2 focus-visible:outline-ink"
+                className="mt-1 block w-full border border-ink bg-cream px-3 py-2 text-[length:calc(17px*var(--fs))] focus:outline-none focus-visible:outline-2 focus-visible:outline-ink"
               />
             </label>
-            <label className="block text-[17px]">
+            <label className="block text-[length:calc(17px*var(--fs))]">
               {RQ.date[lang]}
               <input
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="mt-1 block w-full border border-ink bg-cream px-3 py-2 text-[17px] focus:outline-none focus-visible:outline-2 focus-visible:outline-ink"
+                className="mt-1 block w-full border border-ink bg-cream px-3 py-2 text-[length:calc(17px*var(--fs))] focus:outline-none focus-visible:outline-2 focus-visible:outline-ink"
               />
             </label>
             {formError && (
@@ -157,7 +157,7 @@ export default function RequestsTab() {
             <button
               type="submit"
               disabled={busy !== null || !farm}
-              className="bg-ink px-6 py-3 text-[17px] text-cream disabled:opacity-50 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+              className="bg-ink px-6 py-3 text-[length:calc(17px*var(--fs))] text-cream disabled:opacity-50 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
             >
               {busy === "new" ? RQ.sending[lang] : RQ.send[lang]}
             </button>
@@ -179,7 +179,7 @@ export default function RequestsTab() {
                 ]}
               />
             </div>
-            <p className="text-[15px] text-ink-soft">{note}</p>
+            <p className="text-[length:calc(15px*var(--fs))] text-ink-soft">{note}</p>
             {list.error && <ErrorBox error={list.error} onRetry={list.reload} />}
             {error && (
               <p role="alert" className="text-bad">
@@ -191,9 +191,9 @@ export default function RequestsTab() {
             ) : shown.length === 0 ? (
               <p className="py-8 text-ink-soft">{RQ.empty[lang]}</p>
             ) : (
-              <table className="w-full text-[17px]">
+              <table className="w-full text-[length:calc(17px*var(--fs))]">
                 <thead>
-                  <tr className="border-b border-ink text-start text-[14px] uppercase tracking-wide text-ink-soft">
+                  <tr className="border-b border-ink text-start text-[length:calc(14px*var(--fs))] uppercase tracking-wide text-ink-soft">
                     <th className="py-2 text-start font-normal">{RQ.colId[lang]}</th>
                     <th className="py-2 text-start font-normal">{RQ.colFarm[lang]}</th>
                     <th className="py-2 text-end font-normal">{RQ.colVolume[lang]}</th>
@@ -219,7 +219,7 @@ export default function RequestsTab() {
                               type="button"
                               disabled={busy !== null}
                               onClick={() => decide(r, "approved")}
-                              className="border border-ink px-3 py-1 text-[16px] hover:bg-sand disabled:opacity-50"
+                              className="border border-ink px-3 py-1 text-[length:calc(16px*var(--fs))] hover:bg-sand disabled:opacity-50"
                             >
                               {RQ.approve[lang]}
                             </button>
@@ -227,7 +227,7 @@ export default function RequestsTab() {
                               type="button"
                               disabled={busy !== null}
                               onClick={() => decide(r, "rejected")}
-                              className="border border-ink px-3 py-1 text-[16px] hover:bg-sand disabled:opacity-50"
+                              className="border border-ink px-3 py-1 text-[length:calc(16px*var(--fs))] hover:bg-sand disabled:opacity-50"
                             >
                               {RQ.reject[lang]}
                             </button>

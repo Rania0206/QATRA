@@ -37,10 +37,10 @@ function useImpact() {
 function Cell({ value, unit, caption }: { value: string; unit: string; caption: string }) {
   return (
     <div className="min-w-0">
-      <p dir="ltr" className="break-words font-display text-[22px] font-medium leading-tight sm:text-[28px]">
+      <p dir="ltr" className="break-words font-display text-[length:calc(22px*var(--fs))] font-medium leading-tight sm:text-[length:calc(28px*var(--fs)*var(--fsn))]">
         {value}
       </p>
-      <p className="text-[13px] leading-tight text-ink-soft">
+      <p className="text-[length:calc(13px*var(--fs))] leading-tight text-ink-soft">
         {unit} · {caption}
       </p>
     </div>
@@ -67,7 +67,7 @@ function Block({ title, rows, lang }: { title: string; rows: RowData[]; lang: La
       <ul className="mt-1">
         {rows.map((r) => (
           <li key={r.key} className="grid grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)_minmax(0,1fr)] items-start gap-x-3 border-b border-line py-3 last:border-0">
-            <span className="text-[16px] leading-snug">{r.label}</span>
+            <span className="text-[length:calc(16px*var(--fs))] leading-snug">{r.label}</span>
             {r.day !== undefined ? <Cell value={fmtN(r.day, lang, r.dayDec, r.fixedDay)} unit={r.unit} caption={r.dayTag} /> : <span />}
             {r.season !== undefined ? <Cell value={fmtN(r.season, lang, r.seasonDec)} unit={r.unit} caption={r.seasonTag} /> : <span />}
           </li>
@@ -82,18 +82,18 @@ function Panel({ title, sub, note, children, lang }: { title: string; sub: strin
     <article className="min-w-0 border border-line bg-white px-5 py-6 sm:px-6">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="text-3xl sm:text-4xl">{title}</h2>
-        <a href="#/public" className="link text-[15px]">
+        <a href="#/public" className="link text-[length:calc(15px*var(--fs))]">
           {Im.sources[lang]}
         </a>
       </div>
-      <p className="mt-1 text-[16px] text-ink-soft">{sub}</p>
-      <div className="mt-4 grid grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)_minmax(0,1fr)] gap-x-3 text-[14px] text-ink-soft">
+      <p className="mt-1 text-[length:calc(16px*var(--fs))] text-ink-soft">{sub}</p>
+      <div className="mt-4 grid grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)_minmax(0,1fr)] gap-x-3 text-[length:calc(14px*var(--fs))] text-ink-soft">
         <span />
         <span>{Im.perDay[lang]}</span>
         <span>{Im.perSeason[lang]}</span>
       </div>
       {children}
-      {note && <p className="mt-4 text-[14px] text-ink-soft">{note}</p>}
+      {note && <p className="mt-4 text-[length:calc(14px*var(--fs))] text-ink-soft">{note}</p>}
     </article>
   );
 }
@@ -158,12 +158,12 @@ export default function ImpactTab() {
       <Band tone="olive" className="md:py-24">
         <Intro as="h1" eyebrow={Im.eyebrow[lang]} title={headline(p.farms, p.farmers.day, p.m3.day, lang)}>
           <p>{Im.lead[lang]}</p>
-          <p className="mt-3 text-[15px]">{Im.leadNote[lang]}</p>
+          <p className="mt-3 text-[length:calc(15px*var(--fs))]">{Im.leadNote[lang]}</p>
         </Intro>
       </Band>
 
       <Band tone="cream" wide>
-        {USE_MOCKS && <p className="mb-6 text-center text-[15px]">{Im.mockNote[lang]}</p>}
+        {USE_MOCKS && <p className="mb-6 text-center text-[length:calc(15px*var(--fs))]">{Im.mockNote[lang]}</p>}
         <div className="grid items-start gap-4 lg:grid-cols-2">
           <Panel title={Im.pilotTitle[lang]} sub={pilotSub(p.farms, b?.pilot.total_area_ha ?? 0, days, lang)} lang={lang}>
             <Block
@@ -194,7 +194,7 @@ export default function ImpactTab() {
           {eq && b ? (
             <Panel title={Im.growTitle[lang]} sub={growSub(b.adoption_rate * 100, eq.ha * b.adoption_rate, eq.ha, lang)} note={Im.growNote[lang]} lang={lang}>
               <Block title={Im.water[lang]} lang={lang} rows={[grow(Im.well[lang], "g-well", grown?.water, Im.m3[lang])]} />
-              <p className="mt-1 text-[13px] text-ink-soft">{Im.noGrowWater[lang]}</p>
+              <p className="mt-1 text-[length:calc(13px*var(--fs))] text-ink-soft">{Im.noGrowWater[lang]}</p>
               <Block title={Im.energy[lang]} lang={lang} rows={[grow(Im.kwh[lang], "g-kwh", grown?.kwh, Im.kwhUnit[lang])]} />
               <Block
                 title={Im.money[lang]}
@@ -204,7 +204,7 @@ export default function ImpactTab() {
                   grow(`${Im.qatra[lang]} (${Im.qatraShare[lang]})`, "g-qatra", grown?.qatra, Im.tnd[lang]),
                 ]}
               />
-              <div className="mt-4 flex flex-wrap items-center gap-3 text-[14px]">
+              <div className="mt-4 flex flex-wrap items-center gap-3 text-[length:calc(14px*var(--fs))]">
                 <Pill tone="ok">{fmtN(eq.ha, lang, 0)} {Im.hectaresReported[lang]}</Pill>
                 <a href="#/territory" className="link">
                   {Im.moreBusiness[lang]}
@@ -213,7 +213,7 @@ export default function ImpactTab() {
             </Panel>
           ) : (
             <Panel title={Im.growTitle[lang]} sub="" lang={lang}>
-              <p className="mt-4 text-[16px]">{Im.growMissing[lang]}</p>
+              <p className="mt-4 text-[length:calc(16px*var(--fs))]">{Im.growMissing[lang]}</p>
             </Panel>
           )}
         </div>

@@ -77,13 +77,13 @@ export default function OperatorView() {
   return (
     <>
       <Band tone="olive" className="md:py-20">
-        <p role="note" className="mx-auto mb-8 max-w-2xl border-2 border-ink px-4 py-2 text-center text-[15px] font-medium">
+        <p role="note" className="mx-auto mb-8 max-w-2xl border-2 border-ink px-4 py-2 text-center text-[length:calc(15px*var(--fs))] font-medium">
           {T.opBanner[lang]}
         </p>
         <Intro as="h1" size="xl" eyebrow={T.eyebrow[lang]} title={T.opTitle[lang]}>
           <p>{T.opLead[lang]}</p>
           {compat.data && !compat.loading && (
-            <p className="mt-6 font-display text-[26px] leading-snug">
+            <p className="mt-6 font-display text-[length:calc(26px*var(--fs)*var(--fsn))] leading-snug">
               {ORDER.map((d, i) => (
                 <span key={d}>
                   {i > 0 && (
@@ -104,7 +104,7 @@ export default function OperatorView() {
         <div className="fade-up mx-auto mt-10 flex max-w-2xl flex-col items-center gap-4">
           {base.data ? <DayPicker batches={base.data.batches} value={shownBatch} onChange={setBatchId} lang={lang} /> : <Skeleton className="h-12 w-72" />}
           {status && <Pill tone={COMPLIANCE[status]?.tone ?? "neutral"}>{COMPLIANCE[status]?.label[lang] ?? status}</Pill>}
-          <a href="#/compatibility?view=farmer" className="link text-[15px]">
+          <a href="#/compatibility?view=farmer" className="link text-[length:calc(15px*var(--fs))]">
             {T.opBack[lang]}
           </a>
         </div>

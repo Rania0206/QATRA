@@ -111,7 +111,7 @@ export default function HeatwaveTab() {
           ) : d && model ? (
             <div className={`space-y-10 transition-opacity duration-300 ${updating ? "opacity-50" : ""}`} aria-busy={updating}>
               {updating && (
-                <p role="status" className="text-center text-[15px] text-ink-soft">
+                <p role="status" className="text-center text-[length:calc(15px*var(--fs))] text-ink-soft">
                   {H.updating[lang]}
                 </p>
               )}
@@ -121,10 +121,10 @@ export default function HeatwaveTab() {
               {nothingPlanned ? (
                 <div role="note" className="mx-auto max-w-3xl border border-warn px-6 py-6 text-center">
                   <h2 className="text-3xl text-warn">{H.nothingTitle[lang]}</h2>
-                  <p className="mt-3 text-[17px]">{H.nothingText[lang]}</p>
+                  <p className="mt-3 text-[length:calc(17px*var(--fs))]">{H.nothingText[lang]}</p>
                 </div>
               ) : (
-                <p className="mx-auto max-w-3xl border-s-4 border-ok ps-5 font-display text-[26px] leading-snug">
+                <p className="mx-auto max-w-3xl border-s-4 border-ok ps-5 font-display text-[length:calc(26px*var(--fs)*var(--fsn))] leading-snug">
                   {heatwaveVerdict(d.naive.hours_without_water, d.qatra.hours_without_water, model.outage?.[0] ?? 13, model.outage?.[1] ?? 17, lang)}
                 </p>
               )}
@@ -140,9 +140,9 @@ export default function HeatwaveTab() {
                 <div className="flex flex-wrap items-center justify-center gap-3">
                   <TagChip tag={d.tag} />
                 </div>
-                <p className="text-[15px] text-ink-soft">{H.caveat[lang]}</p>
+                <p className="text-[length:calc(15px*var(--fs))] text-ink-soft">{H.caveat[lang]}</p>
                 {d.allocation.warnings.length > 0 && (
-                  <details className="text-start text-[15px] text-ink-soft">
+                  <details className="text-start text-[length:calc(15px*var(--fs))] text-ink-soft">
                     <summary className="cursor-pointer text-center">{H.notes[lang]}</summary>
                     <ul className="mt-3 list-disc space-y-1 ps-6" dir="ltr">
                       {d.allocation.warnings.map((w) => (
@@ -172,7 +172,7 @@ function DayPicker({ days, value, onChange, lang }: { days: string[]; value: str
             type="button"
             onClick={() => onChange(day)}
             aria-pressed={day === value}
-            className={`min-w-20 border px-3 py-2 text-[16px] transition-colors focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink ${
+            className={`min-w-20 border px-3 py-2 text-[length:calc(16px*var(--fs))] transition-colors focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink ${
               day === value ? "border-ink bg-ink text-cream" : "border-line hover:border-ink"
             }`}
           >
@@ -225,7 +225,7 @@ function Legend({ lang, outage }: { lang: Lang; outage: readonly [number, number
     { key: "line", label: H.basinLine[lang] },
   ];
   return (
-    <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[15px]">
+    <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[length:calc(15px*var(--fs))]">
       {items.map((i) => (
         <li key={i.key} className="flex items-center gap-2">
           {i.key === "line" ? (
@@ -297,7 +297,7 @@ function Panel({ title, rows, run, model, lang, bad = false }: { title: string; 
           </ComposedChart>
         </ResponsiveContainer>
       </div>
-      {noBasin && <p className="text-center text-[15px] text-ink-soft">{H.noBasin[lang]}</p>}
+      {noBasin && <p className="text-center text-[length:calc(15px*var(--fs))] text-ink-soft">{H.noBasin[lang]}</p>}
 
       <dl className="grid grid-cols-3 gap-3 text-center">
         <Stat value={run.hours_without_water} label={H.hoursNoWater[lang]} bad={bad && run.hours_without_water > 0} />
@@ -305,7 +305,7 @@ function Panel({ title, rows, run, model, lang, bad = false }: { title: string; 
         <Stat value={Math.round(run.grid_kwh)} label={H.fromGrid[lang]} />
       </dl>
       {run.solar_kwh > 0 && (
-        <p className="text-center text-[15px] text-ink-soft">
+        <p className="text-center text-[length:calc(15px*var(--fs))] text-ink-soft">
           {Math.round(run.solar_kwh)} {H.fromSun[lang]}
         </p>
       )}
@@ -317,7 +317,7 @@ function Stat({ value, label, bad = false }: { value: number; label: string; bad
   return (
     <div className={`border px-2 py-3 ${bad ? "border-bad text-bad" : "border-line"}`}>
       <dd className="font-display text-4xl leading-none tabular-nums">{value}</dd>
-      <dt className="mt-1 text-[14px] leading-snug">{label}</dt>
+      <dt className="mt-1 text-[length:calc(14px*var(--fs))] leading-snug">{label}</dt>
     </div>
   );
 }
@@ -326,7 +326,7 @@ function HourTooltip({ active, payload, lang }: { active?: boolean; payload?: { 
   if (!active || !payload?.length) return null;
   const r = payload[0].payload;
   return (
-    <div className="border border-line bg-cream px-3 py-2 text-[14px] shadow" dir="ltr">
+    <div className="border border-line bg-cream px-3 py-2 text-[length:calc(14px*var(--fs))] shadow" dir="ltr">
       <p className="font-medium">{`${r.hour}:00–${r.hour + 1}:00`}</p>
       <p>
         {H.tooltipSource[lang]}: {H[SOURCE[r.source].label][lang]} · {r.kw.toFixed(1)} kW

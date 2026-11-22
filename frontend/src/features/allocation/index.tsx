@@ -50,7 +50,7 @@ function FarmerAllocation() {
         <Intro as="h1" size="xl" eyebrow={A.eyebrow[lang]} title={A.title[lang]}>
           <p>{farmCode ? A.leadOwn[lang] : A.leadCode[lang]}</p>
           {farmCode && (d?.allocation.date ?? d?.savings?.date) && (
-            <p className="mt-4 text-[16px]">
+            <p className="mt-4 text-[length:calc(16px*var(--fs))]">
               {A.planFor[lang]} {fmtDateL((d?.allocation.date ?? d?.savings?.date)!, lang)}
             </p>
           )}
@@ -60,7 +60,7 @@ function FarmerAllocation() {
 
       {farmCode && (
         <Band tone="cream">
-          {USE_MOCKS && <p className="mb-6 text-center text-[15px]">{A.mockNote[lang]}</p>}
+          {USE_MOCKS && <p className="mb-6 text-center text-[length:calc(15px*var(--fs))]">{A.mockNote[lang]}</p>}
           {plan.error ? (
             <ErrorBox error={plan.error} onRetry={plan.reload} />
           ) : !d || !farm ? (
@@ -71,12 +71,12 @@ function FarmerAllocation() {
               <Skeleton className="h-6 w-full" />
             </div>
           ) : !item ? (
-            <p className="text-center text-[17px]">{A.noFarmPlan[lang]}</p>
+            <p className="text-center text-[length:calc(17px*var(--fs))]">{A.noFarmPlan[lang]}</p>
           ) : (
             <>
               <AllocationCard farm={farm} item={item} money={money} compat={compat} lang={lang} large onChange={change} />
               {item.m3 > 0 && d.allocation.schedule.some((s) => s.pump_kw > 0) && (
-                <p className="mx-auto mt-6 max-w-2xl text-center text-[17px] leading-snug">
+                <p className="mx-auto mt-6 max-w-2xl text-center text-[length:calc(17px*var(--fs))] leading-snug">
                   {pumpLine(d.allocation.schedule.filter((s) => s.pump_kw > 0).map((s) => s.hour), lang)}
                 </p>
               )}

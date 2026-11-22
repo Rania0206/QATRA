@@ -33,8 +33,8 @@ function Burger({ open }: { open: boolean }) {
 function Wordmark() {
   return (
     <span dir="ltr" className="flex items-baseline gap-2 font-display">
-      <span className="text-[28px] leading-none tracking-tight">{PROJECT_NAME}</span>
-      <span lang="ar" dir="rtl" className="text-[22px] leading-none">
+      <span className="text-[length:calc(28px*var(--fs)*var(--fsn))] leading-none tracking-tight">{PROJECT_NAME}</span>
+      <span lang="ar" dir="rtl" className="text-[length:calc(22px*var(--fs))] leading-none">
         قطرة
       </span>
     </span>
@@ -45,7 +45,7 @@ function Wordmark() {
 function LangSwitch() {
   const { lang, setLang } = useLang();
   return (
-    <div role="group" aria-label={C.language[lang]} className="flex items-center text-[15px]">
+    <div role="group" aria-label={C.language[lang]} className="flex items-center text-[length:calc(15px*var(--fs))]">
       {LANGS.map((l, i) => (
         <span key={l.id} className="flex items-center">
           {i > 0 && (
@@ -100,7 +100,7 @@ export default function Shell({ tabs, active, onSelect, role, onRole, children }
 
   return (
     <div className="flex min-h-screen flex-col bg-cream text-ink">
-      <div role="note" className="bg-ink px-4 py-2 text-center text-[15px] text-cream">
+      <div role="note" className="bg-ink px-4 py-2 text-center text-[length:calc(15px*var(--fs))] text-cream">
         {C.demo[lang]}
         {USE_MOCKS && <span className="ms-3 underline underline-offset-4">mock API</span>}
       </div>
@@ -118,7 +118,7 @@ export default function Shell({ tabs, active, onSelect, role, onRole, children }
             >
               <Burger open={false} />
             </button>
-            {current && <span className="hidden text-[16px] md:inline">{label(current)}</span>}
+            {current && <span className="hidden text-[length:calc(16px*var(--fs))] md:inline">{label(current)}</span>}
           </div>
           <a
             href={`#/${tabs[0]?.id ?? ""}`}
@@ -131,13 +131,13 @@ export default function Shell({ tabs, active, onSelect, role, onRole, children }
             <Wordmark />
           </a>
           <div className="flex w-full min-w-0 items-center justify-between gap-3 sm:w-auto sm:justify-end sm:gap-5">
-            <label className="flex min-w-0 items-center gap-2 text-[15px]">
+            <label className="flex min-w-0 items-center gap-2 text-[length:calc(15px*var(--fs))]">
               <span className="hidden text-ink-soft sm:inline">{RT.select[lang]}</span>
               <select
                 value={role ?? ""}
                 onChange={(e) => onRole((e.target.value || null) as RoleId | null)}
                 aria-label={RT.select[lang]}
-                className="rounded border border-line bg-cream px-2 py-1 text-[15px] focus:outline-none focus-visible:outline-2 focus-visible:outline-ink"
+                className="rounded border border-line bg-cream px-2 py-1 text-[length:calc(15px*var(--fs))] focus:outline-none focus-visible:outline-2 focus-visible:outline-ink"
               >
                 <option value="">{RT.none[lang]}</option>
                 {ROLES.map((r) => (
@@ -155,7 +155,7 @@ export default function Shell({ tabs, active, onSelect, role, onRole, children }
                   e.preventDefault();
                   go(shortcut.id);
                 }}
-                className="link hidden text-[16px] lg:inline"
+                className="link hidden text-[length:calc(16px*var(--fs))] lg:inline"
               >
                 {C.safe[lang]}
               </a>
@@ -165,7 +165,7 @@ export default function Shell({ tabs, active, onSelect, role, onRole, children }
       </header>
 
       {roleInfo && (
-        <div role="note" className="bg-sand px-4 py-2 text-center text-[15px] text-ink-soft">
+        <div role="note" className="bg-sand px-4 py-2 text-center text-[length:calc(15px*var(--fs))] text-ink-soft">
           <p>
             <span className="font-medium text-ink">{roleInfo.label[lang]}</span> · {roleInfo.about[lang]}{" "}
             <span className="whitespace-nowrap">({roleInfo.operator ? RT.allFarms[lang] : RT.oneFarm[lang]})</span>
@@ -220,7 +220,7 @@ export default function Shell({ tabs, active, onSelect, role, onRole, children }
                     aria-current={active === t.id ? "page" : undefined}
                     className="group flex items-baseline gap-4 border-b border-olive-deep pb-3"
                   >
-                    <span className="text-[15px]">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="text-[length:calc(15px*var(--fs))]">{String(i + 1).padStart(2, "0")}</span>
                     <span
                       className={`font-display text-4xl leading-tight transition-transform duration-300 group-hover:translate-x-2 rtl:group-hover:-translate-x-2 ${
                         active === t.id ? "underline decoration-2 underline-offset-8" : ""
@@ -233,8 +233,8 @@ export default function Shell({ tabs, active, onSelect, role, onRole, children }
               ))}
             </ol>
           </nav>
-          <p className="pb-2 text-center text-[15px]">{RT.notice[lang]}</p>
-          <p className="pb-8 text-center text-[15px]">{C.area[lang]}</p>
+          <p className="pb-2 text-center text-[length:calc(15px*var(--fs))]">{RT.notice[lang]}</p>
+          <p className="pb-8 text-center text-[length:calc(15px*var(--fs))]">{C.area[lang]}</p>
         </div>
       )}
 

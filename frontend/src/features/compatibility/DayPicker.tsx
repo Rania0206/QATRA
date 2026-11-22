@@ -15,7 +15,7 @@ export default function DayPicker({ batches, value, onChange, lang }: Props) {
   const newest = batches[0]?.date.slice(0, 10);
 
   return (
-    <label className="flex flex-wrap items-center justify-center gap-3 text-[17px]">
+    <label className="flex flex-wrap items-center justify-center gap-3 text-[length:calc(17px*var(--fs))]">
       {T.whichDay[lang]}
       <input
         type="date"
@@ -26,7 +26,7 @@ export default function DayPicker({ batches, value, onChange, lang }: Props) {
           const match = batches.find((b) => b.date.slice(0, 10) === e.target.value);
           if (match) onChange(match.id);
         }}
-        className="border border-ink bg-cream px-4 py-2.5 text-[17px] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+        className="border border-ink bg-cream px-4 py-2.5 text-[length:calc(17px*var(--fs))] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
       />
     </label>
   );
