@@ -5,6 +5,8 @@ import ErrorBox from "../../components/ErrorBox";
 import { Band, Intro, Pill, Segmented, Skeleton, type Tone } from "../../components/ui";
 import { USE_MOCKS } from "../../config";
 import { useApi } from "../../hooks/useApi";
+import { useRole } from "../../hooks/useHashRole";
+import { requestPowers } from "../../roles";
 import { fmtDateL, useLang } from "../../i18n";
 import { cropName } from "../compatibility/format";
 import { RQ } from "./texts";
@@ -20,6 +22,7 @@ const tomorrow = () => {
 
 export default function RequestsTab() {
   const { lang } = useLang();
+  const power = requestPowers(useRole()); // who may send, who may decide
   const farms = useApi<Farm[]>(() => get<Farm[]>("/api/farms"));
   const list = useApi<WaterRequest[]>(() => get<WaterRequest[]>("/api/requests"));
   // The list as this screen knows it. With the mock API the answers never change, so the screen applies them itself.
@@ -81,6 +84,23 @@ export default function RequestsTab() {
 
   const label = (s: RequestStatus) => RQ[s][lang];
 
+  // Lab and Public do not use requests: no form, no list (the list has the farms' volumes)
+  if (!power.send && !power.decide)
+    return (
+      <>
+        <Band tone="olive">
+          <Intro as="h1" size="xl" eyebrow={RQ.eyebrow[lang]} title={RQ.title[lang]}>
+            <p>{RQ.lead[lang]}</p>
+          </Intro>
+        </Band>
+        <Band tone="cream">
+          <p className="text-center text-[17px]">{RQ.noteNone[lang]}</p>
+        </Band>
+      </>
+    );
+
+  const note = power.send && power.decide ? RQ.noteBoth[lang] : power.send ? RQ.noteSend[lang] : RQ.noteDecide[lang];
+
   return (
     <>
       <Band tone="olive" className="md:py-28">
@@ -90,7 +110,8 @@ export default function RequestsTab() {
       </Band>
 
       <Band tone="cream" wide>
-        <div className="grid gap-14 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)]">
+        <div className={`grid gap-14 ${power.send ? "lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)]" : ""}`}>
+          {power.send && (
           <form onSubmit={submit} className="space-y-5" aria-label={RQ.formTitle[lang]}>
             <h2 className="text-3xl">{RQ.formTitle[lang]}</h2>
             <label className="block text-[17px]">
@@ -141,6 +162,7 @@ export default function RequestsTab() {
               {busy === "new" ? RQ.sending[lang] : RQ.send[lang]}
             </button>
           </form>
+          )}
 
           <section aria-label={RQ.listTitle[lang]} className="space-y-5">
             <div className="flex flex-wrap items-center justify-between gap-4">
@@ -157,7 +179,7 @@ export default function RequestsTab() {
                 ]}
               />
             </div>
-            <p className="text-[15px] text-ink-soft">{RQ.demo[lang]}</p>
+            <p className="text-[15px] text-ink-soft">{note}</p>
             {list.error && <ErrorBox error={list.error} onRetry={list.reload} />}
             {error && (
               <p role="alert" className="text-bad">
@@ -191,7 +213,7 @@ export default function RequestsTab() {
                         <Pill tone={TONE[r.status]}>{label(r.status)}</Pill>
                       </td>
                       <td className="py-3 text-end">
-                        {r.status === "pending" && (
+                        {power.decide && r.status === "pending" && (
                           <span className="inline-flex gap-2">
                             <button
                               type="button"

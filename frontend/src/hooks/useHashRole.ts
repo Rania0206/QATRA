@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { ROLE_IDS, type RoleId } from "../roles";
 
 // The demo role lives in the URL hash next to the tab: "#/batches?role=onas". Other params (?farm=, ?view=) are kept.
@@ -24,6 +24,10 @@ const write = (role: RoleId | null, replace: boolean, tab?: string) => {
   if (replace) window.history.replaceState(null, "", hash);
   else window.location.hash = hash.slice(1);
 };
+
+/** The role chosen in the header, for the pages. Provided by App; null = all sections. */
+export const RoleContext = createContext<RoleId | null>(null);
+export const useRole = () => useContext(RoleContext);
 
 export function useHashRole(): [RoleId | null, (r: RoleId | null, tab?: string) => void] {
   const [role, setRole] = useState<RoleId | null>(read);

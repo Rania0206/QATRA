@@ -1,7 +1,7 @@
 import type { ComponentType } from "react";
 import Shell from "./components/Shell";
 import { useHashTab } from "./hooks/useHashTab";
-import { useHashRole } from "./hooks/useHashRole";
+import { RoleContext, useHashRole } from "./hooks/useHashRole";
 import { ROLES } from "./roles";
 import MapTab from "./features/map";
 import BatchesTab from "./features/batches";
@@ -51,7 +51,9 @@ function TabsApp() {
 
   return (
     <Shell tabs={TABS} active={active} onSelect={setActive} role={role} onRole={(r) => setRole(r, r ? ROLES.find((x) => x.id === r)?.home : undefined)}>
-      <Component />
+      <RoleContext.Provider value={role}>
+        <Component />
+      </RoleContext.Provider>
     </Shell>
   );
 }

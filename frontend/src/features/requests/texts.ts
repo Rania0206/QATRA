@@ -37,4 +37,24 @@ export const RQ = {
     fr: "Démo : les boutons Approuver et Refuser sont ouverts à tous. Il n'y a pas de connexion.",
     ar: "عرض تجريبي: أزرار الموافقة والرفض متاحة للجميع. لا يوجد تسجيل دخول.",
   },
+  noteBoth: {
+    en: "Demo with no role: sending and deciding are both open here. Choose GDA to send requests, or ONAS or CRDA to decide them.",
+    fr: "Démo sans rôle : envoyer et décider sont tous deux ouverts ici. Choisissez GDA pour envoyer des demandes, ou ONAS ou CRDA pour les décider.",
+    ar: "عرض بلا دور: الإرسال والقرار متاحان معًا هنا. اختر GDA لإرسال الطلبات، أو ONAS أو CRDA للبتّ فيها.",
+  },
+  noteSend: {
+    en: "You send the requests. The operator (ONAS or CRDA) approves or rejects them, and you see the answer in the list.",
+    fr: "Vous envoyez les demandes. L'opérateur (ONAS ou CRDA) les approuve ou les refuse, et vous voyez la réponse dans la liste.",
+    ar: "أنت ترسل الطلبات. المشغّل (ONAS أو CRDA) يوافق عليها أو يرفضها، وترى الجواب في القائمة.",
+  },
+  noteDecide: {
+    en: "You decide the farms' requests: Approve or Reject. A decision is final. Farms send their requests as GDA.",
+    fr: "Vous décidez des demandes des fermes : Approuver ou Refuser. Une décision est définitive. Les fermes envoient leurs demandes en tant que GDA.",
+    ar: "أنت تبتّ في طلبات المزارع: موافقة أو رفض. القرار نهائي. ترسل المزارع طلباتها بصفة GDA.",
+  },
+  noteNone: {
+    en: "This role does not use water requests. GDA sends them; ONAS and CRDA decide them.",
+    fr: "Ce rôle n'utilise pas les demandes d'eau. GDA les envoie ; ONAS et CRDA les décident.",
+    ar: "هذا الدور لا يستعمل طلبات الماء. GDA يرسلها، وONAS وCRDA يبتّون فيها.",
+  },
 } satisfies Record<string, Tr>;

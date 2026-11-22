@@ -5,6 +5,7 @@ import ErrorBox from "../../components/ErrorBox";
 import { Band, Drawer, Intro, Pill, Skeleton } from "../../components/ui";
 import { useApi } from "../../hooks/useApi";
 import { useLang } from "../../i18n";
+import { useRole } from "../../hooks/useHashRole";
 import { OPERATOR_ROLES } from "../../roles";
 import { COMPLIANCE } from "../batches/format";
 import DayPicker from "./DayPicker";
@@ -19,23 +20,23 @@ import { DECISION, T, type RuleInfo } from "./format";
  */
 const param = (name: string) => new URLSearchParams(window.location.hash.split("?")[1] ?? "").get(name);
 // ?view=operator / ?view=farmer win; else the demo role decides (ONAS and CRDA see all farms); else the build flag.
-const isOperator = () => {
+const isOperator = (role: string | null) => {
   const view = param("view");
   if (view === "operator") return true;
   if (view === "farmer") return false;
-  const role = param("role");
   if (role && OPERATOR_ROLES.includes(role)) return true;
   return import.meta.env.VITE_DEMO_OPERATOR === "true";
 };
 
 export function useOperatorView(): boolean {
-  const [on, setOn] = useState(isOperator);
+  const role = useRole();
+  const [, setTick] = useState(0); // re-render when the link changes (?view=)
   useEffect(() => {
-    const update = () => setOn(isOperator());
+    const update = () => setTick((n) => n + 1);
     window.addEventListener("hashchange", update);
     return () => window.removeEventListener("hashchange", update);
   }, []);
-  return on;
+  return isOperator(role);
 }
 
 const newestFirst = (a: Batch, b: Batch) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id);
