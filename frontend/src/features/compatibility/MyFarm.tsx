@@ -34,11 +34,12 @@ interface Props {
   result: FarmCompatibility;
   rules: Map<string, RuleInfo>;
   lang: Lang;
-  onChange: () => void;
+  onChange?: () => void; // farmer view only: "Not your farm? Change"
+  label?: string; // eyebrow above the farm name (default "Your farm")
 }
 
 /** One farm only: big verdict, one plain reason, short checklist, legal details on demand. */
-export default function MyFarm({ farm, result, rules, lang, onChange }: Props) {
+export default function MyFarm({ farm, result, rules, lang, onChange, label }: Props) {
   const params = useMemo(() => new Map([...rules.values()].map((r) => [r.rule_id, r.parameter ?? r.rule_id])), [rules]);
   const checks = plainChecks(result.results, farm.crop, lang, params);
   const sorted = sortResults(result.results);
@@ -58,7 +59,7 @@ export default function MyFarm({ farm, result, rules, lang, onChange }: Props) {
 
       <div className="space-y-8 px-6 py-7">
         <header>
-          <p className="eyebrow">{T.yourFarm[lang]}</p>
+          <p className="eyebrow">{label ?? T.yourFarm[lang]}</p>
           <h2 className="mt-1 text-4xl">{farm.name.replace(/^Ferme [A-Z] - /, "")}</h2>
           <p className="mt-1 text-[16px] text-ink-soft">
             {cropName(farm.crop, lang)} · {fmtNumber(farm.area_ha)} ha · {T.soilSalt[lang]}: {fmtNumber(farm.soil_ece)} dS/m
@@ -108,12 +109,14 @@ export default function MyFarm({ farm, result, rules, lang, onChange }: Props) {
           </ul>
         </details>
 
-        <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4 text-[15px]">
-          <span className="text-ink-soft">{T.privacy[lang]}</span>
-          <button type="button" onClick={onChange} className="link">
-            {T.change[lang]}
-          </button>
-        </footer>
+        {onChange && (
+          <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4 text-[15px]">
+            <span className="text-ink-soft">{T.privacy[lang]}</span>
+            <button type="button" onClick={onChange} className="link">
+              {T.change[lang]}
+            </button>
+          </footer>
+        )}
       </div>
     </article>
   );
