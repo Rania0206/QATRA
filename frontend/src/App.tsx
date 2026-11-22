@@ -10,7 +10,7 @@ import SoilTab from "./features/soil";
 import HeatwaveTab from "./features/heatwave";
 import MessagesTab from "./features/messages";
 import ImpactTab from "./features/impact";
-import TerritoryTab from "./features/territory";
+import BusinessTab from "./features/business"; // the "territory" route now shows the Business screen (A-14c)
 import PublicTab from "./features/public";
 import PassportPage from "./features/passport/PassportPage";
 
@@ -26,7 +26,7 @@ const TABS: { id: string; label: string; Component: ComponentType }[] = [
   { id: "messages", label: "Messages", Component: MessagesTab },
   { id: "impact", label: "Impact", Component: ImpactTab },
   // QATRA Lite: next-version tabs stay at the end
-  { id: "territory", label: "Territory (next version)", Component: TerritoryTab },
+  { id: "territory", label: "Business", Component: BusinessTab },
   { id: "public", label: "Public (next version)", Component: PublicTab },
 ];
 
