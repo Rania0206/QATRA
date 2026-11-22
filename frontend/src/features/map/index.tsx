@@ -2,7 +2,7 @@ import { get } from "../../api/client";
 import type { MapFeature, MapLayer, MapLayersResponse, Plant } from "../../api/types";
 import ErrorBox from "../../components/ErrorBox";
 import Loading from "../../components/Loading";
-import { Band, Intro } from "../../components/ui";
+import { Band } from "../../components/ui";
 import { useApi } from "../../hooks/useApi";
 import { useLang, type Lang } from "../../i18n";
 import MapView, { FALLBACK, STYLE, isDrawable, layerLabel } from "./MapView";
@@ -17,13 +17,8 @@ export default function MapTab() {
 
   return (
     <>
-      <Band tone="olive" className="md:py-28">
-        <Intro as="h1" size="xl" eyebrow={M.eyebrow[lang]} title={M.title[lang]}>
-          <p>{M.lead[lang]}</p>
-        </Intro>
-      </Band>
-
-      <Band tone="cream" wide>
+      <Band tone="cream" wide className="!py-10 md:!py-12">
+        <p className="mb-5 text-[18px]">{M.lead[lang]}</p>
         {layers.loading ? (
           <Loading label={M.loading[lang]} />
         ) : layers.error ? (

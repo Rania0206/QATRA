@@ -4,9 +4,9 @@ export const M = {
   eyebrow: { en: "Zaouiet-Sousse", fr: "Zaouiet-Sousse", ar: "زاوية سوسة" },
   title: { en: "Where the water comes from, and where it goes.", fr: "D'où vient l'eau, et où elle va.", ar: "من أين يأتي الماء، وإلى أين يذهب." },
   lead: {
-    en: "Treatment plants, the irrigated area, farmland and the storage basin. Tap a marker or a field for details.",
-    fr: "Stations d'épuration, périmètre irrigué, terres agricoles et bassin de stockage. Touchez un repère ou un champ pour les détails.",
-    ar: "محطات المعالجة، المنطقة السقوية، الأراضي الفلاحية وحوض التخزين. اضغط على علامة أو حقل لرؤية التفاصيل.",
+    en: "Treatment plants, irrigated area, farmland and storage basin. Tap a marker or a field for details.",
+    fr: "Stations, périmètre irrigué, terres agricoles et bassin. Touchez un repère ou un champ pour les détails.",
+    ar: "المحطات، المنطقة السقوية، الأراضي الفلاحية وحوض التخزين. اضغط على علامة أو حقل لرؤية التفاصيل.",
   },
   layers: { en: "On the map", fr: "Sur la carte", ar: "على الخريطة" },
   onMap: { en: "on the map", fr: "sur la carte", ar: "على الخريطة" },
