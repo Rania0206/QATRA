@@ -12,6 +12,7 @@ import MessagesTab from "./features/messages";
 import ImpactTab from "./features/impact";
 import TerritoryTab from "./features/territory";
 import PublicTab from "./features/public";
+import PassportPage from "./features/passport/PassportPage";
 
 // One entry per feature tab. Add a tab = one line here (by agreement).
 const TABS: { id: string; label: string; Component: ComponentType }[] = [
@@ -31,7 +32,15 @@ const TABS: { id: string; label: string; Component: ComponentType }[] = [
 
 const TAB_IDS = TABS.map((t) => t.id);
 
+/** Pages outside the tabs, addressed by path (no router): /passport/{batch id}. */
+const PASSPORT_PREFIX = "/passport/";
+
 export default function App() {
+  // Shell-less page for phones: the QR code of a batch opens it, so it must not carry the tabs.
+  return window.location.pathname.startsWith(PASSPORT_PREFIX) ? <PassportPage /> : <TabsApp />;
+}
+
+function TabsApp() {
   const [active, setActive] = useHashTab(TAB_IDS, TABS[0].id);
   const { Component } = TABS.find((t) => t.id === active)!;
 
