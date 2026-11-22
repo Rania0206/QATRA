@@ -512,17 +512,39 @@ export interface BusinessReport extends BusinessView {
 /** POST /api/requests, GET /api/requests?status=, PATCH /api/requests/{id} */
 export type RequestStatus = "pending" | "approved" | "rejected";
 
+export type Declaration = "not_eaten_raw" | "no_grazing" | "crop_on_list" | "water_limits" | "accuracy";
+export type ApplicantCapacity = "owner" | "tenant" | "gda_representative";
+export type IrrigationMethod = "drip" | "surface" | "sprinkler";
+
 export interface WaterRequest {
   id: string; // REQ-001, ...
   farm_id: string;
   requested_m3: number;
-  date: string; // ISO date the water is wanted
+  date: string; // ISO date the water is wanted (the first day)
   status: RequestStatus;
   created_at: string; // ISO datetime
+  // formal request (A-18, optional: absent on a minimal request)
+  crop?: string; // the farm's crop when the request was made
+  area_ha?: number;
+  applicant_name?: string;
+  applicant_capacity?: ApplicantCapacity;
+  applicant_phone?: string;
+  irrigation_method?: IrrigationMethod;
+  date_end?: string; // the last day
+  declarations?: Declaration[]; // all five when the request is formal
+  signed_name?: string;
 }
 
 export interface RequestIn {
   farm_id: string;
   requested_m3: number; // > 0
   date: string;
+  // formal request: all together or none (the server answers 422 for a half-filled one)
+  applicant_name?: string;
+  applicant_capacity?: ApplicantCapacity;
+  applicant_phone?: string;
+  irrigation_method?: IrrigationMethod;
+  date_end?: string;
+  declarations?: Declaration[];
+  signed_name?: string;
 }

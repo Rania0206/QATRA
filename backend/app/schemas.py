@@ -3,7 +3,7 @@ import re
 from datetime import date as date_type
 from typing import Annotated, Literal, Optional
 
-from pydantic import AfterValidator, BaseModel, Field
+from pydantic import AfterValidator, BaseModel, Field, model_validator
 
 PLAN_YEARS = (2020, 2035)  # the years a plan date may be in
 
@@ -365,10 +365,36 @@ class MetaSources(BaseModel):
 RequestStatus = Literal["pending", "approved", "rejected"]
 
 
+# The five declarations of the formal request, each tied to the rules the engine applies (docs/rules.md).
+Declaration = Literal["not_eaten_raw", "no_grazing", "crop_on_list", "water_limits", "accuracy"]
+DECLARATIONS: tuple[str, ...] = ("not_eaten_raw", "no_grazing", "crop_on_list", "water_limits", "accuracy")
+
+
 class RequestIn(BaseModel):
     farm_id: str
     requested_m3: float = Field(gt=0, le=100000)
     date: date_type  # ISO date of the day the water is wanted
+    # Formal request (optional, all together or not at all): who asks, how, until when, what is declared and signed.
+    applicant_name: Optional[str] = Field(None, max_length=120)
+    applicant_capacity: Optional[Literal["owner", "tenant", "gda_representative"]] = None
+    applicant_phone: Optional[str] = Field(None, max_length=30)
+    irrigation_method: Optional[Literal["drip", "surface", "sprinkler"]] = None
+    date_end: Optional[date_type] = None  # last day the water is wanted
+    declarations: Optional[list[Declaration]] = None  # when present, ALL five are required
+    signed_name: Optional[str] = Field(None, max_length=120)
+
+    @model_validator(mode="after")
+    def _formal_request_is_complete(self):
+        if self.date_end is not None and self.date_end < self.date:
+            raise ValueError("date_end is before date")
+        if self.declarations is not None:  # a formal request: every declaration, a name and a signature
+            if set(self.declarations) != set(DECLARATIONS):
+                raise ValueError("all five declarations are required")
+            if not (self.applicant_name or "").strip() or not (self.signed_name or "").strip():
+                raise ValueError("applicant_name and signed_name are required")
+            if self.applicant_capacity is None or self.irrigation_method is None:
+                raise ValueError("applicant_capacity and irrigation_method are required")
+        return self
 
 
 class RequestPatch(BaseModel):
@@ -382,3 +408,13 @@ class WaterRequest(BaseModel):
     date: date_type
     status: RequestStatus
     created_at: str  # ISO datetime
+    # Formal request (absent from the answer when not given; the endpoints use response_model_exclude_none)
+    crop: Optional[str] = None  # the farm's crop when the request was made
+    area_ha: Optional[float] = None
+    applicant_name: Optional[str] = None
+    applicant_capacity: Optional[str] = None
+    applicant_phone: Optional[str] = None
+    irrigation_method: Optional[str] = None
+    date_end: Optional[date_type] = None
+    declarations: Optional[list[str]] = None
+    signed_name: Optional[str] = None

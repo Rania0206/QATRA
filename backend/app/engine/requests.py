@@ -2,6 +2,7 @@
 from datetime import datetime
 from typing import Optional
 
+from app.engine.farms import get_farm
 from app.schemas import RequestIn, WaterRequest
 
 _requests: list[WaterRequest] = []
@@ -12,9 +13,14 @@ def reset() -> None:
 
 
 def create(body: RequestIn, now: Optional[datetime] = None) -> WaterRequest:
+    farm = get_farm(body.farm_id)
+    formal = body.declarations is not None  # a formal request keeps the details of the form
+    extra = body.model_dump(exclude={"farm_id", "requested_m3", "date"}) if formal or body.date_end else {}
+    if formal:
+        extra.update(crop=farm.crop if farm else None, area_ha=farm.area_ha if farm else None)
     req = WaterRequest(
         id=f"REQ-{len(_requests) + 1:03d}", farm_id=body.farm_id, requested_m3=body.requested_m3, date=body.date,
-        status="pending", created_at=(now or datetime.now()).isoformat(timespec="seconds"),
+        status="pending", created_at=(now or datetime.now()).isoformat(timespec="seconds"), **extra,
     )
     _requests.append(req)
     return req
