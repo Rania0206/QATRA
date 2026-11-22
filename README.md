@@ -30,15 +30,41 @@ For each daily batch of treated water, QATRA answers four questions:
 
 ## Project status
 
+_Last updated: 2026-11-22. Updated by whoever merges into `dev`; keep it current after every task._
+
+**The two developers**
+- **Dev A** (GitHub `malak584`): batches, legal rules and compatibility, QATRA Lite scope, English/French/Arabic, farmer view.
+- **Dev B** (GitHub `Rania0206`): app shell and shared UI, plants and map, soil model, batch passport.
+
+### Done and merged in `dev`
+
+| Task | Owner | What it is |
+|---|---|---|
+| Data pipeline (`scripts/`, `data/`) | shared | Raw downloads, cleaned reference tables, simulated scenario |
+| A-02 | Dev A | Batches: `GET/POST /api/batches`, validity of lab analyses (Decree 89-1047), batches table and detail drawer |
+| A-03 | Dev A | Legal rules engine (NT 106.03, Decree 89-1047, 1994 crop list, FAO-29 advice), `GET /api/farms`, `GET /api/farms/{id}/compatibility`, `GET /api/compatibility`, compatibility screen |
+| QATRA Lite | Dev A | Reduced scope for the demo: contract, Savings and Business shapes, next-version tabs |
+| A-15 | Dev A | English / French / Arabic (RTL), farmer sees only their own farm (farm code or SMS link), plain-language farm panel, day picker |
+| Restyle, farm code, operator view | Dev A | Map and Soil in the new look, farm-code fixes, hidden operator view with all farms (`#/compatibility?view=operator`) |
+| B-01 | Dev B | App shell (hash tabs, demo banner), shared `TagChip`, `Loading`, `ErrorBox`, `useApi` |
+| B-13 | Dev B | `GET /api/plants`, `GET /api/map/layers` (plants, irrigated area, OSM plants, farmland, farms, basin) |
+| B-02 | Dev B | Map tab: Esri satellite and OSM basemaps, plant popup with tag, farmland polygons |
+| B-03 | Dev B | Soil engine: `engine/soil.py`, `engine/soil_inputs.py` (`cap_volume`), `POST /api/soil/simulate` (naive vs managed leaching over 30 years) |
+| B-04 | Dev B | Soil tab: chart, year slider with Play, summary cards, blocked-by-law state |
+| B-12 | Dev B | `GET /api/batches/{id}/passport` (quality summary, analysis checks, crops, timeline), passport page `/passport/{id}` for phones, reusable `<PassportQR>`, LAN scripts |
+
+### Not done yet
+
 | Area | State |
 |---|---|
-| Data pipeline (`scripts/`, `data/`) | Done: raw downloads, cleaned reference tables, simulated scenario |
-| Backend skeleton (FastAPI, in-memory store, 17 routers) | Done |
-| **Batches** (`/api/batches`, validity of analyses) | Done (A-02) |
-| Compatibility rules, needs, optimiser, soil, heatwave, impact, risk, passport, LLM explain | Router stubs only. The formulas below marked *planned* describe the intended model |
-| Frontend shell (10 tabs, hash routing, banner) | Done (B-01a) |
-| Shared UI: `TagChip`, `Loading`, `ErrorBox`, `useApi` | Done (B-01b) |
-| Frontend tabs other than Batches | Placeholders |
+| Needs forecast, supply, optimiser (allocation and pumping schedule), heatwave | Router stubs. The formulas marked *Planned* below describe the intended model |
+| Risk score (A-08), anomalies, impact, messages, requests, territory, LLM explain | Router stubs. The Impact tab only shows a small example |
+| Allocation, Savings, Heatwave, Messages, Public, Territory tabs | Placeholders |
+| Passport `destinations` | Empty until the allocation exists |
+| Map: the version with all farms coloured by decision (B-02b) | Not merged: `dev` deliberately shows only the farmer's own farm. The code is in git history (`b733d53`, branch `feature/B-02b-map-farms`) |
+| Map and Soil texts | English, French and Arabic. Passport page: English only |
+
+Tests: 143 backend tests (`pytest`), frontend build (`npm run build`) passes.
 
 Formulas below are labelled **Implemented** (in code today), **Data pipeline** (computed by a script to produce a dataset), or **Planned** (design agreed, not coded yet).
 
@@ -53,16 +79,17 @@ QATRA/
 │   │   ├── main.py         app + router registration, /api/health
 │   │   ├── store.py        loads every dataset once into memory
 │   │   ├── schemas.py      Pydantic models (mirror of the API contract)
-│   │   ├── engine/         business logic (batches.py today)
+│   │   ├── engine/         business logic: batches, rules, compatibility, farms, soil, soil_inputs, passport
 │   │   └── routers/        one file per feature, one owner per file
 │   ├── tests/
 │   └── requirements.txt
 ├── frontend/           React + TypeScript + Tailwind 4 + Vite
 │   └── src/
 │       ├── App.tsx         tab list (TABS) wired into the shell
-│       ├── components/     Shell, TagChip, Loading, ErrorBox, Placeholder
+│       ├── components/     Shell, TagChip, Loading, ErrorBox, PassportQR, shared UI
 │       ├── hooks/          useHashTab, useApi
-│       ├── features/       one folder per tab
+│       ├── i18n.tsx        English / French / Arabic
+│       ├── features/       one folder per tab, plus passport/ (page outside the tabs)
 │       ├── api/            client.ts (real or mock), types.ts
 │       └── mocks/          JSON responses used in mock mode
 ├── data/
@@ -173,7 +200,7 @@ Batch-level status:
 
 A missing metals analysis only adds a non-blocking warning. This module checks **dates**, not legal **limits**; limit checks belong to the compatibility rules (see 2).
 
-### 2. Legal limits and compatibility rules — *Planned* (`rules` router)
+### 2. Legal limits and compatibility rules — *Implemented* (A-03: `engine/rules.py`, `engine/rules_config.py`)
 
 Inputs are the NT 106.03 (1989) limits in `data/clean/nt106003_rules.json`:
 
@@ -187,9 +214,9 @@ Inputs are the NT 106.03 (1989) limits in `data/clean/nt106003_rules.json`:
 | Chloride | 2000 mg/L | Fluoride | 3 mg/L |
 | Organochlorines | 0.001 mg/L | | |
 
-Faecal coliforms have **no limit** in NT 106.03. The engine uses a WHO-derived fallback of **1,000 CFU/100 mL**, tagged `TO_VERIFY`; it is not Tunisian law.
+Faecal coliforms have **no limit** in NT 106.03, so the rules engine has no coliform rule. The batch passport shows a WHO-derived fallback of **1,000 CFU/100 mL**, tagged `TO_VERIFY`; it is not Tunisian law and never decides a batch's colour.
 
-Each rule returns a `RuleResult {rule_id, passed, severity, reason_en, reason_fr, legal_ref}` with severity `block`, `condition` or `info`. The farm-level decision is:
+Each rule returns a `RuleResult {rule_id, passed, severity, reason_en, reason_fr, legal_ref}` with severity `block`, `condition` or `info`. A **soil-salinity condition** applies per crop: it fails when the soil ECe is at least **80 %** of the crop threshold (FAO-29, a QATRA choice). The farm-level decision is:
 
 ```
 decision = blocked      if any rule has severity=block and passed=false
@@ -246,26 +273,55 @@ season_m3 = area_ha × 10 × 1000 × Kc_mid × 0.6 / 0.9
 ```
 rounded to the nearest 100 m³.
 
-### 4. Salinity: yield loss and leaching — *Data pipeline* (parameters) / *Planned* (`soil` router)
+### 4. Salinity: yield loss, leaching and TWW volume cap — *Implemented* (B-03: `engine/soil.py`, `engine/soil_inputs.py`)
 
-**Yield response to soil salinity** (FAO-29, Maas–Hoffman), parameters per crop in `crop_salt_tolerance.csv`:
+All assumptions below are `ESTIMATE`. Crop thresholds that FAO-29 does not publish (olive, pomegranate: 4.0 dS/m; oat fodder: 6.0 dS/m) are `TO_VERIFY` placeholders and tag the result `TO_VERIFY`.
 
-```
-Y% = 100 − b · (ECe − a)       for ECe > a        (a = threshold in dS/m, b = % loss per dS/m)
-Y% = 100                       for ECe ≤ a
-```
-Examples: alfalfa a = 2.0, b = 7.3; lettuce a = 1.3, b = 13.0; wheat a = 6.0, b = 7.1; barley a = 8.0, b = 5.0.
-Olive and pomegranate have a rating (moderately tolerant) but no published threshold; 4.0 dS/m is an `ESTIMATE / TO_VERIFY` placeholder.
-
-**Leaching requirement** (FAO-29), the extra fraction of water needed to keep soil salinity under the crop threshold:
+**Leaching requirement and equilibrium** (FAO-29). `ECw` = water EC, `ECe_thr` = crop threshold, `LF` = leaching fraction in (0, 1]:
 
 ```
-LR = ECw / (5·ECe − ECw)        surface / sprinkler irrigation, ECe = crop threshold
-LR = ECw / (2·max ECe)          drip / high-frequency irrigation
+LR     = ECw / (5·ECe_thr − ECw)          infinite (flag "water too saline for this crop") when 5·ECe_thr ≤ ECw
+ECe_eq = ECw · (1 + LF) / (5 · LF)        so LF = LR gives ECe_eq = ECe_thr
 ```
-`ECw` is the irrigation-water EC. The soil simulation returns a `leaching_fraction` and the farm ECe series over time. When ECe is above the threshold, the allocated volume is **capped** (see 6).
 
-**Steady-state soil salinity** rule of thumb used to set up the simulated farms: `ECe ≈ 1.5 × ECw` (FAO-29, leaching fraction 15–20 %). With ECw of 1–4 dS/m this gives 1.5–6 dS/m for TWW-irrigated coastal soils (`ESTIMATE / TO_VERIFY`).
+**Yearly trajectory** (30 years, relaxation time τ = 3 years):
+
+```
+ECe[t+1] = ECe[t] + (ECe_eq − ECe[t]) · (1 − exp(−1/τ))
+```
+
+The series moves monotonically from the starting ECe to `ECe_eq`, so it stays under the threshold exactly when `ECe0 ≤ thr` and `ECe_eq ≤ thr`.
+
+**Two policies** (`POST /api/soil/simulate`):
+
+```
+naive : LF = LF_naive                      no managed leaching, rain only
+qatra : LF = max(LR, LF_naive), capped at 0.5
+LF_naive = Pe / (Pe + ETc)                 bounded to (0.02, 0.5]
+Pe  = 0.7 × mean annual precipitation      effective rain, 30-year mean (~272 mm/yr)
+ETc = Kc_mid × ET0 of the growing season   mm, 30-year mean; seasons: perennials Apr–Oct, winter cereals and fodder Nov–May
+```
+
+Irrigation water per season (`need = ETc × area_ha × 10` m³): naive applies exactly `need`; QATRA applies `need × (1/(1−LF) − LF_naive/(1−LF_naive))`, which credits the rain that already leaches (equal to `need` when `LF = LF_naive`).
+
+**Yield loss at the last year** (FAO-29, Maas–Hoffman), slope `b` from `crop_salt_tolerance.csv`:
+
+```
+loss% = clip( b · (ECe_year30 − a), 0, 100 )      null when the crop has no published slope (olive, pomegranate, oat): never invented
+```
+Examples: alfalfa a = 2.0, b = 7.3; wheat a = 6.0, b = 7.1; barley a = 8.0, b = 5.0.
+
+**Maximum TWW volume per season per farm** (`cap_volume(farm, ecw)`): the largest volume of treated water that keeps the 30-year ECe under the threshold, never above the crop need, 0 for crops forbidden by law. The water is mixed with fresh water of EC `ECf = 1.0 dS/m` (ESTIMATE):
+
+```
+ECw_max = thr · 5·LF_max / (1 + LF_max)           LF_max = 0.3, a practical ceiling (ESTIMATE)
+f       = clip( (ECw_max − ECf) / (ECw − ECf), 0, 1 )   share of the water that can be TWW
+LF      = min( max(LR(ECw_mix), LF_naive), LF_max )
+volume  = min( f · need / (1 − LF), need )
+```
+`limiting_reason` is `crop_need`, `salinity`, `blocked` or `infeasible`. Example at ECw = 3.5 dS/m: farm A (alfalfa) 15,728 of 21,048 m³ (salinity), farm B (olive) its full need, farm C (lettuce) 0 (blocked).
+
+**Steady-state rule of thumb** used to set up the simulated farms: `ECe ≈ 1.5 × ECw` (FAO-29, leaching fraction 15–20 %). With ECw of 1–4 dS/m this gives 1.5–6 dS/m for TWW-irrigated coastal soils (`ESTIMATE / TO_VERIFY`).
 
 **Water-quality guidelines** (`irrigation_water_quality_guidelines.csv`, FAO-29) classify the water on infiltration (SAR combined with ECw), sodium toxicity (SAR < 3 none, 3–9 moderate, > 9 severe) and salinity.
 
@@ -337,6 +393,15 @@ The grid emission factor is **not sourced yet** (`null`, `TO_VERIFY` in `energy_
 - **Polygon area:** approximate geodesic area of a lon/lat ring (spherical excess), giving hectares for OSM farmland.
 - **Polygon centroid:** ring centroid of each farmland polygon.
 - **Soil texture:** USDA triangle in simplified ordered rules from sand and clay (silt = 100 − sand − clay), e.g. `clay ≥ 40 → clay`, `27 ≤ clay < 40 → clay loam / silty clay loam / sandy clay loam`. SoilGrids values (0–30 and 30–60 cm) are matched to each farm by nearest point.
+
+### 9. Batch passport — *Implemented* (B-12: `engine/passport.py`)
+
+Read from the existing engines and the regulation pack; nothing is invented.
+- **Quality summary** (7 rows): EC (limit 7000 µS/cm shown as 7 dS/m), BOD5 30, COD 90, TSS 30 mg/L, pH 6.5–8.5, helminth eggs 1 per litre (NT 106.03, `REPORTED`), faecal coliforms 1,000 CFU/100 mL (WHO fallback, `TO_VERIFY`, not law). A value that is not measured has `ok = null`.
+- **Analysis checks**: `valid_until = analysis date + validity`, validity from Decree 89-1047 Art. 3: physico-chemical 30 days, parasite eggs 15 days, metals 182 days (not required per batch).
+- **Colour**: `compliant` is green, `conditional` amber, `non_compliant` and `analysis_invalid` red, from the legal compliance of the batch until the risk model (A-08) exists.
+- **Crops**: allowed = the 21 June 1994 order (fruit trees only without sprinklers; olive and alfalfa flagged "to verify"); empty when the batch is red. Blocked = crops eaten raw (Art. 5) and direct grazing (Art. 6).
+- **QR code**: encodes `{page origin}/passport/{batch id}`.
 
 ---
 
