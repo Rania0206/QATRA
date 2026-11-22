@@ -1,7 +1,7 @@
 import type { Decision, RuleResult, SourceType, Tag } from "../../api/types";
 import type { Tone } from "../../components/ui";
 
-import type { Lang, Tr } from "../../i18n";
+import { FARM, type Lang, type Tr } from "../../i18n";
 export type { Lang, Tr };
 
 /** One entry of GET /api/rules (only the fields this screen uses). */
@@ -44,6 +44,7 @@ export const GROUPS: ({ id: SourceType } & Tr)[] = [
 ];
 
 export const T = {
+  ...FARM,
   eyebrow: { en: "Water × farm", fr: "Eau × ferme", ar: "الماء × المزرعة" },
   title: {
     en: "Is this water safe for your farm?",
@@ -55,15 +56,6 @@ export const T = {
     fr: "Entrez le code de votre ferme pour voir la réponse du jour, pour votre ferme uniquement.",
     ar: "أدخل رمز مزرعتك لترى جواب اليوم، لمزرعتك فقط.",
   },
-  codeLabel: { en: "Your farm code", fr: "Code de votre ferme", ar: "رمز مزرعتك" },
-  codeHint: {
-    en: "You received it by SMS. Demo codes: A to J.",
-    fr: "Vous l'avez reçu par SMS. Codes de démo : A à J.",
-    ar: "وصلك في رسالة قصيرة. رموز التجربة: من A إلى J.",
-  },
-  see: { en: "See my farm", fr: "Voir ma ferme", ar: "عرض مزرعتي" },
-  notFound: { en: "No farm with this code.", fr: "Aucune ferme avec ce code.", ar: "لا توجد مزرعة بهذا الرمز." },
-  change: { en: "Not your farm? Change", fr: "Pas votre ferme ? Changer", ar: "ليست مزرعتك؟ غيّرها" },
   privacy: { en: "Only your farm is shown here.", fr: "Seule votre ferme est affichée ici.", ar: "لا تُعرض هنا إلا مزرعتك." },
   yourFarm: { en: "Your farm", fr: "Votre ferme", ar: "مزرعتك" },
   batch: { en: "Water batch", fr: "Lot d'eau", ar: "دفعة الماء" },

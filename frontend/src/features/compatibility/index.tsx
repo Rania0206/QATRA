@@ -1,7 +1,9 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useState } from "react";
 import { get } from "../../api/client";
 import type { AllFarmsCompatibility, Batch, Farm } from "../../api/types";
 import ErrorBox from "../../components/ErrorBox";
+import FarmCodeForm from "../../components/FarmCodeForm";
+import { getFarmCode, saveFarmCode } from "../../farm";
 import { Band, Intro, Pill, Skeleton } from "../../components/ui";
 import { USE_MOCKS } from "../../config";
 import { useApi } from "../../hooks/useApi";
@@ -18,28 +20,6 @@ interface Static {
 }
 
 const newestFirst = (a: Batch, b: Batch) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id);
-const STORAGE_KEY = "qatra.farm";
-
-/** Farm code from a personal link (#/compatibility?farm=A), else the one remembered on this device. */
-function initialFarm(): string | null {
-  const fromLink = new URLSearchParams(window.location.hash.split("?")[1] ?? "").get("farm");
-  if (fromLink) return fromLink.trim().toUpperCase();
-  try {
-    return window.localStorage.getItem(STORAGE_KEY);
-  } catch {
-    return null;
-  }
-}
-
-function remember(code: string | null) {
-  try {
-    if (code) window.localStorage.setItem(STORAGE_KEY, code);
-    else window.localStorage.removeItem(STORAGE_KEY);
-  } catch {
-    /* not critical */
-  }
-}
-
 /**
  * "Is this water safe for your farm?" — one farm only. A farmer never sees other farms.
  * NOTE: the page still loads every farm's result from the API and keeps only one; real privacy
@@ -48,9 +28,7 @@ function remember(code: string | null) {
 export default function CompatibilityTab() {
   const { lang } = useLang();
   const [batchId, setBatchId] = useState<string | null>(null); // null = backend default (latest usable batch)
-  const [farmCode, setFarmCode] = useState<string | null>(initialFarm);
-  const [input, setInput] = useState("");
-  const [notFound, setNotFound] = useState(false);
+  const [farmCode, setFarmCode] = useState<string | null>(getFarmCode);
 
   const base = useApi<Static>(async () => {
     const [farms, batches, rules] = await Promise.all([
@@ -75,30 +53,19 @@ export default function CompatibilityTab() {
   // a remembered or linked code that does not exist: ask again
   useEffect(() => {
     if (farmCode && base.data && !farm) {
-      setNotFound(true);
       setFarmCode(null);
-      remember(null);
+      saveFarmCode(null);
     }
   }, [farmCode, base.data, farm]);
 
-  const submit = (e: FormEvent) => {
-    e.preventDefault();
-    const code = input.trim().toUpperCase();
-    if (!code) return;
-    const exists = base.data?.farms.some((f) => f.id.toUpperCase() === code);
-    if (base.data && !exists) {
-      setNotFound(true);
-      return;
-    }
-    setNotFound(false);
+  const choose = (code: string) => {
     setFarmCode(code);
-    remember(code);
+    saveFarmCode(code);
   };
 
   const change = () => {
     setFarmCode(null);
-    setInput("");
-    remember(null);
+    saveFarmCode(null);
   };
 
   const shownBatch = batchId ?? compat.data?.batch_id ?? "";
@@ -114,33 +81,7 @@ export default function CompatibilityTab() {
         </Intro>
 
         {!farm ? (
-          <form onSubmit={submit} className="fade-up mx-auto mt-10 flex max-w-md flex-col items-center gap-3">
-            <label htmlFor="farm-code" className="text-[17px]">
-              {T.codeLabel[lang]}
-            </label>
-            <div className="flex w-full gap-2">
-              <input
-                id="farm-code"
-                value={input}
-                onChange={(e) => {
-                  setInput(e.target.value);
-                  setNotFound(false);
-                }}
-                autoComplete="off"
-                inputMode="text"
-                maxLength={12}
-                className="min-w-0 flex-1 border border-ink bg-cream px-4 py-3 text-center text-[20px] uppercase tracking-widest focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
-                aria-invalid={notFound}
-                aria-describedby="farm-code-hint"
-              />
-              <button type="submit" className="btn min-w-0 bg-ink text-cream">
-                {T.see[lang]}
-              </button>
-            </div>
-            <p id="farm-code-hint" className={`text-[15px] ${notFound ? "font-medium text-bad" : ""}`}>
-              {notFound ? T.notFound[lang] : T.codeHint[lang]}
-            </p>
-          </form>
+          <FarmCodeForm onSubmit={choose} />
         ) : (
           <div className="fade-up mx-auto mt-10 flex max-w-2xl flex-col items-center gap-4">
             {base.data ? (
