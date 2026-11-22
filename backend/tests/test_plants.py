@@ -106,3 +106,11 @@ def test_layers_match_mock_for_shared_layers(layers):
         for f, m in zip(layers[lid]["features"], mock[lid]["features"]):
             assert set(m) <= set(f)
             assert (f["lat"], f["lon"]) == (m["lat"], m["lon"])
+
+
+def test_farmland_layer_has_polygons(layers):
+    fl = layers["farmland"]
+    assert fl["tag"]["status"] == "REPORTED" and len(fl["features"]) == 103
+    for f in fl["features"]:
+        assert f["geometry"]["type"] == "Polygon" and len(f["geometry"]["coordinates"][0]) >= 4
+        assert f["landuse"] in {"farmland", "orchard"} and f["area_ha"] > 0
