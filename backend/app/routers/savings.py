@@ -8,13 +8,14 @@ from app.engine.needs import forecast_dates
 from app.engine.plan import plan
 from app.engine.savings import Overrides, SavingsReport, savings
 from app.engine.schedule import Scenario
+from app.schemas import PlanDate
 
 router = APIRouter(prefix="/api", tags=["savings"])
 
 
 class SavingsIn(BaseModel):
     batch_id: Optional[str] = None  # default: the latest batch that is not analysis_invalid
-    date: Optional[str] = None  # default: the first day of the weather forecast
+    date: PlanDate = None  # YYYY-MM-DD, 2020-2035 (else 422); default: the first day of the weather forecast
     scenario: Scenario = "normal"
     farm_id: Optional[str] = None  # only this farm in the answer (the plan is still shared between all farms)
     overrides: Optional[Overrides] = None  # editable prices

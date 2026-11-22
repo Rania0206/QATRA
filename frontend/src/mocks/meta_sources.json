@@ -6,7 +6,11 @@
       "file": "clean/plants_tunisia.geojson",
       "status": "REPORTED (incomplete)",
       "source_name": "OpenStreetMap / Overpass",
-      "source_url": "https://overpass-api.de"
+      "source_url": "https://overpass-api.de",
+      "publication_date": "2026-11-21 extract",
+      "period_covered": "current",
+      "scope": "Tunisia",
+      "definition": "man_made=wastewater_plant"
     },
     {
       "id": "D02",
@@ -14,7 +18,11 @@
       "file": "clean/plants_details.csv",
       "status": "REPORTED / TO_VERIFY",
       "source_name": "Agridata (data.gov.tn), EIB, African Manager",
-      "source_url": "https://catalog.data.gov.tn/fr/dataset/repartition-regionale-des-ppi-irrigues-par-les-eaux-usees-traitees"
+      "source_url": "https://catalog.data.gov.tn/fr/dataset/repartition-regionale-des-ppi-irrigues-par-les-eaux-usees-traitees",
+      "publication_date": "2021-2024",
+      "period_covered": "2021/22-2023/24",
+      "scope": "Sousse",
+      "definition": "capacity = treatment capacity (not volume available to farmers)"
     },
     {
       "id": "D03",
@@ -22,7 +30,11 @@
       "file": "clean/tww_quality_ranges.csv",
       "status": "REPORTED (ONAS means) + ESTIMATE (ranges)",
       "source_name": "Benabdallah 2003 (ONAS data); general literature",
-      "source_url": "https://www.files.ethz.ch/isn/27892/2003-11.pdf"
+      "source_url": "https://www.files.ethz.ch/isn/27892/2003-11.pdf",
+      "publication_date": "2003",
+      "period_covered": "~2002",
+      "scope": "Tunisia",
+      "definition": "effluent concentration"
     },
     {
       "id": "D04",
@@ -30,7 +42,11 @@
       "file": "raw/datagov/",
       "status": "REPORTED",
       "source_name": "data.gov.tn (CKAN, API disallowed by robots.txt)",
-      "source_url": "https://catalog.data.gov.tn"
+      "source_url": "https://catalog.data.gov.tn",
+      "publication_date": "2026-11-21",
+      "period_covered": "-",
+      "scope": "Tunisia",
+      "definition": "-"
     },
     {
       "id": "D05",
@@ -38,7 +54,11 @@
       "file": "clean/pumps_tunisia.geojson; clean/pumps_sousse.geojson",
       "status": "REPORTED (incomplete)",
       "source_name": "OpenStreetMap",
-      "source_url": "https://overpass-api.de"
+      "source_url": "https://overpass-api.de",
+      "publication_date": "2026-11-21",
+      "period_covered": "current",
+      "scope": "Tunisia / 20 km Zaouiet-Sousse",
+      "definition": "man_made=pumping_station|water_well|borehole"
     },
     {
       "id": "D06",
@@ -46,7 +66,11 @@
       "file": "clean/storage_sousse.geojson",
       "status": "REPORTED (incomplete)",
       "source_name": "OpenStreetMap",
-      "source_url": "https://overpass-api.de"
+      "source_url": "https://overpass-api.de",
+      "publication_date": "2026-11-21",
+      "period_covered": "current",
+      "scope": "20 km",
+      "definition": "water tower/tank/reservoir/basin/pond"
     },
     {
       "id": "D07",
@@ -54,7 +78,11 @@
       "file": "clean/pipes_canals_sousse.geojson",
       "status": "REPORTED (incomplete)",
       "source_name": "OpenStreetMap",
-      "source_url": "https://overpass-api.de"
+      "source_url": "https://overpass-api.de",
+      "publication_date": "2026-11-21",
+      "period_covered": "current",
+      "scope": "20 km",
+      "definition": "man_made=pipeline, waterway=canal|ditch|drain"
     },
     {
       "id": "D08",
@@ -62,7 +90,11 @@
       "file": "clean/solar_sousse.geojson",
       "status": "REPORTED (incomplete)",
       "source_name": "OpenStreetMap",
-      "source_url": "https://overpass-api.de"
+      "source_url": "https://overpass-api.de",
+      "publication_date": "2026-11-21",
+      "period_covered": "current",
+      "scope": "20 km",
+      "definition": "generator:source=solar"
     },
     {
       "id": "D09",
@@ -70,7 +102,11 @@
       "file": "clean/pumping_stations_official.csv",
       "status": "NOT FOUND / REPORTED (press)",
       "source_name": "ONAS via La Presse",
-      "source_url": "https://www.lapresse.tn/?p=4365046"
+      "source_url": "https://www.lapresse.tn/?p=4365046",
+      "publication_date": "2026-10",
+      "period_covered": "-",
+      "scope": "Sousse",
+      "definition": "-"
     },
     {
       "id": "D10",
@@ -78,7 +114,11 @@
       "file": "clean/pump_specs_reference.csv",
       "status": "ESTIMATE",
       "source_name": "Hydraulics; FAO/GIZ SPIS toolbox",
-      "source_url": "https://energypedia.info/wiki/Toolbox_on_SPIS"
+      "source_url": "https://energypedia.info/wiki/Toolbox_on_SPIS",
+      "publication_date": "-",
+      "period_covered": "-",
+      "scope": "generic",
+      "definition": "-"
     },
     {
       "id": "D11",
@@ -86,7 +126,11 @@
       "file": "clean/farmland_sousse.geojson",
       "status": "REPORTED (incomplete); area=ESTIMATE",
       "source_name": "OpenStreetMap",
-      "source_url": "https://overpass-api.de"
+      "source_url": "https://overpass-api.de",
+      "publication_date": "2026-11-21",
+      "period_covered": "current",
+      "scope": "20 km",
+      "definition": "landuse=farmland|orchard|meadow|greenhouse_horticulture|vineyard"
     },
     {
       "id": "D12",
@@ -94,7 +138,11 @@
       "file": "clean/tww_irrigated_areas.csv",
       "status": "REPORTED",
       "source_name": "Ministere de l'Agriculture / Agridata via data.gov.tn",
-      "source_url": "https://catalog.data.gov.tn/fr/dataset/repartition-regionale-des-ppi-irrigues-par-les-eaux-usees-traitees"
+      "source_url": "https://catalog.data.gov.tn/fr/dataset/repartition-regionale-des-ppi-irrigues-par-les-eaux-usees-traitees",
+      "publication_date": "TO_VERIFY",
+      "period_covered": "2021/22-2023/24",
+      "scope": "Tunisia, by perimeter",
+      "definition": "equipped / operated / irrigated area; TWW distributed"
     },
     {
       "id": "D13",
@@ -102,7 +150,11 @@
       "file": "clean/tww_consumption_by_perimeter.csv",
       "status": "REPORTED",
       "source_name": "Agridata via data.gov.tn",
-      "source_url": "https://catalog.data.gov.tn/fr/dataset/evolution-de-la-consommation-des-eaux-usees-traitees-par-perimetre-en-m3"
+      "source_url": "https://catalog.data.gov.tn/fr/dataset/evolution-de-la-consommation-des-eaux-usees-traitees-par-perimetre-en-m3",
+      "publication_date": "TO_VERIFY",
+      "period_covered": "1996/97-2021/22",
+      "scope": "Tunisia",
+      "definition": "TWW consumed"
     },
     {
       "id": "D14",
@@ -110,7 +162,11 @@
       "file": "clean/soilgrids_sousse.csv",
       "status": "ESTIMATE",
       "source_name": "ISRIC SoilGrids 2.0",
-      "source_url": "https://rest.isric.org"
+      "source_url": "https://rest.isric.org",
+      "publication_date": "2020 model",
+      "period_covered": "-",
+      "scope": "grid + demo farms",
+      "definition": "0-30 & 30-60 cm"
     },
     {
       "id": "D15",
@@ -118,7 +174,11 @@
       "file": "clean/soil_salinity_reference.csv",
       "status": "REPORTED (qualitative) / ESTIMATE / TO_VERIFY",
       "source_name": "various",
-      "source_url": null
+      "source_url": null,
+      "publication_date": "-",
+      "period_covered": "-",
+      "scope": "Tunisia",
+      "definition": "ECe"
     },
     {
       "id": "D16",
@@ -126,7 +186,11 @@
       "file": "clean/crop_kc.csv",
       "status": "REPORTED (pomegranate ESTIMATE)",
       "source_name": "FAO Irrigation & Drainage Paper 56",
-      "source_url": "https://www.fao.org/4/x0490e/x0490e00.htm"
+      "source_url": "https://www.fao.org/4/x0490e/x0490e00.htm",
+      "publication_date": "1998",
+      "period_covered": "-",
+      "scope": "generic",
+      "definition": "Kc, stage lengths, root depth"
     },
     {
       "id": "D17",
@@ -134,7 +198,11 @@
       "file": "clean/crop_salt_tolerance.csv",
       "status": "REPORTED (olive/pomegranate/oat TO_VERIFY)",
       "source_name": "FAO-29 Ayers & Westcot 1985",
-      "source_url": "https://www.fao.org/4/t0234e/t0234e00.htm"
+      "source_url": "https://www.fao.org/4/t0234e/t0234e00.htm",
+      "publication_date": "1985",
+      "period_covered": "-",
+      "scope": "generic",
+      "definition": "ECe threshold, slope"
     },
     {
       "id": "D18",
@@ -142,7 +210,11 @@
       "file": "clean/irrigation_water_quality_guidelines.csv",
       "status": "REPORTED",
       "source_name": "FAO-29 Table 1",
-      "source_url": "https://www.fao.org/4/t0234e/t0234e00.htm"
+      "source_url": "https://www.fao.org/4/t0234e/t0234e00.htm",
+      "publication_date": "1985",
+      "period_covered": "-",
+      "scope": "generic",
+      "definition": "degree of restriction"
     },
     {
       "id": "D19",
@@ -150,7 +222,11 @@
       "file": "clean/sousse_crops.csv",
       "status": "REPORTED (press) / TO_VERIFY",
       "source_name": "CRDA Sousse via press",
-      "source_url": "https://en.africanmanager.com/?p=238901"
+      "source_url": "https://en.africanmanager.com/?p=238901",
+      "publication_date": "various",
+      "period_covered": "-",
+      "scope": "Sousse governorate",
+      "definition": "-"
     },
     {
       "id": "D20",
@@ -158,7 +234,11 @@
       "file": "clean/nt106003_rules.json",
       "status": "REPORTED (faecal coliforms: no Tunisian limit; fallback TO_VERIFY)",
       "source_name": "Min. Environnement presentation p.13; JORT 1989 (FAOLEX); Benabdallah 2003",
-      "source_url": "https://faolex.fao.org/docs/pdf/tun204032.pdf"
+      "source_url": "https://faolex.fao.org/docs/pdf/tun204032.pdf",
+      "publication_date": "1989/1994",
+      "period_covered": "-",
+      "scope": "Tunisia",
+      "definition": "max concentration"
     },
     {
       "id": "D21",
@@ -166,7 +246,11 @@
       "file": "clean/weather_forecast_sousse.csv",
       "status": "PROJECTION",
       "source_name": "Open-Meteo forecast API",
-      "source_url": "https://open-meteo.com"
+      "source_url": "https://open-meteo.com",
+      "publication_date": "2026-11-21",
+      "period_covered": "next 7 days",
+      "scope": "35.79N 10.62E",
+      "definition": "-"
     },
     {
       "id": "D22",
@@ -174,7 +258,11 @@
       "file": "clean/weather_summer2026_sousse.csv",
       "status": "REPORTED (reanalysis); ET0 ESTIMATE",
       "source_name": "NASA POWER (Open-Meteo archive quota exceeded)",
-      "source_url": "https://power.larc.nasa.gov"
+      "source_url": "https://power.larc.nasa.gov",
+      "publication_date": "2026-11-21",
+      "period_covered": "2026-06-01..2026-08-31",
+      "scope": "35.79N 10.62E (~0.5 deg cell)",
+      "definition": "hourly LST"
     },
     {
       "id": "D23",
@@ -182,7 +270,11 @@
       "file": "clean/climate_30y_sousse.csv",
       "status": "REPORTED (reanalysis); ET0 ESTIMATE",
       "source_name": "NASA POWER daily",
-      "source_url": "https://power.larc.nasa.gov"
+      "source_url": "https://power.larc.nasa.gov",
+      "publication_date": "2026-11-21",
+      "period_covered": "1995-2024",
+      "scope": "35.79N 10.62E",
+      "definition": "daily rain, FAO-56 PM ET0"
     },
     {
       "id": "D24",
@@ -190,7 +282,11 @@
       "file": "clean/pv_estimate_sousse.csv",
       "status": "ESTIMATE",
       "source_name": "derived",
-      "source_url": null
+      "source_url": null,
+      "publication_date": "-",
+      "period_covered": "summer 2026 + forecast",
+      "scope": "50 kWp demo",
+      "definition": "E = kWp*GHI/1000*PR"
     },
     {
       "id": "D25",
@@ -198,7 +294,11 @@
       "file": "clean/energy_params.json",
       "status": "REPORTED (physics) / ESTIMATE (eta)",
       "source_name": "hydraulics; STEG via press",
-      "source_url": null
+      "source_url": null,
+      "publication_date": "-",
+      "period_covered": "-",
+      "scope": "-",
+      "definition": "E = 0.00272 H / eta"
     },
     {
       "id": "D26",
@@ -206,7 +306,11 @@
       "file": "clean/steg_tariffs.csv",
       "status": "TO_VERIFY (agri tariff) / REPORTED (averages)",
       "source_name": "STEG via press",
-      "source_url": "https://www.steg.com.tn"
+      "source_url": "https://www.steg.com.tn",
+      "publication_date": "2025",
+      "period_covered": "2025",
+      "scope": "Tunisia",
+      "definition": "-"
     },
     {
       "id": "D27",
@@ -214,7 +318,11 @@
       "file": "clean/context_figures.csv",
       "status": "REPORTED / PROJECTION / TO_VERIFY per row",
       "source_name": "see file",
-      "source_url": null
+      "source_url": null,
+      "publication_date": "see file",
+      "period_covered": "see file",
+      "scope": "Tunisia",
+      "definition": "one metric per row"
     },
     {
       "id": "S01",
@@ -222,7 +330,11 @@
       "file": "simulated/sim_batches.csv; simulated/sim_lab_history_weekly.csv",
       "status": "SIMULATED",
       "source_name": "-",
-      "source_url": null
+      "source_url": null,
+      "publication_date": "-",
+      "period_covered": "2026-07-01..2026-08-29; 2024-07..2026-06",
+      "scope": "Sousse Sud (assumed)",
+      "definition": "-"
     },
     {
       "id": "S02",
@@ -230,7 +342,11 @@
       "file": "simulated/sim_farms.csv",
       "status": "SIMULATED (on real OSM polygons)",
       "source_name": "-",
-      "source_url": null
+      "source_url": null,
+      "publication_date": "-",
+      "period_covered": "-",
+      "scope": "Zaouiet-Sousse",
+      "definition": "-"
     },
     {
       "id": "S03",
@@ -238,7 +354,11 @@
       "file": "simulated/sim_pumps_basin.json",
       "status": "SIMULATED",
       "source_name": "-",
-      "source_url": null
+      "source_url": null,
+      "publication_date": "-",
+      "period_covered": "-",
+      "scope": "-",
+      "definition": "-"
     },
     {
       "id": "S04",
@@ -246,7 +366,11 @@
       "file": "simulated/sim_scenarios.json",
       "status": "SIMULATED",
       "source_name": "-",
-      "source_url": null
+      "source_url": null,
+      "publication_date": "-",
+      "period_covered": "-",
+      "scope": "-",
+      "definition": "-"
     },
     {
       "id": "S05",
@@ -254,7 +378,11 @@
       "file": "simulated/sim_outage_windows.csv",
       "status": "SIMULATED",
       "source_name": "based on HRW 2026-10-06",
-      "source_url": "https://www.hrw.org/news/2026/10/06/tunisia-power-water-shortages-endanger-rights"
+      "source_url": "https://www.hrw.org/news/2026/10/06/tunisia-power-water-shortages-endanger-rights",
+      "publication_date": "-",
+      "period_covered": "summer 2026",
+      "scope": "-",
+      "definition": "13:00-17:00 on days with Tmax>=38C"
     },
     {
       "id": "CF01",
@@ -262,7 +390,11 @@
       "file": "clean/context_figures.csv",
       "status": "REPORTED",
       "source_name": "Rapport national du secteur de l'eau 2023, cited by A. Ben Rayana (allAfrica, 2025-07-13)",
-      "source_url": "https://fr.allafrica.com/stories/202507130118.html"
+      "source_url": "https://fr.allafrica.com/stories/202507130118.html",
+      "publication_date": "2025-07-13",
+      "period_covered": "2023",
+      "scope": "Tunisia, ONAS plants",
+      "definition": "Volume of treated wastewater produced"
     },
     {
       "id": "CF02",
@@ -270,7 +402,11 @@
       "file": "clean/context_figures.csv",
       "status": "REPORTED",
       "source_name": "idem",
-      "source_url": "https://fr.allafrica.com/stories/202507130118.html"
+      "source_url": "https://fr.allafrica.com/stories/202507130118.html",
+      "publication_date": "2025-07-13",
+      "period_covered": "2023",
+      "scope": "Tunisia",
+      "definition": "WWTPs operated by ONAS"
     },
     {
       "id": "CF03",
@@ -278,7 +414,11 @@
       "file": "clean/context_figures.csv",
       "status": "REPORTED",
       "source_name": "Rapport national sur le secteur de l'eau 2024 (via Kapitalis)",
-      "source_url": "https://kapitalis.com/tunisie/2026/06/23/tunisie-vers-une-utilisation-sure-des-eaux-usees-traitees-en-agriculture/"
+      "source_url": "https://kapitalis.com/tunisie/2026/06/23/tunisie-vers-une-utilisation-sure-des-eaux-usees-traitees-en-agriculture/",
+      "publication_date": "2026-06-23",
+      "period_covered": "2024",
+      "scope": "Tunisia, 127 plants",
+      "definition": "Volume treated"
     },
     {
       "id": "CF04",
@@ -286,7 +426,11 @@
       "file": "clean/context_figures.csv",
       "status": "REPORTED",
       "source_name": "Rapport national eau 2024 via Kapitalis; Tunisie Numerique gives 2023/24 campaign",
-      "source_url": "https://kapitalis.com/tunisie/2026/06/23/tunisie-vers-une-utilisation-sure-des-eaux-usees-traitees-en-agriculture/"
+      "source_url": "https://kapitalis.com/tunisie/2026/06/23/tunisie-vers-une-utilisation-sure-des-eaux-usees-traitees-en-agriculture/",
+      "publication_date": "2026-06-23",
+      "period_covered": "2024 (other source: campaign 2023/24)",
+      "scope": "Tunisia",
+      "definition": "TWW volume used in agriculture"
     },
     {
       "id": "CF05",
@@ -294,7 +438,11 @@
       "file": "clean/context_figures.csv",
       "status": "REPORTED",
       "source_name": "idem",
-      "source_url": "https://kapitalis.com/tunisie/2026/06/23/tunisie-vers-une-utilisation-sure-des-eaux-usees-traitees-en-agriculture/"
+      "source_url": "https://kapitalis.com/tunisie/2026/06/23/tunisie-vers-une-utilisation-sure-des-eaux-usees-traitees-en-agriculture/",
+      "publication_date": "2026-06-23",
+      "period_covered": "2024",
+      "scope": "Tunisia",
+      "definition": "Agricultural use / total TWW treated"
     },
     {
       "id": "CF06",
@@ -302,7 +450,11 @@
       "file": "clean/context_figures.csv",
       "status": "REPORTED",
       "source_name": "O. Mahjoub (INRGREF), Radio Nationale, via La Presse 2026-08-11",
-      "source_url": "https://www.lapresse.tn/2026/08/11/vers-la-reutilisation-de-plus-de-80-des-eaux-usees-traitees-a-lhorizon-2050/"
+      "source_url": "https://www.lapresse.tn/2026/08/11/vers-la-reutilisation-de-plus-de-80-des-eaux-usees-traitees-a-lhorizon-2050/",
+      "publication_date": "2026-08-11",
+      "period_covered": "stated 2026-08",
+      "scope": "Tunisia",
+      "definition": "Share of TWW reused, all uses (agri, golf, green spaces, etc.)"
     },
     {
       "id": "CF07",
@@ -310,7 +462,11 @@
       "file": "clean/context_figures.csv",
       "status": "REPORTED",
       "source_name": "idem",
-      "source_url": "https://www.lapresse.tn/?p=4352872"
+      "source_url": "https://www.lapresse.tn/?p=4352872",
+      "publication_date": "2026-08-11",
+      "period_covered": "stated 2026-08",
+      "scope": "Tunisia",
+      "definition": "Agricultural share (of TWW produced)"
     },
     {
       "id": "CF08",
@@ -318,7 +474,11 @@
       "file": "clean/context_figures.csv",
       "status": "REPORTED",
       "source_name": "A. Ben Rayana (allAfrica 2025-07-13). Note: other sources give 5-7% (2024) - definitions differ",
-      "source_url": "https://fr.allafrica.com/stories/202507130118.html"
+      "source_url": "https://fr.allafrica.com/stories/202507130118.html",
+      "publication_date": "2025-07-13",
+      "period_covered": "2025",
+      "scope": "Tunisia",
+      "definition": "Share of TWW exploited"
     },
     {
       "id": "CF09",
@@ -326,7 +486,11 @@
       "file": "clean/context_figures.csv",
       "status": "REPORTED",
       "source_name": "L'Economiste Maghrebin 2026-09-02",
-      "source_url": "https://www.leconomistemaghrebin.com/2026/09/02/eaux-usees-traitees-la-tunisie-peut-elle-en-faire-une-veritable-ressource-agricole/"
+      "source_url": "https://www.leconomistemaghrebin.com/2026/09/02/eaux-usees-traitees-la-tunisie-peut-elle-en-faire-une-veritable-ressource-agricole/",
+      "publication_date": "2026-09-02",
+      "period_covered": "2026",
+      "scope": "Tunisia, 17 governorates",
+      "definition": "Perimeters equipped for TWW irrigation"
     },
     {
       "id": "CF10",
@@ -334,7 +498,11 @@
       "file": "clean/context_figures.csv",
       "status": "REPORTED",
       "source_name": "idem",
-      "source_url": "https://www.leconomistemaghrebin.com/2026/09/02/eaux-usees-traitees-la-tunisie-peut-elle-en-faire-une-veritable-ressource-agricole/"
+      "source_url": "https://www.leconomistemaghrebin.com/2026/09/02/eaux-usees-traitees-la-tunisie-peut-elle-en-faire-une-veritable-ressource-agricole/",
+      "publication_date": "2026-09-02",
+      "period_covered": "2026",
+      "scope": "Tunisia",
+      "definition": "Area equipped (amenagee)"
     },
     {
       "id": "CF11",
@@ -342,7 +510,11 @@
       "file": "clean/context_figures.csv",
       "status": "REPORTED",
       "source_name": "authorities cited by L'Economiste Maghrebin",
-      "source_url": "https://www.leconomistemaghrebin.com/2026/09/02/eaux-usees-traitees-la-tunisie-peut-elle-en-faire-une-veritable-ressource-agricole/"
+      "source_url": "https://www.leconomistemaghrebin.com/2026/09/02/eaux-usees-traitees-la-tunisie-peut-elle-en-faire-une-veritable-ressource-agricole/",
+      "publication_date": "2026-09-02",
+      "period_covered": "July 2026",
+      "scope": "Tunisia",
+      "definition": "Area effectively irrigated (~36% of equipped)"
     },
     {
       "id": "CF12",
@@ -350,7 +522,11 @@
       "file": "clean/context_figures.csv",
       "status": "REPORTED",
       "source_name": "Ministere de l'Agriculture / Agridata via data.gov.tn",
-      "source_url": "https://catalog.data.gov.tn/fr/dataset/repartition-regionale-des-ppi-irrigues-par-les-eaux-usees-traitees"
+      "source_url": "https://catalog.data.gov.tn/fr/dataset/repartition-regionale-des-ppi-irrigues-par-les-eaux-usees-traitees",
+      "publication_date": "TO_VERIFY",
+      "period_covered": "campaign 2021/22",
+      "scope": "Tunisia",
+      "definition": "Sum of perimeter rows"
     },
     {
       "id": "CF13",
@@ -358,7 +534,11 @@
       "file": "clean/context_figures.csv",
       "status": "REPORTED",
       "source_name": "ONAS via African Manager",
-      "source_url": "https://africanmanager.com/?p=578993"
+      "source_url": "https://africanmanager.com/?p=578993",
+      "publication_date": "TO_VERIFY",
+      "period_covered": "2025",
+      "scope": "Tunisia",
+      "definition": "Plants equipped with tertiary treatment"
     },
     {
       "id": "CF14",
@@ -366,7 +546,11 @@
       "file": "clean/context_figures.csv",
       "status": "REPORTED",
       "source_name": "Cour des comptes, 28th annual report (published May 2014)",
-      "source_url": "https://www.leconomistemaghrebin.com/2014/05/15/tunis-defaillances-onas/"
+      "source_url": "https://www.leconomistemaghrebin.com/2014/05/15/tunis-defaillances-onas/",
+      "publication_date": "2014-05-15",
+      "period_covered": "audit period 2008-2011",
+      "scope": "ONAS plants",
+      "definition": "Share of treated water non-compliant"
     },
     {
       "id": "CF15",
@@ -374,7 +558,11 @@
       "file": "clean/context_figures.csv",
       "status": "REPORTED",
       "source_name": "idem; also: only 9 of 55 parameters analysed; control covers 37% of plants",
-      "source_url": "https://www.webdo.tn/fr/actualite/national/tunisie-40-eaux-traitees-ne-conformes-aux-normes-sanitaires/161354/"
+      "source_url": "https://www.webdo.tn/fr/actualite/national/tunisie-40-eaux-traitees-ne-conformes-aux-normes-sanitaires/161354/",
+      "publication_date": "2014-05",
+      "period_covered": "audit period 2008-2011",
+      "scope": "ONAS",
+      "definition": "Plants satisfying no standard"
     },
     {
       "id": "CF16",
@@ -382,7 +570,11 @@
       "file": "clean/context_figures.csv",
       "status": "PROJECTION",
       "source_name": "Strategie Eau 2050 (La Presse 2026-07-18)",
-      "source_url": "https://www.lapresse.tn/2026/07/18/strategie-eau-2050-vers-une-valorisation-de-70-des-eaux-usees-traitees/"
+      "source_url": "https://www.lapresse.tn/2026/07/18/strategie-eau-2050-vers-une-valorisation-de-70-des-eaux-usees-traitees/",
+      "publication_date": "2026-07-18",
+      "period_covered": "target 2050",
+      "scope": "Tunisia",
+      "definition": "Target share of TWW valorised in agriculture"
     },
     {
       "id": "CF17",
@@ -390,7 +582,11 @@
       "file": "clean/context_figures.csv",
       "status": "PROJECTION",
       "source_name": "idem / L'Economiste Maghrebin 2026-07-01",
-      "source_url": "https://www.leconomistemaghrebin.com/2026/07/01/eaux-usees-en-tunisie-450-millions-de-m%C2%B3-promis-en-2050-mais-a-quel-prix-pour-lenvironnement-et-la-sante/"
+      "source_url": "https://www.leconomistemaghrebin.com/2026/07/01/eaux-usees-en-tunisie-450-millions-de-m%C2%B3-promis-en-2050-mais-a-quel-prix-pour-lenvironnement-et-la-sante/",
+      "publication_date": "2026-07-01",
+      "period_covered": "target 2050",
+      "scope": "Tunisia",
+      "definition": "Valorised volume (of 560 Mm3 expected production)"
     },
     {
       "id": "CF18",
@@ -398,7 +594,11 @@
       "file": "clean/context_figures.csv",
       "status": "PROJECTION",
       "source_name": "idem",
-      "source_url": "https://www.leconomistemaghrebin.com/2026/07/01/eaux-usees-en-tunisie-450-millions-de-m%C2%B3-promis-en-2050-mais-a-quel-prix-pour-lenvironnement-et-la-sante/"
+      "source_url": "https://www.leconomistemaghrebin.com/2026/07/01/eaux-usees-en-tunisie-450-millions-de-m%C2%B3-promis-en-2050-mais-a-quel-prix-pour-lenvironnement-et-la-sante/",
+      "publication_date": "2026-07-01",
+      "period_covered": "2050",
+      "scope": "Tunisia",
+      "definition": "Expected TWW production"
     },
     {
       "id": "CF19",
@@ -406,7 +606,11 @@
       "file": "clean/context_figures.csv",
       "status": "PROJECTION",
       "source_name": "idem",
-      "source_url": "https://www.leconomistemaghrebin.com/?p=680074"
+      "source_url": "https://www.leconomistemaghrebin.com/?p=680074",
+      "publication_date": "2026",
+      "period_covered": "2050 plan",
+      "scope": "Tunisia",
+      "definition": "Planned projects (~56,000 ha irrigation + recharge, green spaces, industry)"
     },
     {
       "id": "CF20",
@@ -414,7 +618,11 @@
       "file": "clean/context_figures.csv",
       "status": "PROJECTION",
       "source_name": "WebManagerCenter 2026-07-20",
-      "source_url": "https://www.webmanagercenter.com/2026/07/20/570318/tunisie-53-des-investissements-de-la-strategie-nationale-de-leau-2050-dedies-aux-eaux-usees-traitees/"
+      "source_url": "https://www.webmanagercenter.com/2026/07/20/570318/tunisie-53-des-investissements-de-la-strategie-nationale-de-leau-2050-dedies-aux-eaux-usees-traitees/",
+      "publication_date": "2026-07-20",
+      "period_covered": "2050 plan",
+      "scope": "Tunisia",
+      "definition": "Share of strategy investment"
     },
     {
       "id": "CF21",
@@ -422,7 +630,11 @@
       "file": "clean/context_figures.csv",
       "status": "TO_VERIFY",
       "source_name": "Not confirmed in sources read",
-      "source_url": null
+      "source_url": null,
+      "publication_date": null,
+      "period_covered": null,
+      "scope": "Tunisia",
+      "definition": null
     },
     {
       "id": "CF22",
@@ -430,7 +642,11 @@
       "file": "clean/context_figures.csv",
       "status": "REPORTED",
       "source_name": "WebManagerCenter 'SONEDE: les chiffres' 2025-07-21",
-      "source_url": "https://www.webmanagercenter.com/2025/07/21/549519/sonede-les-chiffres/"
+      "source_url": "https://www.webmanagercenter.com/2025/07/21/549519/sonede-les-chiffres/",
+      "publication_date": "2025-07-21",
+      "period_covered": "2023",
+      "scope": "Tunisia, SONEDE network",
+      "definition": "Total volume consumed by SONEDE subscribers (not only households)"
     },
     {
       "id": "CF23",
@@ -438,7 +654,11 @@
       "file": "clean/context_figures.csv",
       "status": "REPORTED",
       "source_name": "INM seasonal bulletin via allAfrica/La Presse 2026-09-22",
-      "source_url": "https://www.lapresse.tn/2026/09/22/lete-2026-classe-le-plus-chaud-en-tunisie-depuis-1950/"
+      "source_url": "https://www.lapresse.tn/2026/09/22/lete-2026-classe-le-plus-chaud-en-tunisie-depuis-1950/",
+      "publication_date": "2026-09-22",
+      "period_covered": "JJA 2026",
+      "scope": "Tunisia",
+      "definition": "Seasonal mean temperature anomaly"
     },
     {
       "id": "CF24",
@@ -446,7 +666,11 @@
       "file": "clean/context_figures.csv",
       "status": "REPORTED",
       "source_name": "INM via allAfrica",
-      "source_url": "https://fr.allafrica.com/stories/202609220426.html"
+      "source_url": "https://fr.allafrica.com/stories/202609220426.html",
+      "publication_date": "2026-09-22",
+      "period_covered": "Aug 2026",
+      "scope": "Tunisia",
+      "definition": "Monthly mean temperature"
     },
     {
       "id": "CF25",
@@ -454,7 +678,11 @@
       "file": "clean/context_figures.csv",
       "status": "REPORTED",
       "source_name": "INM via Africanews",
-      "source_url": "https://www.africanews.com/2026/09/22/tunisia-says-2026-summer-hottest-on-record-temperatures-topped-497c/"
+      "source_url": "https://www.africanews.com/2026/09/22/tunisia-says-2026-summer-hottest-on-record-temperatures-topped-497c/",
+      "publication_date": "2026-09-22",
+      "period_covered": "2026-07-17",
+      "scope": "Kairouan",
+      "definition": "Station maximum"
     },
     {
       "id": "CF26",
@@ -462,7 +690,11 @@
       "file": "clean/context_figures.csv",
       "status": "REPORTED",
       "source_name": "Human Rights Watch, 'Tunisia: Power, Water Shortages Endanger Rights'",
-      "source_url": "https://www.hrw.org/news/2026/10/06/tunisia-power-water-shortages-endanger-rights"
+      "source_url": "https://www.hrw.org/news/2026/10/06/tunisia-power-water-shortages-endanger-rights",
+      "publication_date": "2026-10-06",
+      "period_covered": "summer 2026",
+      "scope": "Tunisia",
+      "definition": "Time window of rolling outages (crowd-sourced data; up to 12 h)"
     },
     {
       "id": "CF27",
@@ -470,7 +702,11 @@
       "file": "clean/context_figures.csv",
       "status": "REPORTED",
       "source_name": "Observatoire tunisien de l'eau via La Presse 2026-08-09",
-      "source_url": "https://www.lapresse.tn/2026/08/09/perturbation-de-lalimentation-en-eau-potable-plus-de-six-cent-signalements-en-un-mois/"
+      "source_url": "https://www.lapresse.tn/2026/08/09/perturbation-de-lalimentation-en-eau-potable-plus-de-six-cent-signalements-en-un-mois/",
+      "publication_date": "2026-08-09",
+      "period_covered": "July 2026",
+      "scope": "Tunisia",
+      "definition": "Citizen reports (549 = unannounced cuts/disruptions); another count: 604"
     },
     {
       "id": "CF28",
@@ -478,7 +714,11 @@
       "file": "clean/context_figures.csv",
       "status": "REPORTED",
       "source_name": "DG Barrages, Ministry of Agriculture (Business News 2026-06-23)",
-      "source_url": "https://businessnews.com.tn/2026/06/23/barrages-le-taux-de-remplissage-atteint-60-selon-le-ministere-de-lagriculture/1407255/"
+      "source_url": "https://businessnews.com.tn/2026/06/23/barrages-le-taux-de-remplissage-atteint-60-selon-le-ministere-de-lagriculture/1407255/",
+      "publication_date": "2026-06-23",
+      "period_covered": "mid-June 2026",
+      "scope": "Tunisia, all dams",
+      "definition": "Reserve / total capacity"
     },
     {
       "id": "CF29",
@@ -486,7 +726,11 @@
       "file": "clean/context_figures.csv",
       "status": "REPORTED",
       "source_name": "Ministry of Agriculture via Tuniscope (ONAGRI daily bulletin stopped Oct 2025)",
-      "source_url": "https://www.tuniscope.com/ar/article/443148/actualites/societe/alias-100913"
+      "source_url": "https://www.tuniscope.com/ar/article/443148/actualites/societe/alias-100913",
+      "publication_date": "2026-10-24",
+      "period_covered": "2026-10-23",
+      "scope": "Tunisia, all dams",
+      "definition": "Reserve / total capacity"
     },
     {
       "id": "CF30",
@@ -494,7 +738,11 @@
       "file": "clean/context_figures.csv",
       "status": "TO_VERIFY",
       "source_name": "Not found",
-      "source_url": null
+      "source_url": null,
+      "publication_date": null,
+      "period_covered": "Aug 2026",
+      "scope": "Tunisia",
+      "definition": null
     },
     {
       "id": "CF31",
@@ -502,7 +750,11 @@
       "file": "clean/context_figures.csv",
       "status": "REPORTED",
       "source_name": "Agridata / data.gov.tn",
-      "source_url": "https://catalog.data.gov.tn/fr/dataset/repartition-regionale-des-ppi-irrigues-par-les-eaux-usees-traitees"
+      "source_url": "https://catalog.data.gov.tn/fr/dataset/repartition-regionale-des-ppi-irrigues-par-les-eaux-usees-traitees",
+      "publication_date": "TO_VERIFY",
+      "period_covered": "2023/24",
+      "scope": "Zaouiet Sousse (fed by Sousse Sud WWTP)",
+      "definition": "Area equipped"
     },
     {
       "id": "CF32",
@@ -510,7 +762,11 @@
       "file": "clean/context_figures.csv",
       "status": "REPORTED",
       "source_name": "Agridata / data.gov.tn",
-      "source_url": "https://catalog.data.gov.tn/fr/dataset/repartition-regionale-des-ppi-irrigues-par-les-eaux-usees-traitees"
+      "source_url": "https://catalog.data.gov.tn/fr/dataset/repartition-regionale-des-ppi-irrigues-par-les-eaux-usees-traitees",
+      "publication_date": "TO_VERIFY",
+      "period_covered": "campaign 2023/24",
+      "scope": "Zaouiet Sousse perimeter",
+      "definition": "TWW volume distributed"
     }
   ],
   "safe_figures": [

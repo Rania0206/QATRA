@@ -1,8 +1,29 @@
 """Shared API objects. Mirror of frontend/src/api/types.ts. Change only by agreement."""
+import re
 from datetime import date as date_type
-from typing import Literal, Optional
+from typing import Annotated, Literal, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import AfterValidator, BaseModel, Field
+
+PLAN_YEARS = (2020, 2035)  # the years a plan date may be in
+
+
+def check_plan_date(v: Optional[str]) -> Optional[str]:
+    """A plan date is YYYY-MM-DD, a real calendar day, in 2020-2035. Anything else is a 422 with a clear message."""
+    if v is None:
+        return v
+    try:
+        ok = re.fullmatch(r"\d{4}-\d{2}-\d{2}", v) and date_type.fromisoformat(v).isoformat() == v
+    except ValueError:
+        ok = False
+    if not ok:
+        raise ValueError(f"date must be a real day written YYYY-MM-DD, for example 2026-08-26 (got {v!r})")
+    if not PLAN_YEARS[0] <= int(v[:4]) <= PLAN_YEARS[1]:
+        raise ValueError(f"date must be between {PLAN_YEARS[0]} and {PLAN_YEARS[1]} (got {v!r})")
+    return v
+
+
+PlanDate = Annotated[Optional[str], AfterValidator(check_plan_date)]
 
 TagStatus = Literal["REPORTED", "ESTIMATE", "PROJECTION", "SIMULATED", "TO_VERIFY"]
 
@@ -79,6 +100,7 @@ class ScheduleSlot(BaseModel):
 
 class Allocation(BaseModel):
     batch_id: str
+    date: Optional[str] = None  # the day the plan is for, YYYY-MM-DD (additive field)
     items: list[AllocationItem]
     schedule: list[ScheduleSlot]
     energy_kwh: float
@@ -315,6 +337,11 @@ class SourceRow(BaseModel):
     status: str
     source_name: str
     source_url: Optional[str] = None  # a few rows have no public URL
+    # A-17 (additive, all optional): what the row is, and its year, so the Sources page can say "where from, and when"
+    publication_date: Optional[str] = None  # the catalogue's text, e.g. "2025" or "2026-11-21 extract"
+    period_covered: Optional[str] = None  # e.g. "2021/22-2023/24" or "current"
+    scope: Optional[str] = None  # e.g. "Tunisia", "Sousse"
+    definition: Optional[str] = None  # what the dataset is
 
 
 class SafeFigure(BaseModel):

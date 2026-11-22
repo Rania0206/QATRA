@@ -103,6 +103,7 @@ export interface ScheduleSlot {
 
 export interface Allocation {
   batch_id: string;
+  date?: string; // the day the plan is for, YYYY-MM-DD
   items: AllocationItem[];
   schedule: ScheduleSlot[];
   energy_kwh: number;
@@ -416,6 +417,11 @@ export interface SourceRow {
   status: string; // the catalogue's own text, e.g. "REPORTED (incomplete)"
   source_name: string;
   source_url: string | null;
+  // A-17 (optional): the catalogue's year and description of the row
+  publication_date?: string | null;
+  period_covered?: string | null;
+  scope?: string | null;
+  definition?: string | null;
 }
 
 export interface SafeFigure {

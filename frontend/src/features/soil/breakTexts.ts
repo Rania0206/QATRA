@@ -17,9 +17,9 @@ export const BK = {
   reset: { en: "Back to the real value", fr: "Revenir à la vraie valeur", ar: "العودة إلى القيمة الحقيقية" },
   planTitle: { en: "The water plan, re-planned", fr: "Le plan d'eau, refait", ar: "خطة الماء بعد إعادة التخطيط" },
   planHint: {
-    en: "Batch {batch} (700 m³, smaller than the farms' needs). The Change column compares with the plan before you moved the slider.",
-    fr: "Lot {batch} (700 m³, plus petit que les besoins des fermes). La colonne Écart compare avec le plan avant le curseur.",
-    ar: "الدفعة {batch} (700 م³، أقل من حاجة الضيعات). يقارن عمود الفرق مع الخطة قبل تحريك المنزلق.",
+    en: "Batch {batch} as if it held only {m3} m³ (less than the farms' needs). The Change column compares with the plan before you moved the slider.",
+    fr: "Lot {batch} comme s'il ne contenait que {m3} m³ (moins que les besoins des fermes). La colonne Écart compare avec le plan avant le curseur.",
+    ar: "الدفعة {batch} كأنها لا تحوي إلا {m3} م³ (أقل من حاجة الضيعات). يقارن عمود الفرق مع الخطة قبل تحريك المنزلق.",
   },
   colFarm: { en: "Farm", fr: "Ferme", ar: "الضيعة" },
   colStatus: { en: "Status", fr: "Statut", ar: "الحالة" },

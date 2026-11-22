@@ -8,8 +8,9 @@ import type { Lang } from "../../i18n";
 import { cropName } from "../compatibility/format";
 import { BK } from "./breakTexts";
 
-/** A 700 m3 batch: smaller than the farms' total need, so the water a farm cannot take goes to the others. */
+/** The plan is run as if the batch held 250 m3: less than the farms' total need (about 390 m3), so the water a farm cannot take goes to the others. */
 export const PLAN_BATCH = "SSUD-20260827";
+export const PLAN_VOLUME = 250;
 const MAX_ECE = 12;
 
 const fmt = (v: number) => v.toLocaleString("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
@@ -34,9 +35,9 @@ export default function BreakIt({
   useEffect(() => setDraft(null), [farmId]);
 
   const farms = useApi<Farm[]>(() => get<Farm[]>("/api/farms"));
-  const base = useApi<Allocation>(() => post<Allocation>("/api/allocate", { batch_id: PLAN_BATCH }));
+  const base = useApi<Allocation>(() => post<Allocation>("/api/allocate", { batch_id: PLAN_BATCH, volume_m3: PLAN_VOLUME }));
   const live = useApi<Allocation>(
-    () => (farmEce === null ? Promise.resolve(null as unknown as Allocation) : post<Allocation>("/api/allocate", { batch_id: PLAN_BATCH, soil_ece: { [farmId]: farmEce } })),
+    () => (farmEce === null ? Promise.resolve(null as unknown as Allocation) : post<Allocation>("/api/allocate", { batch_id: PLAN_BATCH, volume_m3: PLAN_VOLUME, soil_ece: { [farmId]: farmEce } })),
     [farmId, farmEce],
   );
   const now = farmEce === null ? base.data : live.data ?? base.data;
@@ -83,7 +84,7 @@ export default function BreakIt({
       {now && (
         <div>
           <h3 className="border-b border-ink pb-2 text-2xl">{BK.planTitle[lang]}</h3>
-          <p className="py-2 text-[15px] text-ink-soft">{BK.planHint[lang].replace("{batch}", PLAN_BATCH)}</p>
+          <p className="py-2 text-[15px] text-ink-soft">{BK.planHint[lang].replace("{batch}", PLAN_BATCH).replace("{m3}", String(PLAN_VOLUME))}</p>
           <table className="w-full text-[17px]">
             <thead>
               <tr className="border-b border-ink text-[14px] uppercase tracking-wide text-ink-soft">

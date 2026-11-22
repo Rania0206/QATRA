@@ -25,8 +25,16 @@ def test_every_catalogue_row_is_present(body):
     assert len(body["sources"]) == len(cat) == 64
     assert [s["id"] for s in body["sources"]] == cat["id"].tolist()
     for s in body["sources"]:
-        assert set(s) == {"id", "title", "file", "status", "source_name", "source_url"}
+        assert set(s) == {"id", "title", "file", "status", "source_name", "source_url", "publication_date", "period_covered", "scope", "definition"}
         assert s["status"] and s["title"]
+
+
+def test_catalogue_rows_carry_their_year_and_what_they_are(body):
+    cat = pd.read_csv(ROOT / "data" / "data_catalog.csv").set_index("id")
+    by = {s["id"]: s for s in body["sources"]}
+    assert by["D26"]["publication_date"] == str(cat.loc["D26", "publication_date"]) == "2025"  # STEG tariffs
+    assert by["D01"]["period_covered"] == "current" and by["D01"]["definition"]
+    assert sum(1 for s in body["sources"] if s["publication_date"]) > 50  # nothing guessed: a blank cell stays None
 
 
 def test_five_safe_figures_with_status_and_url(body):

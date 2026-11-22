@@ -29,7 +29,7 @@ export const Bz = {
   projection: { en: "projection", fr: "projection", ar: "توقّع" },
   farmersSave: { en: "Farmers save", fr: "Les agriculteurs économisent", ar: "الفلاحون يوفّرون" },
   qatraEarns: { en: "QATRA earns", fr: "QATRA gagne", ar: "قطرة تكسب" },
-  waterSaved: { en: "Well water not pumped", fr: "Eau de puits non pompée", ar: "ماء الآبار غير المضخوخ" },
+  waterSaved: { en: "Fresh water replaced", fr: "Eau douce remplacée", ar: "الماء العذب المعوَّض" },
   elecSaved: { en: "Electricity saved", fr: "Électricité économisée", ar: "الكهرباء الموفَّرة" },
   perYear: { en: "per year", fr: "par an", ar: "في السنة" },
   tnd: { en: "TND", fr: "TND", ar: "TND" },

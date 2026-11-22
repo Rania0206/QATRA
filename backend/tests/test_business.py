@@ -58,6 +58,8 @@ def test_territory_hectares_are_reported_and_the_money_is_a_projection():
     keys = {t.key: t for t in b.territory}
     assert keys["equipped_ha"].value == 7819 and keys["irrigated_ha"].value == 2778 and keys["perimeter_ha"].value == 257
     assert all(t.tag.status == "REPORTED" and t.source_url for t in b.territory)
+    assert all(t.source.strip().lower() != "idem" for t in b.territory)  # the data's "idem" is replaced by the real source
+    assert keys["equipped_ha"].source.startswith("L'Economiste Maghrebin")
     assert by_id(b, "equipped").ha == 7819 and by_id(b, "irrigated").ha == 2778
     assert by_id(b, "equipped").ha_tag.status == "REPORTED" and by_id(b, "pilot").ha_tag.status == "SIMULATED"
     assert all(s.tag.status == "PROJECTION" for s in b.scenarios)  # a projection is never labelled reported

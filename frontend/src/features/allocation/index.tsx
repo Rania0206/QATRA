@@ -49,9 +49,9 @@ function FarmerAllocation() {
       <Band tone="olive" className="md:py-24">
         <Intro as="h1" size="xl" eyebrow={A.eyebrow[lang]} title={A.title[lang]}>
           <p>{farmCode ? A.leadOwn[lang] : A.leadCode[lang]}</p>
-          {farmCode && d?.savings?.date && (
+          {farmCode && (d?.allocation.date ?? d?.savings?.date) && (
             <p className="mt-4 text-[16px]">
-              {A.planFor[lang]} {fmtDateL(d.savings.date, lang)}
+              {A.planFor[lang]} {fmtDateL((d?.allocation.date ?? d?.savings?.date)!, lang)}
             </p>
           )}
         </Intro>

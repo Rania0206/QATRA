@@ -1,9 +1,9 @@
 {
   "period": "2026-07-01/2026-08-29",
-  "tww_allocated_m3": 40582.2,
-  "fresh_water_saved_m3": 40582.2,
-  "energy_kwh": 12074.6,
-  "solar_share": 0.412,
+  "tww_allocated_m3": 20125.1,
+  "fresh_water_saved_m3": 20125.1,
+  "energy_kwh": 5987.9,
+  "solar_share": 0.639,
   "co2_avoided_kg": null,
   "farms_served": 9,
   "small_farms_served": 4,

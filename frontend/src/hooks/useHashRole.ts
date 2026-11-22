@@ -13,8 +13,9 @@ const read = (): RoleId | null => {
   return r && ROLE_IDS.includes(r) ? (r as RoleId) : null;
 };
 
-const write = (role: RoleId | null, replace: boolean) => {
-  const [path, q] = split(window.location.hash);
+const write = (role: RoleId | null, replace: boolean, tab?: string) => {
+  const [pathNow, q] = split(window.location.hash);
+  const path = tab ? `/${tab}` : pathNow;
   if (role) q.set("role", role);
   else q.delete("role");
   const qs = q.toString();
@@ -24,7 +25,7 @@ const write = (role: RoleId | null, replace: boolean) => {
   else window.location.hash = hash.slice(1);
 };
 
-export function useHashRole(): [RoleId | null, (r: RoleId | null) => void] {
+export function useHashRole(): [RoleId | null, (r: RoleId | null, tab?: string) => void] {
   const [role, setRole] = useState<RoleId | null>(read);
 
   useEffect(() => {
@@ -41,9 +42,10 @@ export function useHashRole(): [RoleId | null, (r: RoleId | null) => void] {
     return () => window.removeEventListener("hashchange", onHash);
   }, []);
 
-  const choose = useCallback((r: RoleId | null) => {
+  /** Choose a role (null = all sections). `tab`: open that tab at the same time. */
+  const choose = useCallback((r: RoleId | null, tab?: string) => {
     setRole(r);
-    write(r, false);
+    write(r, false, tab);
   }, []);
   return [role, choose];
 }
