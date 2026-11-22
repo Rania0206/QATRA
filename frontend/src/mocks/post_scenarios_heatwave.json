@@ -6,37 +6,40 @@
     "batch_id": "SSUD-20260826",
     "items": [
       {
-        "farm_id": "B",
-        "status": "allocated",
-        "m3": 320.0
-      },
-      {
-        "farm_id": "D",
-        "status": "allocated",
-        "m3": 280.0
-      },
-      {
-        "farm_id": "F",
-        "status": "allocated",
-        "m3": 180.0
-      },
-      {
         "farm_id": "A",
         "status": "conditional",
-        "m3": 120.0,
-        "cap_reason": "Alfalfa: no sprinkler irrigation; drip/surface only"
+        "m3": 70.5,
+        "cap_reason": "anti-rebound: not more than the 70.6 m3/day already taken from the well"
       },
       {
-        "farm_id": "J",
+        "farm_id": "B",
         "status": "capped",
-        "m3": 100.0,
-        "cap_reason": "Soil ECe 4.5 dS/m: leaching fraction limits volume"
+        "m3": 103.8,
+        "cap_reason": "anti-rebound: not more than the 103.9 m3/day already taken from the borehole"
       },
       {
         "farm_id": "C",
         "status": "blocked",
         "m3": 0.0,
-        "cap_reason": "Lettuce eaten raw: prohibited (Decret 89-1047)"
+        "cap_reason": "Lettuce is eaten raw: forbidden (Decree 89-1047 Art. 5)"
+      },
+      {
+        "farm_id": "D",
+        "status": "capped",
+        "m3": 168.3,
+        "cap_reason": "anti-rebound: not more than the 168.3 m3/day already taken from the borehole"
+      },
+      {
+        "farm_id": "H",
+        "status": "capped",
+        "m3": 15.5,
+        "cap_reason": "anti-rebound: not more than the 15.6 m3/day already taken from the network"
+      },
+      {
+        "farm_id": "I",
+        "status": "capped",
+        "m3": 52.7,
+        "cap_reason": "anti-rebound: not more than the 52.8 m3/day already taken from the borehole"
       }
     ],
     "schedule": [
@@ -78,125 +81,679 @@
       },
       {
         "hour": 6,
-        "pump_kw": 0.0,
-        "source": "off",
-        "basin_m3": 600.0
+        "pump_kw": 3.6,
+        "source": "basin",
+        "basin_m3": 582.765
       },
       {
         "hour": 7,
-        "pump_kw": 0.0,
-        "source": "off",
-        "basin_m3": 600.0
+        "pump_kw": 12.0,
+        "source": "solar",
+        "basin_m3": 593.781
       },
       {
         "hour": 8,
-        "pump_kw": 0.0,
-        "source": "off",
-        "basin_m3": 600.0
+        "pump_kw": 21.869,
+        "source": "solar",
+        "basin_m3": 637.988
       },
       {
         "hour": 9,
-        "pump_kw": 44.6,
+        "pump_kw": 30.802,
         "source": "solar",
-        "basin_m3": 750.0
+        "basin_m3": 712.238
       },
       {
         "hour": 10,
-        "pump_kw": 44.6,
+        "pump_kw": 37.733,
         "source": "solar",
-        "basin_m3": 900.0
+        "basin_m3": 809.799
       },
       {
         "hour": 11,
-        "pump_kw": 44.6,
+        "pump_kw": 41.866,
         "source": "solar",
-        "basin_m3": 1050.0
+        "basin_m3": 921.259
       },
       {
         "hour": 12,
-        "pump_kw": 44.6,
+        "pump_kw": 44.266,
         "source": "solar",
-        "basin_m3": 1200.0
+        "basin_m3": 1040.792
       },
       {
         "hour": 13,
-        "pump_kw": 44.6,
-        "source": "solar",
-        "basin_m3": 1350.0
+        "pump_kw": 41.731,
+        "source": "basin",
+        "basin_m3": 1151.801
       },
       {
         "hour": 14,
-        "pump_kw": 44.6,
-        "source": "solar",
-        "basin_m3": 1500.0
+        "pump_kw": 35.333,
+        "source": "basin",
+        "basin_m3": 1241.29
       },
       {
         "hour": 15,
-        "pump_kw": 44.6,
-        "source": "solar",
-        "basin_m3": 1650.0
+        "pump_kw": 28.133,
+        "source": "basin",
+        "basin_m3": 1306.564
       },
       {
         "hour": 16,
-        "pump_kw": 0.0,
-        "source": "off",
-        "basin_m3": 1650.0
+        "pump_kw": 18.269,
+        "source": "basin",
+        "basin_m3": 1338.664
       },
       {
         "hour": 17,
-        "pump_kw": 44.6,
-        "source": "grid",
-        "basin_m3": 1800.0
+        "pump_kw": 8.266,
+        "source": "basin",
+        "basin_m3": 1337.12
       },
       {
         "hour": 18,
-        "pump_kw": 0.0,
+        "pump_kw": 1.2,
         "source": "basin",
-        "basin_m3": 1650.0
+        "basin_m3": 1311.813
       },
       {
         "hour": 19,
         "pump_kw": 0.0,
         "source": "basin",
-        "basin_m3": 1500.0
+        "basin_m3": 1282.47
       },
       {
         "hour": 20,
         "pump_kw": 0.0,
-        "source": "basin",
-        "basin_m3": 1350.0
+        "source": "off",
+        "basin_m3": 1282.47
       },
       {
         "hour": 21,
         "pump_kw": 0.0,
         "source": "off",
-        "basin_m3": 1350.0
+        "basin_m3": 1282.47
       },
       {
         "hour": 22,
         "pump_kw": 0.0,
         "source": "off",
-        "basin_m3": 1350.0
+        "basin_m3": 1282.47
       },
       {
         "hour": 23,
         "pump_kw": 0.0,
         "source": "off",
-        "basin_m3": 1350.0
+        "basin_m3": 1282.47
       }
     ],
-    "energy_kwh": 356.8,
-    "solar_share": 0.87,
-    "fresh_replaced_m3": 1200.0,
+    "energy_kwh": 325.1,
+    "solar_share": 1.0,
+    "fresh_replaced_m3": 410.8,
     "warnings": [
-      "Grid outage 13:00-17:00: pumping moved to solar hours and basin.",
-      "600 m3 of 1800 not delivered (outage + basin starts at 600 m3)."
+      "Grid outage 13:00-17:00: irrigation moved to solar hours and the basin; the grid never runs in the outage.",
+      "1089.2 m3 not allocated: kept in the basin.",
+      "Farms E, F, G, J are not irrigated: their crop is not growing in this month.",
+      "Solar surplus: 873 m3 pumped into the basin and kept for the next days (basin 600 to 1282 m3). The plan's energy counts it.",
+      "Hourly schedule: the heatwave model of this scenario (pump power proportional to its flow, farms irrigated from the basin during the outage). The A-05 pump schedule is not used here: it calls solar only when the PV output reaches the full pump power (44.6 kW) and the array peaks at 44.3 kW this day, and it does not model farm draws.",
+      "Basin evaporation is not applied (basin area not in the data).",
+      "NASA POWER ~0.5 deg grid: coastal extremes smoothed"
     ]
   },
   "baseline": {
-    "energy_kwh": 312.2,
-    "solar_share": 1.0
+    "energy_kwh": 87.2,
+    "solar_share": 0.0
   },
+  "naive": {
+    "policy": "naive",
+    "hours_without_water": 4,
+    "unserved_m3": 117.4,
+    "delivered_m3": 293.4,
+    "grid_kwh": 87.2,
+    "solar_kwh": 0.0,
+    "hourly": [
+      {
+        "hour": 0,
+        "outage": false,
+        "demand_m3": 0.0,
+        "delivered_m3": 0.0,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 0.0,
+        "basin_m3": null,
+        "source": "off"
+      },
+      {
+        "hour": 1,
+        "outage": false,
+        "demand_m3": 0.0,
+        "delivered_m3": 0.0,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 0.0,
+        "basin_m3": null,
+        "source": "off"
+      },
+      {
+        "hour": 2,
+        "outage": false,
+        "demand_m3": 0.0,
+        "delivered_m3": 0.0,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 0.0,
+        "basin_m3": null,
+        "source": "off"
+      },
+      {
+        "hour": 3,
+        "outage": false,
+        "demand_m3": 0.0,
+        "delivered_m3": 0.0,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 0.0,
+        "basin_m3": null,
+        "source": "off"
+      },
+      {
+        "hour": 4,
+        "outage": false,
+        "demand_m3": 0.0,
+        "delivered_m3": 0.0,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 0.0,
+        "basin_m3": null,
+        "source": "off"
+      },
+      {
+        "hour": 5,
+        "outage": false,
+        "demand_m3": 0.0,
+        "delivered_m3": 0.0,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 0.0,
+        "basin_m3": null,
+        "source": "off"
+      },
+      {
+        "hour": 6,
+        "outage": false,
+        "demand_m3": 29.343,
+        "delivered_m3": 29.343,
+        "unserved_m3": 0.0,
+        "grid_kw": 8.725,
+        "solar_kw": 0.0,
+        "basin_m3": null,
+        "source": "grid"
+      },
+      {
+        "hour": 7,
+        "outage": false,
+        "demand_m3": 29.343,
+        "delivered_m3": 29.343,
+        "unserved_m3": 0.0,
+        "grid_kw": 8.725,
+        "solar_kw": 0.0,
+        "basin_m3": null,
+        "source": "grid"
+      },
+      {
+        "hour": 8,
+        "outage": false,
+        "demand_m3": 29.343,
+        "delivered_m3": 29.343,
+        "unserved_m3": 0.0,
+        "grid_kw": 8.725,
+        "solar_kw": 0.0,
+        "basin_m3": null,
+        "source": "grid"
+      },
+      {
+        "hour": 9,
+        "outage": false,
+        "demand_m3": 29.343,
+        "delivered_m3": 29.343,
+        "unserved_m3": 0.0,
+        "grid_kw": 8.725,
+        "solar_kw": 0.0,
+        "basin_m3": null,
+        "source": "grid"
+      },
+      {
+        "hour": 10,
+        "outage": false,
+        "demand_m3": 29.343,
+        "delivered_m3": 29.343,
+        "unserved_m3": 0.0,
+        "grid_kw": 8.725,
+        "solar_kw": 0.0,
+        "basin_m3": null,
+        "source": "grid"
+      },
+      {
+        "hour": 11,
+        "outage": false,
+        "demand_m3": 29.343,
+        "delivered_m3": 29.343,
+        "unserved_m3": 0.0,
+        "grid_kw": 8.725,
+        "solar_kw": 0.0,
+        "basin_m3": null,
+        "source": "grid"
+      },
+      {
+        "hour": 12,
+        "outage": false,
+        "demand_m3": 29.343,
+        "delivered_m3": 29.343,
+        "unserved_m3": 0.0,
+        "grid_kw": 8.725,
+        "solar_kw": 0.0,
+        "basin_m3": null,
+        "source": "grid"
+      },
+      {
+        "hour": 13,
+        "outage": true,
+        "demand_m3": 29.343,
+        "delivered_m3": 0.0,
+        "unserved_m3": 29.343,
+        "grid_kw": 0.0,
+        "solar_kw": 0.0,
+        "basin_m3": null,
+        "source": "off"
+      },
+      {
+        "hour": 14,
+        "outage": true,
+        "demand_m3": 29.343,
+        "delivered_m3": 0.0,
+        "unserved_m3": 29.343,
+        "grid_kw": 0.0,
+        "solar_kw": 0.0,
+        "basin_m3": null,
+        "source": "off"
+      },
+      {
+        "hour": 15,
+        "outage": true,
+        "demand_m3": 29.343,
+        "delivered_m3": 0.0,
+        "unserved_m3": 29.343,
+        "grid_kw": 0.0,
+        "solar_kw": 0.0,
+        "basin_m3": null,
+        "source": "off"
+      },
+      {
+        "hour": 16,
+        "outage": true,
+        "demand_m3": 29.343,
+        "delivered_m3": 0.0,
+        "unserved_m3": 29.343,
+        "grid_kw": 0.0,
+        "solar_kw": 0.0,
+        "basin_m3": null,
+        "source": "off"
+      },
+      {
+        "hour": 17,
+        "outage": false,
+        "demand_m3": 29.343,
+        "delivered_m3": 29.343,
+        "unserved_m3": 0.0,
+        "grid_kw": 8.725,
+        "solar_kw": 0.0,
+        "basin_m3": null,
+        "source": "grid"
+      },
+      {
+        "hour": 18,
+        "outage": false,
+        "demand_m3": 29.343,
+        "delivered_m3": 29.343,
+        "unserved_m3": 0.0,
+        "grid_kw": 8.725,
+        "solar_kw": 0.0,
+        "basin_m3": null,
+        "source": "grid"
+      },
+      {
+        "hour": 19,
+        "outage": false,
+        "demand_m3": 29.343,
+        "delivered_m3": 29.343,
+        "unserved_m3": 0.0,
+        "grid_kw": 8.725,
+        "solar_kw": 0.0,
+        "basin_m3": null,
+        "source": "grid"
+      },
+      {
+        "hour": 20,
+        "outage": false,
+        "demand_m3": 0.0,
+        "delivered_m3": 0.0,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 0.0,
+        "basin_m3": null,
+        "source": "off"
+      },
+      {
+        "hour": 21,
+        "outage": false,
+        "demand_m3": 0.0,
+        "delivered_m3": 0.0,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 0.0,
+        "basin_m3": null,
+        "source": "off"
+      },
+      {
+        "hour": 22,
+        "outage": false,
+        "demand_m3": 0.0,
+        "delivered_m3": 0.0,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 0.0,
+        "basin_m3": null,
+        "source": "off"
+      },
+      {
+        "hour": 23,
+        "outage": false,
+        "demand_m3": 0.0,
+        "delivered_m3": 0.0,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 0.0,
+        "basin_m3": null,
+        "source": "off"
+      }
+    ]
+  },
+  "qatra": {
+    "policy": "qatra",
+    "hours_without_water": 0,
+    "unserved_m3": 0.0,
+    "delivered_m3": 410.8,
+    "grid_kwh": 0.0,
+    "solar_kwh": 325.1,
+    "hourly": [
+      {
+        "hour": 0,
+        "outage": false,
+        "demand_m3": 0.0,
+        "delivered_m3": 0.0,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 0.0,
+        "basin_m3": 600.0,
+        "source": "off"
+      },
+      {
+        "hour": 1,
+        "outage": false,
+        "demand_m3": 0.0,
+        "delivered_m3": 0.0,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 0.0,
+        "basin_m3": 600.0,
+        "source": "off"
+      },
+      {
+        "hour": 2,
+        "outage": false,
+        "demand_m3": 0.0,
+        "delivered_m3": 0.0,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 0.0,
+        "basin_m3": 600.0,
+        "source": "off"
+      },
+      {
+        "hour": 3,
+        "outage": false,
+        "demand_m3": 0.0,
+        "delivered_m3": 0.0,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 0.0,
+        "basin_m3": 600.0,
+        "source": "off"
+      },
+      {
+        "hour": 4,
+        "outage": false,
+        "demand_m3": 0.0,
+        "delivered_m3": 0.0,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 0.0,
+        "basin_m3": 600.0,
+        "source": "off"
+      },
+      {
+        "hour": 5,
+        "outage": false,
+        "demand_m3": 0.0,
+        "delivered_m3": 0.0,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 0.0,
+        "basin_m3": 600.0,
+        "source": "off"
+      },
+      {
+        "hour": 6,
+        "outage": false,
+        "demand_m3": 29.343,
+        "delivered_m3": 29.343,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 3.6,
+        "basin_m3": 582.765,
+        "source": "basin"
+      },
+      {
+        "hour": 7,
+        "outage": false,
+        "demand_m3": 29.343,
+        "delivered_m3": 29.343,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 12.0,
+        "basin_m3": 593.781,
+        "source": "solar"
+      },
+      {
+        "hour": 8,
+        "outage": false,
+        "demand_m3": 29.343,
+        "delivered_m3": 29.343,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 21.869,
+        "basin_m3": 637.988,
+        "source": "solar"
+      },
+      {
+        "hour": 9,
+        "outage": false,
+        "demand_m3": 29.343,
+        "delivered_m3": 29.343,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 30.802,
+        "basin_m3": 712.238,
+        "source": "solar"
+      },
+      {
+        "hour": 10,
+        "outage": false,
+        "demand_m3": 29.343,
+        "delivered_m3": 29.343,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 37.733,
+        "basin_m3": 809.799,
+        "source": "solar"
+      },
+      {
+        "hour": 11,
+        "outage": false,
+        "demand_m3": 29.343,
+        "delivered_m3": 29.343,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 41.866,
+        "basin_m3": 921.259,
+        "source": "solar"
+      },
+      {
+        "hour": 12,
+        "outage": false,
+        "demand_m3": 29.343,
+        "delivered_m3": 29.343,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 44.266,
+        "basin_m3": 1040.792,
+        "source": "solar"
+      },
+      {
+        "hour": 13,
+        "outage": true,
+        "demand_m3": 29.343,
+        "delivered_m3": 29.343,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 41.731,
+        "basin_m3": 1151.801,
+        "source": "basin"
+      },
+      {
+        "hour": 14,
+        "outage": true,
+        "demand_m3": 29.343,
+        "delivered_m3": 29.343,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 35.333,
+        "basin_m3": 1241.29,
+        "source": "basin"
+      },
+      {
+        "hour": 15,
+        "outage": true,
+        "demand_m3": 29.343,
+        "delivered_m3": 29.343,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 28.133,
+        "basin_m3": 1306.564,
+        "source": "basin"
+      },
+      {
+        "hour": 16,
+        "outage": true,
+        "demand_m3": 29.343,
+        "delivered_m3": 29.343,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 18.269,
+        "basin_m3": 1338.664,
+        "source": "basin"
+      },
+      {
+        "hour": 17,
+        "outage": false,
+        "demand_m3": 29.343,
+        "delivered_m3": 29.343,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 8.266,
+        "basin_m3": 1337.12,
+        "source": "basin"
+      },
+      {
+        "hour": 18,
+        "outage": false,
+        "demand_m3": 29.343,
+        "delivered_m3": 29.343,
+        "unserved_m3": -0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 1.2,
+        "basin_m3": 1311.813,
+        "source": "basin"
+      },
+      {
+        "hour": 19,
+        "outage": false,
+        "demand_m3": 29.343,
+        "delivered_m3": 29.343,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 0.0,
+        "basin_m3": 1282.47,
+        "source": "basin"
+      },
+      {
+        "hour": 20,
+        "outage": false,
+        "demand_m3": 0.0,
+        "delivered_m3": 0.0,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 0.0,
+        "basin_m3": 1282.47,
+        "source": "off"
+      },
+      {
+        "hour": 21,
+        "outage": false,
+        "demand_m3": 0.0,
+        "delivered_m3": 0.0,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 0.0,
+        "basin_m3": 1282.47,
+        "source": "off"
+      },
+      {
+        "hour": 22,
+        "outage": false,
+        "demand_m3": 0.0,
+        "delivered_m3": 0.0,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 0.0,
+        "basin_m3": 1282.47,
+        "source": "off"
+      },
+      {
+        "hour": 23,
+        "outage": false,
+        "demand_m3": 0.0,
+        "delivered_m3": 0.0,
+        "unserved_m3": 0.0,
+        "grid_kw": 0.0,
+        "solar_kw": 0.0,
+        "basin_m3": 1282.47,
+        "source": "off"
+      }
+    ]
+  },
+  "caveat": "NASA POWER ~0.5 deg grid: coastal extremes smoothed",
   "tag": {
     "status": "SIMULATED",
     "source": "data/simulated/sim_scenarios.json"

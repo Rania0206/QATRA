@@ -15,7 +15,7 @@ date. Any other date works too (A-05e): its needs use the summer 2026 weather fi
 day (engine/needs.weather_for), and a warning says the weather is historical. The soil model uses long-term climate.
 """
 import math
-from typing import Optional
+from typing import Callable, Optional
 
 from pydantic import BaseModel
 
@@ -23,7 +23,7 @@ from app.engine import soil
 from app.engine.batches import get_batch
 from app.engine.compatibility import default_batch
 from app.engine.farms import list_farms
-from app.engine.needs import daily_need, forecast_dates
+from app.engine.needs import NeedItem, daily_need, forecast_dates
 from app.engine.rules import evaluate
 from app.engine.schedule import Scenario, schedule
 from app.schemas import Allocation, AllocationItem, Batch, Farm
@@ -97,7 +97,13 @@ def _blocked_reason(results) -> str:
     return failed[0].reason_en if failed else "blocked by the rules"
 
 
-def allocate(batch: Batch, date: Optional[str] = None, options: Optional[AllocateOptions] = None) -> Plan:
+NeedFn = Callable[[Farm, str], Optional[NeedItem]]
+
+
+def allocate(batch: Batch, date: Optional[str] = None, options: Optional[AllocateOptions] = None,
+             need_fn: NeedFn = daily_need) -> Plan:
+    """need_fn(farm, day) gives the farm's need of that day (default: the forecast need of engine/needs). A scenario on a
+    day the forecast does not cover (the summer heatwave) passes its own need function; the rules stay the same."""
     options = options or AllocateOptions()
     dates = forecast_dates()
     day = date or (dates[0] if dates else "")
@@ -114,8 +120,8 @@ def allocate(batch: Batch, date: Optional[str] = None, options: Optional[Allocat
     sources: set[str] = set()
     for farm in farms:
         ev = evaluate(farm, batch)
-        n = daily_need(farm, day)
-        if n and n.weather_source:
+        n = need_fn(farm, day)
+        if getattr(n, "weather_source", None):  # a custom need_fn may return items without it
             sources.add(n.weather_source)
         need = (n.need_m3 or 0.0) if n else 0.0
         if n is None:
@@ -167,7 +173,7 @@ def allocate(batch: Batch, date: Optional[str] = None, options: Optional[Allocat
 
 # ---------------------------------------------------------------- A-05d: allocation + pump schedule = the contract Allocation
 def plan(batch_id: Optional[str] = None, date: Optional[str] = None, scenario: Scenario = "normal",
-         farm_ids: Optional[list[str]] = None) -> Optional[Allocation]:
+         farm_ids: Optional[list[str]] = None, need_fn: NeedFn = daily_need) -> Optional[Allocation]:
     """Who gets how much (allocate) and when the pump runs (schedule). None if the batch does not exist.
 
     Default batch: the latest one that is not analysis_invalid (the same default as the compatibility screen).
@@ -175,7 +181,7 @@ def plan(batch_id: Optional[str] = None, date: Optional[str] = None, scenario: S
     batch = get_batch(batch_id) if batch_id else default_batch()
     if batch is None:
         return None
-    p = allocate(batch, date, AllocateOptions(farm_ids=farm_ids))
+    p = allocate(batch, date, AllocateOptions(farm_ids=farm_ids), need_fn)
     s = schedule(p.total_allocated_m3, p.date, scenario)
     return Allocation(
         batch_id=batch.id,

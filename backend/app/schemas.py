@@ -205,6 +205,45 @@ class Passport(BaseModel):
     tag: Tag
 
 
+class HeatwaveHour(BaseModel):
+    hour: int
+    outage: bool
+    demand_m3: float
+    delivered_m3: float
+    unserved_m3: float
+    grid_kw: float
+    solar_kw: float
+    basin_m3: Optional[float] = None  # null for the naive policy (no basin)
+    source: Literal["solar", "grid", "basin", "off"]
+
+
+class HeatwaveRun(BaseModel):
+    policy: Literal["naive", "qatra"]
+    hours_without_water: int
+    unserved_m3: float
+    delivered_m3: float
+    grid_kwh: float
+    solar_kwh: float
+    hourly: list[HeatwaveHour]  # 24 rows
+
+
+class HeatwaveBaseline(BaseModel):
+    energy_kwh: float
+    solar_share: float
+
+
+class HeatwaveResult(BaseModel):
+    scenario_id: str
+    label: str
+    date: str
+    allocation: Allocation
+    baseline: HeatwaveBaseline  # the naive run: all grid, no solar
+    naive: HeatwaveRun
+    qatra: HeatwaveRun
+    caveat: str
+    tag: Tag
+
+
 class HealthResponse(BaseModel):
     status: str
     datasets: dict[str, int]
