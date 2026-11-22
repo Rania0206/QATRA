@@ -1,13 +1,13 @@
 {
-  "id": "IN-2",
+  "id": "OUT-REPLY-1",
   "farm_id": "B",
-  "direction": "in",
+  "direction": "out",
   "channel": "sms",
-  "at": "2026-11-22T04:12:48",
-  "text": "1",
-  "text_fr": null,
-  "text_ar": null,
-  "needs_human_review": false,
-  "batch_id": null,
-  "status": null
+  "at": "2026-11-22T04:17:48",
+  "text": null,
+  "text_fr": "Merci, Ferme B. Votre volume de 75 m³ est confirmé. Livraison demain de 11:00 à 15:00.",
+  "text_ar": "شكرا، ضيعة B. كمية 75 م³ تأكّدت. التسليم غدوة من 11:00 إلى 15:00.",
+  "needs_human_review": true,
+  "batch_id": "SSUD-20260829",
+  "status": "allocated"
 }

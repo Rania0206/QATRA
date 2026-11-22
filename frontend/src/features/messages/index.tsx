@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { get, post } from "../../api/client";
-import type { Farm, Message } from "../../api/types";
+import type { Allocation, Farm, Message } from "../../api/types";
 import ErrorBox from "../../components/ErrorBox";
+import { USE_MOCKS } from "../../config";
 import { Band, Intro, Segmented, Skeleton } from "../../components/ui";
 import { useApi } from "../../hooks/useApi";
 import { useLang, type Lang } from "../../i18n";
@@ -15,6 +16,10 @@ export default function MessagesTab() {
   const { lang } = useLang();
   const farms = useApi<Farm[]>(() => get<Farm[]>("/api/farms"));
   const msgs = useApi<Message[]>(() => get<Message[]>("/api/messages"));
+  const alloc = useApi<Allocation>(() => get<Allocation>("/api/allocation/current"));
+  // The plan as first shown: the "Change" column compares the live plan with it.
+  const firstPlan = useRef<Allocation | null>(null);
+  if (alloc.data && !firstPlan.current) firstPlan.current = alloc.data;
   const [farmId, setFarmId] = useState(DEFAULT_FARM);
   const [show, setShow] = useState<Show>("both");
   // Replies sent from this screen. Kept here too so they show even when the answers are mocked.
@@ -29,12 +34,19 @@ export default function MessagesTab() {
   const offer = [...thread].reverse().find((m) => m.direction === "out"); // the latest offer decides whether replying makes sense
   const canReply = !!offer && !!offer.status && offer.status !== "blocked";
 
+  // With the real server the answer, the reply and any new message come back from GET /api/messages: the local copy is dropped.
+  useEffect(() => {
+    if (!USE_MOCKS) setSent([]);
+  }, [msgs.data]);
+
   const reply = async (text: string) => {
     setSending(true);
     setSendError(null);
     try {
       await post<Message>("/api/messages/reply", { farm_id: farmId, text });
       setSent((s) => [...s, { id: `local-${s.length + 1}`, farm_id: farmId, direction: "in", channel: "sms", at: new Date().toISOString(), text }]);
+      msgs.reload(); // the reply of the service and the new messages
+      alloc.reload(); // the new allocation
     } catch (e) {
       setSendError(e instanceof Error ? e : new Error(String(e)));
     } finally {
@@ -83,17 +95,20 @@ export default function MessagesTab() {
             {MS.mockup[lang]}
           </p>
 
-          {msgs.loading ? (
+          {msgs.loading && !msgs.data ? (
             <div className="mx-auto max-w-[28rem] space-y-3" aria-busy="true" aria-label={MS.loading[lang]}>
               <Skeleton className="h-[34rem] w-full" />
             </div>
           ) : msgs.error ? (
             <ErrorBox error={msgs.error} onRetry={msgs.reload} />
           ) : (
-            <PhoneFrame lang={lang}>
-              <Chat thread={thread} show={show} lang={lang} />
-              <ReplyBar canReply={canReply} sending={sending} onReply={reply} lang={lang} hasThread={thread.length > 0} />
-            </PhoneFrame>
+            <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,28rem)_minmax(0,1fr)] lg:justify-center">
+              <PhoneFrame lang={lang}>
+                <Chat thread={thread} show={show} lang={lang} />
+                <ReplyBar canReply={canReply} sending={sending} onReply={reply} lang={lang} hasThread={thread.length > 0} />
+              </PhoneFrame>
+              <PlanPanel alloc={alloc.data} first={firstPlan.current} farms={farms.data ?? []} lang={lang} selected={farmId} />
+            </div>
           )}
 
           {sendError && <ErrorBox error={`${MS.sendError[lang]} ${sendError.message}`} onRetry={() => setSendError(null)} />}
@@ -101,6 +116,63 @@ export default function MessagesTab() {
         </div>
       </Band>
     </>
+  );
+}
+
+const fmtM3 = (v: number) => v.toLocaleString("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+
+/** The plan as it stands now, and how it moved since it was first shown (a farm answering 2 shifts its water to the others). */
+function PlanPanel({ alloc, first, farms, lang, selected }: { alloc?: Allocation; first: Allocation | null; farms: Farm[]; lang: Lang; selected: string }) {
+  if (!alloc) return null;
+  const was = new Map((first?.items ?? []).map((i) => [i.farm_id, i.m3]));
+  const crop = new Map(farms.map((f) => [f.id, f.crop]));
+  const status = (i: Allocation["items"][number]): string =>
+    i.cap_reason?.startsWith("refused") ? MS.stRefused[lang]
+      : i.status === "allocated" ? MS.stAllocated[lang]
+      : i.status === "conditional" ? MS.stConditional[lang]
+      : i.status === "blocked" ? MS.stBlocked[lang]
+      : MS.stCapped[lang];
+  const total = alloc.items.reduce((s, i) => s + i.m3, 0);
+  const totalWas = (first?.items ?? []).reduce((s, i) => s + i.m3, 0);
+  const Delta = ({ now, before }: { now: number; before?: number }): ReactNode => {
+    const d = before === undefined ? 0 : Math.round((now - before) * 10) / 10;
+    if (d === 0) return <span className="text-ink-soft">–</span>;
+    return <span className={d > 0 ? "text-ok" : "text-bad"}>{d > 0 ? "+" : "−"}{fmtM3(Math.abs(d))}</span>;
+  };
+  return (
+    <section className="space-y-4" aria-label={MS.allocTitle[lang]}>
+      <h2 className="text-3xl">{MS.allocTitle[lang]}</h2>
+      <p className="text-[16px] text-ink-soft">{MS.allocHint[lang]}</p>
+      <table className="w-full text-[17px]">
+        <thead>
+          <tr className="border-b border-ink text-start text-[14px] uppercase tracking-wide text-ink-soft">
+            <th className="py-2 text-start font-normal">{MS.colFarm[lang]}</th>
+            <th className="py-2 text-start font-normal">{MS.colStatus[lang]}</th>
+            <th className="py-2 text-end font-normal">{MS.colVolume[lang]}</th>
+            <th className="py-2 text-end font-normal">{MS.colChange[lang]}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {alloc.items.map((i) => (
+            <tr key={i.farm_id} className={`border-b border-line ${i.farm_id === selected ? "bg-sand" : ""} ${i.status === "blocked" ? "text-ink-soft" : ""}`}>
+              <td className="py-2">
+                {i.farm_id} <span className="text-[14px] text-ink-soft">{crop.has(i.farm_id) ? cropName(crop.get(i.farm_id)!, lang) : ""}</span>
+              </td>
+              <td className="py-2">{status(i)}</td>
+              <td className="py-2 text-end tabular-nums" dir="ltr">{fmtM3(i.m3)}</td>
+              <td className="py-2 text-end tabular-nums" dir="ltr"><Delta now={i.m3} before={was.get(i.farm_id)} /></td>
+            </tr>
+          ))}
+        </tbody>
+        <tfoot>
+          <tr className="font-medium">
+            <td className="py-2" colSpan={2}>{MS.total[lang]}</td>
+            <td className="py-2 text-end tabular-nums" dir="ltr">{fmtM3(total)}</td>
+            <td className="py-2 text-end tabular-nums" dir="ltr"><Delta now={total} before={first ? totalWas : undefined} /></td>
+          </tr>
+        </tfoot>
+      </table>
+    </section>
   );
 }
 

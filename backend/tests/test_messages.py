@@ -223,14 +223,14 @@ def test_filter_by_farm_and_unknown_farm(client):
     assert client.get("/api/messages", params={"farm_id": "Z"}).status_code == 404
 
 
-def test_replies_are_kept_in_memory_and_listed_after_the_messages(client):
+def test_a_reply_returns_the_service_answer_and_both_are_kept_in_memory(client):
     r = client.post("/api/messages/reply", json={"farm_id": "B", "text": "1"})
     assert r.status_code == 201
     msg = Message.model_validate(r.json())
-    assert msg.direction == "in" and msg.text == "1" and msg.farm_id == "B"
+    assert msg.direction == "out" and msg.farm_id == "B" and "confirmé" in msg.text_fr and msg.needs_human_review
     b = client.get("/api/messages", params={"farm_id": "B"}).json()
-    assert [x["direction"] for x in b] == ["out", "in"] and b[-1]["text"] == "1"
-    assert [x["farm_id"] for x in client.get("/api/messages", params={"farm_id": "A"}).json()] == ["A"]  # another farm: no reply
+    assert [x["direction"] for x in b] == ["out", "in", "out"] and b[1]["text"] == "1"  # offer, the answer, the reply
+    assert [x["farm_id"] for x in client.get("/api/messages", params={"farm_id": "A"}).json()] == ["A"]  # another farm: no answer
 
 
 def test_bad_replies(client):
@@ -246,3 +246,185 @@ def test_mock_matches_the_real_shape(client):
     real_out = [x for x in client.get("/api/messages").json()]
     assert {k for x in mock if x["direction"] == "out" for k in x} == set(real_out[0])  # same keys as a real outgoing message
     assert [x["id"] for x in mock if x["direction"] == "out"] == [x["id"] for x in real_out]
+
+
+# ================================================================ B-08c: the farmers answer 1 / 2 / 3 / 4
+SMALL_BATCH = "SSUD-20260827"  # 700 m3: smaller than the total need, so the sharing binds and a refusal frees water for the others
+
+
+def volumes(alloc):
+    return {i.farm_id: i.m3 for i in alloc.items}
+
+
+@pytest.fixture
+def plan_calls(monkeypatch):
+    """Counts the runs of the live allocator (engine/plan.plan) and keeps their arguments."""
+    calls = []
+    real = m.plan
+
+    def spy(*a, **kw):
+        calls.append((a, kw))
+        return real(*a, **kw)
+
+    monkeypatch.setattr(m, "plan", spy)
+    return calls
+
+
+@pytest.mark.parametrize("text,expected", [
+    ("1", "1"), (" 2 ", "2"), ("3", "3"), ("4", "4"), ("١", "1"), ("٢", "2"), ("٣", "3"), ("٤", "4"), ("۲", "2"),
+    ("1.", "1"), ("2!", "2"), ("٢؟", "2"), ("\n3\n", "3"),
+    ("12", None), ("0", None), ("٠", None), ("5", None), ("oui", None), ("OK", None), ("", None), ("   ", None), ("1 2", None),
+])
+def test_parse_choice(text, expected):
+    assert m.parse_choice(text) == expected
+
+
+def test_accept_confirms_and_does_not_replan(plan_calls):
+    before = m.current_allocation(SMALL_BATCH)
+    n = len(plan_calls)
+    r = m.add_reply("B", "1", batch_id=SMALL_BATCH)
+    assert "confirmé" in r["text_fr"] and m.fmt_number(volumes(before)["B"], "fr") + " m³" in r["text_fr"]
+    assert "تأكّدت" in r["text_ar"] and r["needs_human_review"] is True
+    assert "B" in m._state_for(SMALL_BATCH).confirmed
+    assert len(plan_calls) == n and m.current_allocation(SMALL_BATCH) is before  # nothing re-planned
+
+
+def test_refusal_by_b_changes_the_other_farms_volumes_and_tells_them(plan_calls):
+    before = volumes(m.current_allocation(SMALL_BATCH))
+    m.add_reply("B", "2", batch_id=SMALL_BATCH)
+    alloc = m.current_allocation(SMALL_BATCH)
+    after = volumes(alloc)
+    assert after["B"] == 0 and before["B"] > 0
+    grew = {f for f in after if f not in ("B", "C") and after[f] > before[f] + 0.05}
+    assert grew == {"A", "D", "E", "F", "G", "H", "I", "J"}  # every farm that can receive water gets more
+    assert all(after[f] >= before[f] for f in after if f != "B")  # nobody loses
+    assert sum(after.values()) <= 700 + 0.5  # still within the batch
+    b = next(i for i in alloc.items if i.farm_id == "B")
+    assert b.status == "capped" and "refused" in b.cap_reason
+    updates = {x["farm_id"]: x for x in m.list_messages() if "-U" in x["id"]}
+    assert set(updates) == grew
+    for f, x in updates.items():
+        delta = m.fmt_number(round(after[f] - before[f], 1), "fr")
+        assert f"+{delta} m³" in x["text_fr"] and f"{m.fmt_number(after[f], 'fr')} m³ au total" in x["text_fr"]
+        assert m.fmt_number(after[f], "ar") + " م³" in x["text_ar"] and x["needs_human_review"] is True
+        assert x["batch_id"] == SMALL_BATCH and x["direction"] == "out"
+    assert any("refused its volume" in w for w in alloc.warnings)
+
+
+def test_the_allocator_runs_again_for_the_same_batch_without_the_farm_and_without_blocked_ones(plan_calls):
+    m.current_allocation(SMALL_BATCH)
+    n = len(plan_calls)
+    m.add_reply("B", "2", batch_id=SMALL_BATCH)
+    (args, kwargs), = plan_calls[n:]  # exactly one new run
+    assert args[0] == SMALL_BATCH
+    assert set(kwargs["farm_ids"]) == {"A", "D", "E", "F", "G", "H", "I"} | {"J"}  # previous eligible farms minus B
+    assert "B" not in kwargs["farm_ids"] and "C" not in kwargs["farm_ids"]
+
+
+def test_blocked_farm_c_never_receives_the_freed_volume():
+    m.add_reply("B", "2", batch_id=SMALL_BATCH)
+    alloc = m.current_allocation(SMALL_BATCH)
+    c = next(i for i in alloc.items if i.farm_id == "C")
+    assert c.status == "blocked" and c.m3 == 0
+    assert not any("-U" in x["id"] and x["farm_id"] == "C" for x in m.list_messages())
+
+
+def test_a_second_refusal_does_not_replan_twice(plan_calls):
+    m.current_allocation(SMALL_BATCH)
+    m.add_reply("B", "2", batch_id=SMALL_BATCH)
+    n, alloc, updates = len(plan_calls), m.current_allocation(SMALL_BATCH), [x["id"] for x in m.list_messages() if "-U" in x["id"]]
+    again = m.add_reply("B", "٢", batch_id=SMALL_BATCH)  # Arabic-Indic 2
+    assert "déjà enregistré" in again["text_fr"] and "من قبل" in again["text_ar"]
+    assert len(plan_calls) == n  # no new run
+    assert m.current_allocation(SMALL_BATCH) is alloc
+    assert [x["id"] for x in m.list_messages() if "-U" in x["id"]] == updates  # no new messages for the other farms
+
+
+def test_two_farms_can_refuse_one_after_the_other():
+    m.add_reply("B", "2", batch_id=SMALL_BATCH)
+    after_b = volumes(m.current_allocation(SMALL_BATCH))
+    m.add_reply("D", "2", batch_id=SMALL_BATCH)
+    after_d = volumes(m.current_allocation(SMALL_BATCH))
+    assert after_d["B"] == 0 and after_d["D"] == 0 and after_d["J"] > after_b["J"]
+
+
+def test_accept_after_a_refusal_is_closed():
+    m.add_reply("B", "2", batch_id=SMALL_BATCH)
+    r = m.add_reply("B", "1", batch_id=SMALL_BATCH)
+    assert "refusé" in r["text_fr"] and "B" not in m._state_for(SMALL_BATCH).confirmed
+
+
+def test_unknown_text_gets_a_help_reply_and_no_replan(plan_calls):
+    m.current_allocation(SMALL_BATCH)
+    n, alloc = len(plan_calls), m.current_allocation(SMALL_BATCH)
+    for text in ("oui", "OK", "12", "5", "?"):
+        r = m.add_reply("B", text, batch_id=SMALL_BATCH)
+        for k in ("1", "2", "3", "4"):
+            assert k in r["text_fr"] and k in r["text_ar"]
+        assert "Envoyez 1 pour accepter" in r["text_fr"] and "ابعث 1" in r["text_ar"]
+    assert len(plan_calls) == n and m.current_allocation(SMALL_BATCH) is alloc
+    assert not m._state_for(SMALL_BATCH).confirmed and not m._state_for(SMALL_BATCH).refused
+
+
+def test_postpone_and_call_me_are_logged_without_replan(plan_calls, caplog):
+    m.current_allocation(SMALL_BATCH)
+    n = len(plan_calls)
+    with caplog.at_level("INFO", logger="app.engine.messages"):
+        p = m.add_reply("B", "3", batch_id=SMALL_BATCH)
+        c = m.add_reply("D", "٤", batch_id=SMALL_BATCH)
+    assert "report" in p["text_fr"] and "conseiller" in c["text_fr"] and "رجعلك" in p["text_ar"] and "يعيّطلك" in c["text_ar"]
+    assert [x["request"] for x in m._state_for(SMALL_BATCH).log] == ["postpone", "call-me"]
+    assert "asked to postpone" in caplog.text and "asked to be called" in caplog.text
+    assert len(plan_calls) == n and not m._state_for(SMALL_BATCH).refused
+
+
+def test_a_blocked_farm_has_nothing_to_accept_or_refuse(plan_calls):
+    m.current_allocation(SMALL_BATCH)
+    n, alloc = len(plan_calls), m.current_allocation(SMALL_BATCH)
+    for text in ("1", "2"):
+        r = m.add_reply("C", text, batch_id=SMALL_BATCH)
+        assert "Aucune eau ne vous est proposée" in r["text_fr"] and not re.search(r"\d", r["text_fr"].replace("Ferme C", ""))
+    assert len(plan_calls) == n and m.current_allocation(SMALL_BATCH) is alloc and "C" not in m._state_for(SMALL_BATCH).refused
+
+
+def test_on_a_large_batch_nobody_gets_more_and_the_water_stays_in_the_basin():
+    before = volumes(m.current_allocation())  # default batch: 1,500 m3, every farm is already at its own cap
+    m.add_reply("B", "2")
+    after = volumes(m.current_allocation())
+    assert after["B"] == 0 and all(after[f] == before[f] for f in after if f != "B")
+    assert not [x for x in m.list_messages() if "-U" in x["id"]]  # no "volume added" message when nothing was added
+    assert any("not allocated" in w and "basin" in w for w in m.current_allocation().warnings)
+
+
+def test_new_arabic_templates_are_flagged_and_listed_for_review():
+    for key in ("reply_accept", "reply_refuse", "reply_refuse_again", "reply_closed", "reply_no_offer", "reply_postpone", "reply_callme", "reply_help", "update"):
+        assert m.AR[key]["needs_human_review"] is True and key in m.FR
+        assert m.AR[key]["text"] in m.review_markdown()
+
+
+# ---- the endpoints
+def test_api_refusal_stores_the_new_allocation_and_the_messages(client):
+    r = client.post("/api/messages/reply", json={"farm_id": "B", "text": "٢"})
+    assert r.status_code == 201 and "refusez" in r.json()["text_fr"]
+    cur = client.get("/api/allocation/current")
+    assert cur.status_code == 200
+    items = {i["farm_id"]: i for i in cur.json()["items"]}
+    assert items["B"]["m3"] == 0 and items["B"]["status"] == "capped" and items["C"]["status"] == "blocked"
+    from app.schemas import Allocation
+    Allocation.model_validate(cur.json())
+    thread = client.get("/api/messages", params={"farm_id": "B"}).json()
+    assert [x["direction"] for x in thread] == ["out", "in", "out"] and thread[1]["text"] == "٢"
+
+
+def test_api_repeated_refusal_is_idempotent(client):
+    client.post("/api/messages/reply", json={"farm_id": "B", "text": "2"})
+    first = client.get("/api/allocation/current").json()
+    again = client.post("/api/messages/reply", json={"farm_id": "B", "text": "2"})
+    assert again.status_code == 201 and "déjà enregistré" in again.json()["text_fr"]
+    assert client.get("/api/allocation/current").json() == first
+
+
+def test_api_unknown_text_is_a_help_reply(client):
+    r = client.post("/api/messages/reply", json={"farm_id": "B", "text": "peut-être"})
+    assert r.status_code == 201 and "Envoyez 1 pour accepter" in r.json()["text_fr"]
+    assert client.get("/api/allocation/current").json()["items"] == [i.model_dump() for i in m._state_for().base.items]

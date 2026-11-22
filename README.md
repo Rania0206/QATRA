@@ -62,7 +62,7 @@ _Last updated: 2026-11-22. Updated by whoever merges into `dev`; keep it current
 
 | Task | Owner | State |
 |---|---|---|
-| B-08a, B-08b | Dev B | Messages to the farmers: `engine/messages.py` (templates allocated, conditional, capped, blocked in French and Tunisian Arabic, saving line from Dev A's savings engine), `GET /api/messages`, `POST /api/messages/reply` (replies in memory), and the Messages tab: a phone mockup with chat bubbles, farm selector, FR / AR / both toggle, link to the water passport and quick replies 1 / 2. The Arabic waits for a Tunisian speaker (`docs/messages-templates.md`). Branch `feature/B-08-messages` |
+| B-08a, B-08b, B-08c | Dev B | Messages to the farmers: `engine/messages.py` (templates allocated, conditional, capped, blocked in French and Tunisian Arabic, saving line from Dev A's savings engine), `GET /api/messages`, the Messages tab (phone mockup, farm selector, FR / AR toggle, passport link, quick replies 1 / 2), and the answers: `POST /api/messages/reply` reads 1 accept, 2 refuse, 3 postpone, 4 call me; a refusal runs Dev A's allocator again without that farm and stores the new plan (`GET /api/allocation/current`). The Arabic waits for a Tunisian speaker (`docs/messages-templates.md`). Branch `feature/B-08-messages` |
 
 ### Not done yet
 
@@ -76,7 +76,7 @@ _Last updated: 2026-11-22. Updated by whoever merges into `dev`; keep it current
 | Map: the version with all farms coloured by decision (B-02b) | Not merged: `dev` deliberately shows only the farmer's own farm. The code is in git history (`b733d53`, branch `feature/B-02b-map-farms`) |
 | Map and Soil texts | English, French and Arabic. Passport page: English only |
 
-Tests: 246 backend tests (`pytest`), frontend build (`npm run build`) passes.
+Tests: 316 backend tests with the messages branch (`pytest`), frontend build (`npm run build`) passes.
 
 Formulas below are labelled **Implemented** (in code today), **Data pipeline** (computed by a script to produce a dataset), or **Planned** (design agreed, not coded yet).
 
@@ -486,7 +486,9 @@ saving line  "About {X} TND saved this season (estimate)"  only if Dev A's savin
 ```
 `{m3}` is the farm's volume in the Allocation; the delivery hours are the longest block of consecutive pump hours of the allocation's schedule (the pump may run at other hours too, which are not announced). `{X}` is `savings(plan, farm_id).season.farmer_net_tnd`, printed exactly as returned and never computed in the messages. **Every Arabic template has `needs_human_review: true`** until a Tunisian speaker approves it: the review sheet is `docs/messages-templates.md`.
 
-**The tab** (B-08b): a phone mockup (status bar, QATRA contact, chat bubbles: outgoing green on the right, the farmer's replies grey on the left, timestamps). A farm selector and a FR / AR / FR + AR toggle; the Arabic is shown right to left. Under a message with water, "View water passport" opens `/passport/{batch_id}`. Buttons "1 · Accept" and "2 · Refuse" call `POST /api/messages/reply`; they are not shown when no water is offered (blocked farm). Buttons 3 and 4 will come once their meaning is defined. A visible note says "Mockup: no real message is sent".
+**The tab** (B-08b): a phone mockup (status bar, QATRA contact, chat bubbles: outgoing green on the right, the farmer's replies grey on the left, timestamps). A farm selector and a FR / AR / FR + AR toggle; the Arabic is shown right to left. Under a message with water, "View water passport" opens `/passport/{batch_id}`. Buttons "1 · Accept" and "2 · Refuse" call `POST /api/messages/reply`; they are not shown when no water is offered (blocked farm). Buttons 3 and 4 will come once their meaning is defined. A visible note says "Mockup: no real message is sent". Next to the phone, a live table "Today's water plan" shows the plan and how it moved since it was first shown.
+
+**Answers** (B-08c): `1` accept, `2` refuse, `3` postpone, `4` call me; Arabic-Indic digits work; any other text gets a help reply and changes nothing. A refusal runs `plan()` (Dev A's allocator, in process) again for the same batch without that farm, stores the new allocation and writes to the farms that got more water ("+X m³ added"). Blocked farms never receive the freed volume; a second `2` does nothing more. Note: Dev A's allocator never gives a farm more than its own need or anti-rebound cap, so on the default batch (1,500 m³ for about 800 m³ of needs) a refusal frees water that nobody else can use and it stays in the basin; on a limited batch such as SSUD-20260827 (700 m³) it is shared between the other farms.
 
 ---
 

@@ -34,6 +34,22 @@ export const MS = {
   loading: { en: "Loading the messages…", fr: "Chargement des messages…", ar: "جارٍ تحميل الرسائل…" },
   sendError: { en: "The reply could not be sent.", fr: "La réponse n'a pas pu être envoyée.", ar: "تعذّر إرسال الجواب." },
   retry: { en: "Try again", fr: "Réessayer", ar: "حاول مجددًا" },
+  allocTitle: { en: "Today's water plan", fr: "Plan de l'eau du jour", ar: "خطة الماء لهذا اليوم" },
+  allocHint: {
+    en: "Live: it changes when a farm answers 2. The freed water goes to the other farms, never to a blocked one.",
+    fr: "En direct : il change quand une ferme répond 2. L'eau libérée va aux autres fermes, jamais à une ferme bloquée.",
+    ar: "مباشر: يتغيّر لمّا ضيعة تجاوب بـ 2. الماء اللي تحرّر يمشي للضيعات الأخرى، موش للضيعة الممنوعة.",
+  },
+  colFarm: { en: "Farm", fr: "Ferme", ar: "الضيعة" },
+  colStatus: { en: "Status", fr: "Statut", ar: "الحالة" },
+  colVolume: { en: "m³", fr: "m³", ar: "م³" },
+  colChange: { en: "Change", fr: "Écart", ar: "الفرق" },
+  total: { en: "Total", fr: "Total", ar: "المجموع" },
+  stAllocated: { en: "Allocated", fr: "Alloué", ar: "مخصّص" },
+  stConditional: { en: "With a condition", fr: "Sous condition", ar: "بشرط" },
+  stCapped: { en: "Limited", fr: "Limité", ar: "محدود" },
+  stBlocked: { en: "Blocked", fr: "Bloqué", ar: "ممنوع" },
+  stRefused: { en: "Refused", fr: "Refusé", ar: "مرفوض" },
   contact: { en: "QATRA water service", fr: "Service de l'eau QATRA", ar: "خدمة الماء قطرة" },
 } satisfies Record<string, Tr>;
 

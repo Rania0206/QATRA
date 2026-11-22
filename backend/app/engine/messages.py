@@ -14,8 +14,14 @@ allocated, conditional, capped, blocked. Rules:
 - ARABIC: written in Tunisian dialect. EVERY Arabic template carries needs_human_review = True until a Tunisian speaker
   has approved it. Run `python -m app.engine.messages` to print all the templates for that review.
 
-Replies from the farmers are kept in memory only (no database), until the application restarts.
+Replies (B-08c). A farmer answers with 1 (accept), 2 (refuse), 3 (postpone) or 4 (call me); Arabic-Indic digits work too.
+Anything else gets a help message and changes nothing. Accept marks the offer confirmed. Refuse gives the volume back: the
+allocator (engine/plan.plan, the live function, no HTTP round trip) is run again for the same batch without that farm, the
+new allocation is stored and the farms whose volume changed get a new message. A second 2 from the same farm does not
+re-plan again. Postpone and call-me are logged, nothing is re-planned. Everything is kept in memory only (no database), until
+the application restarts.
 """
+import logging
 import threading
 from datetime import date as _date
 from datetime import datetime, timedelta
@@ -23,9 +29,11 @@ from typing import Any, Optional
 
 from app.engine.farms import get_farm
 from app.engine.needs import forecast_dates
-from app.engine.plan import plan
+from app.engine.plan import AllocateOptions, plan
 from app.engine.savings import savings
-from app.schemas import Allocation, Farm, ScheduleSlot
+from app.schemas import Allocation, AllocationItem, Farm, ScheduleSlot
+
+log = logging.getLogger(__name__)
 
 DEFAULT_LANG = "fr+ar"
 SAVING_FIELD = "farmer_net_tnd"  # what the farmer keeps after the QATRA fee (Dev A's savings.season, for this farm)
@@ -92,6 +100,30 @@ FR: dict[str, str] = {
     "block_grazing": "le pâturage direct est interdit sur les terres arrosées d'eau traitée",
     "block_other": "la règle de sécurité ne le permet pas aujourd'hui",
 }
+
+# Placeholders: {farm} {m3} {when} {old} {delta}
+FR.update({
+    "reply_accept": "Merci, {farm}. Votre volume de {m3} m³ est confirmé.{when}",
+    "reply_refuse": "C'est noté, {farm} : vous refusez cette livraison. Nous proposons ce volume aux autres fermes. Merci de nous avoir prévenus.",
+    "reply_refuse_again": "Votre refus est déjà enregistré, {farm}. Il n'y a rien d'autre à faire.",
+    "reply_closed": "Vous avez refusé cette livraison, {farm}. Si vous changez d'avis, envoyez 4 et un conseiller vous rappelle.",
+    "reply_no_offer": "Aucune eau ne vous est proposée aujourd'hui, {farm}. Il n'y a rien à confirmer.",
+    "reply_postpone": "C'est noté, {farm} : votre demande de report est enregistrée. Un conseiller reviendra vers vous.",
+    "reply_callme": "C'est noté, {farm} : un conseiller vous rappelle.",
+    "reply_help": "Message non compris, {farm}. Envoyez 1 pour accepter, 2 pour refuser, 3 pour reporter, 4 pour être rappelé.",
+    "update": "Bonne nouvelle, {farm} : +{delta} m³ d'eau traitée ajoutés, soit {m3} m³ au total (avant : {old} m³).{when} Répondez 1 pour accepter, 2 pour refuser.",
+})
+AR.update({
+    "reply_accept": _ar("شكرا، {farm}. كمية {m3} م³ تأكّدت.{when}"),
+    "reply_refuse": _ar("مفهوم، {farm}: رفضت التسليم هذا. باش نعرضو الكمية على الضيعات الأخرى. يعطيك الصحة على الخبر."),
+    "reply_refuse_again": _ar("رفضك مسجّل من قبل، {farm}. ما عندك حاجة أخرى تعملها."),
+    "reply_closed": _ar("رفضت التسليم هذا، {farm}. كان بدّلت رأيك ابعث 4 وواحد من المستشارين يعيّطلك."),
+    "reply_no_offer": _ar("ما فماش ماء معروض عليك اليوم، {farm}. ما فما حتى حاجة باش تأكّدها."),
+    "reply_postpone": _ar("مفهوم، {farm}: طلب التأجيل تسجّل. واحد من المستشارين باش يرجعلك."),
+    "reply_callme": _ar("مفهوم، {farm}: واحد من المستشارين باش يعيّطلك."),
+    "reply_help": _ar("ما فهمتش الرسالة، {farm}. ابعث 1 باش تقبل، 2 باش ترفض، 3 باش تأجّل، 4 باش نعيّطولك."),
+    "update": _ar("خبر باهي، {farm}: زدناك {delta} م³ ماء معالج، ويولّي عندك {m3} م³ في الكل (قبل: {old} م³).{when} جاوب بـ 1 باش تقبل ولا بـ 2 باش ترفض."),
+})
 
 CROPS = {  # same names as the farmer screens (frontend features/compatibility/format.ts)
     "alfalfa": ("Luzerne", "الفصّة"), "olive": ("Olivier", "الزيتون"), "lettuce": ("Laitue", "الخسّ"),
@@ -211,7 +243,27 @@ def render(item: Any, farm: Optional[Farm], lang: str = DEFAULT_LANG, saving_tnd
     return out
 
 
-# ---------------------------------------------------------------- the messages of the latest allocation
+# ---------------------------------------------------------------- the allocation state of the day
+class _State:
+    """The allocation of one batch, as it stands after the farmers' answers."""
+
+    def __init__(self, base: Allocation, day: Optional[str], sent: str):
+        self.base = base  # the allocation of the first offers
+        self.alloc = base  # the current one: changes when a farm refuses
+        self.day, self.sent = day, sent
+        self.refused: set[str] = set()
+        self.confirmed: set[str] = set()
+        self.log: list[dict] = []  # postpone / call-me requests (no re-plan)
+        self.offers: list[dict] = []  # the first offer of each farm
+        self.extra: list[dict] = []  # system replies and "volume added" messages
+
+
+_lock = threading.RLock()
+_states: dict[str, _State] = {}
+_inbox: list[dict] = []  # what the farmers wrote
+_seq = {"reply": 0, "update": 0}
+
+
 def _season_saving(alloc: Allocation, farm_id: str, day: Optional[str]) -> Optional[float]:
     """The saving of this farm for the season, exactly as Dev A's savings engine returns it (None if it has none)."""
     report = savings(alloc, None, farm_id, day, "normal")
@@ -220,47 +272,171 @@ def _season_saving(alloc: Allocation, farm_id: str, day: Optional[str]) -> Optio
     return float(getattr(report.season, SAVING_FIELD))
 
 
-def outgoing_messages() -> list[dict]:
-    """One message per farm for the latest allocation (default batch and day of engine/plan.plan)."""
-    alloc = plan()
-    if alloc is None:
-        return []
-    dates = forecast_dates()
-    day = dates[0] if dates else None
-    sent = (f"{(_date.fromisoformat(day) - timedelta(days=1)).isoformat()}T{SEND_HOUR}" if day else f"1970-01-01T{SEND_HOUR}")
-    window = delivery_window(alloc.schedule)
+def _now() -> str:
+    return datetime.now().isoformat(timespec="seconds")
+
+
+def _state_for(batch_id: Optional[str] = None) -> Optional[_State]:
+    """The state of the batch (the latest usable batch by default), created from the first allocation on first use."""
+    with _lock:
+        if batch_id is not None and batch_id in _states:
+            return _states[batch_id]
+        if batch_id is None and _states:
+            return next(iter(_states.values()))
+        alloc = plan(batch_id)
+        if alloc is None:
+            return None
+        if alloc.batch_id in _states:
+            return _states[alloc.batch_id]
+        dates = forecast_dates()
+        day = dates[0] if dates else None
+        sent = f"{(_date.fromisoformat(day) - timedelta(days=1)).isoformat()}T{SEND_HOUR}" if day else f"1970-01-01T{SEND_HOUR}"
+        st = _State(alloc, day, sent)
+        window = delivery_window(alloc.schedule)
+        for item in alloc.items:
+            saving = _season_saving(alloc, item.farm_id, day) if item.status != "blocked" else None
+            st.offers.append({"id": f"OUT-{alloc.batch_id}-{item.farm_id}", "farm_id": item.farm_id, "direction": "out", "channel": "sms",
+                              "at": sent, "batch_id": alloc.batch_id, "status": item.status,
+                              **render(item, get_farm(item.farm_id), DEFAULT_LANG, saving, window)})
+        _states[alloc.batch_id] = st
+        return st
+
+
+def current_allocation(batch_id: Optional[str] = None) -> Optional[Allocation]:
+    """The allocation as it stands now: the first plan, or the re-plan after a refusal."""
+    st = _state_for(batch_id)
+    return st.alloc if st else None
+
+
+def outgoing_messages(batch_id: Optional[str] = None) -> list[dict]:
+    """The first offer of each farm for the latest allocation (default batch and day of engine/plan.plan)."""
+    st = _state_for(batch_id)
+    return [dict(m) for m in st.offers] if st else []
+
+
+# ---------------------------------------------------------------- the replies
+_DIGITS = str.maketrans("٠١٢٣٤٥٦٧٨٩۰۱۲۳۴۵۶۷۸۹", "01234567890123456789")  # Arabic-Indic and Persian digits
+
+
+def parse_choice(text: str) -> Optional[str]:
+    """"1" accept, "2" refuse, "3" postpone, "4" call-me. Whitespace, a final full stop or "!" and Arabic-Indic digits are fine;
+    anything else (including "12" or "yes") is None."""
+    t = (text or "").translate(_DIGITS).strip().rstrip(".!؟?").strip()
+    return t if t in ("1", "2", "3", "4") else None
+
+
+def _system(st: _State, farm_id: str, key: str, item: Optional[AllocationItem] = None, window: Optional[tuple[int, int]] = None) -> dict:
+    """A reply of the service to a farmer, in both languages (the Arabic waits for review)."""
+    farm_label = {"fr": f"Ferme {farm_id}", "ar": f"ضيعة {farm_id}"}
+    out: dict = {}
+    for code in ("fr", "ar"):
+        when = _template("when", code).format(a=_hhmm(window[0]), b=_hhmm(window[1])) if window else ""
+        out[f"text_{code}"] = _template(key, code).format(farm=farm_label[code], m3=fmt_number(item.m3, code) if item else "", when=when)
+    _seq["reply"] += 1
+    return {"id": f"OUT-REPLY-{_seq['reply']}", "farm_id": farm_id, "direction": "out", "channel": "sms", "at": _now(),
+            "batch_id": st.alloc.batch_id, "status": item.status if item else None, "needs_human_review": True, **out}
+
+
+def _item(alloc: Allocation, farm_id: str) -> Optional[AllocationItem]:
+    return next((i for i in alloc.items if i.farm_id == farm_id), None)
+
+
+def _replan_without(st: _State, farm_id: str) -> list[dict]:
+    """The farm refused: run the allocator again for the same batch without it, store the new allocation and return the
+    messages of the farms whose volume changed. Uses the live engine function, not an HTTP call."""
+    old = st.alloc
+    st.refused.add(farm_id)
+    eligible = [i.farm_id for i in old.items if i.status != "blocked" and i.farm_id not in st.refused]
+    new = plan(old.batch_id, None, "normal", farm_ids=eligible)
+    if new is None:  # cannot happen for a batch that already has a plan; keep the old plan and say so
+        st.refused.discard(farm_id)
+        raise RuntimeError(f"batch {old.batch_id} has no plan any more")
+    by_farm = {i.farm_id: i for i in new.items}
+    merged = []
+    for it in old.items:
+        if it.farm_id in by_farm:
+            merged.append(by_farm[it.farm_id])
+        elif it.farm_id in st.refused:  # refused: nothing delivered, with the reason
+            merged.append(AllocationItem(farm_id=it.farm_id, status="capped", m3=0.0, cap_reason="refused by the farmer: the volume goes to the other farms"))
+        else:  # blocked by the rules: unchanged, never receives the freed volume
+            merged.append(it)
+    st.alloc = Allocation(batch_id=new.batch_id, items=merged, schedule=new.schedule, energy_kwh=new.energy_kwh, solar_share=new.solar_share,
+                          fresh_replaced_m3=new.fresh_replaced_m3,
+                          warnings=[*new.warnings, f"Farm {farm_id} refused its volume: the plan was run again for the other farms."])
+    window = delivery_window(new.schedule)
     out = []
-    for item in alloc.items:
-        farm = get_farm(item.farm_id)
-        saving = _season_saving(alloc, item.farm_id, day) if item.status != "blocked" else None
-        out.append({"id": f"OUT-{alloc.batch_id}-{item.farm_id}", "farm_id": item.farm_id, "direction": "out", "channel": "sms",
-                    "at": sent, "batch_id": alloc.batch_id, "status": item.status, **render(item, farm, DEFAULT_LANG, saving, window)})
+    for it in merged:
+        before = _item(old, it.farm_id)
+        if it.farm_id in st.refused or it.status == "blocked" or before is None or it.m3 - before.m3 <= 0.05:
+            continue  # only the farms that got more water are told
+        saving = _season_saving(st.alloc, it.farm_id, st.day)
+        _seq["update"] += 1
+        text = {}
+        for code in ("fr", "ar"):
+            when = _template("when", code).format(a=_hhmm(window[0]), b=_hhmm(window[1])) if window else _template("when_unknown", code)
+            label = f"Ferme {it.farm_id}" if code == "fr" else f"ضيعة {it.farm_id}"
+            body = _template("update", code).format(farm=label, delta=fmt_number(round(it.m3 - before.m3, 1), code), m3=fmt_number(it.m3, code),
+                                                    old=fmt_number(before.m3, code), when=when)
+            if saving is not None and saving > 0:
+                body += _template("saving", code).format(tnd=fmt_number(saving, code))
+            text[f"text_{code}"] = body
+        out.append({"id": f"OUT-{st.alloc.batch_id}-{it.farm_id}-U{_seq['update']}", "farm_id": it.farm_id, "direction": "out", "channel": "sms",
+                    "at": _now(), "batch_id": st.alloc.batch_id, "status": it.status, "needs_human_review": True, **text})
     return out
 
 
-# ---------------------------------------------------------------- replies, in memory only
-_lock = threading.Lock()
-_replies: list[dict] = []
+def add_reply(farm_id: str, text: str, at: Optional[str] = None, batch_id: Optional[str] = None) -> dict:
+    """A farmer's answer. Stores it, acts on it (1 to 4) and returns the reply of the service (an outgoing message).
 
-
-def add_reply(farm_id: str, text: str, at: Optional[str] = None) -> dict:
+    Idempotent: a second 2 from a farm that already refused does not re-plan again."""
     with _lock:
-        msg = {"id": f"IN-{len(_replies) + 1}", "farm_id": farm_id, "direction": "in", "channel": "sms",
-               "at": at or datetime.now().isoformat(timespec="seconds"), "text": text}
-        _replies.append(msg)
-        return dict(msg)
+        inbound = {"id": f"IN-{len(_inbox) + 1}", "farm_id": farm_id, "direction": "in", "channel": "sms", "at": at or _now(), "text": text}
+        _inbox.append(inbound)
+        st = _state_for(batch_id)
+        if st is None:
+            raise LookupError("no batch to answer about")
+        choice, item, window = parse_choice(text), _item(st.alloc, farm_id), delivery_window(st.alloc.schedule)
+        has_offer = item is not None and item.status != "blocked" and (item.m3 > 0 or farm_id in st.refused)
+        if choice is None:
+            key = "reply_help"
+        elif choice in ("3", "4"):
+            log.info("farm %s asked to %s (batch %s): recorded, nothing re-planned", farm_id, "postpone" if choice == "3" else "be called", st.alloc.batch_id)
+            st.log.append({"farm_id": farm_id, "request": "postpone" if choice == "3" else "call-me", "at": inbound["at"]})
+            key = "reply_postpone" if choice == "3" else "reply_callme"
+        elif not has_offer:
+            key = "reply_no_offer"  # a blocked farm, or a farm with no water: nothing to confirm or refuse
+        elif choice == "1":
+            key = "reply_closed" if farm_id in st.refused else "reply_accept"
+            if key == "reply_accept":
+                st.confirmed.add(farm_id)
+        elif farm_id in st.refused:  # a second 2: already handled
+            key = "reply_refuse_again"
+        else:
+            st.confirmed.discard(farm_id)
+            st.extra.extend(_replan_without(st, farm_id))
+            key = "reply_refuse"
+        reply = _system(st, farm_id, key, item if key == "reply_accept" else None, window if key == "reply_accept" else None)
+        st.extra.append(reply)
+        return dict(reply)
 
 
 def reset_replies() -> None:
+    """Forget every answer, every re-plan and every state (tests, demo reset)."""
     with _lock:
-        _replies.clear()
+        _inbox.clear()
+        _states.clear()
+        _seq.update(reply=0, update=0)
 
 
-def list_messages(farm_id: Optional[str] = None) -> list[dict]:
-    """The messages of the latest allocation plus the replies received, oldest first. farm_id: only that farm."""
+reset_state = reset_replies
+
+
+def list_messages(farm_id: Optional[str] = None, batch_id: Optional[str] = None) -> list[dict]:
+    """The first offers, the farmers' answers, the replies of the service and the "volume added" messages, oldest first.
+    farm_id: only that farm."""
     with _lock:
-        replies = [dict(r) for r in _replies]
-    msgs = [*outgoing_messages(), *replies]
+        st = _state_for(batch_id)
+        msgs = [*(dict(m) for m in (st.offers if st else [])), *(dict(m) for m in _inbox), *(dict(m) for m in (st.extra if st else []))]
     if farm_id is not None:
         msgs = [m for m in msgs if m["farm_id"] == farm_id]
     return sorted(msgs, key=lambda m: (m["at"], m["id"]))
@@ -277,6 +453,10 @@ def review_markdown() -> str:
         "block_raw": "Why blocked: crop eaten raw", "block_list": "Why blocked: crop not on the allowed list",
         "block_analysis": "Why blocked: lab analysis", "block_quality": "Why blocked: quality limit",
         "block_grazing": "Why blocked: direct grazing", "block_other": "Why blocked: other",
+        "reply_accept": "Reply to 1: confirmed", "reply_refuse": "Reply to 2: refusal noted", "reply_refuse_again": "Reply to a second 2",
+        "reply_closed": "Reply to 1 after a refusal", "reply_no_offer": "Reply when no water is offered (blocked farm)",
+        "reply_postpone": "Reply to 3: postpone noted", "reply_callme": "Reply to 4: a counsellor calls", "reply_help": "Reply to anything else: how to answer",
+        "update": "Volume added after another farm refused",
     }
     lines = ["# Message templates: review by a Tunisian speaker", "",
              "Generated from `backend/app/engine/messages.py` (`cd backend && python -m app.engine.messages`).",
