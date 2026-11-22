@@ -8,12 +8,12 @@ import { S, STATUS, assumptionName, assumptionValue } from "./texts";
 export default function HowCalculated({ report, lang }: { report: SavingsReport; lang: Lang }) {
   const warnings = report.warnings.filter((w) => !w.startsWith("Season and year"));
   return (
-    <details className="group mx-auto mt-8 w-full max-w-2xl border border-line bg-white px-5 py-4 sm:px-6">
+    <details className="group mx-auto mt-6 w-full max-w-3xl border border-line bg-white px-5 py-4 sm:px-6">
       <summary className="cursor-pointer list-none text-xl font-medium sm:text-2xl">
         {S.howTitle[lang]} <span className="inline-block transition-transform group-open:rotate-90 rtl:rotate-180 rtl:group-open:rotate-90">›</span>
       </summary>
 
-      <ul className="mt-4 space-y-1 text-[16px] leading-snug">
+      <ul className="mt-4 space-y-1 text-[length:calc(16px*var(--fs))] leading-snug">
         <li>• {S.honest1[lang]}</li>
         <li>• {S.honest2[lang]}</li>
       </ul>
@@ -25,15 +25,15 @@ export default function HowCalculated({ report, lang }: { report: SavingsReport;
           return (
             <li key={a.name} className={`border-t border-line py-3 ${verify ? "bg-warn-soft px-3" : ""}`}>
               <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                <span className="text-[16px] font-medium">{assumptionName(a, lang)}</span>
-                <span dir="ltr" className="text-[16px]">
+                <span className="text-[length:calc(16px*var(--fs))] font-medium">{assumptionName(a, lang)}</span>
+                <span dir="ltr" className="text-[length:calc(16px*var(--fs))]">
                   {assumptionValue(a, lang)}
                 </span>
               </div>
               <div className="mt-1.5 flex flex-wrap items-center gap-2">
                 <Pill tone={st.tone}>{st.label[lang]}</Pill>
               </div>
-              <p className="mt-1.5 break-words text-[14px] text-ink-soft">
+              <p className="mt-1.5 break-words text-[length:calc(14px*var(--fs))] text-ink-soft">
                 {S.source[lang]}: {a.source}
               </p>
             </li>
@@ -41,9 +41,9 @@ export default function HowCalculated({ report, lang }: { report: SavingsReport;
         })}
       </ul>
 
-      {S.sourceNote[lang] && <p className="mt-2 text-[14px] text-ink-soft">{S.sourceNote[lang]}</p>}
+      {S.sourceNote[lang] && <p className="mt-2 text-[length:calc(14px*var(--fs))] text-ink-soft">{S.sourceNote[lang]}</p>}
       {warnings.length > 0 && (
-        <ul className="mt-3 space-y-1 border-t border-line pt-3 text-[15px]">
+        <ul className="mt-3 space-y-1 border-t border-line pt-3 text-[length:calc(15px*var(--fs))]">
           {warnings.map((w) => (
             <li key={w}>• {warningText(w, lang)}</li>
           ))}

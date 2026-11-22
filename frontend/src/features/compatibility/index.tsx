@@ -79,7 +79,7 @@ function FarmerCompatibility() {
 
   return (
     <>
-      <Band tone="olive" className="md:py-24">
+      <Band tone="olive">
         <Intro as="h1" size="xl" eyebrow={T.eyebrow[lang]} title={T.title[lang]}>
           <p>{T.lead[lang]}</p>
         </Intro>
@@ -93,7 +93,7 @@ function FarmerCompatibility() {
             ) : (
               <Skeleton className="h-12 w-72" />
             )}
-            <div className="flex items-center gap-3 text-[16px]">
+            <div className="flex items-center gap-3 text-[length:calc(16px*var(--fs))]">
               {T.quality[lang]}:
               {batchStatus ? (
                 <Pill tone={COMPLIANCE[batchStatus]?.tone ?? "neutral"}>{COMPLIANCE[batchStatus]?.label[lang] ?? batchStatus}</Pill>
@@ -107,7 +107,7 @@ function FarmerCompatibility() {
 
       {farmCode && (
         <Band tone="cream">
-          {USE_MOCKS && <p className="mb-6 text-center text-[15px]">{T.mockNote[lang]}</p>}
+          {USE_MOCKS && <p className="mb-6 text-center text-[length:calc(15px*var(--fs))]">{T.mockNote[lang]}</p>}
           {error ? (
             <ErrorBox
               error={error}

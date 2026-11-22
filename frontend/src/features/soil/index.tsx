@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { CartesianGrid, Legend, Line, LineChart, ReferenceDot, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { post } from "../../api/client";
 import type { SoilSimulateRequest, SoilSimulation } from "../../api/types";
@@ -10,6 +10,8 @@ import { useApi } from "../../hooks/useApi";
 import { FARM, useLang } from "../../i18n";
 import { fmtNumber } from "../batches/format";
 import { cropName } from "../compatibility/format";
+import { useOperatorView } from "../compatibility/OperatorView";
+import BreakIt from "./BreakIt";
 import { S, blockedText, soilVerdict, yearText, yieldText } from "./texts";
 
 // the API answers 404 "Unknown farm" for a code that does not exist
@@ -33,14 +35,20 @@ function SquareDot({ cx, cy, index }: { cx?: number; cy?: number; index?: number
 /** The soil simulation for one farm only: the farmer's own code, never a list of farms. */
 export default function SoilTab() {
   const { lang } = useLang();
-  const [farmCode, setFarmCode] = useState<string | null>(getFarmCode);
+  const [savedCode, setFarmCode] = useState<string | null>(getFarmCode);
+  // Operator view (#/soil?view=operator, demo only): the "break it" panel works on farm A when no code was typed.
+  const operator = useOperatorView();
+  const farmCode = savedCode ?? (operator ? "A" : null);
+  const [ece, setEce] = useState<number | null>(null); // judge override of the soil salinity
+  const onEce = useCallback((v: number | null) => setEce(v), []);
+  useEffect(() => setEce(null), [farmCode]);
 
   const sim = useApi<SoilSimulation | null>(
     () =>
       farmCode
-        ? post<SoilSimulation>("/api/soil/simulate", { farm_id: farmCode, batch_id: DEMO_BATCH } satisfies SoilSimulateRequest)
+        ? post<SoilSimulation>("/api/soil/simulate", { farm_id: farmCode, batch_id: DEMO_BATCH, ...(ece !== null ? { soil_ece: ece } : {}) } satisfies SoilSimulateRequest)
         : Promise.resolve(null),
-    [farmCode],
+    [farmCode, ece],
   );
 
   const data = sim.data ?? undefined;
@@ -103,15 +111,15 @@ export default function SoilTab() {
 
   return (
     <>
-      <Band tone="olive" className="md:py-24">
+      <Band tone="olive">
         <Intro as="h1" size="xl" eyebrow={S.eyebrow[lang]} title={S.title[lang]}>
           <p>{S.lead[lang]}</p>
         </Intro>
         {!farmCode && <FarmCodeForm onSubmit={choose} />}
-        {farmCode && data && (
-          <p className="fade-up mt-8 text-center text-[17px]">
+        {savedCode && data && (
+          <p className="fade-up mt-8 text-center text-[length:calc(17px*var(--fs))]">
             {S.yourCrop[lang]}: <strong className="font-medium">{crop}</strong> ·{" "}
-            <button type="button" onClick={change} className="link text-[15px]">
+            <button type="button" onClick={change} className="link text-[length:calc(15px*var(--fs))]">
               {FARM.change[lang]}
             </button>
           </p>
@@ -120,7 +128,10 @@ export default function SoilTab() {
 
       {farmCode && (
         <Band tone="cream" wide>
-          {sim.loading ? (
+          {operator && (
+            <BreakIt farmId={farmCode} soilEce={data?.soil_ece ?? undefined} farmEce={ece} onEce={onEce} lang={lang} />
+          )}
+          {sim.loading && (!sim.data || sim.data.farm_id !== farmCode) ? (
             <div className="space-y-4" aria-busy="true" aria-label={S.simulating[lang]}>
               <Skeleton className="h-16 w-full" />
               <Skeleton className="h-96 w-full" />
@@ -146,12 +157,12 @@ export default function SoilTab() {
           ) : data && blocked ? (
             <div role="alert" className="mx-auto max-w-2xl border border-bad px-6 py-8 text-center">
               <h2 className="text-3xl text-bad">{S.blockedTitle[lang]}</h2>
-              <p className="mt-3 text-[18px]">{blockedText(crop, lang)}</p>
+              <p className="mt-3 text-[length:calc(18px*var(--fs))]">{blockedText(crop, lang)}</p>
             </div>
           ) : data && verdict ? (
             <div className="space-y-10">
               <p
-                className={`mx-auto max-w-3xl border-s-4 ps-5 font-display text-[26px] leading-snug ${
+                className={`mx-auto max-w-3xl border-s-4 ps-5 font-display text-[length:calc(26px*var(--fs)*var(--fsn))] leading-snug ${
                   verdict.tone === "ok" ? "border-ok" : "border-warn"
                 }`}
               >
@@ -233,8 +244,8 @@ export default function SoilTab() {
                 </Stat>
               </div>
 
-              {data.warning && <p className="border-s-2 border-warn ps-4 text-[15px]">{data.warning}</p>}
-              <p className="text-center text-[15px] text-ink-soft">
+              {data.warning && <p className="border-s-2 border-warn ps-4 text-[length:calc(15px*var(--fs))]">{data.warning}</p>}
+              <p className="text-center text-[length:calc(15px*var(--fs))] text-ink-soft">
                 {S.basedOn[lang]} <span dir="ltr">{data.batch_id}</span> · {S.waterSalt[lang]} {data.ecw} dS/m. {S.estimate[lang]}
               </p>
             </div>
@@ -257,8 +268,8 @@ function Stat({ title, children }: { title: string; children: ReactNode }) {
 function Row({ name, colour, value }: { name: string; colour: string; value: string }) {
   return (
     <div>
-      <dt className={`text-[15px] font-medium ${colour}`}>{name}</dt>
-      <dd className="text-[19px]">{value}</dd>
+      <dt className={`text-[length:calc(15px*var(--fs))] font-medium ${colour}`}>{name}</dt>
+      <dd className="text-[length:calc(19px*var(--fs))]">{value}</dd>
     </div>
   );
 }

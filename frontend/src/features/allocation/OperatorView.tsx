@@ -23,7 +23,7 @@ export default function OperatorAllocation() {
   const plan = usePlan(params);
   const d = plan.data;
   const forecastDate = useRef<string | undefined>(undefined); // the backend's default day, remembered for the button label
-  if (d?.params.date === undefined && d?.savings?.date) forecastDate.current = d.savings.date;
+  if (d?.params.date === undefined && (d?.allocation.date ?? d?.savings?.date)) forecastDate.current = (d.allocation.date ?? d.savings?.date)!;
 
   const byFarm = useMemo(() => new Map((d?.allocation.items ?? []).map((i) => [i.farm_id, i])), [d]);
   const money = useMemo(() => new Map((d?.savings?.items ?? []).map((i) => [i.farm_id, i])), [d]);
@@ -42,27 +42,27 @@ export default function OperatorAllocation() {
 
   return (
     <>
-      <Band tone="olive" className="md:py-20">
-        <p role="note" className="mx-auto mb-8 max-w-2xl border-2 border-ink px-4 py-2 text-center text-[15px] font-medium">
+      <Band tone="olive">
+        <p role="note" className="mx-auto mb-8 max-w-2xl border-2 border-ink px-4 py-2 text-center text-[length:calc(15px*var(--fs))] font-medium">
           {A.opBanner[lang]}
         </p>
         <Intro as="h1" size="xl" eyebrow={A.eyebrow[lang]} title={A.title[lang]}>
           <p>{A.leadAll[lang]}</p>
-          {d?.savings?.date && (
-            <p className="mt-4 text-[16px]">
-              {A.planFor[lang]} {fmtDateL(d.savings.date, lang)}
+          {(d?.allocation.date ?? d?.savings?.date) && (
+            <p className="mt-4 text-[length:calc(16px*var(--fs))]">
+              {A.planFor[lang]} {fmtDateL((d?.allocation.date ?? d?.savings?.date)!, lang)}
             </p>
           )}
         </Intro>
         <div className="mt-8 text-center">
-          <a href="#/allocation?view=farmer" className="link text-[15px]">
+          <a href="#/allocation?view=farmer" className="link text-[length:calc(15px*var(--fs))]">
             {A.opBack[lang]}
           </a>
         </div>
       </Band>
 
       <Band tone="cream" wide>
-        {USE_MOCKS && <p className="mb-6 text-center text-[15px]">{A.mockNote[lang]}</p>}
+        {USE_MOCKS && <p className="mb-6 text-center text-[length:calc(15px*var(--fs))]">{A.mockNote[lang]}</p>}
         {plan.error ? (
           <ErrorBox error={plan.error} onRetry={plan.reload} />
         ) : !d ? (
@@ -79,7 +79,7 @@ export default function OperatorAllocation() {
             </div>
           </div>
         ) : empty ? (
-          <p className="text-center text-[17px]">{A.empty[lang]}</p>
+          <p className="text-center text-[length:calc(17px*var(--fs))]">{A.empty[lang]}</p>
         ) : (
           <>
             <Controls
@@ -95,11 +95,11 @@ export default function OperatorAllocation() {
             <dl className="mb-8 grid grid-cols-2 gap-3 lg:grid-cols-5">
               {tiles!.map((t) => (
                 <div key={t.label} className="min-w-0 border border-line bg-white px-4 py-3">
-                  <dt className="text-[15px] text-ink-soft">{t.label}</dt>
-                  <dd className="font-display text-[28px] font-medium leading-tight">
+                  <dt className="text-[length:calc(15px*var(--fs))] text-ink-soft">{t.label}</dt>
+                  <dd className="font-display text-[length:calc(28px*var(--fs)*var(--fsn))] font-medium leading-tight">
                     <span dir="ltr">{t.value}</span> <span className="text-[0.55em]">{t.unit}</span>
                   </dd>
-                  {"note" in t && <dd className="text-[14px] text-ink-soft">{t.note}</dd>}
+                  {"note" in t && <dd className="text-[length:calc(14px*var(--fs))] text-ink-soft">{t.note}</dd>}
                 </div>
               ))}
             </dl>

@@ -1,0 +1,15 @@
+{
+  "name": "QATRA قطرة",
+  "short_name": "QATRA",
+  "description": "Decision support for reusing treated wastewater in agriculture (demo with simulated data)",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fcf7f1",
+  "theme_color": "#1b1b1a",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

@@ -5,6 +5,8 @@ import ErrorBox from "../../components/ErrorBox";
 import { Band, Drawer, Intro, Pill, Skeleton } from "../../components/ui";
 import { useApi } from "../../hooks/useApi";
 import { useLang } from "../../i18n";
+import { useRole } from "../../hooks/useHashRole";
+import { OPERATOR_ROLES } from "../../roles";
 import { COMPLIANCE } from "../batches/format";
 import DayPicker from "./DayPicker";
 import FarmCard, { FarmCardSkeleton } from "./FarmCard";
@@ -16,17 +18,25 @@ import { DECISION, T, type RuleInfo } from "./format";
  * It is NOT access control: it is hidden by default and turns on with #/compatibility?view=operator
  * (or VITE_DEMO_OPERATOR=true in the build). A real version needs logins and a server-side role check.
  */
-const flag = () => new URLSearchParams(window.location.hash.split("?")[1] ?? "").get("view");
-const isOperator = () => (flag() === "operator" ? true : flag() === "farmer" ? false : import.meta.env.VITE_DEMO_OPERATOR === "true");
+const param = (name: string) => new URLSearchParams(window.location.hash.split("?")[1] ?? "").get(name);
+// ?view=operator / ?view=farmer win; else the demo role decides (ONAS and CRDA see all farms); else the build flag.
+const isOperator = (role: string | null) => {
+  const view = param("view");
+  if (view === "operator") return true;
+  if (view === "farmer") return false;
+  if (role && OPERATOR_ROLES.includes(role)) return true;
+  return import.meta.env.VITE_DEMO_OPERATOR === "true";
+};
 
 export function useOperatorView(): boolean {
-  const [on, setOn] = useState(isOperator);
+  const role = useRole();
+  const [, setTick] = useState(0); // re-render when the link changes (?view=)
   useEffect(() => {
-    const update = () => setOn(isOperator());
+    const update = () => setTick((n) => n + 1);
     window.addEventListener("hashchange", update);
     return () => window.removeEventListener("hashchange", update);
   }, []);
-  return on;
+  return isOperator(role);
 }
 
 const newestFirst = (a: Batch, b: Batch) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id);
@@ -66,17 +76,22 @@ export default function OperatorView() {
 
   return (
     <>
-      <Band tone="olive" className="md:py-20">
-        <p role="note" className="mx-auto mb-8 max-w-2xl border-2 border-ink px-4 py-2 text-center text-[15px] font-medium">
+      <Band tone="olive">
+        <p role="note" className="mx-auto mb-8 max-w-2xl border-2 border-ink px-4 py-2 text-center text-[length:calc(15px*var(--fs))] font-medium">
           {T.opBanner[lang]}
         </p>
         <Intro as="h1" size="xl" eyebrow={T.eyebrow[lang]} title={T.opTitle[lang]}>
           <p>{T.opLead[lang]}</p>
           {compat.data && !compat.loading && (
-            <p className="mt-6 font-display text-[26px] leading-snug">
+            <p className="mt-6 font-display text-[length:calc(26px*var(--fs)*var(--fsn))] leading-snug">
               {ORDER.map((d, i) => (
                 <span key={d}>
-                  {i > 0 && <span className="mx-2">·</span>}
+                  {i > 0 && (
+                    <>
+                      <span className="mx-2">·</span>
+                      <wbr /> {/* a place to break the line on a phone */}
+                    </>
+                  )}
                   <span className="whitespace-nowrap">
                     {counts[d]} {i === 0 ? `${T.farms[lang]} ` : ""}
                     {DECISION[d].legend[lang]}
@@ -89,7 +104,7 @@ export default function OperatorView() {
         <div className="fade-up mx-auto mt-10 flex max-w-2xl flex-col items-center gap-4">
           {base.data ? <DayPicker batches={base.data.batches} value={shownBatch} onChange={setBatchId} lang={lang} /> : <Skeleton className="h-12 w-72" />}
           {status && <Pill tone={COMPLIANCE[status]?.tone ?? "neutral"}>{COMPLIANCE[status]?.label[lang] ?? status}</Pill>}
-          <a href="#/compatibility?view=farmer" className="link text-[15px]">
+          <a href="#/compatibility?view=farmer" className="link text-[length:calc(15px*var(--fs))]">
             {T.opBack[lang]}
           </a>
         </div>

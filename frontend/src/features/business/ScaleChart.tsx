@@ -20,7 +20,7 @@ function Tip({ active, payload, lang }: { active?: boolean; payload?: { payload:
   const r = active ? payload?.[0]?.payload : undefined;
   if (!r) return null;
   return (
-    <div className="border border-ink bg-cream px-3 py-2 text-[15px] shadow-sm">
+    <div className="border border-ink bg-cream px-3 py-2 text-[length:calc(15px*var(--fs))] shadow-sm">
       <p className="font-medium">
         <span dir="ltr">{fmtN(r.ha, lang, r.ha < 100 ? 1 : 0)}</span> {Bz.ha[lang]}
       </p>
@@ -42,10 +42,10 @@ export default function ScaleChart({ rows, selectedId, lang }: { rows: Row[]; se
     <figure className="mt-10" aria-label={Bz.chartAria[lang]}>
       <figcaption className="text-center">
         <h2 className="text-2xl sm:text-3xl">{Bz.chartTitle[lang]}</h2>
-        <p className="mx-auto mt-2 max-w-2xl text-[15px] text-ink-soft">{Bz.chartLead[lang]}</p>
+        <p className="mx-auto mt-2 max-w-2xl text-[length:calc(15px*var(--fs))] text-ink-soft">{Bz.chartLead[lang]}</p>
       </figcaption>
 
-      <ul className="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[15px]">
+      <ul className="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[length:calc(15px*var(--fs))]">
         <li className="flex items-center gap-2">
           <span aria-hidden="true" className="inline-block h-3.5 w-3.5" style={{ background: FARMERS }} /> {Bz.farmersSave[lang]}
         </li>

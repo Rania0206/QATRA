@@ -28,7 +28,7 @@ Shared between backend (FastAPI, `backend/app`) and frontend (React, `frontend/s
 | `Passport` | `batch_id`, `plant`, `date`, `volume_m3`, `analysis_status`, `risk_colour?`, `allowed_crops`, `blocked_crops`, `destinations`: `[{farm_id, m3}]`, `issued_at`, `qr_payload`, `tag` (original fields) + B-12a: `quality_summary`: `[{param, label, value?, unit, limit_min?, limit_max?, ok?, legal_ref, tag}]`, `checks`: `[{type, required, present, analysed_on?, valid_until?, validity_days, is_valid?, legal_ref}]`, `timeline`: `[{at, event}]` |
 | `HeatwaveResult` | `scenario_id`, `label`, `date`, `dates`, `allocated_m3`, `allocation`: `Allocation`, `baseline`: `{energy_kwh, solar_share}`, `naive` and `qatra`: `{policy, hours_without_water, unserved_m3, delivered_m3, grid_kwh, solar_kwh, hourly: [{hour, outage, demand_m3, delivered_m3, unserved_m3, grid_kw, solar_kw, basin_m3?, source}] x24}`, `caveat`, `tag` |
 | `Message` | `id`, `farm_id`, `direction`: `"in" \| "out"`, `channel` (`"sms"`), `at`, `text?` (incoming), `text_fr?`, `text_ar?`, `needs_human_review` (default false; true on every outgoing message while the Arabic is not approved), `batch_id?` and `status?` (outgoing: the batch of the allocation, whose passport is `/passport/{batch_id}`, and the plan status of the farm) |
-| `Allocation` | `batch_id`, `items`: `[{farm_id, status, m3, cap_reason?}]`, `schedule`: `[{hour, pump_kw, source: "solar" \| "grid" \| "basin" \| "off", basin_m3}]`, `energy_kwh`, `solar_share` (0..1), `fresh_replaced_m3`, `warnings`: `string[]` |
+| `Allocation` | `batch_id`, `date?` (the day the plan is for, YYYY-MM-DD), `items`: `[{farm_id, status, m3, cap_reason?}]`, `schedule`: `[{hour, pump_kw, source: "solar" \| "grid" \| "basin" \| "off", basin_m3}]`, `energy_kwh`, `solar_share` (0..1), `fresh_replaced_m3`, `warnings`: `string[]` |
 
 Conventions used in mocks (free strings, agree before adding values):
 - `Batch.status` (A-03b, compliance with NT 106.03 / Decree 89-1047): `compliant`, `conditional`, `non_compliant` (a measured value above a limit), `analysis_invalid` (analysis expired or missing).
@@ -40,7 +40,7 @@ Conventions used in mocks (free strings, agree before adding values):
 | # | Method | Path | Owner | Request | Response | Mock |
 |---|---|---|---|---|---|---|
 | 1 | GET | `/api/health` | `main.py` | – | `{status, datasets: {name: rows}, errors}` | `health.json` |
-| 2 | GET | `/api/meta/sources` | `meta` | – | `{sources: [{id, title, file, status, source_name, source_url}], safe_figures: [{id, label, value, unit, definition, status, source_name, source_url, as_of}]}`: `sources` = the 64 catalogue rows (status is the catalogue's own text, `source_url` null when there is none); `safe_figures` = exactly the 5 figures of `data/README.md` section 4 (SF1 318 Mm³ produced, SF2 11.3 Mm³ in agriculture 2024, SF3 7,819 ha equipped, SF4 Water 2050 targets = PROJECTION, SF5 summer 2026 +2.9 °C), values read from `context_figures.csv`, each with its own definition. 22 % (all uses), 4 % (agriculture) and <10 % are not merged into them; the Court of Auditors 61 % (audit 2008-2011, published May 2014) is left out | `meta_sources.json` |
+| 2 | GET | `/api/meta/sources` | `meta` | – | `{sources: [{id, title, file, status, source_name, source_url, publication_date?, period_covered?, scope?, definition?}], safe_figures: [{id, label, value, unit, definition, status, source_name, source_url, as_of}]}`: `sources` = the 64 catalogue rows (status is the catalogue's own text, `source_url` null when there is none); A-17 adds the four optional fields (year, period, scope, what the dataset is) from the same catalogue row, `null` when its cell is empty; `safe_figures` = exactly the 5 figures of `data/README.md` section 4 (SF1 318 Mm³ produced, SF2 11.3 Mm³ in agriculture 2024, SF3 7,819 ha equipped, SF4 Water 2050 targets = PROJECTION, SF5 summer 2026 +2.9 °C), values read from `context_figures.csv`, each with its own definition. 22 % (all uses), 4 % (agriculture) and <10 % are not merged into them; the Court of Auditors 61 % (audit 2008-2011, published May 2014) is left out | `meta_sources.json` |
 | 3 | GET | `/api/map/layers` | `plants` | – | `{layers: [{id, label, tag, features: [{id, name, lat, lon, ...}]}]}` | `map_layers.json` |
 | 4 | GET | `/api/plants` | `plants` | – | `[{id, name, governorate, serves_perimeter, treatment_level, capacity_m3_d, lat, lon, tag}]` | `plants.json` |
 | 5 | GET | `/api/batches` | `batches` | – | `Batch[]` | `batches.json` |
@@ -50,16 +50,16 @@ Conventions used in mocks (free strings, agree before adding values):
 | 9 | GET | `/api/batches/{id}/risk` | **CUT FROM MVP** (QATRA Lite) · `risk` | – | `{batch_id, risk_colour, score, factors: [{param, value, limit, ok}], tag}` | `batches_id_risk.json` |
 | 10 | GET | `/api/farms` | `needs` | – | `Farm[]` | `farms.json` |
 | 11 | GET | `/api/farms/{id}/compatibility?batch_id=` | `rules` | query `batch_id?` (default: latest batch whose status is not `analysis_invalid`) | `{farm_id, batch_id, decision: "compatible" \| "conditional" \| "blocked", results: RuleResult[], tag}` | `farms_id_compatibility.json` |
-| 12 | GET | `/api/forecast/needs` | `needs` | query `start?` (any date; default: first forecast day), `days?` (default 7, max 14), `farm_id?` | `{start, days, items: [{date, farm_id, et0_mm, kc, need_m3, etc_mm?, effective_rain_mm?, need_mm?, weather_source?}], tag}`; need = max(0, ET0 x Kc - 0.7 x rain), need_m3 = need_mm x area_ha x 10; `weather_source` is `"forecast"` (the 7 forecast days) or `"historical"` (summer 2026 file for 1 Jun-31 Aug, else the 30-year average of that day of the year); `kc`/`etc_mm`/`need_mm`/`need_m3` are `null` for a crop without a Kc; 404 for an unknown `farm_id` or a `start` that is not a date | `forecast_needs.json` |
+| 12 | GET | `/api/forecast/needs` | `needs` | query `start?` (any date; default: first forecast day; `kc` is the Kc of the month from the crop calendar, 0 when the crop is not growing), `days?` (default 7, max 14), `farm_id?` | `{start, days, items: [{date, farm_id, et0_mm, kc, need_m3, etc_mm?, effective_rain_mm?, need_mm?, weather_source?}], tag}`; need = max(0, ET0 x Kc - 0.7 x rain), need_m3 = need_mm x area_ha x 10; `weather_source` is `"forecast"` (the 7 forecast days) or `"historical"` (summer 2026 file for 1 Jun-31 Aug, else the 30-year average of that day of the year); `kc`/`etc_mm`/`need_mm`/`need_m3` are `null` for a crop without a Kc; 404 for an unknown `farm_id` or a `start` that is not a date | `forecast_needs.json` |
 | 13 | GET | `/api/forecast/supply` | **CUT FROM MVP** (QATRA Lite) · `supply` | query `start?`, `days?` | `{start, days, items: [{date, plant_id, volume_m3, batch_id}], tag}` | `forecast_supply.json` |
-| 14 | POST | `/api/allocate` | `optimiser` | `{batch_id?, date?, scenario?: "normal" \| "outage", farm_ids?}` (all optional; default batch = latest not `analysis_invalid`, default date = first forecast day, default scenario `normal`; any other date uses historical weather and adds a warning; `outage` = no grid 13:00-17:00, the pump may still run there on the sun alone at a reduced flow) | `Allocation` (404 unknown batch, 422 bad scenario). `solar_share` = solar kWh / total kWh: within an hour the sun covers min(PV kW, pump kW) and the grid the rest | `post_allocate.json` |
-| 15 | POST | `/api/soil/simulate` | `soil` | `{farm_id, batch_id, days?, years?, soil_ece?, ecw?}` | `SoilSimulation` (see below) | `post_soil_simulate.json` |
+| 14 | POST | `/api/allocate` | `optimiser` | `{batch_id?, date?, scenario?: "normal" \| "outage", farm_ids?, soil_ece?: {farm_id: dS/m}, volume_m3?}` (all optional; `volume_m3` (> 0, at most 100000) = judge override of the batch volume, the stored batch is not changed; `soil_ece` = judge override of a farm's soil salinity, each 0 to 30, else 422: the rules, the soil cap and the plan see it, used by the "break it" panel of the Soil tab; default batch = latest not `analysis_invalid`, default date = first forecast day, default scenario `normal`; any other date uses historical weather and adds a warning; `outage` = no grid 13:00-17:00, the pump may still run there on the sun alone at a reduced flow) | `Allocation` (404 unknown batch or unknown farm in `farm_ids`, 422 bad scenario or bad date: only `YYYY-MM-DD`, a real day, year 2020-2035). `date` is the day of the plan. `solar_share` = solar kWh / total kWh: within an hour the sun covers min(PV kW, pump kW) and the grid the rest | `post_allocate.json` |
+| 15 | POST | `/api/soil/simulate` | `soil` | `{farm_id, batch_id, days?, years?, soil_ece?, ecw?}` | `SoilSimulation` (see below; `soil_ece` in the response is the salinity the simulation started from, the farm's or the override) | `post_soil_simulate.json` |
 | 16 | POST | `/api/scenarios/heatwave` | `heatwave` | `{scenario_id, date?}` (`scenario_id` `"heatwave_outage"` or `"default"`; `date` one of the response `dates`, default the scenario's day) | `HeatwaveResult` (see below); 404 unknown scenario, 422 bad body or a day without outage window | `post_scenarios_heatwave.json` |
-| 17 | GET | `/api/impact` | `impact` | – | `{period, tww_allocated_m3, fresh_water_saved_m3, energy_kwh, solar_share, co2_avoided_kg, farms_served, small_farms_served, batches_blocked, tag}` | `impact.json` |
+| 17 | GET | `/api/impact` | `impact` | – | `{period, tww_allocated_m3, fresh_water_saved_m3, energy_kwh, solar_share, co2_avoided_kg, farms_served, small_farms_served, batches_blocked, tag}`: totals over all 60 simulated batches, each run through the live allocator and pump schedule (no farm name); `co2_avoided_kg` is **null** until the grid emission factor is sourced (`energy_params.json`, TO_VERIFY); `batches_blocked` = batches that could not send any water; ESTIMATE | `impact.json` |
 | 18 | POST | `/api/explain` | **CUT FROM MVP** (QATRA Lite) · `llm` | `{kind: "allocation" \| "compatibility", payload: object, lang?}` | `{text_en, text_fr, tag}` | `post_explain.json` |
 | 19 | GET | `/api/messages` | `messages` | query `farm_id?` | `Message[]` (see below): one outgoing message per farm for the latest allocation, then the replies; 404 unknown farm | `messages.json` |
 | 20 | POST | `/api/messages/reply` | `messages` | `{farm_id, text}` (text 1 to 500 characters): `1` accept, `2` refuse, `3` postpone, `4` call me (Arabic-Indic digits too); anything else gets a help reply | `Message`: **the reply of the service** (outgoing, 201); the farmer's own message is stored too and listed by `GET /api/messages`. 404 unknown farm, 422 empty text | `post_messages_reply.json` |
-| 21 | POST | `/api/requests` | `requests` | `{farm_id, requested_m3, date}` (`requested_m3` > 0, `date` ISO): 404 unknown farm, 422 otherwise | `{id, farm_id, requested_m3, date, status: "pending", created_at}` (201, id `REQ-001`, `REQ-002`, ...) | `post_requests.json` |
+| 21 | POST | `/api/requests` | `requests` | `{farm_id, requested_m3, date}` (`requested_m3` > 0, `date` ISO): 404 unknown farm, 422 otherwise. **Formal request (A-18, optional, all together):** `applicant_name`, `applicant_capacity` (`owner` \| `tenant` \| `gda_representative`), `applicant_phone?`, `irrigation_method` (`drip` \| `surface` \| `sprinkler`), `date_end?` (not before `date`), `declarations` (**all five**: `not_eaten_raw`, `no_grazing`, `crop_on_list`, `water_limits`, `accuracy`), `signed_name`: a half-filled formal request is 422 | `{id, farm_id, requested_m3, date, status: "pending", created_at}` (201, id `REQ-001`, `REQ-002`, ...) plus, for a formal request, the fields above and `crop`, `area_ha` (the farm when the request was made); fields that were not given are absent from the answer | `post_requests.json` |
 | 22 | GET | `/api/requests` | `requests` | query `status?` (`pending`, `approved` or `rejected`, 422 otherwise) | request object[], oldest first; kept in memory (lost at restart) | `requests.json` |
 | 23 | PATCH | `/api/requests/{id}` | `requests` | `{status: "approved" \| "rejected"}` (422 for any other value) | request object; 404 unknown id, **409 if the request was already decided** (a decision is final) | `patch_requests_id.json` |
 | 24 | GET | `/api/anomalies` | **CUT FROM MVP** (QATRA Lite) · `anomalies` | – | `[{batch_id, date, type: "stale_analysis" \| "quality", detail, severity: "warning" \| "critical", tag}]` | `anomalies.json` |
@@ -100,9 +100,9 @@ The QATRA plan against the naive one, hour by hour (`engine/heatwave.py`). Exten
 - `qatra`: rule-based plan. Outside the outage: solar first, then the basin by gravity (keeping the reserve the outage needs), then the grid as backup. During the outage: the basin by gravity, **no grid**. Solar surplus fills the basin (never above its 3,000 m3). `hours_without_water` is 0 on 2026-08-26.
 - `allocation.schedule`: 24 slots. `pump_kw` is the electric power the pump draws (solar plus grid). `source`: `grid` if the grid runs, else `basin` if the farms are irrigated from the basin by gravity (the pump may still be filling it with solar), else `solar`, else `off`. `basin_m3` is the level at the end of the hour.
 - `baseline`: the naive run (`energy_kwh` = its grid energy, `solar_share` = 0). `allocation.energy_kwh` and `solar_share` are the QATRA plan.
-- **`allocation.items` come from Dev A's plan (A-05a)**: legal block (lettuce 0), soil cap for conditional farms (alfalfa), anti-rebound (never more than the farm already takes from its own well that day, season volume / 180), sharing. The forecast file does not cover this summer day, so `plan.allocate` receives a `need_fn` (an optional parameter added to `engine/plan.py`, default unchanged) that gives the need of the heatwave day with Dev A's own formula (`needs.water_need`) on the summer weather. Only the farms growing that month are planned, plus the blocked ones; the others are named in `warnings`. On 2026-08-26: 410.8 m3 allocated (the farms' full need is ~874 m3).
+- **`allocation.items` come from Dev A's plan (A-05a)**: legal block (lettuce 0), soil cap for every farm the soil model limits (alfalfa), anti-rebound (never more than the farm already takes from its own well that day, season volume / 180), sharing. The forecast file does not cover this summer day, so `plan.allocate` receives a `need_fn` (an optional parameter added to `engine/plan.py`, default unchanged) that gives the need of the heatwave day with Dev A's own formula (`needs.water_need`) on the summer weather. Only the farms growing that month are planned, plus the blocked ones; the others are named in `warnings`. "Growing" is `needs.is_growing(crop, day)` (the crop calendar `needs.CROP_CALENDAR`), the same rule `POST /api/allocate` uses, so the two screens plan the same farms and volumes for the same day and batch (410.8 m3 on 2026-08-26). On 2026-08-26: 410.8 m3 allocated (the farms' full need is ~874 m3).
 - Both `naive` and `qatra` irrigate that allocated volume, spread evenly over 06:00-20:00 (ESTIMATE), so the allocation and the two hourly series always agree.
-- **`allocation.schedule`, `energy_kwh`, `solar_share` are the heatwave model's**, not the A-05 pump schedule: that one calls solar only when the PV output reaches the full pump power (44.6 kW) and the array peaks at 44.3 kW on 2026-08-26 (7 % solar there), and it does not model farm draws. `warnings` says so. `energy_kwh` counts the solar surplus pumped into the basin for the next days (also in `warnings`).
+- **`allocation.schedule`, `energy_kwh`, `solar_share` are the heatwave model's**, not the A-05 pump schedule: that one fills the sunniest hours first, the grid tops up the rest of an hour, and it does not model farm draws (for the same 410.8 m3 on 2026-08-26 it gives a solar share of 0.97). `warnings` says so. `energy_kwh` counts the solar surplus pumped into the basin for the next days (also in `warnings`).
 - Basin evaporation is not applied (basin area not in the data). `caveat` = "NASA POWER ~0.5 deg grid: coastal extremes smoothed".
 
 ### Messages to the farmers (endpoints 19 and 20, B-08a)
@@ -113,7 +113,7 @@ The QATRA plan against the naive one, hour by hour (`engine/heatwave.py`). Exten
 - **Saving line** ("About X TND saved this season (estimate)"): added only when Dev A's savings engine returns a value for the farm: `savings(plan, farm_id).season.farmer_net_tnd` (what the farmer keeps after the QATRA fee; `SAVING_FIELD` in the engine), printed exactly as returned, never computed in the messages. Left out when the value is missing, 0 or negative, or the farm is blocked. The season figure is a PROJECTION, hence "estimate".
 - **Replies (B-08c)**: `1` accept (marks the offer confirmed), `2` refuse, `3` postpone, `4` call me. Digits are read after trimming (a final `.` or `!` is fine) and Arabic-Indic digits (٠-٩) count; `12`, `0`, `5` or any word is not an answer and gets a help reply that asks for 1 to 4, with no re-plan.
   - **Refusal**: the allocator (`engine/plan.plan`, the live function, no HTTP round trip) runs again for the same batch with `farm_ids` = the farms that were eligible (not blocked, not already refused) minus the refusing farm. The new plan is stored (`GET /api/allocation/current`): the refusing farm is `capped` with 0 m3 and `cap_reason` "refused by the farmer", blocked farms are unchanged and never receive the freed volume. Every farm that gets more water receives a new message ("+X m3 added, Y m3 in total, before: Z m3", `OUT-{batch}-{farm}-U{n}`). The difference is the new volume minus the old one, both from the Allocation.
-  - **What a refusal changes depends on the batch**: Dev A's allocator never gives a farm more than its own need or anti-rebound cap. When the batch is larger than the total of those caps (the default batch, 1,500 m3 for about 800 m3 of needs) nobody else can take more: the plan shows the volume as "not allocated: kept in the basin" and no farm gets a message. When the batch is the limit (for example SSUD-20260827, 700 m3) the freed volume is shared between the others.
+  - **What a refusal changes depends on the batch**: Dev A's allocator never gives a farm more than its own need or anti-rebound cap. When the batch is larger than the total of those caps (the default batch, 1,500 m3 for about 390 m3 of needs on 21 Nov, and every real batch, 700 m3 at the least) nobody else can take more: the plan shows the volume as "not sent today: stays at the plant" and no farm gets a message. When the batch is the limit (a batch below the total need of the day, for example a 250 m3 operator batch on 21 Nov) the freed volume is shared between the others.
   - **Idempotent**: a second `2` from the same farm gets "already recorded" and does not re-plan or write to the other farms. `1` after a refusal is answered "you refused". A blocked farm, or a farm with no water, has nothing to accept or refuse (no re-plan). `3` and `4` are logged and kept (`log`), nothing is re-planned.
   - Replies, the new plan and the messages are kept in memory only (lost at restart). The A-05d fallback (a proportional redistribution inside `cap_volume`) was not needed: Dev A's plan is merged.
   - The Allocation screen (Dev A) still calls the stateless `POST /api/allocate`; it can read `GET /api/allocation/current` to show the plan after the answers.
@@ -161,23 +161,24 @@ The QATRA plan against the naive one, hour by hour (`engine/heatwave.py`). Exten
 Decision: any failed `block` → `blocked`; else any failed `condition` → `conditional`; else `compatible`. `info` results always pass. Rule list: `GET /api/rules`, `docs/rules.md`.
 
 `POST /api/allocate` with `{"batch_id": "SSUD-20260708"}` → `Allocation` (real output, abbreviated: 3 of the 10 farms, only the pumping hours)
-(the batch is dated July, the weather forecast starts on 21 Nov: the date defaults to the first forecast day and does not have to match the batch;
-farm A is limited by soil salinity, farm C (lettuce) is blocked, 800 of the 1,200 m³ are allocated and the rest stays in the basin;
-the sun covers part of the pumping at midday, hence a solar share above 0)
+(the batch is dated July, the weather forecast starts on 21 Nov: the date defaults to the first forecast day, returned in `date`, and does not have to match the batch;
+farm A is limited by soil salinity, farm C (lettuce) is blocked, the cereals have just been sown so their need is small, 394 of the 1,200 m³ are allocated and the rest stays at the plant;
+the sun covers most of the pumping at midday, hence a solar share above 0)
 ```json
 {
   "batch_id": "SSUD-20260708",
+  "date": "2026-11-21",
   "items": [
     {
       "farm_id": "A",
       "status": "conditional",
-      "m3": 35.7,
+      "m3": 25.4,
       "cap_reason": "soil salinity: limited volume (alfalfa tolerates ECe 2 dS/m: only 49% of the water can be TWW (blend 2.31 dS/m, leaching fraction 0.30))"
     },
     {
       "farm_id": "B",
       "status": "allocated",
-      "m3": 75.0,
+      "m3": 72.4,
       "cap_reason": null
     },
     {
@@ -190,48 +191,30 @@ the sun covers part of the pumping at midday, hence a solar share above 0)
   ],
   "schedule": [
     {
-      "hour": 6,
-      "pump_kw": 44.6,
-      "source": "grid",
-      "basin_m3": 1350.0
-    },
-    {
-      "hour": 11,
-      "pump_kw": 44.6,
-      "source": "solar",
-      "basin_m3": 1500.0
-    },
-    {
       "hour": 12,
       "pump_kw": 44.6,
       "source": "solar",
-      "basin_m3": 1650.0
+      "basin_m3": 1350.0
     },
     {
       "hour": 13,
       "pump_kw": 44.6,
       "source": "solar",
-      "basin_m3": 1800.0
+      "basin_m3": 1500.0
     },
     {
       "hour": 14,
-      "pump_kw": 44.6,
+      "pump_kw": 27.9,
       "source": "solar",
-      "basin_m3": 1950.0
-    },
-    {
-      "hour": 18,
-      "pump_kw": 14.9,
-      "source": "grid",
-      "basin_m3": 2000.0
+      "basin_m3": 1593.7
     },
     "... 24 slots in all (hour 0..23); hours without pumping have source \"off\""
   ],
-  "energy_kwh": 238.0,
-  "solar_share": 0.41,
-  "fresh_replaced_m3": 800.0,
+  "energy_kwh": 117.1,
+  "solar_share": 0.64,
+  "fresh_replaced_m3": 393.7,
   "warnings": [
-    "400 m3 not allocated: kept in the basin."
+    "806.3 m3 not sent today: stays at the plant."
   ]
 }
 ```

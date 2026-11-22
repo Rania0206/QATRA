@@ -1,7 +1,9 @@
 import type { ComponentType } from "react";
 import Shell from "./components/Shell";
 import { useHashTab } from "./hooks/useHashTab";
-import { useHashRole } from "./hooks/useHashRole";
+import { RoleContext, useHashRole } from "./hooks/useHashRole";
+import { ROLES } from "./roles";
+import HomeTab from "./features/home"; // the landing page: first tab, opened by default and by the wordmark
 import MapTab from "./features/map";
 import BatchesTab from "./features/batches";
 import CompatibilityTab from "./features/compatibility";
@@ -13,24 +15,25 @@ import MessagesTab from "./features/messages";
 import RequestsTab from "./features/requests"; // B-11b: a new tab (Dev A: one line in TABS and one in TAB_LABEL)
 import ImpactTab from "./features/impact";
 import BusinessTab from "./features/business"; // the "territory" route now shows the Business screen (A-14c)
-import PublicTab from "./features/public";
+import SourcesTab from "./features/sources"; // the "public" route now shows Sources and assumptions (A-17); features/public is no longer routed
 import PassportPage from "./features/passport/PassportPage";
 
 // One entry per feature tab. Add a tab = one line here (by agreement).
 const TABS: { id: string; label: string; Component: ComponentType }[] = [
-  { id: "map", label: "Map", Component: MapTab },
+  // Order = the demo story (docs/demo-script.md): water, safety, plan, savings, scale-up, impact, sources; then the backup screens
+  { id: "home", label: "Home", Component: HomeTab },
   { id: "batches", label: "Batches", Component: BatchesTab },
   { id: "compatibility", label: "Compatibility", Component: CompatibilityTab },
   { id: "allocation", label: "Allocation", Component: AllocationTab },
   { id: "savings", label: "Savings", Component: SavingsTab },
-  { id: "soil", label: "Soil", Component: SoilTab },
+  { id: "territory", label: "Business", Component: BusinessTab },
+  { id: "impact", label: "Impact", Component: ImpactTab },
+  { id: "public", label: "Sources", Component: SourcesTab },
   { id: "heatwave", label: "Heatwave", Component: HeatwaveTab },
+  { id: "soil", label: "Soil", Component: SoilTab },
   { id: "messages", label: "Messages", Component: MessagesTab },
   { id: "requests", label: "Requests", Component: RequestsTab },
-  { id: "impact", label: "Impact", Component: ImpactTab },
-  // QATRA Lite: next-version tabs stay at the end
-  { id: "territory", label: "Business", Component: BusinessTab },
-  { id: "public", label: "Public", Component: PublicTab },
+  { id: "map", label: "Map", Component: MapTab },
 ];
 
 const TAB_IDS = TABS.map((t) => t.id);
@@ -49,8 +52,10 @@ function TabsApp() {
   const { Component } = TABS.find((t) => t.id === active)!;
 
   return (
-    <Shell tabs={TABS} active={active} onSelect={setActive} role={role} onRole={setRole}>
-      <Component />
+    <Shell tabs={TABS} active={active} onSelect={setActive} role={role} onRole={(r) => setRole(r, r ? ROLES.find((x) => x.id === r)?.home : undefined)}>
+      <RoleContext.Provider value={role}>
+        <Component />
+      </RoleContext.Provider>
     </Shell>
   );
 }

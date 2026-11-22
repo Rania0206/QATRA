@@ -30,8 +30,8 @@ export default function SplitBar({ parts, ariaLabel }: { parts: Part[]; ariaLabe
         {parts.map((p) => (
           <li key={p.key} className="flex items-start gap-3 border-b border-line py-3 last:border-0">
             <span aria-hidden="true" className="mt-1.5 inline-block h-3.5 w-3.5 shrink-0" style={p.swatch} />
-            <span className="min-w-0 flex-1 text-[17px] leading-snug">{p.label}</span>
-            <span dir="ltr" className={`shrink-0 text-[18px] font-medium ${p.tone ?? ""}`}>
+            <span className="min-w-0 flex-1 text-[length:calc(17px*var(--fs))] leading-snug">{p.label}</span>
+            <span dir="ltr" className={`shrink-0 text-[length:calc(18px*var(--fs))] font-medium ${p.tone ?? ""}`}>
               {p.amount}
             </span>
           </li>

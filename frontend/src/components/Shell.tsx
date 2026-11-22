@@ -1,5 +1,5 @@
-import { useEffect, useState, type ReactNode } from "react";
-import { PROJECT_NAME, USE_MOCKS } from "../config";
+import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
+import { PROJECT_NAME } from "../config";
 import { C, LANGS, LANG_NAME, TAB_LABEL, useLang } from "../i18n";
 import { ROLES, RT, type RoleId } from "../roles";
 
@@ -20,6 +20,9 @@ interface Props {
 /** English demo notice, kept for code that imports it; the strip itself is translated. */
 export const DEMO_BANNER = C.demo.en;
 
+/** Demo path on a phone when no role is chosen. */
+const PHONE_TABS = ["map", "soil", "heatwave", "messages"];
+
 function Burger({ open }: { open: boolean }) {
   return (
     <span aria-hidden="true" className="relative block h-5 w-9">
@@ -33,8 +36,8 @@ function Burger({ open }: { open: boolean }) {
 function Wordmark() {
   return (
     <span dir="ltr" className="flex items-baseline gap-2 font-display">
-      <span className="text-[28px] leading-none tracking-tight">{PROJECT_NAME}</span>
-      <span lang="ar" dir="rtl" className="text-[22px] leading-none">
+      <span className="text-[length:calc(28px*var(--fs)*var(--fsn))] leading-none tracking-tight">{PROJECT_NAME}</span>
+      <span lang="ar" dir="rtl" className="text-[length:calc(22px*var(--fs))] leading-none">
         قطرة
       </span>
     </span>
@@ -45,7 +48,7 @@ function Wordmark() {
 function LangSwitch() {
   const { lang, setLang } = useLang();
   return (
-    <div role="group" aria-label={C.language[lang]} className="flex items-center text-[15px]">
+    <div role="group" aria-label={C.language[lang]} className="flex items-center text-[length:calc(15px*var(--fs))]">
       {LANGS.map((l, i) => (
         <span key={l.id} className="flex items-center">
           {i > 0 && (
@@ -91,19 +94,20 @@ export default function Shell({ tabs, active, onSelect, role, onRole, children }
     return () => window.removeEventListener("keydown", onKey);
   }, [menuOpen]);
 
-  const relevant = ROLES.find((r) => r.id === role)?.tabs ?? null; // null: no role, nothing is dimmed
+  const roleInfo = ROLES.find((r) => r.id === role);
+  const relevant = roleInfo?.tabs ?? null; // null: no role, every tab is listed
+  const menuTabs = relevant ? tabs.filter((t) => relevant.includes(t.id)) : tabs;
+  const home = roleInfo ? tabs.find((t) => t.id === roleInfo.home) : undefined;
   const current = tabs.find((t) => t.id === active);
   const shortcut = tabs.find((t) => t.id === "compatibility");
+  // Phone bar: the four sections the role uses (or the demo path when there is no role) and a More button for the rest.
+  const barTabs = (relevant ? menuTabs : PHONE_TABS.map((id) => tabs.find((t) => t.id === id)).filter((t): t is ShellTab => !!t)).slice(0, 4);
 
   return (
-    <div className="flex min-h-screen flex-col bg-cream text-ink">
-      <div role="note" className="bg-ink px-4 py-2 text-center text-[15px] text-cream">
-        {C.demo[lang]}
-        {USE_MOCKS && <span className="ms-3 underline underline-offset-4">mock API</span>}
-      </div>
-
+    <div className="flex min-h-dvh flex-col bg-cream pb-[calc(4.25rem+env(safe-area-inset-bottom))] text-ink sm:pb-0">
       <header className="sticky top-0 z-[1000] border-b border-line bg-cream">
-        <div className="mx-auto grid h-20 max-w-7xl grid-cols-[1fr_auto_1fr] items-center px-5 sm:px-8">
+        {/* phones: menu + wordmark on the first line, role and language wrap onto a second one (no sideways scroll); from sm: the original 3-column row */}
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-4 gap-y-1 px-5 py-2 sm:grid sm:h-20 sm:grid-cols-[1fr_auto_1fr] sm:py-0 sm:px-8">
           <div className="flex items-center gap-5">
             <button
               type="button"
@@ -114,7 +118,7 @@ export default function Shell({ tabs, active, onSelect, role, onRole, children }
             >
               <Burger open={false} />
             </button>
-            {current && <span className="hidden text-[16px] md:inline">{label(current)}</span>}
+            {current && <span className="hidden text-[length:calc(16px*var(--fs))] md:inline">{label(current)}</span>}
           </div>
           <a
             href={`#/${tabs[0]?.id ?? ""}`}
@@ -126,14 +130,14 @@ export default function Shell({ tabs, active, onSelect, role, onRole, children }
           >
             <Wordmark />
           </a>
-          <div className="flex items-center justify-end gap-5">
-            <label className="flex items-center gap-2 text-[15px]">
+          <div className="flex w-full min-w-0 items-center justify-between gap-3 sm:w-auto sm:justify-end sm:gap-5">
+            <label className="flex min-w-0 items-center gap-2 text-[length:calc(15px*var(--fs))]">
               <span className="hidden text-ink-soft sm:inline">{RT.select[lang]}</span>
               <select
                 value={role ?? ""}
                 onChange={(e) => onRole((e.target.value || null) as RoleId | null)}
                 aria-label={RT.select[lang]}
-                className="rounded border border-line bg-cream px-2 py-1 text-[15px] focus:outline-none focus-visible:outline-2 focus-visible:outline-ink"
+                className="rounded border border-line bg-cream px-2 py-1 text-[length:calc(15px*var(--fs))] focus:outline-none focus-visible:outline-2 focus-visible:outline-ink"
               >
                 <option value="">{RT.none[lang]}</option>
                 {ROLES.map((r) => (
@@ -151,7 +155,7 @@ export default function Shell({ tabs, active, onSelect, role, onRole, children }
                   e.preventDefault();
                   go(shortcut.id);
                 }}
-                className="link hidden text-[16px] lg:inline"
+                className="link hidden text-[length:calc(16px*var(--fs))] lg:inline"
               >
                 {C.safe[lang]}
               </a>
@@ -160,10 +164,28 @@ export default function Shell({ tabs, active, onSelect, role, onRole, children }
         </div>
       </header>
 
-      {role && (
-        <p role="note" className="bg-sand px-4 py-2 text-center text-[15px] text-ink-soft">
-          <span className="text-ink">{ROLES.find((r) => r.id === role)?.label[lang]}</span> · {RT.notice[lang]}
-        </p>
+      {roleInfo && (
+        <div role="note" className="bg-sand px-4 py-2 text-center text-[length:calc(15px*var(--fs))] text-ink-soft">
+          <p>
+            <span className="font-medium text-ink">{roleInfo.label[lang]}</span> · {roleInfo.about[lang]}{" "}
+            <span className="whitespace-nowrap">({roleInfo.operator ? RT.allFarms[lang] : RT.oneFarm[lang]})</span>
+          </p>
+          {relevant && !relevant.includes(active) && home && (
+            <p className="mt-1 text-bad">
+              {RT.notMine[lang]}{" "}
+              <a
+                href={`#/${home.id}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  go(home.id);
+                }}
+                className="link"
+              >
+                {RT.goTo[lang]} {label(home)}
+              </a>
+            </p>
+          )}
+        </div>
       )}
 
       {menuOpen && (
@@ -181,12 +203,15 @@ export default function Shell({ tabs, active, onSelect, role, onRole, children }
             <span />
           </div>
           <nav aria-label="Main sections" className="flex flex-1 items-center justify-center px-5 py-10">
-            <ol className="grid w-full max-w-4xl gap-x-16 gap-y-4 md:grid-cols-2">
-              {tabs.map((t, i) => (
+            <ol
+              className="grid w-full max-w-4xl gap-x-16 gap-y-4 md:grid-flow-col md:grid-cols-2 md:[grid-template-rows:repeat(var(--rows),auto)]"
+              style={{ "--rows": Math.ceil(menuTabs.length / 2) } as CSSProperties}
+            >
+              {menuTabs.map((t, i) => (
                 <li
                   key={t.id}
-                  className={`fade-up transition-opacity ${relevant && !relevant.includes(t.id) ? "opacity-40" : ""}`}
-                  data-relevant={relevant ? String(relevant.includes(t.id)) : undefined}
+                  className="fade-up"
+                  data-relevant={relevant ? "true" : undefined}
                   style={{ animationDelay: `${i * 35}ms` }}
                 >
                   <a
@@ -198,7 +223,7 @@ export default function Shell({ tabs, active, onSelect, role, onRole, children }
                     aria-current={active === t.id ? "page" : undefined}
                     className="group flex items-baseline gap-4 border-b border-olive-deep pb-3"
                   >
-                    <span className="text-[15px]">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="w-7 shrink-0 text-[length:calc(15px*var(--fs))] tabular-nums">{String(i + 1).padStart(2, "0")}</span>
                     <span
                       className={`font-display text-4xl leading-tight transition-transform duration-300 group-hover:translate-x-2 rtl:group-hover:-translate-x-2 ${
                         active === t.id ? "underline decoration-2 underline-offset-8" : ""
@@ -206,14 +231,13 @@ export default function Shell({ tabs, active, onSelect, role, onRole, children }
                     >
                       {label(t)}
                     </span>
-                    {relevant?.includes(t.id) && <span className="ms-auto text-[15px]">● {RT.relevant[lang]}</span>}
                   </a>
                 </li>
               ))}
             </ol>
           </nav>
-          <p className="pb-2 text-center text-[15px]">{RT.notice[lang]}</p>
-          <p className="pb-8 text-center text-[15px]">{C.area[lang]}</p>
+          <p className="pb-2 text-center text-[length:calc(15px*var(--fs))]">{RT.notice[lang]}</p>
+          <p className="pb-8 text-center text-[length:calc(15px*var(--fs))]">{C.area[lang]}</p>
         </div>
       )}
 
@@ -223,6 +247,35 @@ export default function Shell({ tabs, active, onSelect, role, onRole, children }
         <p className="font-display text-4xl">{PROJECT_NAME}</p>
         <p className="mx-auto mt-4 max-w-sm">{C.tagline[lang]}</p>
       </footer>
+      <nav
+        aria-label={C.mainTabs[lang]}
+        className="fixed inset-x-0 bottom-0 z-[1100] flex border-t border-line bg-cream pb-[env(safe-area-inset-bottom)] sm:hidden"
+      >
+        {barTabs.map((t) => (
+          <a
+            key={t.id}
+            href={`#/${t.id}`}
+            onClick={(e) => {
+              e.preventDefault();
+              go(t.id);
+            }}
+            aria-current={active === t.id ? "page" : undefined}
+            className={`flex min-h-14 flex-1 flex-col items-center justify-center gap-1 px-1 text-[13px] leading-tight ${active === t.id ? "font-medium text-ink" : "text-ink-soft"}`}
+          >
+            <span aria-hidden="true" className={`h-1 w-6 rounded-full ${active === t.id ? "bg-ink" : "bg-transparent"}`} />
+            <span className="max-w-full truncate">{label(t)}</span>
+          </a>
+        ))}
+        <button
+          type="button"
+          onClick={() => setMenuOpen(true)}
+          aria-expanded={menuOpen}
+          className="flex min-h-14 flex-1 flex-col items-center justify-center gap-1 px-1 text-[13px] leading-tight text-ink-soft"
+        >
+          <span aria-hidden="true" className="h-1 w-6 rounded-full bg-transparent" />
+          <span>{C.more[lang]}</span>
+        </button>
+      </nav>
     </div>
   );
 }

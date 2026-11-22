@@ -11,7 +11,7 @@ export default function ErrorBox({ error, onRetry }: Props) {
   return (
     <div role="alert" className="border border-bad bg-cream px-6 py-8 text-center">
       <h3 className="text-3xl text-bad">{C.error[lang]}</h3>
-      <p dir="ltr" className="mx-auto mt-3 max-w-xl break-words text-[15px]">
+      <p dir="ltr" className="mx-auto mt-3 max-w-xl break-words text-[length:calc(15px*var(--fs))]">
         {message}
       </p>
       {onRetry && (

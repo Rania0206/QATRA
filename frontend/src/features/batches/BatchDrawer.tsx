@@ -33,7 +33,7 @@ function Validity({ a, batchDate, lang }: { a: Analysis; batchDate: string; lang
       <div className="h-[3px] w-full bg-line" role="progressbar" aria-valuemin={0} aria-valuemax={total} aria-valuenow={Math.max(0, left)} aria-label={text}>
         <div className={`h-full transition-[width] duration-500 ${color}`} style={{ width: `${pct}%` }} />
       </div>
-      <p className={`text-[15px] ${left < 0 ? "text-bad" : "text-ink-soft"}`}>{text}</p>
+      <p className={`text-[length:calc(15px*var(--fs))] ${left < 0 ? "text-bad" : "text-ink-soft"}`}>{text}</p>
     </div>
   );
 }
@@ -45,12 +45,12 @@ function AnalysisSection({ a, batchDate, lang }: { a: Analysis; batchDate: strin
         <h3 className="text-2xl">{ANALYSIS_LABEL[a.type][lang]}</h3>
         <AnalysisPill status={a.is_valid ? "valid" : "expired"} />
       </div>
-      <p className="text-[15px] text-ink-soft">
+      <p className="text-[length:calc(15px*var(--fs))] text-ink-soft">
         {B.sampled[lang]} {fmtDate(a.date, lang)} · {B.validUntil[lang]}{" "}
         <span className={a.is_valid ? "" : "text-bad"}>{fmtDate(a.valid_until, lang)}</span>
       </p>
       <Validity a={a} batchDate={batchDate} lang={lang} />
-      <table className="w-full text-[15px]">
+      <table className="w-full text-[length:calc(15px*var(--fs))]">
         <tbody>
           {Object.entries(a.values).map(([k, v]) => {
             const { label, unit } = paramInfo(k, lang);
@@ -77,7 +77,7 @@ function MissingSection({ type, lang }: { type: AnalysisType; lang: Lang }) {
         <h3 className="text-2xl">{ANALYSIS_LABEL[type][lang]}</h3>
         <AnalysisPill status="missing" />
       </div>
-      <p className="text-[15px] text-bad">{B.noAnalysis[lang]}</p>
+      <p className="text-[length:calc(15px*var(--fs))] text-bad">{B.noAnalysis[lang]}</p>
     </section>
   );
 }
@@ -97,7 +97,7 @@ export default function BatchDrawer({ batch, onClose }: Props) {
           <h2 dir="ltr" className="text-start text-3xl tabular-nums">
             {batch.id}
           </h2>
-          <p className="text-[17px]">
+          <p className="text-[length:calc(17px*var(--fs))]">
             {fmtNumber(batch.volume_m3)} m³ · {B.treatmentWord[lang]} {treatmentName(batch.treatment_level, lang)}
           </p>
           <CompliancePill status={batch.status} />
@@ -105,7 +105,7 @@ export default function BatchDrawer({ batch, onClose }: Props) {
       }
     >
       {batch.warnings?.map((w) => (
-        <p key={w} className="text-[15px] text-ink-soft">
+        <p key={w} className="text-[length:calc(15px*var(--fs))] text-ink-soft">
           {B.note[lang]}: {warningText(w, lang)}
         </p>
       ))}

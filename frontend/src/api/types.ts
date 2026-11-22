@@ -103,6 +103,7 @@ export interface ScheduleSlot {
 
 export interface Allocation {
   batch_id: string;
+  date?: string; // the day the plan is for, YYYY-MM-DD
   items: AllocationItem[];
   schedule: ScheduleSlot[];
   energy_kwh: number;
@@ -212,6 +213,7 @@ export interface SoilSimulation {
   crop: string;
   threshold_ece: number;
   ecw: number;
+  soil_ece?: number | null; // soil ECe the simulation started from (the farm's, or the judge's override)
   years: number[]; // [0..N]
   naive: SoilPolicy;
   qatra: SoilQatraPolicy;
@@ -415,6 +417,11 @@ export interface SourceRow {
   status: string; // the catalogue's own text, e.g. "REPORTED (incomplete)"
   source_name: string;
   source_url: string | null;
+  // A-17 (optional): the catalogue's year and description of the row
+  publication_date?: string | null;
+  period_covered?: string | null;
+  scope?: string | null;
+  definition?: string | null;
 }
 
 export interface SafeFigure {
@@ -441,7 +448,7 @@ export interface ImpactSummary {
   fresh_water_saved_m3: number;
   energy_kwh: number;
   solar_share: number; // 0..1
-  co2_avoided_kg: number;
+  co2_avoided_kg: number | null; // null until the grid emission factor is sourced
   farms_served: number;
   small_farms_served: number;
   batches_blocked: number;
@@ -506,17 +513,39 @@ export interface BusinessReport extends BusinessView {
 /** POST /api/requests, GET /api/requests?status=, PATCH /api/requests/{id} */
 export type RequestStatus = "pending" | "approved" | "rejected";
 
+export type Declaration = "not_eaten_raw" | "no_grazing" | "crop_on_list" | "water_limits" | "accuracy";
+export type ApplicantCapacity = "owner" | "tenant" | "gda_representative";
+export type IrrigationMethod = "drip" | "surface" | "sprinkler";
+
 export interface WaterRequest {
   id: string; // REQ-001, ...
   farm_id: string;
   requested_m3: number;
-  date: string; // ISO date the water is wanted
+  date: string; // ISO date the water is wanted (the first day)
   status: RequestStatus;
   created_at: string; // ISO datetime
+  // formal request (A-18, optional: absent on a minimal request)
+  crop?: string; // the farm's crop when the request was made
+  area_ha?: number;
+  applicant_name?: string;
+  applicant_capacity?: ApplicantCapacity;
+  applicant_phone?: string;
+  irrigation_method?: IrrigationMethod;
+  date_end?: string; // the last day
+  declarations?: Declaration[]; // all five when the request is formal
+  signed_name?: string;
 }
 
 export interface RequestIn {
   farm_id: string;
   requested_m3: number; // > 0
   date: string;
+  // formal request: all together or none (the server answers 422 for a half-filled one)
+  applicant_name?: string;
+  applicant_capacity?: ApplicantCapacity;
+  applicant_phone?: string;
+  irrigation_method?: IrrigationMethod;
+  date_end?: string;
+  declarations?: Declaration[];
+  signed_name?: string;
 }

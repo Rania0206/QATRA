@@ -28,16 +28,16 @@ export default function PassportQR({ batchId, size = 128 }: { batchId: string; s
           <QRCodeSVG value={url} size={size} level="M" />
         </div>
         <div className="min-w-0 space-y-1">
-          <p className="text-[15px] text-ink-soft">{T.hint[lang]}</p>
-          <a href={url} target="_blank" rel="noreferrer" className="link text-[15px]">
+          <p className="text-[length:calc(15px*var(--fs))] text-ink-soft">{T.hint[lang]}</p>
+          <a href={url} target="_blank" rel="noreferrer" className="link text-[length:calc(15px*var(--fs))]">
             {T.open[lang]}
           </a>
-          <p dir="ltr" className="break-all text-start text-[12px] text-ink-soft">
+          <p dir="ltr" className="break-all text-start text-[length:calc(12px*var(--fs))] text-ink-soft">
             {url}
           </p>
         </div>
       </div>
-      {isLocal(window.location.hostname) && <p className="text-[13px] leading-snug text-warn">{T.local[lang]}</p>}
+      {isLocal(window.location.hostname) && <p className="text-[length:calc(13px*var(--fs))] leading-snug text-warn">{T.local[lang]}</p>}
     </div>
   );
 }

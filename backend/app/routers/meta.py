@@ -61,5 +61,7 @@ def meta_sources():
     figures of the pitch with their own definition, status, source and date (values read from context_figures.csv)."""
     cat = get_store()["data_catalog"]
     sources = [SourceRow(id=r.id, title=r.title, file=r.file, status=r.status, source_name=r.source_name,
-                         source_url=_clean(r.source_url) or None) for r in cat.itertuples()]
+                         source_url=_clean(r.source_url) or None, publication_date=_clean(r.publication_date) or None,
+                         period_covered=_clean(r.period_covered) or None, scope=_clean(r.scope) or None,
+                         definition=_clean(r.definition) or None) for r in cat.itertuples()]
     return MetaSources(sources=sources, safe_figures=safe_figures())

@@ -60,6 +60,7 @@ export function fmtDateL(iso: string, lang: Lang): string {
 
 /** Section names, by tab id. Unknown ids fall back to the label given by App.tsx. */
 export const TAB_LABEL: Record<string, Tr> = {
+  home: { en: "Home", fr: "Accueil", ar: "الرئيسية" },
   map: { en: "Map", fr: "Carte", ar: "الخريطة" },
   batches: { en: "Batches", fr: "Lots d'eau", ar: "دفعات الماء" },
   compatibility: { en: "Compatibility", fr: "Compatibilité", ar: "الملاءمة" },
@@ -71,7 +72,7 @@ export const TAB_LABEL: Record<string, Tr> = {
   requests: { en: "Requests", fr: "Demandes", ar: "الطلبات" },
   impact: { en: "Impact", fr: "Impact", ar: "الأثر" },
   territory: { en: "Business", fr: "Modèle économique", ar: "النموذج الاقتصادي" },
-  public: { en: "Public", fr: "Public", ar: "العموم" },
+  public: { en: "Sources", fr: "Sources", ar: "المصادر" },
 };
 
 /** Farm-code form (farmer-facing screens). */
@@ -97,6 +98,8 @@ export const C = {
   safe: { en: "Is this water safe?", fr: "Cette eau est-elle sûre ?", ar: "هل هذا الماء آمن؟" },
   openMenu: { en: "Open menu", fr: "Ouvrir le menu", ar: "فتح القائمة" },
   closeMenu: { en: "Close menu", fr: "Fermer le menu", ar: "إغلاق القائمة" },
+  more: { en: "More", fr: "Plus", ar: "المزيد" },
+  mainTabs: { en: "Main sections", fr: "Sections principales", ar: "الأقسام الرئيسية" },
   language: { en: "Language", fr: "Langue", ar: "اللغة" },
   area: {
     en: "Sousse Sud plant → Zaouiet-Sousse irrigated area",

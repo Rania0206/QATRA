@@ -1,15 +1,15 @@
 {
   "period": "2026-07-01/2026-08-29",
-  "tww_allocated_m3": 80037.0,
-  "fresh_water_saved_m3": 80037.0,
-  "energy_kwh": 21400.0,
-  "solar_share": 0.68,
-  "co2_avoided_kg": 6100.0,
+  "tww_allocated_m3": 20125.1,
+  "fresh_water_saved_m3": 20125.1,
+  "energy_kwh": 5987.9,
+  "solar_share": 0.639,
+  "co2_avoided_kg": null,
   "farms_served": 9,
-  "small_farms_served": 5,
-  "batches_blocked": 3,
+  "small_farms_served": 4,
+  "batches_blocked": 9,
   "tag": {
     "status": "ESTIMATE",
-    "source": "SIMULATED batches x allocation heuristics"
+    "source": "SIMULATED batches x allocation (Dev A's allocator and pump schedule)"
   }
 }

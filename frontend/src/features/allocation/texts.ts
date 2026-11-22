@@ -44,7 +44,7 @@ export const A = {
   tnd: { en: "TND", fr: "TND", ar: "TND" },
   // summary strip (operator)
   sumShared: { en: "Water shared", fr: "Eau répartie", ar: "الماء الموزَّع" },
-  sumReplaced: { en: "Well water saved", fr: "Eau de puits économisée", ar: "ماء الآبار الموفَّر" },
+  sumReplaced: { en: "Fresh water saved", fr: "Eau douce économisée", ar: "الماء العذب الموفَّر" },
   sumSolar: { en: "Solar energy", fr: "Énergie solaire", ar: "الطاقة الشمسية" },
   sumEnergy: { en: "Pumping energy", fr: "Énergie de pompage", ar: "طاقة الضخ" },
   sumMoney: { en: "Farmers save", fr: "Gain des agriculteurs", ar: "وفر الفلاحين" },
@@ -173,12 +173,36 @@ export const farmSub = (farm: Farm, lang: Lang) => `${cropName(farm.crop, lang)}
 // ---- warnings from the server: translated when the text is known, otherwise shown as is
 const WARNINGS: { re: RegExp; to: (m: RegExpMatchArray, lang: Lang) => string }[] = [
   {
-    re: /^([\d.]+) m3 not allocated: kept in the basin\.$/,
+    re: /^([\d.]+) m3 not sent today: stays at the plant\.$/,
     to: (m, l) =>
       ({
-        en: `${fmtN(+m[1], l)} m³ not shared today: kept in the basin.`,
-        fr: `${fmtN(+m[1], l)} m³ non répartis aujourd'hui : gardés dans le bassin.`,
-        ar: `${fmtN(+m[1], l)} م³ لم تُوزَّع اليوم: بقيت في الحوض.`,
+        en: `${fmtN(+m[1], l)} m³ not sent today: stays at the plant.`,
+        fr: `${fmtN(+m[1], l)} m³ non envoyés aujourd'hui : restent à la station.`,
+        ar: `${fmtN(+m[1], l)} م³ لم تُرسَل اليوم: بقيت في المحطة.`,
+      })[l],
+  },
+  {
+    re: /^This batch cannot be reused \((analysis expired|analysis missing|not compliant)\): nothing is sent\.$/,
+    to: (m, l) => {
+      const why = {
+        "analysis expired": { en: "analysis expired", fr: "analyse périmée", ar: "التحليل منتهي الصلاحية" },
+        "analysis missing": { en: "analysis missing", fr: "analyse manquante", ar: "التحليل غير موجود" },
+        "not compliant": { en: "not compliant", fr: "non conforme", ar: "غير مطابقة" },
+      }[m[1] as "analysis expired" | "analysis missing" | "not compliant"][l];
+      return {
+        en: `This batch cannot be reused (${why}): nothing is sent.`,
+        fr: `Ce lot ne peut pas être réutilisé (${why}) : rien n'est envoyé.`,
+        ar: `لا يمكن إعادة استعمال هذه الدفعة (${why}): لا يُرسَل شيء.`,
+      }[l];
+    },
+  },
+  {
+    re: /^Farm ([A-Z0-9]+): its crop is not growing this month, so no water is needed\.$/,
+    to: (m, l) =>
+      ({
+        en: `Farm ${m[1]}: its crop is not growing this month, so no water is needed.`,
+        fr: `Ferme ${m[1]} : sa culture ne pousse pas ce mois-ci, donc pas besoin d'eau.`,
+        ar: `المزرعة ${m[1]}: محصولها لا ينمو هذا الشهر، لذلك لا حاجة إلى الماء.`,
       })[l],
   },
   {

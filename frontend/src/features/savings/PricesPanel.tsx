@@ -80,13 +80,13 @@ export default function PricesPanel({ defaults, current, overrides, onCommit, bu
   const edited = Object.keys(overrides).length > 0 || Object.keys(draft).length > 0;
 
   return (
-    <section aria-label={S.pricesTitle[lang]} className="mx-auto mt-10 w-full max-w-2xl border border-line bg-white px-5 py-5 sm:px-6">
+    <section aria-label={S.pricesTitle[lang]} className="mx-auto mt-6 w-full max-w-3xl border border-line bg-white px-5 py-5 sm:px-6">
       <div className="flex items-start justify-between gap-3">
         <div>
           <h2 className="text-2xl sm:text-3xl">{S.pricesTitle[lang]}</h2>
-          <p className="mt-1 text-[15px] text-ink-soft">{S.pricesLead[lang]}</p>
+          <p className="mt-1 text-[length:calc(15px*var(--fs))] text-ink-soft">{S.pricesLead[lang]}</p>
         </div>
-        <span role="status" aria-live="polite" className={`shrink-0 text-[14px] text-ink-soft transition-opacity duration-200 ${busy ? "opacity-100" : "opacity-0"}`}>
+        <span role="status" aria-live="polite" className={`shrink-0 text-[length:calc(14px*var(--fs))] text-ink-soft transition-opacity duration-200 ${busy ? "opacity-100" : "opacity-0"}`}>
           {busy ? S.updating[lang] : " "}
         </span>
       </div>
@@ -95,7 +95,7 @@ export default function PricesPanel({ defaults, current, overrides, onCommit, bu
         {FIELDS.map((f) => {
           const bad = draft[f.key] !== undefined && parse(draft[f.key], f) === null;
           return (
-            <label key={f.key} className="flex min-w-0 flex-col gap-1.5 text-[15px]">
+            <label key={f.key} className="flex min-w-0 flex-col gap-1.5 text-[length:calc(15px*var(--fs))]">
               <span>{S[f.label][lang]}</span>
               <span className="flex items-stretch">
                 <input
@@ -108,7 +108,7 @@ export default function PricesPanel({ defaults, current, overrides, onCommit, bu
                   value={shown(f)}
                   onChange={(e) => edit(f, e.target.value)}
                   aria-invalid={bad}
-                  className={`min-w-0 flex-1 border bg-cream px-3 py-2.5 text-[18px] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink ${
+                  className={`min-w-0 flex-1 border bg-cream px-3 py-2.5 text-[length:calc(18px*var(--fs))] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink ${
                     bad ? "border-bad" : "border-ink"
                   }`}
                 />
@@ -118,7 +118,7 @@ export default function PricesPanel({ defaults, current, overrides, onCommit, bu
                   </span>
                 )}
               </span>
-              {bad && <span className="text-[14px] text-bad">{S.invalid[lang]}</span>}
+              {bad && <span className="text-[length:calc(14px*var(--fs))] text-bad">{S.invalid[lang]}</span>}
             </label>
           );
         })}
@@ -128,7 +128,7 @@ export default function PricesPanel({ defaults, current, overrides, onCommit, bu
         <button type="button" onClick={reset} disabled={!edited} className="btn disabled:cursor-not-allowed disabled:opacity-40">
           {S.reset[lang]}
         </button>
-        {USE_MOCKS && <span className="text-[14px] text-ink-soft">{S.mockNote[lang]}</span>}
+        {USE_MOCKS && <span className="text-[length:calc(14px*var(--fs))] text-ink-soft">{S.mockNote[lang]}</span>}
       </div>
     </section>
   );

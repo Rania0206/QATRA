@@ -39,9 +39,9 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 
 function QualityTable({ rows }: { rows: PassportQuality[] }) {
   return (
-    <table className="w-full table-fixed text-[15px]">
+    <table className="w-full table-fixed text-[length:calc(15px*var(--fs))]">
       <thead>
-        <tr className="border-b border-ink text-start text-[13px] uppercase tracking-wide text-ink-soft">
+        <tr className="border-b border-ink text-start text-[length:calc(13px*var(--fs))] uppercase tracking-wide text-ink-soft">
           <th className="w-[34%] py-1.5 text-start font-normal">Parameter</th>
           <th className="w-[22%] py-1.5 text-end font-normal">Value</th>
           <th className="w-[20%] py-1.5 text-end font-normal">Limit</th>
@@ -55,9 +55,9 @@ function QualityTable({ rows }: { rows: PassportQuality[] }) {
             <tr key={q.param} className="border-b border-line align-top last:border-0">
               <td className="py-2 pe-2">
                 {q.label}
-                {q.unit && <span className="block text-[13px] text-ink-soft">{q.unit}</span>}
+                {q.unit && <span className="block text-[length:calc(13px*var(--fs))] text-ink-soft">{q.unit}</span>}
                 {notLaw && (
-                  <span className="mt-1 block text-[13px] leading-snug text-ink-soft">
+                  <span className="mt-1 block text-[length:calc(13px*var(--fs))] leading-snug text-ink-soft">
                     Not a legal limit: {q.legal_ref.replace("No limit in NT 106.03: ", "")}.
                     <span className="mt-1 block">
                       <TagChip tag={q.tag} showSource={false} />
@@ -88,7 +88,7 @@ function CheckRow({ c, lang }: { c: PassportCheck; lang: "en" | "fr" | "ar" }) {
     <li className="flex items-start justify-between gap-3 border-b border-line pb-2 last:border-0">
       <span>
         {CHECK_LABEL[c.type]}
-        <span className="block text-[13px] text-ink-soft">
+        <span className="block text-[length:calc(13px*var(--fs))] text-ink-soft">
           {c.present && c.valid_until ? `Valid until ${fmtDateL(c.valid_until, lang)}` : `Every ${c.validity_days} days`} · {c.legal_ref}
         </span>
       </span>
@@ -104,7 +104,7 @@ export default function PassportPage() {
 
   return (
     <div className="min-h-screen bg-cream text-ink">
-      <div role="note" className="bg-ink px-4 py-2 text-center text-[13px] leading-snug text-cream">
+      <div role="note" className="bg-ink px-4 py-2 text-center text-[length:calc(13px*var(--fs))] leading-snug text-cream">
         {C.demo[lang]}
       </div>
 
@@ -119,12 +119,12 @@ export default function PassportPage() {
               <h1 dir="ltr" className="break-all text-start text-4xl tabular-nums">
                 {p.batch_id}
               </h1>
-              <p className="text-[16px]">
+              <p className="text-[length:calc(16px*var(--fs))]">
                 {fmtDateL(p.date, lang)} · {fmt(p.volume_m3)} m³
               </p>
-              <p className="text-[16px] text-ink-soft">{p.plant}</p>
+              <p className="text-[length:calc(16px*var(--fs))] text-ink-soft">{p.plant}</p>
               {/TO_VERIFY/.test(p.plant) && (
-                <p className="text-[14px] leading-snug text-warn">The plant identity is not confirmed (TO_VERIFY): it is assumed from the nearest mapped plant.</p>
+                <p className="text-[length:calc(14px*var(--fs))] leading-snug text-warn">The plant identity is not confirmed (TO_VERIFY): it is assumed from the nearest mapped plant.</p>
               )}
             </header>
 
@@ -136,18 +136,18 @@ export default function PassportPage() {
                     <span aria-hidden="true">{s.icon}</span>
                     {s.word}
                   </p>
-                  <p className="text-[16px] leading-snug">{s.line}</p>
+                  <p className="text-[length:calc(16px*var(--fs))] leading-snug">{s.line}</p>
                 </div>
               );
             })()}
 
             <Section title="Water quality">
               <QualityTable rows={p.quality_summary} />
-              <p className="text-[13px] text-ink-soft">Limits: NT 106.03 (1989). Values come from the laboratory analysis of this batch.</p>
+              <p className="text-[length:calc(13px*var(--fs))] text-ink-soft">Limits: NT 106.03 (1989). Values come from the laboratory analysis of this batch.</p>
             </Section>
 
             <Section title="Analyses">
-              <ul className="space-y-2 text-[15px]">
+              <ul className="space-y-2 text-[length:calc(15px*var(--fs))]">
                 {p.checks.map((c) => (
                   <CheckRow key={c.type} c={c} lang={lang} />
                 ))}
@@ -159,7 +159,7 @@ export default function PassportPage() {
                 <div>
                   <h3 className="mb-1 text-xl text-ok">✓ Allowed</h3>
                   {p.allowed_crops.length ? (
-                    <ul className="flex flex-wrap gap-2 text-[15px]">
+                    <ul className="flex flex-wrap gap-2 text-[length:calc(15px*var(--fs))]">
                       {p.allowed_crops.map((c) => (
                         <li key={c} className="rounded-full bg-ok-soft px-3 py-0.5 text-ok">
                           {c}
@@ -167,12 +167,12 @@ export default function PassportPage() {
                       ))}
                     </ul>
                   ) : (
-                    <p className="text-[15px] text-ink-soft">None: this batch cannot be used.</p>
+                    <p className="text-[length:calc(15px*var(--fs))] text-ink-soft">None: this batch cannot be used.</p>
                   )}
                 </div>
                 <div>
                   <h3 className="mb-1 text-xl text-bad">✕ Not allowed</h3>
-                  <ul className="flex flex-wrap gap-2 text-[15px]">
+                  <ul className="flex flex-wrap gap-2 text-[length:calc(15px*var(--fs))]">
                     {p.blocked_crops.map((c) => (
                       <li key={c} className="rounded-full bg-bad-soft px-3 py-0.5 text-bad">
                         {c}
@@ -180,14 +180,14 @@ export default function PassportPage() {
                     ))}
                   </ul>
                 </div>
-                <p className="text-[13px] text-ink-soft">Source: order of 21 June 1994 and Decree 89-1047. "(to verify)" means allowed by interpretation, not named in the list.</p>
+                <p className="text-[length:calc(13px*var(--fs))] text-ink-soft">Source: order of 21 June 1994 and Decree 89-1047. "(to verify)" means allowed by interpretation, not named in the list.</p>
               </div>
             </Section>
 
             <Section title="Deliveries">
               {p.destinations.length ? (
                 <>
-                  <ul className="text-[16px]">
+                  <ul className="text-[length:calc(16px*var(--fs))]">
                     {p.destinations.map((d) => (
                       <li key={d.farm_id} className="flex justify-between border-b border-line py-1.5">
                         <span>Farm {d.farm_id}</span>
@@ -195,10 +195,10 @@ export default function PassportPage() {
                       </li>
                     ))}
                   </ul>
-                  <p className="text-end text-[15px] text-ink-soft">Total {fmt(p.destinations.reduce((s, d) => s + d.m3, 0))} m³</p>
+                  <p className="text-end text-[length:calc(15px*var(--fs))] text-ink-soft">Total {fmt(p.destinations.reduce((s, d) => s + d.m3, 0))} m³</p>
                 </>
               ) : (
-                <p className="text-[15px] text-ink-soft">No delivery planned yet for this batch.</p>
+                <p className="text-[length:calc(15px*var(--fs))] text-ink-soft">No delivery planned yet for this batch.</p>
               )}
             </Section>
 
@@ -207,14 +207,14 @@ export default function PassportPage() {
                 {p.timeline.map((e, i) => (
                   <li key={`${e.at}-${i}`} className="relative">
                     <span aria-hidden="true" className="absolute -start-[21px] top-2 h-2.5 w-2.5 rounded-full bg-ink" />
-                    <p className="text-[13px] text-ink-soft">{fmtDateL(e.at, lang)}</p>
-                    <p className="text-[15px] leading-snug">{e.event}</p>
+                    <p className="text-[length:calc(13px*var(--fs))] text-ink-soft">{fmtDateL(e.at, lang)}</p>
+                    <p className="text-[length:calc(15px*var(--fs))] leading-snug">{e.event}</p>
                   </li>
                 ))}
               </ol>
             </Section>
 
-            <footer className="space-y-2 border-t border-line pt-6 text-[13px] text-ink-soft">
+            <footer className="space-y-2 border-t border-line pt-6 text-[length:calc(13px*var(--fs))] text-ink-soft">
               <TagChip tag={p.tag} />
               <p dir="ltr">Issued {p.issued_at.replace("T", " ").slice(0, 16)} · {p.qr_payload}</p>
             </footer>

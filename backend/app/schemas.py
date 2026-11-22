@@ -1,8 +1,29 @@
 """Shared API objects. Mirror of frontend/src/api/types.ts. Change only by agreement."""
+import re
 from datetime import date as date_type
-from typing import Literal, Optional
+from typing import Annotated, Literal, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import AfterValidator, BaseModel, Field, model_validator
+
+PLAN_YEARS = (2020, 2035)  # the years a plan date may be in
+
+
+def check_plan_date(v: Optional[str]) -> Optional[str]:
+    """A plan date is YYYY-MM-DD, a real calendar day, in 2020-2035. Anything else is a 422 with a clear message."""
+    if v is None:
+        return v
+    try:
+        ok = re.fullmatch(r"\d{4}-\d{2}-\d{2}", v) and date_type.fromisoformat(v).isoformat() == v
+    except ValueError:
+        ok = False
+    if not ok:
+        raise ValueError(f"date must be a real day written YYYY-MM-DD, for example 2026-08-26 (got {v!r})")
+    if not PLAN_YEARS[0] <= int(v[:4]) <= PLAN_YEARS[1]:
+        raise ValueError(f"date must be between {PLAN_YEARS[0]} and {PLAN_YEARS[1]} (got {v!r})")
+    return v
+
+
+PlanDate = Annotated[Optional[str], AfterValidator(check_plan_date)]
 
 TagStatus = Literal["REPORTED", "ESTIMATE", "PROJECTION", "SIMULATED", "TO_VERIFY"]
 
@@ -79,6 +100,7 @@ class ScheduleSlot(BaseModel):
 
 class Allocation(BaseModel):
     batch_id: str
+    date: Optional[str] = None  # the day the plan is for, YYYY-MM-DD (additive field)
     items: list[AllocationItem]
     schedule: list[ScheduleSlot]
     energy_kwh: float
@@ -144,6 +166,7 @@ class SoilSimulation(BaseModel):
     crop: str
     threshold_ece: float
     ecw: float
+    soil_ece: Optional[float] = None  # soil ECe the simulation started from (the farm's, or the judge's override)
     years: list[int]  # [0..N]
     naive: SoilPolicy
     qatra: SoilQatraPolicy
@@ -314,6 +337,11 @@ class SourceRow(BaseModel):
     status: str
     source_name: str
     source_url: Optional[str] = None  # a few rows have no public URL
+    # A-17 (additive, all optional): what the row is, and its year, so the Sources page can say "where from, and when"
+    publication_date: Optional[str] = None  # the catalogue's text, e.g. "2025" or "2026-11-21 extract"
+    period_covered: Optional[str] = None  # e.g. "2021/22-2023/24" or "current"
+    scope: Optional[str] = None  # e.g. "Tunisia", "Sousse"
+    definition: Optional[str] = None  # what the dataset is
 
 
 class SafeFigure(BaseModel):
@@ -338,10 +366,36 @@ class MetaSources(BaseModel):
 RequestStatus = Literal["pending", "approved", "rejected"]
 
 
+# The five declarations of the formal request, each tied to the rules the engine applies (docs/rules.md).
+Declaration = Literal["not_eaten_raw", "no_grazing", "crop_on_list", "water_limits", "accuracy"]
+DECLARATIONS: tuple[str, ...] = ("not_eaten_raw", "no_grazing", "crop_on_list", "water_limits", "accuracy")
+
+
 class RequestIn(BaseModel):
     farm_id: str
     requested_m3: float = Field(gt=0, le=100000)
     date: date_type  # ISO date of the day the water is wanted
+    # Formal request (optional, all together or not at all): who asks, how, until when, what is declared and signed.
+    applicant_name: Optional[str] = Field(None, max_length=120)
+    applicant_capacity: Optional[Literal["owner", "tenant", "gda_representative"]] = None
+    applicant_phone: Optional[str] = Field(None, max_length=30)
+    irrigation_method: Optional[Literal["drip", "surface", "sprinkler"]] = None
+    date_end: Optional[date_type] = None  # last day the water is wanted
+    declarations: Optional[list[Declaration]] = None  # when present, ALL five are required
+    signed_name: Optional[str] = Field(None, max_length=120)
+
+    @model_validator(mode="after")
+    def _formal_request_is_complete(self):
+        if self.date_end is not None and self.date_end < self.date:
+            raise ValueError("date_end is before date")
+        if self.declarations is not None:  # a formal request: every declaration, a name and a signature
+            if set(self.declarations) != set(DECLARATIONS):
+                raise ValueError("all five declarations are required")
+            if not (self.applicant_name or "").strip() or not (self.signed_name or "").strip():
+                raise ValueError("applicant_name and signed_name are required")
+            if self.applicant_capacity is None or self.irrigation_method is None:
+                raise ValueError("applicant_capacity and irrigation_method are required")
+        return self
 
 
 class RequestPatch(BaseModel):
@@ -355,3 +409,13 @@ class WaterRequest(BaseModel):
     date: date_type
     status: RequestStatus
     created_at: str  # ISO datetime
+    # Formal request (absent from the answer when not given; the endpoints use response_model_exclude_none)
+    crop: Optional[str] = None  # the farm's crop when the request was made
+    area_ha: Optional[float] = None
+    applicant_name: Optional[str] = None
+    applicant_capacity: Optional[str] = None
+    applicant_phone: Optional[str] = None
+    irrigation_method: Optional[str] = None
+    date_end: Optional[date_type] = None
+    declarations: Optional[list[str]] = None
+    signed_name: Optional[str] = None

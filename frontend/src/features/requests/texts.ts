@@ -37,4 +37,33 @@ export const RQ = {
     fr: "Démo : les boutons Approuver et Refuser sont ouverts à tous. Il n'y a pas de connexion.",
     ar: "عرض تجريبي: أزرار الموافقة والرفض متاحة للجميع. لا يوجد تسجيل دخول.",
   },
+  noteBoth: {
+    en: "Demo with no role: Approve and Reject are hidden. Choose GDA to send requests, or ONAS or CRDA to decide them.",
+    fr: "Démo sans rôle : Approuver et Refuser sont masqués. Choisissez GDA pour envoyer des demandes, ou ONAS ou CRDA pour les décider.",
+    ar: "عرض بلا دور: زرّا الموافقة والرفض مخفيان. اختر GDA لإرسال الطلبات، أو ONAS أو CRDA للبتّ فيها.",
+  },
+  noteSend: {
+    en: "You send the requests. The operator (ONAS or CRDA) approves or rejects them, and you see the answer in the list.",
+    fr: "Vous envoyez les demandes. L'opérateur (ONAS ou CRDA) les approuve ou les refuse, et vous voyez la réponse dans la liste.",
+    ar: "أنت ترسل الطلبات. المشغّل (ONAS أو CRDA) يوافق عليها أو يرفضها، وترى الجواب في القائمة.",
+  },
+  noteDecide: {
+    en: "You decide the farms' requests. Click a request to see all its details, then Approve or Reject. A decision is final. Farms send their requests as GDA.",
+    fr: "Vous décidez des demandes des fermes. Cliquez sur une demande pour voir tout le détail, puis Approuver ou Refuser. Une décision est définitive. Les fermes envoient leurs demandes en tant que GDA.",
+    ar: "أنت تبتّ في طلبات المزارع. اضغط على طلب لرؤية كل تفاصيله، ثم وافق أو ارفض. القرار نهائي. ترسل المزارع طلباتها بصفة GDA.",
+  },
+  detailsTitle: { en: "Request details", fr: "Détail de la demande", ar: "تفاصيل الطلب" },
+  sentOn: { en: "Sent on", fr: "Envoyée le", ar: "أُرسل في" },
+  openRequest: { en: "Open request", fr: "Ouvrir la demande", ar: "فتح الطلب" },
+  finalNote: { en: "A decision is final.", fr: "Une décision est définitive.", ar: "القرار نهائي." },
+  shortRequest: {
+    en: "A short request: no applicant details or declarations were given.",
+    fr: "Une demande simple : ni coordonnées du demandeur ni déclarations.",
+    ar: "طلب مبسّط: دون بيانات مقدّم الطلب أو تصريحات.",
+  },
+  noteNone: {
+    en: "This role does not use water requests. GDA sends them; ONAS and CRDA decide them.",
+    fr: "Ce rôle n'utilise pas les demandes d'eau. GDA les envoie ; ONAS et CRDA les décident.",
+    ar: "هذا الدور لا يستعمل طلبات الماء. GDA يرسلها، وONAS وCRDA يبتّون فيها.",
+  },
 } satisfies Record<string, Tr>;

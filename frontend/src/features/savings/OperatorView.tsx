@@ -28,15 +28,15 @@ export default function OperatorSavings() {
 
   return (
     <>
-      <Band tone="olive" className="md:py-20">
-        <p role="note" className="mx-auto mb-8 max-w-2xl border-2 border-ink px-4 py-2 text-center text-[15px] font-medium">
+      <Band tone="olive">
+        <p role="note" className="mx-auto mb-8 max-w-2xl border-2 border-ink px-4 py-2 text-center text-[length:calc(15px*var(--fs))] font-medium">
           {S.opBanner[lang]}
         </p>
         <Intro as="h1" size="xl" eyebrow={S.eyebrow[lang]} title={S.title[lang]}>
           <p>{S.leadAll[lang]}</p>
         </Intro>
         <div className="mt-8 text-center">
-          <a href="#/savings?view=farmer" className="link text-[15px]">
+          <a href="#/savings?view=farmer" className="link text-[length:calc(15px*var(--fs))]">
             {S.opBack[lang]}
           </a>
         </div>
@@ -55,21 +55,21 @@ export default function OperatorSavings() {
             <Skeleton className="h-72 w-full" />
           </div>
         ) : r.items.length === 0 ? (
-          <p className="text-center text-[17px]">{S.empty[lang]}</p>
+          <p className="text-center text-[length:calc(17px*var(--fs))]">{S.empty[lang]}</p>
         ) : (
           <>
             <h2 className="sr-only">{S.total[lang]}</h2>
             <dl className="grid gap-3 sm:grid-cols-3">
               {totals!.map(({ label, t, tag, dec }) => (
                 <div key={label} className="min-w-0 border border-line bg-white px-5 py-4">
-                  <dt className="flex flex-wrap items-center justify-between gap-2 text-[16px] text-ink-soft">
+                  <dt className="flex flex-wrap items-center justify-between gap-2 text-[length:calc(16px*var(--fs))] text-ink-soft">
                     {S.total[lang]} · {label}
                     <Pill tone="neutral">{tag}</Pill>
                   </dt>
-                  <dd className="mt-1 font-display text-[40px] font-medium leading-tight">
+                  <dd className="mt-1 font-display text-[length:calc(40px*var(--fs)*var(--fsn))] font-medium leading-tight">
                     <span dir="ltr">{dec ? fmtMoney(t.farmer_net_tnd, lang) : money0(t.farmer_net_tnd)}</span> <span className="text-[0.45em]">{S.tnd[lang]}</span>
                   </dd>
-                  <dd className="text-[15px] text-ink-soft">
+                  <dd className="text-[length:calc(15px*var(--fs))] text-ink-soft">
                     {S.farmersKeep[lang]} · {S.qatraShare[lang]}: <span dir="ltr">{dec ? fmtMoney(t.qatra_fee_tnd, lang) : money0(t.qatra_fee_tnd)}</span> {S.tnd[lang]}
                   </dd>
                 </div>
@@ -78,9 +78,9 @@ export default function OperatorSavings() {
 
             <section className="mt-10" aria-label={S.tableTitle[lang]}>
               <h2 className="text-3xl sm:text-4xl">{S.tableTitle[lang]}</h2>
-              <p className="mt-1 text-[15px] text-ink-soft">{S.colUnit[lang]}</p>
+              <p className="mt-1 text-[length:calc(15px*var(--fs))] text-ink-soft">{S.colUnit[lang]}</p>
               <div className="mt-4 overflow-x-auto border border-line bg-white">
-                <table className="w-full table-fixed border-collapse text-[13px] sm:table-auto sm:text-[16px]">
+                <table className="w-full table-fixed border-collapse text-[length:calc(13px*var(--fs))] sm:table-auto sm:text-[length:calc(16px*var(--fs))]">
                   <thead>
                     <tr className="border-b border-ink text-start">
                       <th scope="col" className="w-[22%] px-1.5 py-2 text-start font-medium sm:px-3">{S.colFarm[lang]}</th>
@@ -99,7 +99,7 @@ export default function OperatorSavings() {
                         <tr key={i.farm_id} className="border-b border-line last:border-0">
                           <th scope="row" className="px-1.5 py-2 text-start font-normal sm:px-3">
                             <span className="block truncate">{farm ? farmTitle(farm) : i.farm_id}</span>
-                            {blocked && <span className="block text-[12px] text-bad sm:text-[14px]">{S.notAllowed[lang]}</span>}
+                            {blocked && <span className="block text-[length:calc(12px*var(--fs))] text-bad sm:text-[length:calc(14px*var(--fs))]">{S.notAllowed[lang]}</span>}
                           </th>
                           <td dir="ltr" className="px-1 py-2 text-end sm:px-3">{fmtN(i.m3, lang)}</td>
                           <td dir="ltr" className="px-1 py-2 text-end sm:px-3">{fmtMoney(i.electricity_saved_tnd, lang)}</td>
@@ -122,7 +122,7 @@ export default function OperatorSavings() {
                   </tfoot>
                 </table>
               </div>
-              <p className="mt-2 text-[14px] text-ink-soft">
+              <p className="mt-2 text-[length:calc(14px*var(--fs))] text-ink-soft">
                 {S.estimate[lang]} · {S.colNet[lang]} = {S.colElec[lang]} + {S.colFert[lang]} − {S.colWater[lang]}
               </p>
             </section>

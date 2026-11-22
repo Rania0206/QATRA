@@ -27,8 +27,8 @@ export function Band({
   id?: string;
 }) {
   return (
-    <section id={id} className={`${BAND[tone]} px-5 py-20 sm:px-8 md:py-24 ${className}`}>
-      <div className={`mx-auto ${wide ? "max-w-6xl" : "max-w-3xl"}`}>{children}</div>
+    <section id={id} className={`${BAND[tone]} px-5 sm:px-8 ${tone === "olive" ? "py-8 md:py-12" : "py-10 md:py-14"} ${className}`}>
+      <div className={`mx-auto ${wide ? "max-w-6xl" : "max-w-4xl"}`}>{children}</div>
     </section>
   );
 }
@@ -50,9 +50,9 @@ export function Intro({
   const H = as;
   return (
     <div className="fade-up mx-auto max-w-2xl text-center">
-      {eyebrow && <p className="eyebrow mb-5">{eyebrow}</p>}
-      <H className={size === "xl" ? "text-5xl sm:text-6xl md:text-7xl" : "text-4xl sm:text-5xl"}>{title}</H>
-      {children && <div className="mx-auto mt-7 max-w-xl text-[17px] leading-relaxed">{children}</div>}
+      {eyebrow && <p className="eyebrow mb-3">{eyebrow}</p>}
+      <H className={size === "xl" ? "text-4xl sm:text-5xl" : "text-3xl sm:text-4xl"}>{title}</H>
+      {children && <div className={`mx-auto max-w-xl text-[length:calc(17px*var(--fs))] leading-relaxed mt-3`}>{children}</div>}
     </div>
   );
 }
@@ -74,7 +74,7 @@ export function Pill({ tone, children, title, large = false }: { tone: Tone; chi
     <span
       title={title}
       className={`inline-flex items-center gap-2 whitespace-nowrap rounded-full font-medium ${PILL[tone]} ${
-        large ? "px-4 py-1.5 text-[16px]" : "px-3 py-1 text-[15px]"
+        large ? "px-4 py-1.5 text-[length:calc(16px*var(--fs))]" : "px-3 py-1 text-[length:calc(15px*var(--fs))]"
       }`}
     >
       <span aria-hidden="true" className={`h-2 w-2 rounded-full ${DOT[tone]}`} />
@@ -100,7 +100,7 @@ export function Segmented<T extends string>({
   label: string;
 }) {
   return (
-    <div role="group" aria-label={label} className="inline-flex border border-ink text-[16px]">
+    <div role="group" aria-label={label} className="inline-flex border border-ink text-[length:calc(16px*var(--fs))]">
       {options.map((o, i) => {
         const on = o.id === value;
         return (
@@ -156,7 +156,7 @@ export function Drawer({
       <button type="button" aria-label="Close" onClick={onClose} className="absolute inset-0 bg-ink/35" />
       <aside className="relative flex h-full w-full max-w-xl flex-col overflow-y-auto bg-cream">
         <header className="sticky top-0 z-10 border-b border-line bg-cream px-6 pb-5 pt-6">
-          <button type="button" onClick={onClose} className="link absolute end-6 top-6 text-[15px]">
+          <button type="button" onClick={onClose} className="link absolute end-6 top-6 text-[length:calc(15px*var(--fs))]">
             {closeLabel ?? C.close[lang]}
           </button>
           {header}
