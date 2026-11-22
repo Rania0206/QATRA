@@ -330,12 +330,34 @@ def _series(run: dict, policy: str) -> dict:
             "hourly": rows}
 
 
-def run_scenario(scenario_id: str) -> dict:
+def outage_dates() -> list[str]:
+    """The days with a grid outage window (sim_outage_windows): the days the heatwave scenario can be run on."""
+    return sorted({str(d)[:10] for d in get_store()[OUTAGES]["date"]})
+
+
+def scenario_on(sc: dict, day: Optional[str]) -> dict:
+    """The scenario moved to another outage day: that day's weather, outage and batch; the infrastructure stays
+    (PV array, basin starting level, pump). ValueError if the day has no outage window or no batch."""
+    if day is None or day == sc["date"]:
+        return sc
+    if day not in outage_dates():
+        raise ValueError(f"{day} has no grid outage window: choose one of {', '.join(outage_dates())}")
+    batch = get_batch(f"SSUD-{day.replace('-', '')}")
+    if batch is None:
+        raise ValueError(f"no batch of treated water on {day}")
+    return {**sc, "date": day, "batch_id": batch.id, "batch_volume_m3": batch.volume_m3,
+            "label": f"Hot day with a grid outage, {day}"}
+
+
+def run_scenario(scenario_id: str, date: Optional[str] = None) -> dict:
     """Contract shape of POST /api/scenarios/heatwave: the QATRA plan against the naive one, hour by hour.
 
-    Who gets how much comes from Dev A's plan (A-05a: legal block, soil cap, anti-rebound, sharing). Both policies then
-    irrigate that allocated volume, spread over 06:00-20:00, so the two runs and the allocation always agree."""
-    sc = get_scenario(scenario_id)  # KeyError for an unknown scenario
+    `date` (optional) moves the scenario to another outage day, see scenario_on. Who gets how much comes from Dev A's
+    plan (A-05a: legal block, soil cap, anti-rebound, sharing). Both policies then irrigate that allocated volume, spread
+    over 06:00-20:00, so the two runs and the allocation always agree. On a day whose batch cannot be used (analysis
+    expired or a limit exceeded) the plan allocates nothing: both policies then have no hour without water, and the
+    warnings say why."""
+    sc = scenario_on(get_scenario(scenario_id), date)  # KeyError for an unknown scenario, ValueError for a bad day
     day = sc["date"]
     plan, notes = scenario_plan(sc)
     demand = spread_demand(plan.total_allocated_m3)
@@ -361,7 +383,8 @@ def run_scenario(scenario_id: str) -> dict:
     allocation = {"batch_id": sc["batch_id"], "items": items, "schedule": schedule,
                   "energy_kwh": round(qatra["solar_kwh"] + qatra["grid_kwh"], 1), "solar_share": qatra["solar_share"],
                   "fresh_replaced_m3": qatra["delivered_m3"], "warnings": warnings}
-    return {"scenario_id": sc["id"], "label": sc["label"], "date": day, "allocation": allocation,
+    return {"scenario_id": sc["id"], "label": sc["label"], "date": day, "dates": outage_dates(),
+            "allocated_m3": round(plan.total_allocated_m3, 1), "allocation": allocation,
             "baseline": {"energy_kwh": naive["grid_kwh"], "solar_share": 0.0},
             "naive": _series(naive, "naive"), "qatra": _series(qatra, "qatra"), "caveat": CAVEAT,
             "tag": {"status": "SIMULATED", "source": "data/simulated/sim_scenarios.json"}}
