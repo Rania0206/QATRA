@@ -43,11 +43,11 @@ def test_real_rainy_day_needs_nothing():
 
 # ---------- from the data pack
 def test_daily_need_uses_the_forecast_and_crop_kc():
-    b = get_farm("B")  # olive, 4 ha, Kc mid 0.70
+    b = get_farm("B")  # olive, 4 ha; in November the calendar gives Kc 0.675 (half way from Kc_ini 0.65 to Kc_mid 0.70)
     n = daily_need(b, FIRST_DAY)
-    assert (n.et0_mm, n.kc) == (2.68, 0.7)
-    assert n.etc_mm == pytest.approx(2.68 * 0.7, abs=0.01)
-    assert n.need_m3 == pytest.approx(2.68 * 0.7 * 4 * 10, abs=0.1)
+    assert (n.et0_mm, n.kc) == (2.68, 0.68)
+    assert n.etc_mm == pytest.approx(2.68 * 0.675, abs=0.01)
+    assert n.need_m3 == pytest.approx(2.68 * 0.675 * 4 * 10, abs=0.1)
 
 
 def test_blocked_crop_still_gets_a_need():
@@ -56,7 +56,7 @@ def test_blocked_crop_still_gets_a_need():
 
 
 def test_kc_for():
-    assert kc_for("olive") == 0.70 and kc_for("alfalfa") == 0.95
+    assert kc_for("olive") == 0.70 and kc_for("alfalfa") == 0.95  # no date: mid-season
     assert kc_for("barley_fodder") == kc_for("barley") == 1.15  # alias: no row of its own in crop_kc
     assert kc_for("dragonfruit") is None
 
@@ -98,9 +98,12 @@ def test_10_farms_x_7_days():
     assert all(i.need_m3 is not None and i.need_m3 >= 0 for i in items)
 
 
-def test_per_hectare_olive_needs_less_than_alfalfa_and_lettuce():
-    per_ha = {f.id: daily_need(f, "2026-11-23").need_m3 / f.area_ha for f in list_farms()}
-    assert per_ha["B"] < per_ha["A"] < per_ha["F"]  # olive < alfalfa < wheat
+def test_per_hectare_olive_needs_less_than_alfalfa_and_wheat_is_idle_in_summer():
+    per_ha = {f.id: daily_need(f, "2026-08-26").need_m3 / f.area_ha for f in list_farms()}
+    assert per_ha["B"] < per_ha["A"]  # olive < alfalfa (mid-season Kc 0.70 and 0.95)
+    assert per_ha["F"] == 0  # wheat is not growing in August
+    nov = {f.id: daily_need(f, "2026-11-23").need_m3 / f.area_ha for f in list_farms()}
+    assert 0 < nov["F"] < nov["B"]  # in November the wheat has just been sown (Kc_ini 0.4): less than olive
 
 
 def test_days_and_farm_filters():

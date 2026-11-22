@@ -380,12 +380,12 @@ Simple readable rules, no optimiser (A-05a), applied per farm in this order. Sta
 
 ```
 1. legal status          m3_farm = 0                       if the farm is blocked (formula 2)
-2. need                  need = max(0, ET0·Kc − 0.7·rain) × area × 10      (formula 3)
-3. soil cap              conditional farms limited by cap_volume (formula 4)
+2. need                  need = max(0, ET0·Kc − 0.7·rain) × area × 10      (formula 3; Kc of the month from needs.CROP_CALENDAR, 0 when the crop is not growing)
+3. soil cap              every farm limited by cap_volume (formula 4; ratio 1.0 where salinity does not bind)
 4. anti-rebound          m3_farm ≤ fresh_m3_season / 180  never more than the farm already takes from its own well that day
 5. sharing               everybody gets the capped need if the total fits in the batch,
                          otherwise the batch is shared in proportion to the capped needs
-6. leftover              what is not allocated stays in the basin (a warning says how much)
+6. leftover              what is not sent today stays at the plant (a warning says how much)
 ```
 Volumes are rounded down to 0.1 m³. **Pump schedule** (A-05b, 24 hourly slots): hours are filled with solar first (an hour counts as solar when PV ≥ the pump power of 44.6 kW, 07:00-12:00 first), then the grid at 06:00 and 18:00-21:00, then the other daytime hours as a last resort; during an outage the grid is never used. Outputs: `energy_kwh`, `solar_share`, and
 
@@ -458,7 +458,7 @@ every hour:          5. solar surplus pumps water into the basin, never above 3,
 ```
 The plant supplies at most the batch of the day (1,800 m³). Basin evaporation (8 mm/d) is not applied: the basin area is not in the data. Result on 2026-08-26: **0 hours without water**, 0 kWh from the grid, 325 kWh of solar (share 100 %; it includes the surplus pumped into the basin for the next days), basin level between 583 and 1,339 m³, against 87 kWh of grid and 117.4 m³ unserved for the naive policy.
 
-`POST /api/scenarios/heatwave` returns both hourly series, the 24-slot schedule (`solar`, `grid`, `basin` or `off`) and the naive run as `baseline`. **`allocation.items` are Dev A's plan** (A-05a): lettuce blocked (0), alfalfa conditional (soil cap), anti-rebound caps on the others, only the farms growing in August (A, B, D, H, I). It receives the need of the heatwave day through the optional `need_fn` of `plan.allocate`, because the forecast file does not cover that summer day. The hourly schedule is the heatwave model's, not the A-05 pump schedule (whose solar rule needs PV ≥ 44.6 kW, above the 44.3 kW peak of that day).
+`POST /api/scenarios/heatwave` returns both hourly series, the 24-slot schedule (`solar`, `grid`, `basin` or `off`) and the naive run as `baseline`. **`allocation.items` are Dev A's plan** (A-05a): lettuce blocked (0), alfalfa conditional (soil cap), anti-rebound caps on the others, only the farms growing in August (A, B, D, H, I; the same `needs.is_growing` rule as `POST /api/allocate`). It receives the need of the heatwave day through the optional `need_fn` of `plan.allocate`, because the forecast file does not cover that summer day. The hourly schedule is the heatwave model's, not the A-05 pump schedule.
 
 ### 11. Savings per farm — *Implemented* (A-14a: `engine/savings.py`)
 

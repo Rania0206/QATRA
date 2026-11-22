@@ -55,13 +55,13 @@ export const Im = {
   mockNote: { en: "Mock mode: sample figures.", fr: "Mode maquette : chiffres d'exemple.", ar: "وضع تجريبي: أرقام نموذجية." },
 } satisfies Record<string, Tr>;
 
-/** Values under 100 keep one decimal, larger ones are rounded (97.2 TND, 14,585 TND). */
+/** Values under 100 keep one decimal, larger ones are rounded (45.4 TND, 6,815 TND). */
 export const nf = (v: number, lang: Lang) => fmtN(v, lang, Math.abs(v) < 100 ? 1 : 0);
 
-/** The headline, generated from the response: "In our pilot, 10 farms save about 97 TND a day and replace 788 m³ of well water." */
+/** The headline, generated from the response: "In our pilot, 10 farms save about 45 TND a day and replace 392.8 m³ of well water." */
 export const headline = (farms: number, tndPerDay: number, wellM3PerDay: number, lang: Lang) => {
   const t = fmtN(tndPerDay, lang, 0);
-  const w = fmtN(wellM3PerDay, lang, 1); // 799.3, the same as the Allocation and Savings screens
+  const w = fmtN(wellM3PerDay, lang, 1); // 392.8, the same as the Allocation and Savings screens
   return {
     en: `In our pilot, ${farms} farms save about ${t} TND a day and replace ${w} m³ of well water.`,
     fr: `Dans notre pilote, ${farms} fermes économisent environ ${t} TND par jour et remplacent ${w} m³ d'eau de puits.`,

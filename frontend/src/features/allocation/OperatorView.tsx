@@ -23,7 +23,7 @@ export default function OperatorAllocation() {
   const plan = usePlan(params);
   const d = plan.data;
   const forecastDate = useRef<string | undefined>(undefined); // the backend's default day, remembered for the button label
-  if (d?.params.date === undefined && d?.savings?.date) forecastDate.current = d.savings.date;
+  if (d?.params.date === undefined && (d?.allocation.date ?? d?.savings?.date)) forecastDate.current = (d.allocation.date ?? d.savings?.date)!;
 
   const byFarm = useMemo(() => new Map((d?.allocation.items ?? []).map((i) => [i.farm_id, i])), [d]);
   const money = useMemo(() => new Map((d?.savings?.items ?? []).map((i) => [i.farm_id, i])), [d]);
@@ -48,9 +48,9 @@ export default function OperatorAllocation() {
         </p>
         <Intro as="h1" size="xl" eyebrow={A.eyebrow[lang]} title={A.title[lang]}>
           <p>{A.leadAll[lang]}</p>
-          {d?.savings?.date && (
+          {(d?.allocation.date ?? d?.savings?.date) && (
             <p className="mt-4 text-[16px]">
-              {A.planFor[lang]} {fmtDateL(d.savings.date, lang)}
+              {A.planFor[lang]} {fmtDateL((d?.allocation.date ?? d?.savings?.date)!, lang)}
             </p>
           )}
         </Intro>

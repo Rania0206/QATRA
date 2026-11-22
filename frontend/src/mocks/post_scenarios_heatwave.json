@@ -19,6 +19,7 @@
   "allocated_m3": 410.8,
   "allocation": {
     "batch_id": "SSUD-20260826",
+    "date": "2026-08-26",
     "items": [
       {
         "farm_id": "A",
@@ -208,7 +209,7 @@
     "fresh_replaced_m3": 410.8,
     "warnings": [
       "Grid outage 13:00-17:00: irrigation moved to solar hours and the basin; the grid never runs in the outage.",
-      "1089.2 m3 not allocated: kept in the basin.",
+      "1089.2 m3 not sent today: stays at the plant.",
       "Farms E, F, G, J are not irrigated: their crop is not growing in this month.",
       "Solar surplus: 873 m3 pumped into the basin and kept for the next days (basin 600 to 1282 m3). The plan's energy counts it.",
       "Hourly schedule: the heatwave model of this scenario (pump power proportional to its flow, farms irrigated from the basin during the outage). The A-05 pump schedule is not used here: it calls solar only when the PV output reaches the full pump power (44.6 kW) and the array peaks at 44.3 kW this day, and it does not model farm draws.",
