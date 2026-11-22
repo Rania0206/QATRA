@@ -46,34 +46,29 @@ _Last updated: 2026-11-22. Updated by whoever merges into `dev`; keep it current
 | QATRA Lite | Dev A | Reduced scope for the demo: contract, Savings and Business shapes, next-version tabs |
 | A-15 | Dev A | English / French / Arabic (RTL), farmer sees only their own farm (farm code or SMS link), plain-language farm panel, day picker |
 | Restyle, farm code, operator view | Dev A | Map and Soil in the new look, farm-code fixes, hidden operator view with all farms (`#/compatibility?view=operator`) |
+| A-04 | Dev A | Daily water need per farm (`engine/needs.py`: ET0 × Kc − 0.7 × rain), `GET /api/forecast/needs` |
+| A-05 | Dev A | Rule-based allocation per farm (`engine/plan.py`: legal block, soil cap, anti-rebound, sharing) and the 24-hour pump schedule (`engine/schedule.py`), `POST /api/allocate` |
 | B-01 | Dev B | App shell (hash tabs, demo banner), shared `TagChip`, `Loading`, `ErrorBox`, `useApi` |
 | B-13 | Dev B | `GET /api/plants`, `GET /api/map/layers` (plants, irrigated area, OSM plants, farmland, farms, basin) |
 | B-02 | Dev B | Map tab: Esri satellite and OSM basemaps, plant popup with tag, farmland polygons |
 | B-03 | Dev B | Soil engine: `engine/soil.py`, `engine/soil_inputs.py` (`cap_volume`), `POST /api/soil/simulate` (naive vs managed leaching over 30 years) |
 | B-04 | Dev B | Soil tab: chart, year slider with Play, summary cards, blocked-by-law state |
+| B-05 | Dev B | Heatwave and grid outage: `engine/heatwave.py` (naive policy: 4 hours without water on 2026-08-26; QATRA policy on solar and the basin: 0) and `POST /api/scenarios/heatwave`. Volumes come from Dev A's plan (A-05) through an optional `need_fn` added to `plan.allocate` |
 | B-12 | Dev B | `GET /api/batches/{id}/passport` (quality summary, analysis checks, crops, timeline), passport page `/passport/{id}` for phones, reusable `<PassportQR>`, LAN scripts |
-
-### In progress (on a branch, not merged yet)
-
-| Task | Owner | State |
-|---|---|---|
-| B-05a, B-05b | Dev B | Heatwave: `engine/heatwave.py` (naive policy: 4 hours without water on 2026-08-26; QATRA policy on solar and the basin: 0) and `POST /api/scenarios/heatwave`. Volumes come from Dev A's plan (A-05); `engine/plan.py` got an optional `need_fn`. Branch `feature/B-05-heatwave-engine` |
-| README | Dev B | Progress table and the soil, rules and passport formulas (branch `docs/readme-progress`) |
 
 ### Not done yet
 
 | Area | State |
 |---|---|
-| Needs forecast, supply, optimiser (allocation and pumping schedule) | Router stubs. The formulas marked *Planned* below describe the intended model |
-| Heatwave tab (hourly chart naive vs QATRA) | Next. The API exists on the branch, the tab is still a placeholder |
+| Heatwave tab (hourly chart naive vs QATRA) and Allocation tab | Next. Both APIs exist (`POST /api/scenarios/heatwave`, `POST /api/allocate`), the tabs are still placeholders |
 | A-05 solar threshold | Open point for Dev A: the pump schedule calls solar only if PV ≥ the full pump power (44.6 kW); the 60 kWp array peaks at 44.3 kW on the heatwave day, so it plans 7 % solar there (`SOLAR_MIN_FRACTION`). The heatwave model uses a pump power proportional to its flow |
-| Risk score (A-08), anomalies, impact, messages, requests, territory, LLM explain | Router stubs. The Impact tab only shows a small example |
+| Supply forecast (cut from the MVP), risk score (A-08), anomalies, impact, messages, requests, territory, LLM explain | Router stubs. The Impact tab only shows a small example |
 | Allocation, Savings, Heatwave, Messages, Public, Territory tabs | Placeholders |
-| Passport `destinations` | Empty until the allocation exists |
+| Passport `destinations` | Still empty: it can now be filled from `POST /api/allocate` (A-05) |
 | Map: the version with all farms coloured by decision (B-02b) | Not merged: `dev` deliberately shows only the farmer's own farm. The code is in git history (`b733d53`, branch `feature/B-02b-map-farms`) |
 | Map and Soil texts | English, French and Arabic. Passport page: English only |
 
-Tests: 216 backend tests on `dev` (219 with the heatwave branch), frontend build (`npm run build`) passes.
+Tests: 219 backend tests (`pytest`), frontend build (`npm run build`) passes.
 
 Formulas below are labelled **Implemented** (in code today), **Data pipeline** (computed by a script to produce a dataset), or **Planned** (design agreed, not coded yet).
 
@@ -237,7 +232,7 @@ Crop rules (QATRA interpretation of the decree and the arrêté of 21 June 1994,
 - **Blocked**: vegetables eaten raw (Art. 5) and direct grazing (Art. 6). Example: farm C (lettuce).
 - **Allowed**: cereals, fodder (alfalfa, oat, barley), industrial crops, fruit trees without sprinklers, olive.
 
-### 3. Crop water need — *Planned* (`needs` router); ET₀ itself is *Data pipeline*
+### 3. Crop water need — *Implemented* (A-04: `engine/needs.py`); ET₀ itself is *Data pipeline*
 
 **Reference evapotranspiration ET₀** is computed in `scripts/02_fetch_weather.py` with the **FAO-56 Penman-Monteith** equation (daily step), from NASA POWER inputs (Tmax, Tmin, mean RH, wind at 2 m, solar radiation):
 
@@ -368,17 +363,20 @@ is maximised, subject to the basin volume balance (`basin_m3(t+1) = basin_m3(t) 
 
 **Cost reference:** STEG average selling price 2025 = 290.7 millimes/kWh, production cost 456.3 millimes/kWh (both `REPORTED`, press). The agricultural-pumping tariff was not found (`TO_VERIFY`).
 
-### 6. Allocation of a batch across farms — *Planned* (`optimiser` router)
+### 6. Allocation of a batch across farms — *Implemented* (A-05: `engine/plan.py`, `engine/schedule.py`); the hourly energy optimisation is *Planned*
 
-Per farm and batch, volume `m3` and status (`allocated`, `conditional`, `capped`, `blocked`) follow these constraints:
+Simple readable rules, no optimiser (A-05a), applied per farm in this order. Status is `allocated`, `conditional`, `capped` or `blocked`:
 
 ```
-Σ m3_farm            ≤ batch volume_m3
-m3_farm              ≤ crop need over the horizon             (formula 3)
-m3_farm              = 0                if decision = blocked  (formula 2)
-m3_farm              ≤ salinity cap     if ECe above threshold (formula 4, leaching limits the volume)
+1. legal status          m3_farm = 0                       if the farm is blocked (formula 2)
+2. need                  need = max(0, ET0·Kc − 0.7·rain) × area × 10      (formula 3)
+3. soil cap              conditional farms limited by cap_volume (formula 4)
+4. anti-rebound          m3_farm ≤ fresh_m3_season / 180  never more than the farm already takes from its own well that day
+5. sharing               everybody gets the capped need if the total fits in the batch,
+                         otherwise the batch is shared in proportion to the capped needs
+6. leftover              what is not allocated stays in the basin (a warning says how much)
 ```
-Outputs: `energy_kwh`, `solar_share`, and
+Volumes are rounded down to 0.1 m³. **Pump schedule** (A-05b, 24 hourly slots): hours are filled with solar first (an hour counts as solar when PV ≥ the pump power of 44.6 kW, 07:00-12:00 first), then the grid at 06:00 and 18:00-21:00, then the other daytime hours as a last resort; during an outage the grid is never used. Outputs: `energy_kwh`, `solar_share`, and
 
 ```
 fresh_replaced_m3 = Σ m3_allocated            (TWW volume substituting fresh-water supply)
@@ -412,7 +410,7 @@ Read from the existing engines and the regulation pack; nothing is invented.
 - **Crops**: allowed = the 21 June 1994 order (fruit trees only without sprinklers; olive and alfalfa flagged "to verify"); empty when the batch is red. Blocked = crops eaten raw (Art. 5) and direct grazing (Art. 6).
 - **QR code**: encodes `{page origin}/passport/{batch id}`.
 
-### 10. Heatwave and grid outage — *Implemented, not merged* (B-05a and B-05b: `engine/heatwave.py`)
+### 10. Heatwave and grid outage — *Implemented* (B-05: `engine/heatwave.py`)
 
 The naive policy irrigates straight from the grid on demand: **no storage basin and no solar shifting**. Hours are hour-start labels: hour 13 is 13:00 to 14:00, so the window 13:00-17:00 covers hours 13 to 16. Outage days come from `sim_outage_windows.csv` (hot days, based on Human Rights Watch Oct 2026; no official STEG schedule exists) and from the scenario file.
 
