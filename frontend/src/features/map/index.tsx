@@ -2,80 +2,92 @@ import { get } from "../../api/client";
 import type { MapFeature, MapLayer, MapLayersResponse, Plant } from "../../api/types";
 import ErrorBox from "../../components/ErrorBox";
 import Loading from "../../components/Loading";
-import TagChip from "../../components/TagChip";
+import { Band, Intro } from "../../components/ui";
 import { useApi } from "../../hooks/useApi";
-import MapView, { isDrawable } from "./MapView";
+import { useLang, type Lang } from "../../i18n";
+import MapView, { FALLBACK, STYLE, isDrawable, layerLabel } from "./MapView";
+import { M } from "./texts";
 
 export default function MapTab() {
+  const { lang } = useLang();
   const layers = useApi<MapLayersResponse>(() => get<MapLayersResponse>("/api/map/layers"));
   const plants = useApi<Plant[]>(() => get<Plant[]>("/api/plants"));
 
-  if (layers.loading) return <Loading label="Loading map layers…" />;
-  if (layers.error) return <ErrorBox error={layers.error} onRetry={layers.reload} />;
   const list = layers.data?.layers ?? [];
-  if (list.length === 0) return <ErrorBox error="The API returned no map layers." onRetry={layers.reload} />;
 
   return (
-    <section className="space-y-4">
-      <div>
-        <h2 className="text-lg font-semibold text-slate-800">Map</h2>
-        <p className="text-sm text-slate-500">Zaouiet-Sousse: treatment plants, irrigated area, farmland and demo farms. Click a marker or a field.</p>
-      </div>
-      {plants.error && <ErrorBox error={`Plant details unavailable: ${plants.error.message}`} onRetry={plants.reload} />}
-      <MapView layers={list} plants={plants.data ?? []} />
-      <LegendPanel layers={list} />
-    </section>
+    <>
+      <Band tone="olive" className="md:py-28">
+        <Intro as="h1" size="xl" eyebrow={M.eyebrow[lang]} title={M.title[lang]}>
+          <p>{M.lead[lang]}</p>
+        </Intro>
+      </Band>
+
+      <Band tone="cream" wide>
+        {layers.loading ? (
+          <Loading label={M.loading[lang]} />
+        ) : layers.error ? (
+          <ErrorBox error={layers.error} onRetry={layers.reload} />
+        ) : list.length === 0 ? (
+          <ErrorBox error={M.noLayers[lang]} onRetry={layers.reload} />
+        ) : (
+          <div className="space-y-8">
+            {plants.error && <ErrorBox error={`${M.plantsDown[lang]}: ${plants.error.message}`} onRetry={plants.reload} />}
+            <MapView layers={list} plants={plants.data ?? []} />
+            <Legend layers={list} lang={lang} />
+          </div>
+        )}
+      </Band>
+    </>
   );
 }
 
-function LegendPanel({ layers }: { layers: MapLayer[] }) {
-  // Features without a location cannot be drawn: list them here instead (e.g. the irrigated perimeter).
+/** Which colour is which layer, with counts; features without a location are listed apart. */
+function Legend({ layers, lang }: { layers: MapLayer[]; lang: Lang }) {
   const unlocated = layers.flatMap((l) => l.features.filter((f) => !isDrawable(f)).map((f) => ({ layer: l, f })));
   return (
-    <div className="grid gap-3 md:grid-cols-2">
-      <div className="rounded-lg border border-slate-200 bg-white p-3">
-        <h3 className="mb-2 text-sm font-semibold text-slate-800">Layers</h3>
-        <ul className="space-y-1.5 text-sm">
-          {layers.map((l) => (
-            <li key={l.id} className="flex flex-wrap items-center justify-between gap-2">
-              <span>
-                {l.label}{" "}
-                <span className="text-slate-400">
-                  ({l.features.some(isDrawable) ? `${l.features.filter(isDrawable).length} on the map` : "not drawn: no location"})
-                </span>
-              </span>
-              <TagChip tag={l.tag} showSource={false} />
-            </li>
-          ))}
+    <div className="grid gap-10 md:grid-cols-2">
+      <section>
+        <h2 className="border-b border-ink pb-3 text-3xl">{M.layers[lang]}</h2>
+        <ul>
+          {layers.map((l) => {
+            const n = l.features.filter(isDrawable).length;
+            const colour = (STYLE[l.id] ?? FALLBACK).colour;
+            return (
+              <li key={l.id} className="flex items-center gap-3 border-b border-line py-3">
+                <span aria-hidden="true" className="h-4 w-4 shrink-0 rounded-full border border-ink" style={{ background: colour }} />
+                <span className="flex-1">{layerLabel(l, lang)}</span>
+                <span className="text-[15px] text-ink-soft">{n > 0 ? `${n} ${M.onMap[lang]}` : M.noLocation[lang]}</span>
+              </li>
+            );
+          })}
         </ul>
-      </div>
+      </section>
+
       {unlocated.length > 0 && (
-        <div className="rounded-lg border border-slate-200 bg-white p-3">
-          <h3 className="mb-2 text-sm font-semibold text-slate-800">Not drawn: no location in the data</h3>
-          <ul className="space-y-2 text-sm text-slate-700">
+        <section>
+          <h2 className="border-b border-ink pb-3 text-3xl">{M.notDrawn[lang]}</h2>
+          <ul>
             {unlocated.map(({ layer, f }) => (
-              <li key={`${layer.id}-${f.id}`}>
-                <strong>{f.name}</strong>
-                <Detail f={f} />
-                <div className="mt-1">
-                  <TagChip tag={layer.tag} showSource={false} />
-                </div>
+              <li key={`${layer.id}-${f.id}`} className="border-b border-line py-3">
+                <p className="font-medium">{f.name}</p>
+                <Detail f={f} lang={lang} />
               </li>
             ))}
           </ul>
-        </div>
+        </section>
       )}
     </div>
   );
 }
 
-function Detail({ f }: { f: MapFeature }) {
+function Detail({ f, lang }: { f: MapFeature; lang: Lang }) {
   const parts = [
-    typeof f.area_ha === "number" ? `${f.area_ha} ha equipped` : null,
-    f.wwtp ? `fed by ${f.wwtp}` : null,
+    typeof f.area_ha === "number" ? `${f.area_ha} ha ${M.equipped[lang]}` : null,
+    f.wwtp ? `${M.fedBy[lang]} ${f.wwtp}` : null,
     typeof f.tww_distributed_m3_yr === "number"
-      ? `${f.tww_distributed_m3_yr.toLocaleString()} m³ distributed${f.campaign ? ` (${f.campaign})` : ""}`
+      ? `${f.tww_distributed_m3_yr.toLocaleString("en-US")} m³ ${M.distributed[lang]}${f.campaign ? ` (${f.campaign})` : ""}`
       : null,
   ].filter(Boolean);
-  return parts.length ? <span className="block text-slate-500">{parts.join(" · ")}</span> : null;
+  return parts.length ? <p className="text-[15px] text-ink-soft">{parts.join(" · ")}</p> : null;
 }
