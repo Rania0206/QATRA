@@ -121,6 +121,39 @@ class BusinessView(BaseModel):
     tag: Tag
 
 
+class SoilPoint(BaseModel):
+    day: int  # legacy field: year * 365
+    ece: float
+
+
+class SoilPolicy(BaseModel):
+    series: list[float]  # ECe (dS/m) at the start of each year, index = year (0..years)
+    first_year_over: Optional[int] = None  # first year ECe > threshold, null if never
+    water_used_m3_season: float
+    yield_loss_pct_30y: Optional[float] = None  # null when the crop has no published yield slope
+
+
+class SoilQatraPolicy(SoilPolicy):
+    leaching_fraction: float
+
+
+class SoilSimulation(BaseModel):
+    farm_id: str
+    batch_id: str
+    crop: str
+    threshold_ece: float
+    ecw: float
+    years: list[int]  # [0..N]
+    naive: SoilPolicy
+    qatra: SoilQatraPolicy
+    # legacy fields (original contract): `series` is the QATRA curve, day = year * 365
+    series: list[SoilPoint]
+    leaching_fraction: float  # = qatra.leaching_fraction
+    blocked_reason: Optional[str] = None  # set when the crop cannot receive TWW by law: the UI shows no simulation
+    warning: Optional[str] = None
+    tag: Tag
+
+
 class HealthResponse(BaseModel):
     status: str
     datasets: dict[str, int]

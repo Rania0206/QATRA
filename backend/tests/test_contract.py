@@ -63,3 +63,9 @@ def test_a03c_mocks_match_engine_models():
     AllFarmsCompatibility.model_validate(load("compatibility.json"))
     for r in load("rules.json"):
         Rule.model_validate(r)
+
+
+def test_soil_simulate_mock_matches_schema():
+    from app.schemas import SoilSimulation
+    m = SoilSimulation.model_validate(load("post_soil_simulate.json"))
+    assert len(m.years) == len(m.naive.series) == len(m.qatra.series) == len(m.series)

@@ -22,6 +22,7 @@ Shared between backend (FastAPI, `backend/app`) and frontend (React, `frontend/s
 | `RuleResult` | `rule_id`, `passed`, `severity`: `"block" \| "condition" \| "info"`, `source_type?`: `"tunisian_law" \| "agronomic_advice"` (NT 106.03 / Decree 89-1047 / 1994 order vs FAO-29), `reason_en`, `reason_fr`, `legal_ref` |
 | `SavingsResult` | `water_need_m3`, `well_kwh_avoided`, `well_cost_avoided_tnd`, `treated_water_cost_tnd`, `nitrogen_kg`, `fertiliser_kg_ammonium_nitrate`, `fertiliser_saved_tnd`, `net_saving_tnd`, `kwh_off_grid`, `well_water_kept_m3`, `compatibility_status`, `breakdown`: `[{label, value, unit, tag}]` |
 | `BusinessView` | `area_name`, `area_ha`, `farms`, `total_saving_tnd`, `qatra_share_pct`, `qatra_revenue_tnd`, `steg_kwh_avoided`, `steg_value_tnd`, `national_areas` (36), `tag` |
+| `SoilSimulation` | `farm_id`, `batch_id`, `crop`, `threshold_ece`, `ecw`, `years`: `[0..N]`, `naive`: `{series: number[], first_year_over: int \| null, water_used_m3_season, yield_loss_pct_30y: number \| null}`, `qatra`: same + `leaching_fraction`, legacy `series`: `[{day, ece}]` (= qatra curve, `day` = year x 365) and `leaching_fraction` (= `qatra.leaching_fraction`), `blocked_reason?` (string when the crop is forbidden for TWW, e.g. lettuce: the UI shows no simulation), `warning?`, `tag` |
 | `Allocation` | `batch_id`, `items`: `[{farm_id, status, m3, cap_reason?}]`, `schedule`: `[{hour, pump_kw, source: "solar" \| "grid" \| "basin" \| "off", basin_m3}]`, `energy_kwh`, `solar_share` (0..1), `fresh_replaced_m3`, `warnings`: `string[]` |
 
 Conventions used in mocks (free strings, agree before adding values):
@@ -47,7 +48,7 @@ Conventions used in mocks (free strings, agree before adding values):
 | 12 | GET | `/api/forecast/needs` | `needs` | query `start?`, `days?` (default 7) | `{start, days, items: [{date, farm_id, et0_mm, kc, need_m3}], tag}` | `forecast_needs.json` |
 | 13 | GET | `/api/forecast/supply` | **CUT FROM MVP** (QATRA Lite) · `supply` | query `start?`, `days?` | `{start, days, items: [{date, plant_id, volume_m3, batch_id}], tag}` | `forecast_supply.json` |
 | 14 | POST | `/api/allocate` | `optimiser` | `{batch_id, date?, farm_ids?}` | `Allocation` | `post_allocate.json` |
-| 15 | POST | `/api/soil/simulate` | `soil` | `{farm_id, batch_id, days}` | `{farm_id, series: [{day, ece}], leaching_fraction, warning?, tag}` | `post_soil_simulate.json` |
+| 15 | POST | `/api/soil/simulate` | `soil` | `{farm_id, batch_id, days?, years?, soil_ece?, ecw?}` | `SoilSimulation` (see below) | `post_soil_simulate.json` |
 | 16 | POST | `/api/scenarios/heatwave` | `heatwave` | `{scenario_id: "heatwave_outage"}` | `{scenario_id, label, date, allocation: Allocation, baseline: {energy_kwh, solar_share}, tag}` | `post_scenarios_heatwave.json` |
 | 17 | GET | `/api/impact` | `impact` | – | `{period, tww_allocated_m3, fresh_water_saved_m3, energy_kwh, solar_share, co2_avoided_kg, farms_served, small_farms_served, batches_blocked, tag}` | `impact.json` |
 | 18 | POST | `/api/explain` | **CUT FROM MVP** (QATRA Lite) · `llm` | `{kind: "allocation" \| "compatibility", payload: object, lang?}` | `{text_en, text_fr, tag}` | `post_explain.json` |
@@ -66,6 +67,16 @@ Conventions used in mocks (free strings, agree before adding values):
 
 **QATRA Lite scope:** endpoints marked **CUT FROM MVP** (#9, #13, #18, #24) stay documented and their router stubs stay registered, but they are not built for the demo.
 Router files `savings.py` and `business.py` do not exist yet; they are added with A-14.
+
+### Soil simulation (endpoint 15, B-03c)
+Yearly steps (30 by default), ESTIMATE. `ecw` = EC of the batch (`EC_dS_m`), unless overridden. `soil_ece` overrides the farm's soil ECe.
+`days` is accepted for backward compatibility and ignored. 404 unknown farm or batch; 422 bad input (`years` 1..100, `ecw` 0..20, `soil_ece` 0..30, or a batch without EC and no `ecw`).
+- `naive`: no managed leaching, leaching fraction from rain only. Irrigation = the crop need.
+- `qatra`: leaching fraction = max(LR, naive) capped at 0.5. `water_used_m3_season` includes the extra leaching water (rain credited).
+- `first_year_over`: first year index with ECe above `threshold_ece`, `null` if never.
+- `yield_loss_pct_30y` = slope x (ECe at the last year - threshold) clipped to [0, 100], using `yield_decline_pct_per_dS_m` of `crop_salt_tolerance.csv`. `null` when the slope is not published (olive, pomegranate, oat_fodder): never invented.
+- `warning` lists: crop blocked for TWW, water too saline, leaching requirement above the cap, soil already above the threshold, TO_VERIFY thresholds.
+- `tag.status` is `TO_VERIFY` when the crop threshold is a placeholder (olive, pomegranate, oat_fodder), else `ESTIMATE`.
 
 ## Examples
 
