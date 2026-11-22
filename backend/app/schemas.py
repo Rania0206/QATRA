@@ -302,3 +302,32 @@ class MapLayer(BaseModel):
 
 class MapLayersResponse(BaseModel):
     layers: list[MapLayer]
+
+
+# ---- B-10a: GET /api/meta/sources
+class SourceRow(BaseModel):
+    """One row of data/data_catalog.csv. `status` is the catalogue's own text (e.g. "REPORTED (incomplete)")."""
+    id: str
+    title: str
+    file: str
+    status: str
+    source_name: str
+    source_url: Optional[str] = None  # a few rows have no public URL
+
+
+class SafeFigure(BaseModel):
+    """One of the 5 REPORTED/PROJECTION figures safe to cite (data/README.md section 4). Values come from context_figures.csv."""
+    id: str  # SF1..SF5
+    label: str
+    value: str
+    unit: str
+    definition: str  # distinct for every figure; related rows keep their own definitions
+    status: str
+    source_name: str
+    source_url: str
+    as_of: str  # publication date of the source, ISO
+
+
+class MetaSources(BaseModel):
+    sources: list[SourceRow]
+    safe_figures: list[SafeFigure]

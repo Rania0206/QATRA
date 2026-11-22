@@ -406,3 +406,30 @@ export interface SavingsReport {
   warnings: string[];
   tag: Tag;
 }
+
+/** GET /api/meta/sources */
+export interface SourceRow {
+  id: string;
+  title: string;
+  file: string;
+  status: string; // the catalogue's own text, e.g. "REPORTED (incomplete)"
+  source_name: string;
+  source_url: string | null;
+}
+
+export interface SafeFigure {
+  id: string; // SF1..SF5
+  label: string;
+  value: string;
+  unit: string;
+  definition: string;
+  status: string; // REPORTED or PROJECTION
+  source_name: string;
+  source_url: string;
+  as_of: string; // ISO date of the source
+}
+
+export interface MetaSources {
+  sources: SourceRow[];
+  safe_figures: SafeFigure[];
+}
