@@ -1,17 +1,15 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { get } from "../../api/client";
-import type { AllFarmsCompatibility, Batch, Decision, Farm } from "../../api/types";
+import type { AllFarmsCompatibility, Batch, Farm } from "../../api/types";
 import ErrorBox from "../../components/ErrorBox";
-import Loading from "../../components/Loading";
-import TagChip from "../../components/TagChip";
+import { Band, Intro, Pill, Skeleton } from "../../components/ui";
 import { USE_MOCKS } from "../../config";
 import { useApi } from "../../hooks/useApi";
-import ComplianceBadge from "../batches/ComplianceBadge";
-import { COMPLIANCE_BADGE, fmtDate } from "../batches/format";
-import DecisionBadge from "./DecisionBadge";
-import FarmCard from "./FarmCard";
-import FarmDrawer from "./FarmDrawer";
-import { T, type Lang, type RuleInfo } from "./format";
+import { useLang } from "../../i18n";
+import { COMPLIANCE } from "../batches/format";
+import DayPicker from "./DayPicker";
+import MyFarm from "./MyFarm";
+import { T, type RuleInfo } from "./format";
 
 interface Static {
   farms: Farm[];
@@ -20,11 +18,39 @@ interface Static {
 }
 
 const newestFirst = (a: Batch, b: Batch) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id);
+const STORAGE_KEY = "qatra.farm";
 
+/** Farm code from a personal link (#/compatibility?farm=A), else the one remembered on this device. */
+function initialFarm(): string | null {
+  const fromLink = new URLSearchParams(window.location.hash.split("?")[1] ?? "").get("farm");
+  if (fromLink) return fromLink.trim().toUpperCase();
+  try {
+    return window.localStorage.getItem(STORAGE_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function remember(code: string | null) {
+  try {
+    if (code) window.localStorage.setItem(STORAGE_KEY, code);
+    else window.localStorage.removeItem(STORAGE_KEY);
+  } catch {
+    /* not critical */
+  }
+}
+
+/**
+ * "Is this water safe for your farm?" — one farm only. A farmer never sees other farms.
+ * NOTE: the page still loads every farm's result from the API and keeps only one; real privacy
+ * needs logins and a per-farm endpoint on the server (next version).
+ */
 export default function CompatibilityTab() {
-  const [lang, setLang] = useState<Lang>("en");
+  const { lang } = useLang();
   const [batchId, setBatchId] = useState<string | null>(null); // null = backend default (latest usable batch)
-  const [selectedFarm, setSelectedFarm] = useState<string | null>(null);
+  const [farmCode, setFarmCode] = useState<string | null>(initialFarm);
+  const [input, setInput] = useState("");
+  const [notFound, setNotFound] = useState(false);
 
   const base = useApi<Static>(async () => {
     const [farms, batches, rules] = await Promise.all([
@@ -43,119 +69,120 @@ export default function CompatibilityTab() {
     if (batchId !== null) reloadCompat();
   }, [batchId, reloadCompat]);
 
-  const close = useCallback(() => setSelectedFarm(null), []);
+  const farm = farmCode ? base.data?.farms.find((f) => f.id.toUpperCase() === farmCode) : undefined;
+  const result = farm ? compat.data?.items.find((i) => i.farm_id === farm.id) : undefined;
+
+  // a remembered or linked code that does not exist: ask again
+  useEffect(() => {
+    if (farmCode && base.data && !farm) {
+      setNotFound(true);
+      setFarmCode(null);
+      remember(null);
+    }
+  }, [farmCode, base.data, farm]);
+
+  const submit = (e: FormEvent) => {
+    e.preventDefault();
+    const code = input.trim().toUpperCase();
+    if (!code) return;
+    const exists = base.data?.farms.some((f) => f.id.toUpperCase() === code);
+    if (base.data && !exists) {
+      setNotFound(true);
+      return;
+    }
+    setNotFound(false);
+    setFarmCode(code);
+    remember(code);
+  };
+
+  const change = () => {
+    setFarmCode(null);
+    setInput("");
+    remember(null);
+  };
+
   const shownBatch = batchId ?? compat.data?.batch_id ?? "";
   const batch = base.data?.batches.find((b) => b.id === shownBatch);
-  const byFarm = useMemo(() => new Map((compat.data?.items ?? []).map((i) => [i.farm_id, i])), [compat.data]);
-  const counts = useMemo(() => {
-    const c: Record<Decision, number> = { compatible: 0, conditional: 0, blocked: 0 };
-    for (const i of compat.data?.items ?? []) c[i.decision] += 1;
-    return c;
-  }, [compat.data]);
-
+  const batchStatus = batch?.status ?? compat.data?.batch_status;
   const error = base.error ?? compat.error;
-  const farm = base.data?.farms.find((f) => f.id === selectedFarm);
-  const farmResult = selectedFarm ? byFarm.get(selectedFarm) : undefined;
 
   return (
-    <div className="space-y-5">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div className="space-y-3">
-          <h2 className="text-2xl font-bold text-slate-900">{T.title[lang]}</h2>
-          <div className="flex flex-wrap items-center gap-3">
-            <label htmlFor="batch" className="text-lg font-medium text-slate-700">
-              {T.batch[lang]}
+    <>
+      <Band tone="olive" className="md:py-24">
+        <Intro as="h1" size="xl" eyebrow={T.eyebrow[lang]} title={T.title[lang]}>
+          <p>{T.lead[lang]}</p>
+        </Intro>
+
+        {!farm ? (
+          <form onSubmit={submit} className="fade-up mx-auto mt-10 flex max-w-md flex-col items-center gap-3">
+            <label htmlFor="farm-code" className="text-[17px]">
+              {T.codeLabel[lang]}
             </label>
-            <select
-              id="batch"
-              value={shownBatch}
-              disabled={!base.data}
-              onChange={(e) => setBatchId(e.target.value)}
-              className="rounded-md border border-slate-300 bg-white px-3 py-2 font-mono text-base"
-            >
-              {!shownBatch && <option value="">…</option>}
-              {base.data?.batches.map((b) => (
-                <option key={b.id} value={b.id}>
-                  {b.id} · {fmtDate(b.date)} · {COMPLIANCE_BADGE[b.status]?.label ?? b.status}
-                </option>
-              ))}
-            </select>
-            {(batch?.status ?? compat.data?.batch_status) && (
-              <ComplianceBadge status={batch?.status ?? compat.data!.batch_status} large />
-            )}
-          </div>
-        </div>
-
-        <div className="flex flex-col items-end gap-2">
-          <div className="inline-flex rounded-lg ring-1 ring-slate-300" role="group" aria-label="Language">
-            {(["en", "fr"] as const).map((l) => (
-              <button
-                key={l}
-                type="button"
-                onClick={() => setLang(l)}
-                aria-pressed={lang === l}
-                className={`px-4 py-2 text-base font-semibold first:rounded-l-lg last:rounded-r-lg ${
-                  lang === l ? "bg-teal-700 text-white" : "bg-white text-slate-700 hover:bg-slate-50"
-                }`}
-              >
-                {l.toUpperCase()}
-              </button>
-            ))}
-          </div>
-          <div className="flex flex-wrap justify-end gap-2">
-            {compat.data && <TagChip tag={compat.data.tag} showSource={false} />}
-            {base.data?.farms[0] && <TagChip tag={base.data.farms[0].tag} />}
-          </div>
-        </div>
-      </div>
-
-      {USE_MOCKS && <p className="text-sm text-slate-500">{T.mockNote[lang]}</p>}
-
-      {compat.data && !compat.loading && (
-        <div className="flex flex-wrap gap-3 text-lg">
-          {(Object.keys(counts) as Decision[]).map((d) => (
-            <span key={d} className="inline-flex items-center gap-2">
-              <DecisionBadge decision={d} lang={lang} /> <strong>{counts[d]}</strong>
-            </span>
-          ))}
-        </div>
-      )}
-
-      {error ? (
-        <ErrorBox
-          error={error}
-          onRetry={() => {
-            base.reload();
-            compat.reload();
-          }}
-        />
-      ) : base.loading || compat.loading || !base.data || !compat.data ? (
-        <Loading label={lang === "fr" ? "Chargement…" : "Loading compatibility…"} />
-      ) : base.data.farms.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center text-lg text-slate-500">
-          {lang === "fr" ? "Aucune ferme." : "No farms yet."}
-        </div>
-      ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {base.data.farms.map((f) => {
-            const r = byFarm.get(f.id);
-            return r ? (
-              <FarmCard
-                key={f.id}
-                farm={f}
-                result={r}
-                lang={lang}
-                selected={selectedFarm === f.id}
-                onSelect={() => setSelectedFarm(f.id)}
+            <div className="flex w-full gap-2">
+              <input
+                id="farm-code"
+                value={input}
+                onChange={(e) => {
+                  setInput(e.target.value);
+                  setNotFound(false);
+                }}
+                autoComplete="off"
+                inputMode="text"
+                maxLength={12}
+                className="min-w-0 flex-1 border border-ink bg-cream px-4 py-3 text-center text-[20px] uppercase tracking-widest focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+                aria-invalid={notFound}
+                aria-describedby="farm-code-hint"
               />
-            ) : null;
-          })}
-        </div>
-      )}
+              <button type="submit" className="btn min-w-0 bg-ink text-cream">
+                {T.see[lang]}
+              </button>
+            </div>
+            <p id="farm-code-hint" className={`text-[15px] ${notFound ? "font-medium text-bad" : ""}`}>
+              {notFound ? T.notFound[lang] : T.codeHint[lang]}
+            </p>
+          </form>
+        ) : (
+          <div className="fade-up mx-auto mt-10 flex max-w-2xl flex-col items-center gap-4">
+            {base.data ? (
+              <DayPicker batches={base.data.batches} value={shownBatch} onChange={setBatchId} lang={lang} />
+            ) : (
+              <Skeleton className="h-12 w-72" />
+            )}
+            <div className="flex items-center gap-3 text-[16px]">
+              {T.quality[lang]}:
+              {batchStatus ? (
+                <Pill tone={COMPLIANCE[batchStatus]?.tone ?? "neutral"}>{COMPLIANCE[batchStatus]?.label[lang] ?? batchStatus}</Pill>
+              ) : (
+                <Skeleton className="h-8 w-32" />
+              )}
+            </div>
+          </div>
+        )}
+      </Band>
 
-      {farm && farmResult && base.data && (
-        <FarmDrawer farm={farm} result={farmResult} rules={base.data.rules} lang={lang} onClose={close} />
+      {farmCode && (
+        <Band tone="cream">
+          {USE_MOCKS && <p className="mb-6 text-center text-[15px]">{T.mockNote[lang]}</p>}
+          {error ? (
+            <ErrorBox
+              error={error}
+              onRetry={() => {
+                base.reload();
+                compat.reload();
+              }}
+            />
+          ) : !farm || !result || compat.loading ? (
+            <div className="mx-auto max-w-2xl space-y-4" aria-busy="true">
+              <Skeleton className="h-16 w-full" />
+              <Skeleton className="h-10 w-2/3" />
+              <Skeleton className="h-6 w-full" />
+              <Skeleton className="h-40 w-full" />
+            </div>
+          ) : (
+            <MyFarm farm={farm} result={result} rules={base.data!.rules} lang={lang} onChange={change} />
+          )}
+        </Band>
       )}
-    </div>
+    </>
   );
 }
