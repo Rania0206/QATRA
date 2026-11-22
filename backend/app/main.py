@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import CORS_ORIGINS, PROJECT_NAME
 from app.routers import (
-    anomalies, batches, heatwave, impact, llm, messages, meta, needs, optimiser,
+    anomalies, batches, business, heatwave, impact, llm, messages, meta, needs, optimiser,
     passport, plants, requests, risk, rules, savings, soil, supply, territory,
 )
 from app.schemas import HealthResponse
@@ -51,6 +51,7 @@ app.include_router(llm.router)
 app.include_router(messages.router)
 app.include_router(impact.router)
 app.include_router(savings.router)
+app.include_router(business.router)
 app.include_router(requests.router)
 app.include_router(territory.router)
 app.include_router(meta.router)
