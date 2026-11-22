@@ -1,6 +1,7 @@
 import type { ComponentType } from "react";
 import Shell from "./components/Shell";
 import { useHashTab } from "./hooks/useHashTab";
+import { useHashRole } from "./hooks/useHashRole";
 import MapTab from "./features/map";
 import BatchesTab from "./features/batches";
 import CompatibilityTab from "./features/compatibility";
@@ -9,8 +10,9 @@ import SavingsTab from "./features/savings";
 import SoilTab from "./features/soil";
 import HeatwaveTab from "./features/heatwave";
 import MessagesTab from "./features/messages";
+import RequestsTab from "./features/requests"; // B-11b: a new tab (Dev A: one line in TABS and one in TAB_LABEL)
 import ImpactTab from "./features/impact";
-import TerritoryTab from "./features/territory";
+import BusinessTab from "./features/business"; // the "territory" route now shows the Business screen (A-14c)
 import PublicTab from "./features/public";
 import PassportPage from "./features/passport/PassportPage";
 
@@ -24,9 +26,10 @@ const TABS: { id: string; label: string; Component: ComponentType }[] = [
   { id: "soil", label: "Soil", Component: SoilTab },
   { id: "heatwave", label: "Heatwave", Component: HeatwaveTab },
   { id: "messages", label: "Messages", Component: MessagesTab },
+  { id: "requests", label: "Requests", Component: RequestsTab },
   { id: "impact", label: "Impact", Component: ImpactTab },
   // QATRA Lite: next-version tabs stay at the end
-  { id: "territory", label: "Territory (next version)", Component: TerritoryTab },
+  { id: "territory", label: "Business", Component: BusinessTab },
   { id: "public", label: "Public", Component: PublicTab },
 ];
 
@@ -42,10 +45,11 @@ export default function App() {
 
 function TabsApp() {
   const [active, setActive] = useHashTab(TAB_IDS, TABS[0].id);
+  const [role, setRole] = useHashRole();
   const { Component } = TABS.find((t) => t.id === active)!;
 
   return (
-    <Shell tabs={TABS} active={active} onSelect={setActive}>
+    <Shell tabs={TABS} active={active} onSelect={setActive} role={role} onRole={setRole}>
       <Component />
     </Shell>
   );

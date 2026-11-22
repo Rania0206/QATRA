@@ -447,3 +447,76 @@ export interface ImpactSummary {
   batches_blocked: number;
   tag: Tag;
 }
+
+// A-14c: GET /api/business (?hectares=&adoption_rate=). Additive: BusinessView above is still the top of the response.
+export interface TerritoryFigure {
+  id: string; // id in data/clean/context_figures.csv
+  key: "equipped_ha" | "irrigated_ha" | "perimeter_ha" | "perimeters";
+  label: string;
+  value: number;
+  unit: string;
+  period: string;
+  source: string;
+  source_url: string;
+  note?: string | null;
+  tag: Tag; // REPORTED
+}
+
+export interface PilotMetrics {
+  date?: string | null;
+  farms_total: number;
+  farms_receiving: number;
+  total_area_ha: number;
+  pilot_ha: number;
+  irrigation_days: number;
+  seasons_per_year: number;
+  farmers_net_tnd_per_ha_season: number;
+  qatra_fee_tnd_per_ha_season: number;
+  well_water_replaced_m3_per_ha_season: number;
+  electricity_saved_kwh_per_ha_season: number;
+  nitrogen_kg_per_ha_season: number;
+  tag: Tag; // PROJECTION
+}
+
+export interface BusinessScenario {
+  id: string;
+  label: string;
+  kind: "pilot" | "preset" | "perimeter" | "territory" | "custom";
+  ha: number;
+  ha_tag: Tag; // REPORTED for the territory figures
+  adoption_rate: number;
+  farmers_saving_tnd_per_year: number;
+  qatra_revenue_tnd_per_year: number;
+  well_water_saved_m3_per_year: number;
+  electricity_saved_kwh_per_year: number;
+  nitrogen_kg_per_year: number;
+  tag: Tag; // PROJECTION
+}
+
+export interface BusinessReport extends BusinessView {
+  date?: string | null;
+  adoption_rate: number; // 0..1
+  pilot: PilotMetrics;
+  territory: TerritoryFigure[];
+  scenarios: BusinessScenario[];
+  assumptions: SavingsAssumption[];
+  warnings: string[];
+}
+
+/** POST /api/requests, GET /api/requests?status=, PATCH /api/requests/{id} */
+export type RequestStatus = "pending" | "approved" | "rejected";
+
+export interface WaterRequest {
+  id: string; // REQ-001, ...
+  farm_id: string;
+  requested_m3: number;
+  date: string; // ISO date the water is wanted
+  status: RequestStatus;
+  created_at: string; // ISO datetime
+}
+
+export interface RequestIn {
+  farm_id: string;
+  requested_m3: number; // > 0
+  date: string;
+}

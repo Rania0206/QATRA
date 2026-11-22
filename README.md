@@ -64,6 +64,7 @@ _Last updated: 2026-11-22. Updated by whoever merges into `dev`; keep it current
 |---|---|---|
 | B-08a, B-08b, B-08c | Dev B | Messages to the farmers: `engine/messages.py` (templates allocated, conditional, capped, blocked in French and Tunisian Arabic, saving line from Dev A's savings engine), `GET /api/messages`, the Messages tab (phone mockup, farm selector, FR / AR toggle, passport link, quick replies 1 / 2), and the answers: `POST /api/messages/reply` reads 1 accept, 2 refuse, 3 postpone, 4 call me; a refusal runs Dev A's allocator again without that farm and stores the new plan (`GET /api/allocation/current`). The Arabic waits for a Tunisian speaker (`docs/messages-templates.md`). Branch `feature/B-08-messages` |
 | B-10a, B-10b | Dev B | `GET /api/meta/sources` (`routers/meta.py`): the 64 catalogue rows plus `safe_figures`, the 5 figures of `data/README.md` section 4 (318 Mm³, 11.3 Mm³ = 3.8 % in 2024, 7,819 / 2,778 ha, Water 2050 targets as PROJECTION, +2.9 °C), values read from `context_figures.csv`, one definition each (22 % / 4 % / <10 % kept apart, Court of Auditors 61 % left out). Branch `feature/B-10-meta-sources` | The Public tab (B-10b) shows 5 large aggregated numbers from `/api/impact` (fresh water replaced, treated water allocated, solar share, farms served, batches blocked; each with its status chip, no farm name or phone number) and a Sources screen listing the 5 safe figures with definition, status, date and link. `/api/impact` is still an empty stub on the real server (the tab works in mock mode).
+| B-11a, B-11b | Dev B | Demo role selector in the header (ONAS, Lab, CRDA, GDA, Public): the menu highlights the sections of the role and dims the others, nothing is blocked. The role lives in the URL hash (`#/batches?role=onas`) and follows tab changes; a visible note says it is a demo switch, not a login. CRDA and GDA also highlight the Requests tab (B-11b). Branch `feature/B-11-roles` | Water requests (B-11b): `POST /api/requests` (farm must exist, `requested_m3` > 0, else 404 / 422), `GET /api/requests?status=`, `PATCH /api/requests/{id}` approved or rejected (404 unknown id, 409 once decided), in memory. A new **Requests** tab (one line in `App.tsx` and one in `i18n.tsx`, tell Dev A) has the form, the list with Approve / Reject buttons and a status chip Pending, Approved or Rejected. Branch `feature/B-11-requests` |
 
 ### Not done yet
 
@@ -71,13 +72,13 @@ _Last updated: 2026-11-22. Updated by whoever merges into `dev`; keep it current
 |---|---|
 | Allocation tab | Next. The API exists (`POST /api/allocate`), the tab is still a placeholder |
 | A-05 solar threshold | Open point for Dev A: the pump schedule calls solar only if PV ≥ the full pump power (44.6 kW); the 60 kWp array peaks at 44.3 kW on the heatwave day, so it plans 7 % solar there (`SOLAR_MIN_FRACTION`). The heatwave model uses a pump power proportional to its flow |
-| Supply forecast (cut from the MVP), risk score (A-08), anomalies, impact, messages, requests, territory, LLM explain | Router stubs. The Impact tab only shows a small example |
-| Territory tab (Allocation and Savings are built by Dev A, Public by Dev B) | Placeholder. The Savings API exists (`POST /api/savings`), the business view (A-14c) does not |
+| Supply forecast (cut from the MVP), risk score (A-08), anomalies, impact, messages, territory, LLM explain | Router stubs. The Impact tab only shows a small example |
+| Territory tab (Allocation, Savings and Business are built by Dev A, Public by Dev B) | Placeholder. The Savings API exists (`POST /api/savings`), the business view (A-14c) does not |
 | Passport `destinations` | Still empty: it can now be filled from `POST /api/allocate` (A-05) |
 | Map: the version with all farms coloured by decision (B-02b) | Not merged: `dev` deliberately shows only the farmer's own farm. The code is in git history (`b733d53`, branch `feature/B-02b-map-farms`) |
 | Map and Soil texts | English, French and Arabic. Passport page: English only |
 
-Tests: 321 backend tests with the sources branch (`pytest`), frontend build (`npm run build`) passes.
+Tests: 350 backend tests with the requests branch (`pytest`), frontend build (`npm run build`) passes.
 
 Formulas below are labelled **Implemented** (in code today), **Data pipeline** (computed by a script to produce a dataset), or **Planned** (design agreed, not coded yet).
 
