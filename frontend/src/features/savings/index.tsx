@@ -77,8 +77,8 @@ function FarmerSavings() {
             <p className="text-center text-[length:calc(17px*var(--fs))]">{S.noPlan[lang]}</p>
           ) : (
             <>
-              <article className="fade-up mx-auto w-full max-w-2xl border border-line bg-white">
-                <div className="space-y-8 px-5 py-7 sm:px-7">
+              <article className="fade-up mx-auto w-full max-w-3xl border border-line bg-white">
+                <div className="space-y-6 px-5 py-6 sm:px-7">
                   <header>
                     <p className="eyebrow">{S.yourFarm[lang]}</p>
                     <h2 className="mt-1 text-3xl sm:text-4xl">{farmTitle(farm)}</h2>

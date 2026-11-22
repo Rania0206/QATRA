@@ -27,8 +27,8 @@ export function Band({
   id?: string;
 }) {
   return (
-    <section id={id} className={`${BAND[tone]} px-5 py-20 sm:px-8 md:py-24 ${className}`}>
-      <div className={`mx-auto ${wide ? "max-w-6xl" : "max-w-3xl"}`}>{children}</div>
+    <section id={id} className={`${BAND[tone]} px-5 sm:px-8 ${tone === "olive" ? "py-8 md:py-12" : "py-10 md:py-14"} ${className}`}>
+      <div className={`mx-auto ${wide ? "max-w-6xl" : "max-w-4xl"}`}>{children}</div>
     </section>
   );
 }
@@ -50,9 +50,9 @@ export function Intro({
   const H = as;
   return (
     <div className="fade-up mx-auto max-w-2xl text-center">
-      {eyebrow && <p className="eyebrow mb-5">{eyebrow}</p>}
-      <H className={size === "xl" ? "text-5xl sm:text-6xl md:text-7xl" : "text-4xl sm:text-5xl"}>{title}</H>
-      {children && <div className="mx-auto mt-7 max-w-xl text-[length:calc(17px*var(--fs))] leading-relaxed">{children}</div>}
+      {eyebrow && <p className="eyebrow mb-3">{eyebrow}</p>}
+      <H className={size === "xl" ? "text-4xl sm:text-5xl" : "text-3xl sm:text-4xl"}>{title}</H>
+      {children && <div className="mx-auto mt-3 max-w-xl text-[length:calc(17px*var(--fs))] leading-relaxed">{children}</div>}
     </div>
   );
 }

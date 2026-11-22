@@ -44,42 +44,40 @@ export default function AllocationCard({ farm, item, money, compat, lang, large 
   const d = decisionOf(item.status);
   const v = VERDICT[d];
   const estimate = money?.tag.status === "PROJECTION" ? A.projection[lang] : A.estimate[lang];
+  const tone = d === "blocked" ? "border-bad" : d === "conditional" ? "border-warn" : "border-ok";
+  const figure = large ? "text-[length:calc(44px*var(--fs))]" : "text-[length:calc(26px*var(--fs)*var(--fsn))]";
   return (
-    <article className={`flex h-full flex-col border border-line bg-white ${large ? "fade-up mx-auto w-full max-w-2xl" : ""}`}>
-      <div
-        className={`flex items-center gap-2 font-display font-medium text-white ${v.bg} ${large ? "gap-3 px-6 py-4 text-[length:calc(26px*var(--fs)*var(--fsn))]" : "px-4 py-2 text-[length:calc(17px*var(--fs))]"}`}
-      >
+    <article className={`flex h-full flex-col border border-line bg-white ${large ? "fade-up mx-auto w-full max-w-3xl" : ""}`}>
+      <div className={`flex items-center gap-2 font-display font-medium text-white ${v.bg} ${large ? "gap-3 px-5 py-3 text-[length:calc(22px*var(--fs))]" : "px-4 py-2 text-[length:calc(17px*var(--fs))]"}`}>
         <span
           aria-hidden="true"
-          className={`flex shrink-0 items-center justify-center rounded-full border-white leading-none ${
-            large ? "h-9 w-9 border-2 text-[length:calc(18px*var(--fs))]" : "h-5 w-5 border-[1.5px] text-[length:calc(12px*var(--fs))]"
-          }`}
+          className={`flex shrink-0 items-center justify-center rounded-full border-white leading-none ${large ? "h-7 w-7 border-2 text-[length:calc(15px*var(--fs))]" : "h-5 w-5 border-[1.5px] text-[length:calc(12px*var(--fs))]"}`}
         >
           {v.symbol}
         </span>
         {DECISION[d][lang]}
       </div>
 
-      <div className={`flex flex-1 flex-col ${large ? "gap-7 px-6 py-7" : "gap-3 px-4 pb-4 pt-3"}`}>
+      <div className={`flex flex-1 flex-col ${large ? "gap-5 p-5 sm:p-6" : "gap-3 px-4 pb-4 pt-3"}`}>
         <header>
           {large && <p className="eyebrow">{A.yourFarm[lang]}</p>}
-          <h3 className={`font-display font-medium leading-tight ${large ? "mt-1 text-4xl" : "text-[length:calc(21px*var(--fs))]"}`}>{farmTitle(farm)}</h3>
-          <p className={`text-ink-soft ${large ? "mt-1 text-[length:calc(16px*var(--fs))]" : "text-[length:calc(15px*var(--fs))]"}`}>{farmSub(farm, lang)}</p>
+          <h3 className={`font-display font-medium leading-tight ${large ? "mt-0.5 text-4xl" : "text-[length:calc(21px*var(--fs))]"}`}>{farmTitle(farm)}</h3>
+          <p className={`text-ink-soft ${large ? "mt-0.5 text-[length:calc(16px*var(--fs))]" : "text-[length:calc(15px*var(--fs))]"}`}>{farmSub(farm, lang)}</p>
         </header>
 
-        <dl className="grid grid-cols-2 gap-3">
-          <div>
+        <dl className={`grid grid-cols-2 ${large ? "gap-3" : "gap-3"}`}>
+          <div className={large ? "bg-sand px-4 py-3" : ""}>
             <dt className="text-[length:calc(15px*var(--fs))] text-ink-soft">{A.waterToday[lang]}</dt>
-            <dd className={`font-display font-medium leading-tight ${large ? "text-4xl" : "text-[length:calc(26px*var(--fs)*var(--fsn))]"}`}>
-              <span dir="ltr">{fmtN(item.m3, lang)}</span> <span className="text-[0.55em]">{A.m3[lang]}</span>
+            <dd className={`font-display font-medium leading-tight ${figure}`}>
+              <span dir="ltr">{fmtN(item.m3, lang)}</span> <span className="text-[0.5em]">{A.m3[lang]}</span>
             </dd>
           </div>
-          <div>
+          <div className={large ? "bg-sand px-4 py-3" : ""}>
             <dt className="text-[length:calc(15px*var(--fs))] text-ink-soft">{A.savedToday[lang]}</dt>
-            <dd className={`font-display font-medium leading-tight ${large ? "text-4xl" : "text-[length:calc(26px*var(--fs)*var(--fsn))]"}`}>
+            <dd className={`font-display font-medium leading-tight ${figure}`}>
               {money ? (
                 <>
-                  <span dir="ltr">{fmtMoney(money.farmer_net_tnd, lang)}</span> <span className="text-[0.55em]">{A.tnd[lang]}</span>
+                  <span dir="ltr">{fmtMoney(money.farmer_net_tnd, lang)}</span> <span className="text-[0.5em]">{A.tnd[lang]}</span>
                 </>
               ) : (
                 "–"
@@ -89,12 +87,12 @@ export default function AllocationCard({ farm, item, money, compat, lang, large 
           </div>
         </dl>
 
-        <p className={`leading-snug ${large ? "text-[length:calc(21px*var(--fs))]" : "text-[length:calc(16px*var(--fs))]"} ${d === "blocked" ? "text-bad" : ""}`}>
+        <p className={`leading-snug ${large ? `border-s-4 ${tone} bg-cream px-4 py-3 text-[length:calc(18px*var(--fs))]` : "text-[length:calc(16px*var(--fs))]"} ${d === "blocked" ? "text-bad" : ""}`}>
           {reasonText(item, farm, compat, lang)}
         </p>
 
         {large && onChange && (
-          <footer className="mt-auto flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4 text-[length:calc(15px*var(--fs))]">
+          <footer className="mt-auto flex flex-wrap items-center justify-between gap-3 border-t border-line pt-3 text-[length:calc(15px*var(--fs))]">
             <span className="text-ink-soft">{A.privacy[lang]}</span>
             <button type="button" onClick={onChange} className="link">
               {A.change[lang]}

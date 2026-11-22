@@ -8,7 +8,7 @@ import { S, STATUS, assumptionName, assumptionValue } from "./texts";
 export default function HowCalculated({ report, lang }: { report: SavingsReport; lang: Lang }) {
   const warnings = report.warnings.filter((w) => !w.startsWith("Season and year"));
   return (
-    <details className="group mx-auto mt-8 w-full max-w-2xl border border-line bg-white px-5 py-4 sm:px-6">
+    <details className="group mx-auto mt-6 w-full max-w-3xl border border-line bg-white px-5 py-4 sm:px-6">
       <summary className="cursor-pointer list-none text-xl font-medium sm:text-2xl">
         {S.howTitle[lang]} <span className="inline-block transition-transform group-open:rotate-90 rtl:rotate-180 rtl:group-open:rotate-90">›</span>
       </summary>

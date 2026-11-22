@@ -46,7 +46,7 @@ export default function MyFarm({ farm, result, rules, lang, onChange, label }: P
   const v = VERDICT[result.decision];
 
   return (
-    <article className="fade-up mx-auto max-w-2xl border border-line bg-white">
+    <article className="fade-up mx-auto max-w-3xl border border-line bg-white">
       <div className={`flex items-center gap-3 px-6 py-4 font-display text-[length:calc(26px*var(--fs)*var(--fsn))] font-medium text-white ${v.bg}`}>
         <span
           aria-hidden="true"
@@ -57,7 +57,7 @@ export default function MyFarm({ farm, result, rules, lang, onChange, label }: P
         {DECISION[result.decision][lang]}
       </div>
 
-      <div className="space-y-8 px-6 py-7">
+      <div className="space-y-6 px-6 py-6">
         <header>
           <p className="eyebrow">{label ?? T.yourFarm[lang]}</p>
           <h2 className="mt-1 text-4xl">{farm.name.replace(/^Ferme [A-Z] - /, "")}</h2>

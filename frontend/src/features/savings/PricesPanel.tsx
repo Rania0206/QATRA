@@ -80,7 +80,7 @@ export default function PricesPanel({ defaults, current, overrides, onCommit, bu
   const edited = Object.keys(overrides).length > 0 || Object.keys(draft).length > 0;
 
   return (
-    <section aria-label={S.pricesTitle[lang]} className="mx-auto mt-10 w-full max-w-2xl border border-line bg-white px-5 py-5 sm:px-6">
+    <section aria-label={S.pricesTitle[lang]} className="mx-auto mt-6 w-full max-w-3xl border border-line bg-white px-5 py-5 sm:px-6">
       <div className="flex items-start justify-between gap-3">
         <div>
           <h2 className="text-2xl sm:text-3xl">{S.pricesTitle[lang]}</h2>
