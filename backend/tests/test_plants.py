@@ -114,3 +114,22 @@ def test_farmland_layer_has_polygons(layers):
     for f in fl["features"]:
         assert f["geometry"]["type"] == "Polygon" and len(f["geometry"]["coordinates"][0]) >= 4
         assert f["landuse"] in {"farmland", "orchard"} and f["area_ha"] > 0
+
+
+def test_farms_layer_has_polygons_and_expected_decisions(layers):
+    farms = {f["id"]: f for f in layers["farms"]["features"]}
+    assert len(farms) == 10 and all(f["geometry"]["type"] == "Polygon" for f in farms.values())
+    assert [farms[k]["expected_decision"] for k in "ABC"] == ["conditional", "compatible", "blocked"]
+    assert all(farms[k]["expected_decision"] is None for k in "DEFGHIJ")  # nothing invented
+    farmland_ids = {f["id"] for f in layers["farmland"]["features"]}
+    assert all(f["osm_polygon_id"] in farmland_ids for f in farms.values())
+
+
+def test_wells_and_pumps_layers_are_labelled_simulated_vs_real(layers):
+    sim, real = layers["wells_sim"], layers["pumps_osm"]
+    assert sim["tag"]["status"] == "SIMULATED" and "assumed" in sim["tag"]["source"]
+    assert len(sim["features"]) == 10 and all(f["id"].startswith("SIM-WELL-") for f in sim["features"])
+    farms = {f["id"]: f for f in layers["farms"]["features"]}
+    assert all((f["lat"], f["lon"]) == (farms[f["id"][-1]]["lat"], farms[f["id"][-1]]["lon"]) for f in sim["features"])
+    assert real["tag"]["status"] == "REPORTED" and len(real["features"]) == 2
+    assert layers["basin"]["tag"]["status"] == "SIMULATED"

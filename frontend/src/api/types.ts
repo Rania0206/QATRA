@@ -176,7 +176,12 @@ export interface MapFeature {
   campaign?: string | null;
   tww_distributed_m3_yr?: number | null;
   landuse?: string;
-  geometry?: GeoPolygon; // farmland polygons
+  geometry?: GeoPolygon | null; // farmland / farm polygons (null: no polygon)
+  osm_polygon_id?: string | null; // farms: the OSM polygon they sit on
+  expected_decision?: string | null; // farms A-C only: fallback when the live rules are unavailable
+  head_m?: number | null; // simulated wells
+  flow_m3_h?: number | null;
+  source?: string | null;
 }
 
 export interface MapLayer {

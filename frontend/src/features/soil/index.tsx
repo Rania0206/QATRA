@@ -80,7 +80,7 @@ export default function SoilTab() {
   );
 
   return (
-    <section className="space-y-4">
+    <section className="mx-auto w-full max-w-7xl space-y-4 px-5 py-8 sm:px-8">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h2 className="text-lg font-semibold text-slate-800">Soil salinity over 30 years</h2>

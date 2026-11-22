@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CircleMarker, LayerGroup, LayersControl, MapContainer, Polygon, Popup, TileLayer, Tooltip } from "react-leaflet";
 import type { LatLngTuple } from "leaflet";
-import type { MapFeature, MapLayer, Plant } from "../../api/types";
+import type { Decision, MapFeature, MapLayer, Plant } from "../../api/types";
 import TagChip from "../../components/TagChip";
 
 // Zaouiet-Sousse (same centre and zoom as data/map_preview.html).
@@ -13,12 +13,24 @@ const ESRI_ATTR = "Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geog
 const OSM = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
 const OSM_ATTR = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
+export type DecisionKey = Decision | "unknown";
+
+// Farm colour = compatibility decision. The word is always shown too (tooltip, card, legend).
+export const DECISION_STYLE: Record<DecisionKey, { colour: string; label: string }> = {
+  compatible: { colour: "#16a34a", label: "Compatible" },
+  conditional: { colour: "#f59e0b", label: "Conditional" },
+  blocked: { colour: "#dc2626", label: "Blocked" },
+  unknown: { colour: "#94a3b8", label: "Unknown" },
+};
+
 // Colour + radius per layer id. Circles and polygons, no marker images (avoids the Vite icon-path issue).
+// SIMULATED layers are drawn hollow with a dashed outline, real (REPORTED) ones solid with a white outline.
 const STYLE: Record<string, { colour: string; radius: number }> = {
   plants: { colour: "#a21caf", radius: 11 },
   osm_plants: { colour: "#e879f9", radius: 7 },
-  farms: { colour: "#f59e0b", radius: 7 },
-  basin: { colour: "#22d3ee", radius: 8 },
+  wells_sim: { colour: "#22d3ee", radius: 14 }, // ring around the farm marker it is drawn at
+  pumps_osm: { colour: "#0e7490", radius: 7 },
+  basin: { colour: "#22d3ee", radius: 11 },
   farmland: { colour: "#a3e635", radius: 0 },
 };
 const FALLBACK = { colour: "#e2e8f0", radius: 6 };
@@ -43,6 +55,7 @@ export function polygonPositions(f: MapFeature): LatLngTuple[][] | null {
 export const isDrawable = (f: MapFeature) => hasCoords(f) || polygonPositions(f) !== null;
 
 function FeaturePopup({ f, layer, plant }: { f: MapFeature; layer: MapLayer; plant?: Plant }) {
+  const tag = plant ? plant.tag : layer.tag;
   return (
     <div className="min-w-48 space-y-1.5 text-sm">
       <p className="text-base font-semibold text-slate-900">{f.name}</p>
@@ -64,18 +77,55 @@ function FeaturePopup({ f, layer, plant }: { f: MapFeature; layer: MapLayer; pla
           {f.landuse && <li>Land use: {f.landuse}</li>}
           {typeof f.area_ha === "number" && <li>Area: {f.area_ha} ha</li>}
           {typeof f.capacity_m3 === "number" && <li>Capacity: {f.capacity_m3.toLocaleString()} m³</li>}
+          {typeof f.head_m === "number" && <li>Head: {f.head_m} m</li>}
+          {typeof f.flow_m3_h === "number" && <li>Flow: {f.flow_m3_h} m³/h</li>}
         </ul>
       )}
-      <TagChip tag={plant ? plant.tag : layer.tag} showSource={false} />
-      {(plant ? plant.tag : layer.tag).source && (
-        <p className="break-words text-xs text-slate-500">{(plant ? plant.tag : layer.tag).source}</p>
-      )}
+      <TagChip tag={tag} showSource={false} />
+      {tag.source && <p className="break-words text-xs text-slate-500">{tag.source}</p>}
     </div>
+  );
+}
+
+interface FarmProps {
+  decisions: Record<string, DecisionKey>;
+  selectedFarm: string | null;
+  onSelectFarm: (id: string) => void;
+}
+
+/** Farms: the OSM polygon (when there is one) plus a marker at lat/lon, both coloured by decision. Click selects the farm. */
+function FarmFeatures({ layer, decisions, selectedFarm, onSelectFarm }: { layer: MapLayer } & FarmProps) {
+  return (
+    <LayerGroup>
+      {layer.features.map((f) => {
+        const decision = decisions[f.id] ?? "unknown";
+        const { colour, label } = DECISION_STYLE[decision];
+        const selected = f.id === selectedFarm;
+        const polygon = polygonPositions(f);
+        const tip = `Farm ${f.id}${f.crop ? ` · ${f.crop.replace(/_/g, " ")}` : ""} · ${label}`;
+        const handlers = { click: () => onSelectFarm(f.id) };
+        return (
+          <LayerGroup key={f.id}>
+            {polygon && (
+              <Polygon positions={polygon} eventHandlers={handlers}
+                pathOptions={{ color: colour, weight: selected ? 4 : 2, fillColor: colour, fillOpacity: selected ? 0.55 : 0.4 }} />
+            )}
+            {hasCoords(f) && (
+              <CircleMarker center={[f.lat, f.lon]} radius={selected ? 11 : 8} eventHandlers={handlers}
+                pathOptions={{ color: selected ? "#0f172a" : "#ffffff", weight: selected ? 3 : 2, fillColor: colour, fillOpacity: 1 }}>
+                <Tooltip direction="right" offset={[8, 0]}>{tip}</Tooltip>
+              </CircleMarker>
+            )}
+          </LayerGroup>
+        );
+      })}
+    </LayerGroup>
   );
 }
 
 function LayerFeatures({ layer, plants }: { layer: MapLayer; plants: Plant[] }) {
   const style = STYLE[layer.id] ?? FALLBACK;
+  const simulated = layer.tag.status === "SIMULATED";
   return (
     <LayerGroup>
       {layer.features.map((f) => {
@@ -98,9 +148,12 @@ function LayerFeatures({ layer, plants }: { layer: MapLayer; plants: Plant[] }) 
             key={f.id}
             center={[f.lat, f.lon]}
             radius={style.radius}
-            pathOptions={{ color: "#ffffff", weight: 2, fillColor: style.colour, fillOpacity: 0.95 }}
+            pathOptions={
+              simulated
+                ? { color: style.colour, weight: 3, dashArray: "4 3", fillColor: style.colour, fillOpacity: 0.15 }
+                : { color: "#ffffff", weight: 2, fillColor: style.colour, fillOpacity: 0.95 }
+            }
           >
-            {layer.id === "farms" && <Tooltip direction="right" offset={[8, 0]}>{`Farm ${f.id}`}</Tooltip>}
             {popup}
           </CircleMarker>
         );
@@ -109,7 +162,7 @@ function LayerFeatures({ layer, plants }: { layer: MapLayer; plants: Plant[] }) 
   );
 }
 
-export default function MapView({ layers, plants }: { layers: MapLayer[]; plants: Plant[] }) {
+export default function MapView({ layers, plants, decisions, selectedFarm, onSelectFarm }: { layers: MapLayer[]; plants: Plant[] } & FarmProps) {
   const [tilesFailed, setTilesFailed] = useState(false);
   return (
     <div className="space-y-2">
@@ -126,11 +179,16 @@ export default function MapView({ layers, plants }: { layers: MapLayer[]; plants
           <LayersControl.BaseLayer name="OpenStreetMap">
             <TileLayer url={OSM} attribution={OSM_ATTR} maxZoom={19} eventHandlers={{ tileerror: () => setTilesFailed(true) }} />
           </LayersControl.BaseLayer>
-          {layers
+          {/* farms last, so their decision colour is never hidden by the layers drawn at the same place */}
+          {[...layers.filter((l) => l.id !== "farms"), ...layers.filter((l) => l.id === "farms")]
             .filter((l) => l.features.some(isDrawable))
             .map((l) => (
               <LayersControl.Overlay key={l.id} checked name={l.label}>
-                <LayerFeatures layer={l} plants={plants} />
+                {l.id === "farms" ? (
+                  <FarmFeatures layer={l} decisions={decisions} selectedFarm={selectedFarm} onSelectFarm={onSelectFarm} />
+                ) : (
+                  <LayerFeatures layer={l} plants={plants} />
+                )}
               </LayersControl.Overlay>
             ))}
         </LayersControl>
