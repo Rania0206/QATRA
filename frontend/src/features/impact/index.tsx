@@ -5,6 +5,7 @@ import ErrorBox from "../../components/ErrorBox";
 import Loading from "../../components/Loading";
 import { Band, Intro } from "../../components/ui";
 import { useApi } from "../../hooks/useApi";
+import { useLang } from "../../i18n";
 
 // Local shape for the example (GET /api/impact); the shared contract is untouched.
 interface Impact {
@@ -14,8 +15,21 @@ interface Impact {
   tag: Tag;
 }
 
+const TX = {
+  eyebrow: { en: "Impact", fr: "Impact", ar: "الأثر" },
+  title: { en: "Fresh water left in the ground.", fr: "De l'eau douce laissée dans le sol.", ar: "مياه عذبة تبقى في باطن الأرض." },
+  lead: {
+    en: "Every cubic metre of treated water used on a field is a cubic metre not pumped from a well.",
+    fr: "Chaque mètre cube d'eau traitée utilisé au champ est un mètre cube non pompé dans un puits.",
+    ar: "كل متر مكعب من الماء المعالج يُستعمل في الحقل هو متر مكعب لا يُضخّ من البئر.",
+  },
+  saved: { en: "of fresh water saved", fr: "d'eau douce économisés", ar: "من المياه العذبة تمّ توفيرها" },
+  simulate: { en: "Simulate a failing call", fr: "Simuler un appel en échec", ar: "محاكاة طلب فاشل" },
+};
+
 // Usage example of useApi + Loading + ErrorBox. B-xx replaces the body later.
 export default function ImpactTab() {
+  const { lang } = useLang();
   const [simulateFailure, setSimulateFailure] = useState(false);
   const { data, loading, error, reload } = useApi<Impact>(() =>
     simulateFailure ? Promise.reject(new Error("Simulated failure (demo)")) : get<Impact>("/api/impact"),
@@ -24,8 +38,8 @@ export default function ImpactTab() {
   return (
     <>
       <Band tone="olive" className="md:py-32">
-        <Intro as="h1" size="xl" eyebrow="Impact" title="Fresh water left in the ground.">
-          <p>Every cubic metre of treated water used on a field is a cubic metre not pumped from a well.</p>
+        <Intro as="h1" size="xl" eyebrow={TX.eyebrow[lang]} title={TX.title[lang]}>
+          <p>{TX.lead[lang]}</p>
         </Intro>
       </Band>
 
@@ -35,11 +49,11 @@ export default function ImpactTab() {
         {data && (
           <div className="fade-up flex flex-col items-center gap-5 text-center">
             <p className="eyebrow">{data.period}</p>
-            <p className="font-display text-7xl leading-none tabular-nums">
+            <p dir="ltr" className="font-display text-7xl leading-none tabular-nums">
               {data.fresh_water_saved_m3.toLocaleString("en-US")}
-              <span className="ml-2 text-3xl">m³</span>
+              <span className="ms-2 text-3xl">m³</span>
             </p>
-            <p>of fresh water saved</p>
+            <p>{TX.saved[lang]}</p>
           </div>
         )}
         <label className="mt-12 flex items-center justify-center gap-3 text-[15px]">
@@ -52,7 +66,7 @@ export default function ImpactTab() {
               setTimeout(reload, 0);
             }}
           />
-          Simulate a failing call
+          {TX.simulate[lang]}
         </label>
       </Band>
     </>

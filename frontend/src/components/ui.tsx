@@ -1,4 +1,5 @@
 import { useEffect, type ReactNode } from "react";
+import { C, useLang } from "../i18n";
 
 /* Shared building blocks for every screen. Style tokens live in index.css (@theme). */
 
@@ -129,7 +130,7 @@ export function Drawer({
   header,
   children,
   onClose,
-  closeLabel = "Close",
+  closeLabel,
 }: {
   label: string;
   header: ReactNode;
@@ -137,6 +138,7 @@ export function Drawer({
   onClose: () => void;
   closeLabel?: string;
 }) {
+  const { lang } = useLang();
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", onKey);
@@ -154,7 +156,7 @@ export function Drawer({
       <aside className="relative flex h-full w-full max-w-xl flex-col overflow-y-auto bg-cream">
         <header className="sticky top-0 z-10 border-b border-line bg-cream px-6 pb-5 pt-6">
           <button type="button" onClick={onClose} className="link absolute end-6 top-6 text-[15px]">
-            {closeLabel}
+            {closeLabel ?? C.close[lang]}
           </button>
           {header}
         </header>

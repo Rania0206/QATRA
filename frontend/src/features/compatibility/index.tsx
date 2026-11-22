@@ -2,14 +2,15 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { get } from "../../api/client";
 import type { AllFarmsCompatibility, Batch, Decision, Farm } from "../../api/types";
 import ErrorBox from "../../components/ErrorBox";
-import { Band, Dot, Intro, Pill, Segmented, Skeleton } from "../../components/ui";
+import { Band, Dot, Intro, Pill, Skeleton } from "../../components/ui";
 import { USE_MOCKS } from "../../config";
 import { useApi } from "../../hooks/useApi";
 import { COMPLIANCE } from "../batches/format";
 import DayPicker from "./DayPicker";
 import FarmCard, { FarmCardSkeleton } from "./FarmCard";
 import FarmDrawer from "./FarmDrawer";
-import { BATCH_STATUS, DECISION, T, isRtl, type Lang, type RuleInfo } from "./format";
+import { useLang } from "../../i18n";
+import { DECISION, T, type RuleInfo } from "./format";
 
 interface Static {
   farms: Farm[];
@@ -21,7 +22,7 @@ const newestFirst = (a: Batch, b: Batch) => b.date.localeCompare(a.date) || b.id
 const ORDER: Decision[] = ["compatible", "conditional", "blocked"];
 
 export default function CompatibilityTab() {
-  const [lang, setLang] = useState<Lang>("en");
+  const { lang } = useLang();
   const [batchId, setBatchId] = useState<string | null>(null); // null = backend default (latest usable batch)
   const [selectedFarm, setSelectedFarm] = useState<string | null>(null);
 
@@ -59,7 +60,7 @@ export default function CompatibilityTab() {
   const farmResult = selectedFarm ? byFarm.get(selectedFarm) : undefined;
 
   return (
-    <div dir={isRtl(lang) ? "rtl" : "ltr"} lang={lang}>
+    <>
       {/* Hero: the question, the batch picker, the language */}
       <Band tone="olive" className="md:py-28">
         <Intro as="h1" size="xl" eyebrow={T.eyebrow[lang]} title={T.title[lang]}>
@@ -88,21 +89,11 @@ export default function CompatibilityTab() {
           <div className="flex items-center gap-3 text-[16px]">
             {T.quality[lang]}:
             {batchStatus ? (
-              <Pill tone={COMPLIANCE[batchStatus]?.tone ?? "neutral"}>{BATCH_STATUS[batchStatus]?.[lang] ?? batchStatus}</Pill>
+              <Pill tone={COMPLIANCE[batchStatus]?.tone ?? "neutral"}>{COMPLIANCE[batchStatus]?.label[lang] ?? batchStatus}</Pill>
             ) : (
               <Skeleton className="h-8 w-32" />
             )}
           </div>
-          <Segmented
-            label="Language"
-            value={lang}
-            onChange={setLang}
-            options={[
-              { id: "en", label: "English" },
-              { id: "fr", label: "Français" },
-              { id: "ar", label: "العربية" },
-            ]}
-          />
         </div>
       </Band>
 
@@ -161,6 +152,6 @@ export default function CompatibilityTab() {
       {farm && farmResult && base.data && (
         <FarmDrawer farm={farm} result={farmResult} rules={base.data.rules} lang={lang} onClose={close} />
       )}
-    </div>
+    </>
   );
 }

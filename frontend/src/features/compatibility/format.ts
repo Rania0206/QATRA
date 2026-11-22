@@ -1,12 +1,8 @@
 import type { Decision, RuleResult, SourceType, Tag } from "../../api/types";
 import type { Tone } from "../../components/ui";
 
-export type Lang = "en" | "fr" | "ar";
-
-/** A text in the three languages of the screen. */
-export type Tr = Record<Lang, string>;
-
-export const isRtl = (lang: Lang) => lang === "ar";
+import type { Lang, Tr } from "../../i18n";
+export type { Lang, Tr };
 
 /** One entry of GET /api/rules (only the fields this screen uses). */
 export interface RuleInfo {
@@ -40,14 +36,6 @@ export const DECISION: Record<Decision, Tr & { legend: Tr; tone: Tone }> = {
     legend: { en: "cannot", fr: "ne peuvent pas", ar: "لا يمكنها" },
     tone: "bad",
   },
-};
-
-/** Batch.status in the three languages (labels match batches/format COMPLIANCE in English). */
-export const BATCH_STATUS: Record<string, Tr> = {
-  compliant: { en: "Meets the law", fr: "Conforme à la loi", ar: "مطابق للقانون" },
-  conditional: { en: "With conditions", fr: "Sous conditions", ar: "بشروط" },
-  non_compliant: { en: "Fails the law", fr: "Non conforme", ar: "غير مطابق للقانون" },
-  analysis_invalid: { en: "Lab test too old", fr: "Test trop ancien", ar: "التحليل قديم" },
 };
 
 export const GROUPS: ({ id: SourceType } & Tr)[] = [
