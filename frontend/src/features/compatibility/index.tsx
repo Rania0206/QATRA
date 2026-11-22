@@ -29,6 +29,7 @@ export default function CompatibilityTab() {
   const { lang } = useLang();
   const [batchId, setBatchId] = useState<string | null>(null); // null = backend default (latest usable batch)
   const [farmCode, setFarmCode] = useState<string | null>(getFarmCode);
+  const [badCode, setBadCode] = useState(false); // a saved or linked code that does not exist
 
   const base = useApi<Static>(async () => {
     const [farms, batches, rules] = await Promise.all([
@@ -53,12 +54,14 @@ export default function CompatibilityTab() {
   // a remembered or linked code that does not exist: ask again
   useEffect(() => {
     if (farmCode && base.data && !farm) {
+      setBadCode(true);
       setFarmCode(null);
       saveFarmCode(null);
     }
   }, [farmCode, base.data, farm]);
 
   const choose = (code: string) => {
+    setBadCode(false);
     setFarmCode(code);
     saveFarmCode(code);
   };
@@ -80,8 +83,8 @@ export default function CompatibilityTab() {
           <p>{T.lead[lang]}</p>
         </Intro>
 
-        {!farm ? (
-          <FarmCodeForm onSubmit={choose} />
+        {!farmCode ? (
+          <FarmCodeForm onSubmit={choose} notFound={badCode} />
         ) : (
           <div className="fade-up mx-auto mt-10 flex max-w-2xl flex-col items-center gap-4">
             {base.data ? (

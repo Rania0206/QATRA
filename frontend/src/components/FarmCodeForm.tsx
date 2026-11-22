@@ -5,11 +5,11 @@ import { useApi } from "../hooks/useApi";
 import { FARM, useLang } from "../i18n";
 
 /** "Your farm code" box. The code is checked against the farm list but the list is never shown. */
-export default function FarmCodeForm({ onSubmit }: { onSubmit: (code: string) => void }) {
+export default function FarmCodeForm({ onSubmit, notFound: startNotFound = false }: { onSubmit: (code: string) => void; notFound?: boolean }) {
   const { lang } = useLang();
   const farms = useApi<Farm[]>(() => get<Farm[]>("/api/farms"));
   const [input, setInput] = useState("");
-  const [notFound, setNotFound] = useState(false);
+  const [notFound, setNotFound] = useState(startNotFound); // e.g. a saved code that no longer exists
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
