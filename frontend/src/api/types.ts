@@ -146,6 +146,50 @@ export interface BusinessView {
   tag: Tag;
 }
 
+export interface Plant {
+  id: string;
+  name: string;
+  governorate: string;
+  serves_perimeter: string | null;
+  treatment_level: string;
+  capacity_m3_d: number | null; // TREATMENT capacity, not volume available to farmers
+  lat: number | null; // null when no coordinates are known (never invented)
+  lon: number | null;
+  tag: Tag;
+}
+
+export interface GeoPolygon {
+  type: "Polygon";
+  coordinates: number[][][]; // [lon, lat] rings
+}
+
+export interface MapFeature {
+  id: string;
+  name: string;
+  lat: number | null; // null: the data has no location (e.g. the irrigated perimeter)
+  lon: number | null;
+  // layer-specific extras
+  crop?: string;
+  capacity_m3?: number;
+  area_ha?: number | null;
+  wwtp?: string | null;
+  campaign?: string | null;
+  tww_distributed_m3_yr?: number | null;
+  landuse?: string;
+  geometry?: GeoPolygon; // farmland polygons
+}
+
+export interface MapLayer {
+  id: string;
+  label: string;
+  tag: Tag;
+  features: MapFeature[];
+}
+
+export interface MapLayersResponse {
+  layers: MapLayer[];
+}
+
 export interface SoilPoint {
   day: number; // legacy: year * 365
   ece: number;

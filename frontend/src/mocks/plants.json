@@ -10,7 +10,7 @@
     "lon": 10.644677,
     "tag": {
       "status": "TO_VERIFY",
-      "source": "https://catalog.data.gov.tn/fr/dataset/repartition-regionale-des-ppi-irrigues-par-les-eaux-usees-traitees"
+      "source": "nearest OSM plant, identity assumed; capacity != volume available to farmers"
     }
   },
   {
@@ -24,7 +24,7 @@
     "lon": null,
     "tag": {
       "status": "REPORTED",
-      "source": "https://catalog.data.gov.tn/fr/dataset/repartition-regionale-des-ppi-irrigues-par-les-eaux-usees-traitees"
+      "source": "https://catalog.data.gov.tn/fr/dataset/repartition-regionale-des-ppi-irrigues-par-les-eaux-usees-traitees; capacity != volume available to farmers"
     }
   },
   {
