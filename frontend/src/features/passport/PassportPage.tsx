@@ -161,7 +161,7 @@ export default function PassportPage() {
                   {p.allowed_crops.length ? (
                     <ul className="flex flex-wrap gap-2 text-[15px]">
                       {p.allowed_crops.map((c) => (
-                        <li key={c} className="border border-ok px-2 py-0.5 text-ok">
+                        <li key={c} className="rounded-full bg-ok-soft px-3 py-0.5 text-ok">
                           {c}
                         </li>
                       ))}
@@ -174,7 +174,7 @@ export default function PassportPage() {
                   <h3 className="mb-1 text-xl text-bad">✕ Not allowed</h3>
                   <ul className="flex flex-wrap gap-2 text-[15px]">
                     {p.blocked_crops.map((c) => (
-                      <li key={c} className="border border-bad px-2 py-0.5 text-bad">
+                      <li key={c} className="rounded-full bg-bad-soft px-3 py-0.5 text-bad">
                         {c}
                       </li>
                     ))}

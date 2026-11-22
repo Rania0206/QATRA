@@ -107,92 +107,92 @@
     },
     {
       "hour": 7,
-      "pump_kw": 14.9,
-      "source": "grid",
-      "basin_m3": 1400.0
+      "pump_kw": 0.0,
+      "source": "off",
+      "basin_m3": 1350.0
     },
     {
       "hour": 8,
       "pump_kw": 0.0,
       "source": "off",
-      "basin_m3": 1400.0
+      "basin_m3": 1350.0
     },
     {
       "hour": 9,
       "pump_kw": 0.0,
       "source": "off",
-      "basin_m3": 1400.0
+      "basin_m3": 1350.0
     },
     {
       "hour": 10,
       "pump_kw": 0.0,
       "source": "off",
-      "basin_m3": 1400.0
+      "basin_m3": 1350.0
     },
     {
       "hour": 11,
-      "pump_kw": 0.0,
-      "source": "off",
-      "basin_m3": 1400.0
+      "pump_kw": 44.6,
+      "source": "solar",
+      "basin_m3": 1500.0
     },
     {
       "hour": 12,
-      "pump_kw": 0.0,
-      "source": "off",
-      "basin_m3": 1400.0
+      "pump_kw": 44.6,
+      "source": "solar",
+      "basin_m3": 1650.0
     },
     {
       "hour": 13,
-      "pump_kw": 0.0,
-      "source": "off",
-      "basin_m3": 1400.0
+      "pump_kw": 44.6,
+      "source": "solar",
+      "basin_m3": 1800.0
     },
     {
       "hour": 14,
-      "pump_kw": 0.0,
-      "source": "off",
-      "basin_m3": 1400.0
+      "pump_kw": 44.6,
+      "source": "solar",
+      "basin_m3": 1950.0
     },
     {
       "hour": 15,
       "pump_kw": 0.0,
       "source": "off",
-      "basin_m3": 1400.0
+      "basin_m3": 1950.0
     },
     {
       "hour": 16,
       "pump_kw": 0.0,
       "source": "off",
-      "basin_m3": 1400.0
+      "basin_m3": 1950.0
     },
     {
       "hour": 17,
       "pump_kw": 0.0,
       "source": "off",
-      "basin_m3": 1400.0
+      "basin_m3": 1950.0
     },
     {
       "hour": 18,
-      "pump_kw": 44.6,
+      "pump_kw": 14.9,
       "source": "grid",
-      "basin_m3": 1550.0
+      "basin_m3": 2000.0
     },
     {
       "hour": 19,
-      "pump_kw": 44.6,
-      "source": "grid",
-      "basin_m3": 1700.0
+      "pump_kw": 0.0,
+      "source": "off",
+      "basin_m3": 2000.0
     },
     {
       "hour": 20,
-      "pump_kw": 44.6,
-      "source": "grid",
-      "basin_m3": 1850.0
+      "pump_kw": 0.0,
+      "source": "off",
+      "basin_m3": 2000.0
     },
     {
       "hour": 21,
-      "pump_kw": 44.6,
-      "source": "grid",
+      "pump_kw": 0.0,
+      "source": "off",
       "basin_m3": 2000.0
     },
     {
@@ -209,7 +209,7 @@
     }
   ],
   "energy_kwh": 238.0,
-  "solar_share": 0.0,
+  "solar_share": 0.41,
   "fresh_replaced_m3": 800.0,
   "warnings": [
     "400 m3 not allocated: kept in the basin."
