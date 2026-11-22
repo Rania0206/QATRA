@@ -23,3 +23,6 @@ Thumbs.db
 dist/
 *.local
 *.tsbuildinfo
+
+# Personal plain-language guide, kept local (lives on the docs/readme-simple branch)
+README_SIMPLE.md

@@ -91,7 +91,7 @@ export default function RequestsTab() {
 
       <Band tone="cream" wide>
         <div className="grid gap-14 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)]">
-          <form onSubmit={submit} className="space-y-5" aria-label={RQ.formTitle[lang]}>
+          <form onSubmit={submit} className="min-w-0 space-y-5" aria-label={RQ.formTitle[lang]}>
             <h2 className="text-3xl">{RQ.formTitle[lang]}</h2>
             <label className="block text-[17px]">
               {RQ.farm[lang]}
@@ -142,7 +142,7 @@ export default function RequestsTab() {
             </button>
           </form>
 
-          <section aria-label={RQ.listTitle[lang]} className="space-y-5">
+          <section aria-label={RQ.listTitle[lang]} className="min-w-0 space-y-5">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <h2 className="text-3xl">{RQ.listTitle[lang]}</h2>
               <Segmented<Filter>
@@ -169,7 +169,8 @@ export default function RequestsTab() {
             ) : shown.length === 0 ? (
               <p className="py-8 text-ink-soft">{RQ.empty[lang]}</p>
             ) : (
-              <table className="w-full text-[17px]">
+              <div className="overflow-x-auto">
+              <table className="w-full min-w-[34rem] text-[17px]">
                 <thead>
                   <tr className="border-b border-ink text-start text-[14px] uppercase tracking-wide text-ink-soft">
                     <th className="py-2 text-start font-normal">{RQ.colId[lang]}</th>
@@ -216,6 +217,7 @@ export default function RequestsTab() {
                   ))}
                 </tbody>
               </table>
+              </div>
             )}
           </section>
         </div>
