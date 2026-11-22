@@ -5,7 +5,8 @@ import ErrorBox from "../../components/ErrorBox";
 import { Band, Dot, Intro, Pill, Segmented, Skeleton } from "../../components/ui";
 import { USE_MOCKS } from "../../config";
 import { useApi } from "../../hooks/useApi";
-import { COMPLIANCE, fmtDate } from "../batches/format";
+import { COMPLIANCE } from "../batches/format";
+import DayPicker from "./DayPicker";
 import FarmCard, { FarmCardSkeleton } from "./FarmCard";
 import FarmDrawer from "./FarmDrawer";
 import { BATCH_STATUS, DECISION, T, isRtl, type Lang, type RuleInfo } from "./format";
@@ -79,30 +80,17 @@ export default function CompatibilityTab() {
         </Intro>
 
         <div className="fade-up mx-auto mt-10 flex max-w-2xl flex-col items-center gap-5">
-          <div className="flex w-full flex-wrap items-center justify-center gap-3">
-            <label htmlFor="batch" className="eyebrow">
-              {T.batch[lang]}
-            </label>
-            <select
-              id="batch"
-              value={shownBatch}
-              disabled={!base.data}
-              onChange={(e) => setBatchId(e.target.value)}
-              className="min-w-0 flex-1 border border-ink bg-transparent px-4 py-3 text-[16px] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink sm:max-w-sm"
-            >
-              {!shownBatch && <option value="">…</option>}
-              {base.data?.batches.map((b) => (
-                <option key={b.id} value={b.id}>
-                  {b.id} · {fmtDate(b.date)} · {BATCH_STATUS[b.status]?.[lang] ?? b.status}
-                </option>
-              ))}
-            </select>
+          {base.data ? (
+            <DayPicker batches={base.data.batches} value={shownBatch} onChange={setBatchId} lang={lang} />
+          ) : (
+            <Skeleton className="h-24 w-full max-w-xl" />
+          )}
+          <div className="flex items-center gap-3 text-[16px]">
+            {T.quality[lang]}:
             {batchStatus ? (
-              <Pill tone={COMPLIANCE[batchStatus]?.tone ?? "neutral"} large>
-                {BATCH_STATUS[batchStatus]?.[lang] ?? batchStatus}
-              </Pill>
+              <Pill tone={COMPLIANCE[batchStatus]?.tone ?? "neutral"}>{BATCH_STATUS[batchStatus]?.[lang] ?? batchStatus}</Pill>
             ) : (
-              <Skeleton className="h-10 w-36" />
+              <Skeleton className="h-8 w-32" />
             )}
           </div>
           <Segmented
