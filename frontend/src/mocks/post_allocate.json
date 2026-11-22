@@ -1,11 +1,11 @@
 {
-  "batch_id": "SSUD-20260708",
+  "batch_id": "SSUD-20260829",
   "items": [
     {
       "farm_id": "A",
       "status": "conditional",
-      "m3": 35.7,
-      "cap_reason": "soil salinity: limited volume (alfalfa tolerates ECe 2 dS/m: only 49% of the water can be TWW (blend 2.31 dS/m, leaching fraction 0.30))"
+      "m3": 35.0,
+      "cap_reason": "soil salinity: limited volume (alfalfa tolerates ECe 2 dS/m: only 48% of the water can be TWW (blend 2.31 dS/m, leaching fraction 0.30))"
     },
     {
       "farm_id": "B",
@@ -173,45 +173,45 @@
     },
     {
       "hour": 18,
-      "pump_kw": 14.9,
+      "pump_kw": 14.7,
       "source": "grid",
-      "basin_m3": 2000.0
+      "basin_m3": 1999.3
     },
     {
       "hour": 19,
       "pump_kw": 0.0,
       "source": "off",
-      "basin_m3": 2000.0
+      "basin_m3": 1999.3
     },
     {
       "hour": 20,
       "pump_kw": 0.0,
       "source": "off",
-      "basin_m3": 2000.0
+      "basin_m3": 1999.3
     },
     {
       "hour": 21,
       "pump_kw": 0.0,
       "source": "off",
-      "basin_m3": 2000.0
+      "basin_m3": 1999.3
     },
     {
       "hour": 22,
       "pump_kw": 0.0,
       "source": "off",
-      "basin_m3": 2000.0
+      "basin_m3": 1999.3
     },
     {
       "hour": 23,
       "pump_kw": 0.0,
       "source": "off",
-      "basin_m3": 2000.0
+      "basin_m3": 1999.3
     }
   ],
-  "energy_kwh": 238.0,
+  "energy_kwh": 237.8,
   "solar_share": 0.41,
-  "fresh_replaced_m3": 800.0,
+  "fresh_replaced_m3": 799.3,
   "warnings": [
-    "400 m3 not allocated: kept in the basin."
+    "700.7 m3 not allocated: kept in the basin."
   ]
 }
