@@ -6,7 +6,7 @@ import { fmtN } from "../../format";
 import { useLang } from "../../i18n";
 import { assumptionName, assumptionValue, STATUS } from "../savings/texts";
 import ScaleChart, { type Row } from "./ScaleChart";
-import { MAX_CUSTOM_HA, project, useBusiness } from "./data";
+import { MAX_CUSTOM_HA, figuresFor, usePilotTotals, useBusiness } from "./data";
 import { Bz, explain, figureName, figureNote, headline, inPractice, pilotLine, warningTexts } from "./texts";
 
 const PRESETS = ["pilot", "ha-100", "ha-1000", "irrigated", "equipped"] as const;
@@ -21,6 +21,7 @@ const btn = (on: boolean) =>
 export default function BusinessTab() {
   const { lang } = useLang();
   const api = useBusiness();
+  const totals = usePilotTotals().data; // the pilot case uses the savings totals (one source of truth)
   const d = api.data;
   const [choice, setChoice] = useState<Choice>("irrigated");
   const [customText, setCustomText] = useState("500");
@@ -36,16 +37,16 @@ export default function BusinessTab() {
   const preset = (id: string) => scenarios.find((s) => s.id === id);
   const selectedHa = choice === "custom" ? lastCustom : (preset(choice)?.ha ?? 0);
   const adoption = adoptionPct / 100;
-  const now = d ? project(d.pilot, selectedHa, adoption) : undefined;
+  const now = d ? figuresFor(choice, selectedHa, adoption, d.pilot, totals) : undefined;
 
   const rows: Row[] = useMemo(() => {
     if (!d) return [];
     const list = PRESETS.map((id) => preset(id)).filter((s): s is NonNullable<typeof s> => !!s);
-    const base = list.map((s) => ({ id: s.id, ha: s.ha, label: `${fmtN(s.ha, lang, s.ha < 100 ? 1 : 0)} ${Bz.ha[lang]}`, ...pick(project(d.pilot, s.ha, adoption)) }));
-    if (choice === "custom") base.push({ id: "custom", ha: lastCustom, label: `${fmtN(lastCustom, lang, lastCustom < 100 ? 1 : 0)} ${Bz.ha[lang]}`, ...pick(project(d.pilot, lastCustom, adoption)) });
+    const base = list.map((s) => ({ id: s.id, ha: s.ha, label: `${fmtN(s.ha, lang, s.ha < 100 ? 1 : 0)} ${Bz.ha[lang]}`, ...pick(figuresFor(s.id, s.ha, adoption, d.pilot, totals)) }));
+    if (choice === "custom") base.push({ id: "custom", ha: lastCustom, label: `${fmtN(lastCustom, lang, lastCustom < 100 ? 1 : 0)} ${Bz.ha[lang]}`, ...pick(figuresFor("custom", lastCustom, adoption, d.pilot, totals)) });
     return base;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [d, adoption, lang, choice, lastCustom]);
+  }, [d, adoption, lang, choice, lastCustom, totals]);
 
   const toVerify = d?.assumptions.filter((a) => a.status === "TO_VERIFY") ?? [];
   const reportedFigures = d?.territory.filter((t) => t.key !== "perimeters") ?? [];
