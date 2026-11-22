@@ -70,8 +70,6 @@ export const T = {
   farms: { en: "farms", fr: "fermes", ar: "مزارع" },
   batch: { en: "Water batch", fr: "Lot d'eau", ar: "دفعة الماء" },
   whichDay: { en: "Which day's water?", fr: "L'eau de quel jour ?", ar: "ماء أيّ يوم؟" },
-  today: { en: "Today", fr: "Aujourd'hui", ar: "اليوم" },
-  otherDate: { en: "Other date", fr: "Autre date", ar: "تاريخ آخر" },
   quality: { en: "Water quality", fr: "Qualité de l'eau", ar: "جودة الماء" },
   farmsEyebrow: { en: "Ten farms, one batch", fr: "Dix fermes, un lot", ar: "عشر مزارع، دفعة واحدة" },
   farmsTitle: { en: "Who can irrigate today.", fr: "Qui peut irriguer aujourd'hui.", ar: "من يمكنه الري اليوم؟" },
