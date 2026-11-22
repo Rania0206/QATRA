@@ -212,6 +212,7 @@ export interface SoilSimulation {
   crop: string;
   threshold_ece: number;
   ecw: number;
+  soil_ece?: number | null; // soil ECe the simulation started from (the farm's, or the judge's override)
   years: number[]; // [0..N]
   naive: SoilPolicy;
   qatra: SoilQatraPolicy;

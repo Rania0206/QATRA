@@ -39,6 +39,7 @@ STEP = 0.1
 
 class AllocateOptions(BaseModel):
     farm_ids: Optional[list[str]] = None  # only these farms (default: all)
+    soil_ece: Optional[dict[str, float]] = None  # judge override of a farm's soil ECe (dS/m), by farm id: "break it" demo
 
 
 class PlanItem(AllocationItem):
@@ -108,6 +109,8 @@ def allocate(batch: Batch, date: Optional[str] = None, options: Optional[Allocat
     dates = forecast_dates()
     day = date or (dates[0] if dates else "")
     farms = [f for f in list_farms() if options.farm_ids is None or f.id in options.farm_ids]
+    if options.soil_ece:  # the rules, the soil cap and the plan all see the overridden salinity
+        farms = [f.model_copy(update={"soil_ece": options.soil_ece[f.id]}) if f.id in options.soil_ece else f for f in farms]
     ecw = _batch_ec(batch)
     warnings: list[str] = []
 
@@ -173,7 +176,8 @@ def allocate(batch: Batch, date: Optional[str] = None, options: Optional[Allocat
 
 # ---------------------------------------------------------------- A-05d: allocation + pump schedule = the contract Allocation
 def plan(batch_id: Optional[str] = None, date: Optional[str] = None, scenario: Scenario = "normal",
-         farm_ids: Optional[list[str]] = None, need_fn: NeedFn = daily_need) -> Optional[Allocation]:
+         farm_ids: Optional[list[str]] = None, need_fn: NeedFn = daily_need,
+         soil_ece: Optional[dict[str, float]] = None) -> Optional[Allocation]:
     """Who gets how much (allocate) and when the pump runs (schedule). None if the batch does not exist.
 
     Default batch: the latest one that is not analysis_invalid (the same default as the compatibility screen).
@@ -181,7 +185,7 @@ def plan(batch_id: Optional[str] = None, date: Optional[str] = None, scenario: S
     batch = get_batch(batch_id) if batch_id else default_batch()
     if batch is None:
         return None
-    p = allocate(batch, date, AllocateOptions(farm_ids=farm_ids), need_fn)
+    p = allocate(batch, date, AllocateOptions(farm_ids=farm_ids, soil_ece=soil_ece), need_fn)
     s = schedule(p.total_allocated_m3, p.date, scenario)
     return Allocation(
         batch_id=batch.id,
