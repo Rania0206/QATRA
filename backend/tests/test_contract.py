@@ -69,3 +69,10 @@ def test_soil_simulate_mock_matches_schema():
     from app.schemas import SoilSimulation
     m = SoilSimulation.model_validate(load("post_soil_simulate.json"))
     assert len(m.years) == len(m.naive.series) == len(m.qatra.series) == len(m.series)
+
+
+def test_needs_mock_matches_engine_model():
+    from app.engine.needs import NeedsForecast
+
+    body = NeedsForecast.model_validate(load("forecast_needs.json"))
+    assert body.days == 7 and len(body.items) == 70
