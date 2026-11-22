@@ -23,6 +23,7 @@ Shared between backend (FastAPI, `backend/app`) and frontend (React, `frontend/s
 | `SavingsResult` | `water_need_m3`, `well_kwh_avoided`, `well_cost_avoided_tnd`, `treated_water_cost_tnd`, `nitrogen_kg`, `fertiliser_kg_ammonium_nitrate`, `fertiliser_saved_tnd`, `net_saving_tnd`, `kwh_off_grid`, `well_water_kept_m3`, `compatibility_status`, `breakdown`: `[{label, value, unit, tag}]` |
 | `BusinessView` | `area_name`, `area_ha`, `farms`, `total_saving_tnd`, `qatra_share_pct`, `qatra_revenue_tnd`, `steg_kwh_avoided`, `steg_value_tnd`, `national_areas` (36), `tag` |
 | `SoilSimulation` | `farm_id`, `batch_id`, `crop`, `threshold_ece`, `ecw`, `years`: `[0..N]`, `naive`: `{series: number[], first_year_over: int \| null, water_used_m3_season, yield_loss_pct_30y: number \| null}`, `qatra`: same + `leaching_fraction`, legacy `series`: `[{day, ece}]` (= qatra curve, `day` = year x 365) and `leaching_fraction` (= `qatra.leaching_fraction`), `blocked_reason?` (string when the crop is forbidden for TWW, e.g. lettuce: the UI shows no simulation), `warning?`, `tag` |
+| `Passport` | `batch_id`, `plant`, `date`, `volume_m3`, `analysis_status`, `risk_colour?`, `allowed_crops`, `blocked_crops`, `destinations`: `[{farm_id, m3}]`, `issued_at`, `qr_payload`, `tag` (original fields) + B-12a: `quality_summary`: `[{param, label, value?, unit, limit_min?, limit_max?, ok?, legal_ref, tag}]`, `checks`: `[{type, required, present, analysed_on?, valid_until?, validity_days, is_valid?, legal_ref}]`, `timeline`: `[{at, event}]` |
 | `Allocation` | `batch_id`, `items`: `[{farm_id, status, m3, cap_reason?}]`, `schedule`: `[{hour, pump_kw, source: "solar" \| "grid" \| "basin" \| "off", basin_m3}]`, `energy_kwh`, `solar_share` (0..1), `fresh_replaced_m3`, `warnings`: `string[]` |
 
 Conventions used in mocks (free strings, agree before adding values):
@@ -41,7 +42,7 @@ Conventions used in mocks (free strings, agree before adding values):
 | 5 | GET | `/api/batches` | `batches` | – | `Batch[]` | `batches.json` |
 | 6 | GET | `/api/batches/{id}` | `batches` | – | `Batch` | `batches_id.json` |
 | 7 | POST | `/api/batches` | `batches` | `Batch` without `analysis_status`, `status`, `risk_colour` | `Batch` | `post_batches.json` |
-| 8 | GET | `/api/batches/{id}/passport` | `passport` | – | `{batch_id, plant, date, volume_m3, analysis_status, risk_colour, allowed_crops, blocked_crops, destinations, issued_at, qr_payload, tag}` | `batches_id_passport.json` |
+| 8 | GET | `/api/batches/{id}/passport` | `passport` | – | `Passport` (see below); 404 unknown batch | `batches_id_passport.json` |
 | 9 | GET | `/api/batches/{id}/risk` | **CUT FROM MVP** (QATRA Lite) · `risk` | – | `{batch_id, risk_colour, score, factors: [{param, value, limit, ok}], tag}` | `batches_id_risk.json` |
 | 10 | GET | `/api/farms` | `needs` | – | `Farm[]` | `farms.json` |
 | 11 | GET | `/api/farms/{id}/compatibility?batch_id=` | `rules` | query `batch_id?` (default: latest batch whose status is not `analysis_invalid`) | `{farm_id, batch_id, decision: "compatible" \| "conditional" \| "blocked", results: RuleResult[], tag}` | `farms_id_compatibility.json` |
@@ -77,6 +78,15 @@ Yearly steps (30 by default), ESTIMATE. `ecw` = EC of the batch (`EC_dS_m`), unl
 - `yield_loss_pct_30y` = slope x (ECe at the last year - threshold) clipped to [0, 100], using `yield_decline_pct_per_dS_m` of `crop_salt_tolerance.csv`. `null` when the slope is not published (olive, pomegranate, oat_fodder): never invented.
 - `warning` lists: crop blocked for TWW, water too saline, leaching requirement above the cap, soil already above the threshold, TO_VERIFY thresholds.
 - `tag.status` is `TO_VERIFY` when the crop threshold is a placeholder (olive, pomegranate, oat_fodder), else `ESTIMATE`.
+
+### Passport (endpoint 8, B-12a)
+Read from existing engines and the regulation pack; nothing is invented.
+- `quality_summary` rows, in order: EC (dS/m, limit 7000 uS/cm = 7), BOD5, COD, TSS, pH (range 6.5 to 8.5), helminth eggs (limit 1 per litre), faecal coliforms. `value`/`ok` are `null` when not measured. Limits are NT 106.03 (`tag` REPORTED). **Faecal coliforms: NT 106.03 sets no limit.** The 1,000 CFU/100 mL limit is a WHO-derived fallback, `tag.status = TO_VERIFY`, not Tunisian law, and it does **not** drive `risk_colour`.
+- `checks`: validity per analysis type from Decree 89-1047 Art.3 (physico-chemical 30 days, parasite eggs 15 days, metals 182 days). Metals are not required per batch: when absent, `required` is false and `is_valid` is `null`. A missing required analysis has `is_valid = false`.
+- `risk_colour` follows the legal compliance of the batch (`compliant` green, `conditional` amber, `non_compliant` and `analysis_invalid` red) until the risk model (A-08) gives its own score.
+- `allowed_crops`: the 21 June 1994 order (fruit trees only "no sprinkler"; olive and alfalfa flagged "(to verify)"). Empty when the batch is not usable (red). `blocked_crops`: crops eaten raw (Decree 89-1047 Art.5) and direct grazing (Art.6).
+- `destinations`: from the allocation (A-05). Until it exists the real endpoint returns `[]` (the mock keeps an illustrative list). The "delivered" timeline event is only added when there are destinations.
+- `timeline` dates: sampling = analysis date; checked = batch date; issued = `issued_at` (`{batch date}T07:00:00`, simulated convention). `qr_payload` = `qatra:passport:{id}`.
 
 ## Examples
 
