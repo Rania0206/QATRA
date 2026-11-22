@@ -1,21 +1,22 @@
+import { C, useLang } from "../i18n";
+
 interface Props {
   error: Error | string;
   onRetry?: () => void;
 }
 
 export default function ErrorBox({ error, onRetry }: Props) {
+  const { lang } = useLang();
   const message = typeof error === "string" ? error : error.message;
   return (
-    <div role="alert" className="rounded-lg border border-red-300 bg-red-50 p-4 text-red-900">
-      <p className="text-sm font-semibold">Something went wrong</p>
-      <p className="mt-1 break-words font-mono text-xs">{message}</p>
+    <div role="alert" className="border border-bad bg-cream px-6 py-8 text-center">
+      <h3 className="text-3xl text-bad">{C.error[lang]}</h3>
+      <p dir="ltr" className="mx-auto mt-3 max-w-xl break-words text-[15px]">
+        {message}
+      </p>
       {onRetry && (
-        <button
-          type="button"
-          onClick={onRetry}
-          className="mt-3 rounded bg-red-700 px-3 py-1 text-sm font-medium text-white hover:bg-red-800"
-        >
-          Retry
+        <button type="button" onClick={onRetry} className="btn mt-6">
+          {C.retry[lang]}
         </button>
       )}
     </div>

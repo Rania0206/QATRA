@@ -1,7 +1,7 @@
-import type { Farm, FarmCompatibility } from "../../api/types";
+import type { Decision, Farm, FarmCompatibility } from "../../api/types";
+import { Skeleton } from "../../components/ui";
 import { fmtNumber } from "../batches/format";
-import DecisionBadge from "./DecisionBadge";
-import { DECISION, T, cropLabel, mainReason, type Lang } from "./format";
+import { DECISION, T, cropName, mainReason, type Lang } from "./format";
 
 interface Props {
   farm: Farm;
@@ -11,32 +11,57 @@ interface Props {
   onSelect: () => void;
 }
 
+/** Solid status colour + symbol, so the verdict reads from across the room. */
+const VERDICT: Record<Decision, { bg: string; symbol: string }> = {
+  compatible: { bg: "bg-ok", symbol: "✓" },
+  conditional: { bg: "bg-warn", symbol: "!" },
+  blocked: { bg: "bg-bad", symbol: "✕" },
+};
+
+export function FarmCardSkeleton() {
+  return (
+    <div className="flex flex-col border border-line" aria-hidden="true">
+      <Skeleton className="h-9 w-full" />
+      <div className="space-y-2 p-4">
+        <Skeleton className="h-7 w-2/3" />
+        <Skeleton className="h-5 w-1/2" />
+        <Skeleton className="h-5 w-full" />
+      </div>
+    </div>
+  );
+}
+
+/** Farm card: verdict first (solid bar), then farm, crop, one plain reason, "Why?". */
 export default function FarmCard({ farm, result, lang, selected, onSelect }: Props) {
+  const v = VERDICT[result.decision];
   return (
     <button
       type="button"
       onClick={onSelect}
       aria-pressed={selected}
-      className={`flex h-full flex-col gap-3 rounded-xl border border-slate-200 bg-white p-5 text-left shadow-sm transition hover:shadow-md focus:outline-none focus:ring-4 ${
-        DECISION[result.decision].ring
-      } ${selected ? "ring-4" : ""}`}
+      className={`group flex h-full flex-col border bg-white text-start transition-shadow duration-200 hover:shadow-[0_4px_16px_rgba(27,27,26,0.12)] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink ${
+        selected ? "border-ink" : "border-line"
+      }`}
     >
-      <div className="flex items-start gap-3">
-        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-teal-800 text-2xl font-bold text-white">
-          {farm.id}
+      <span className={`flex items-center gap-2 px-4 py-2 font-display text-[17px] font-medium text-white ${v.bg}`}>
+        <span
+          aria-hidden="true"
+          className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-[1.5px] border-white text-[12px] leading-none"
+        >
+          {v.symbol}
         </span>
-        <div className="min-w-0">
-          <p className="truncate text-lg font-semibold text-slate-900" title={farm.name}>
-            {farm.name}
-          </p>
-          <p className="text-base text-slate-600">
-            {cropLabel(farm.crop)} · {fmtNumber(farm.area_ha)} ha
-          </p>
-        </div>
-      </div>
-      <DecisionBadge decision={result.decision} lang={lang} large />
-      <p className="text-base leading-snug text-slate-700">{mainReason(result.results, lang)}</p>
-      <span className="sr-only">{T.rules[lang]}</span>
+        {DECISION[result.decision][lang]}
+      </span>
+      <span className="flex flex-1 flex-col px-4 pb-4 pt-3">
+        <span className="font-display text-[21px] font-medium leading-tight">{farm.name.replace(/^Ferme [A-Z] - /, "")}</span>
+        <span className="text-[15px] text-ink-soft">
+          {cropName(farm.crop, lang)} · {fmtNumber(farm.area_ha)} ha
+        </span>
+        <span className="mt-2 text-[16px] leading-snug">{mainReason(result.results, lang, farm.crop)}</span>
+        <span className="mt-auto pt-3 text-[15px] font-medium underline decoration-1 underline-offset-4 group-hover:decoration-2">
+          {T.open[lang]}
+        </span>
+      </span>
     </button>
   );
 }

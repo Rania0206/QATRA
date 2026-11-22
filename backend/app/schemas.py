@@ -121,6 +121,150 @@ class BusinessView(BaseModel):
     tag: Tag
 
 
+class SoilPoint(BaseModel):
+    day: int  # legacy field: year * 365
+    ece: float
+
+
+class SoilPolicy(BaseModel):
+    series: list[float]  # ECe (dS/m) at the start of each year, index = year (0..years)
+    first_year_over: Optional[int] = None  # first year ECe > threshold, null if never
+    water_used_m3_season: float
+    yield_loss_pct_30y: Optional[float] = None  # null when the crop has no published yield slope
+
+
+class SoilQatraPolicy(SoilPolicy):
+    leaching_fraction: float
+
+
+class SoilSimulation(BaseModel):
+    farm_id: str
+    batch_id: str
+    crop: str
+    threshold_ece: float
+    ecw: float
+    years: list[int]  # [0..N]
+    naive: SoilPolicy
+    qatra: SoilQatraPolicy
+    # legacy fields (original contract): `series` is the QATRA curve, day = year * 365
+    series: list[SoilPoint]
+    leaching_fraction: float  # = qatra.leaching_fraction
+    blocked_reason: Optional[str] = None  # set when the crop cannot receive TWW by law: the UI shows no simulation
+    warning: Optional[str] = None
+    tag: Tag
+
+
+class PassportQuality(BaseModel):
+    param: str  # EC, BOD5, COD, TSS, pH, helminth_eggs, faecal_coliforms
+    label: str
+    value: Optional[float] = None  # null when the parameter was not measured
+    unit: str
+    limit_min: Optional[float] = None  # only for ranges (pH)
+    limit_max: Optional[float] = None
+    ok: Optional[bool] = None  # null when not measured
+    legal_ref: str
+    tag: Tag  # faecal coliforms: TO_VERIFY (WHO-derived fallback, not Tunisian law)
+
+
+class PassportCheck(BaseModel):
+    type: Literal["physico_chemical", "parasite_eggs", "metals"]
+    required: bool  # metals are not required per batch (once per semester)
+    present: bool
+    analysed_on: Optional[str] = None
+    valid_until: Optional[str] = None
+    validity_days: int  # 30, 15, 182 (Decree 89-1047 Art.3)
+    is_valid: Optional[bool] = None  # null when not applicable (no metals analysis)
+    legal_ref: str
+
+
+class PassportEvent(BaseModel):
+    at: str  # ISO date or datetime
+    event: str
+
+
+class PassportDestination(BaseModel):
+    farm_id: str
+    m3: float
+
+
+class Passport(BaseModel):
+    batch_id: str
+    plant: str
+    date: str
+    volume_m3: float
+    analysis_status: Literal["valid", "expired", "missing"]
+    risk_colour: Optional[Literal["green", "amber", "red"]] = None
+    allowed_crops: list[str]  # the 1994 order; empty when the batch is not usable
+    blocked_crops: list[str]
+    destinations: list[PassportDestination]  # from the allocation; [] until it exists
+    issued_at: str
+    qr_payload: str
+    quality_summary: list[PassportQuality]
+    checks: list[PassportCheck]
+    timeline: list[PassportEvent]
+    tag: Tag
+
+
+class HeatwaveHour(BaseModel):
+    hour: int
+    outage: bool
+    demand_m3: float
+    delivered_m3: float
+    unserved_m3: float
+    grid_kw: float
+    solar_kw: float
+    basin_m3: Optional[float] = None  # null for the naive policy (no basin)
+    source: Literal["solar", "grid", "basin", "off"]
+
+
+class HeatwaveRun(BaseModel):
+    policy: Literal["naive", "qatra"]
+    hours_without_water: int
+    unserved_m3: float
+    delivered_m3: float
+    grid_kwh: float
+    solar_kwh: float
+    hourly: list[HeatwaveHour]  # 24 rows
+
+
+class HeatwaveBaseline(BaseModel):
+    energy_kwh: float
+    solar_share: float
+
+
+class HeatwaveResult(BaseModel):
+    scenario_id: str
+    label: str
+    date: str
+    dates: list[str]  # the days that can be chosen: the days with an outage window
+    allocated_m3: float  # what the plan allocated that day; 0 when the batch of the day cannot be used
+    allocation: Allocation
+    baseline: HeatwaveBaseline  # the naive run: all grid, no solar
+    naive: HeatwaveRun
+    qatra: HeatwaveRun
+    caveat: str
+    tag: Tag
+
+
+class Message(BaseModel):
+    id: str
+    farm_id: str
+    direction: Literal["in", "out"]
+    channel: str  # "sms"
+    at: str  # ISO datetime
+    text: Optional[str] = None  # incoming messages: what the farmer wrote
+    text_fr: Optional[str] = None  # outgoing messages: French and Tunisian Arabic (no language column in the data)
+    text_ar: Optional[str] = None
+    needs_human_review: bool = False  # true while the Arabic text has not been approved by a Tunisian speaker
+    batch_id: Optional[str] = None  # outgoing: the batch of the allocation (the UI links to its passport)
+    status: Optional[str] = None  # outgoing: allocated | conditional | capped | blocked
+
+
+class ReplyIn(BaseModel):
+    farm_id: str
+    text: str
+
+
 class HealthResponse(BaseModel):
     status: str
     datasets: dict[str, int]

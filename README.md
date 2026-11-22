@@ -30,15 +30,53 @@ For each daily batch of treated water, QATRA answers four questions:
 
 ## Project status
 
+_Last updated: 2026-11-22. Updated by whoever merges into `dev`; keep it current after every task._
+
+**The two developers**
+- **Dev A** (GitHub `malak584`): batches, legal rules and compatibility, QATRA Lite scope, English/French/Arabic, farmer view.
+- **Dev B** (GitHub `Rania0206`): app shell and shared UI, plants and map, soil model, batch passport.
+
+### Done and merged in `dev`
+
+| Task | Owner | What it is |
+|---|---|---|
+| Data pipeline (`scripts/`, `data/`) | shared | Raw downloads, cleaned reference tables, simulated scenario |
+| A-02 | Dev A | Batches: `GET/POST /api/batches`, validity of lab analyses (Decree 89-1047), batches table and detail drawer |
+| A-03 | Dev A | Legal rules engine (NT 106.03, Decree 89-1047, 1994 crop list, FAO-29 advice), `GET /api/farms`, `GET /api/farms/{id}/compatibility`, `GET /api/compatibility`, compatibility screen |
+| QATRA Lite | Dev A | Reduced scope for the demo: contract, Savings and Business shapes, next-version tabs |
+| A-15 | Dev A | English / French / Arabic (RTL), farmer sees only their own farm (farm code or SMS link), plain-language farm panel, day picker |
+| Restyle, farm code, operator view | Dev A | Map and Soil in the new look, farm-code fixes, hidden operator view with all farms (`#/compatibility?view=operator`) |
+| A-04 | Dev A | Daily water need per farm (`engine/needs.py`: ET0 × Kc − 0.7 × rain), `GET /api/forecast/needs` |
+| A-05 | Dev A | Rule-based allocation per farm (`engine/plan.py`: legal block, soil cap, anti-rebound, sharing) and the 24-hour pump schedule (`engine/schedule.py`), `POST /api/allocate` |
+| A-14a | Dev A | Savings engine (`engine/savings.py`): well electricity saved, fertiliser value of the nitrogen in treated water, water cost, QATRA fee; `POST /api/savings` |
+| B-01 | Dev B | App shell (hash tabs, demo banner), shared `TagChip`, `Loading`, `ErrorBox`, `useApi` |
+| B-13 | Dev B | `GET /api/plants`, `GET /api/map/layers` (plants, irrigated area, OSM plants, farmland, farms, basin) |
+| B-02 | Dev B | Map tab: Esri satellite and OSM basemaps, plant popup with tag, farmland polygons |
+| B-03 | Dev B | Soil engine: `engine/soil.py`, `engine/soil_inputs.py` (`cap_volume`), `POST /api/soil/simulate` (naive vs managed leaching over 30 years) |
+| B-04 | Dev B | Soil tab: chart, year slider with Play, summary cards, blocked-by-law state |
+| B-05 | Dev B | Heatwave and grid outage: `engine/heatwave.py` (naive policy: 4 hours without water on 2026-08-26; QATRA policy on solar and the basin: 0) and `POST /api/scenarios/heatwave`. Volumes come from Dev A's plan (A-05) through an optional `need_fn` added to `plan.allocate` |
+| B-06 | Dev B | Heatwave tab: "Without QATRA" and "With QATRA" 24-hour panels (pump power by source, basin level, outage shading, shared axes), a day picker over the 12 outage days and a very large animated "hours without irrigation" counter. `POST /api/scenarios/heatwave` takes an optional `date` and returns `dates` and `allocated_m3`. English, French, Arabic |
+| B-12 | Dev B | `GET /api/batches/{id}/passport` (quality summary, analysis checks, crops, timeline), passport page `/passport/{id}` for phones, reusable `<PassportQR>`, LAN scripts |
+
+### In progress (on a branch, not merged yet)
+
+| Task | Owner | State |
+|---|---|---|
+| B-08a, B-08b, B-08c | Dev B | Messages to the farmers: `engine/messages.py` (templates allocated, conditional, capped, blocked in French and Tunisian Arabic, saving line from Dev A's savings engine), `GET /api/messages`, the Messages tab (phone mockup, farm selector, FR / AR toggle, passport link, quick replies 1 / 2), and the answers: `POST /api/messages/reply` reads 1 accept, 2 refuse, 3 postpone, 4 call me; a refusal runs Dev A's allocator again without that farm and stores the new plan (`GET /api/allocation/current`). The Arabic waits for a Tunisian speaker (`docs/messages-templates.md`). Branch `feature/B-08-messages` |
+
+### Not done yet
+
 | Area | State |
 |---|---|
-| Data pipeline (`scripts/`, `data/`) | Done: raw downloads, cleaned reference tables, simulated scenario |
-| Backend skeleton (FastAPI, in-memory store, 17 routers) | Done |
-| **Batches** (`/api/batches`, validity of analyses) | Done (A-02) |
-| Compatibility rules, needs, optimiser, soil, heatwave, impact, risk, passport, LLM explain | Router stubs only. The formulas below marked *planned* describe the intended model |
-| Frontend shell (10 tabs, hash routing, banner) | Done (B-01a) |
-| Shared UI: `TagChip`, `Loading`, `ErrorBox`, `useApi` | Done (B-01b) |
-| Frontend tabs other than Batches | Placeholders |
+| Allocation tab | Next. The API exists (`POST /api/allocate`), the tab is still a placeholder |
+| A-05 solar threshold | Open point for Dev A: the pump schedule calls solar only if PV ≥ the full pump power (44.6 kW); the 60 kWp array peaks at 44.3 kW on the heatwave day, so it plans 7 % solar there (`SOLAR_MIN_FRACTION`). The heatwave model uses a pump power proportional to its flow |
+| Supply forecast (cut from the MVP), risk score (A-08), anomalies, impact, messages, requests, territory, LLM explain | Router stubs. The Impact tab only shows a small example |
+| Allocation, Savings, Public, Territory tabs | Placeholders. The Savings API exists (`POST /api/savings`), the business view (A-14c) does not |
+| Passport `destinations` | Still empty: it can now be filled from `POST /api/allocate` (A-05) |
+| Map: the version with all farms coloured by decision (B-02b) | Not merged: `dev` deliberately shows only the farmer's own farm. The code is in git history (`b733d53`, branch `feature/B-02b-map-farms`) |
+| Map and Soil texts | English, French and Arabic. Passport page: English only |
+
+Tests: 316 backend tests with the messages branch (`pytest`), frontend build (`npm run build`) passes.
 
 Formulas below are labelled **Implemented** (in code today), **Data pipeline** (computed by a script to produce a dataset), or **Planned** (design agreed, not coded yet).
 
@@ -53,16 +91,17 @@ QATRA/
 │   │   ├── main.py         app + router registration, /api/health
 │   │   ├── store.py        loads every dataset once into memory
 │   │   ├── schemas.py      Pydantic models (mirror of the API contract)
-│   │   ├── engine/         business logic (batches.py today)
+│   │   ├── engine/         business logic: batches, rules, compatibility, farms, soil, soil_inputs, passport
 │   │   └── routers/        one file per feature, one owner per file
 │   ├── tests/
 │   └── requirements.txt
 ├── frontend/           React + TypeScript + Tailwind 4 + Vite
 │   └── src/
 │       ├── App.tsx         tab list (TABS) wired into the shell
-│       ├── components/     Shell, TagChip, Loading, ErrorBox, Placeholder
+│       ├── components/     Shell, TagChip, Loading, ErrorBox, PassportQR, shared UI
 │       ├── hooks/          useHashTab, useApi
-│       ├── features/       one folder per tab
+│       ├── i18n.tsx        English / French / Arabic
+│       ├── features/       one folder per tab, plus passport/ (page outside the tabs)
 │       ├── api/            client.ts (real or mock), types.ts
 │       └── mocks/          JSON responses used in mock mode
 ├── data/
@@ -98,6 +137,21 @@ npm run dev           # talks to the backend at VITE_API_BASE_URL (default http:
 npm run build         # tsc + vite build
 ```
 Tabs are addressable by URL hash: `http://localhost:5173/#/soil`, `#/batches`, and so on.
+
+### Open the batch passport on a phone
+The passport page is `/passport/{batch id}` (for example `/passport/SSUD-20260708`): no tabs, made for a phone. Every batch drawer (Batches tab) shows its QR code.
+
+```powershell
+cd frontend
+npm run dev:mocks:lan     # or: npm run dev:lan  (real API)
+```
+Vite prints several `Network:` addresses. Use the one marked **Wi-Fi** (the `192.168.x.x` VMware ones are not reachable from a phone), for example `http://172.17.11.238:5173`.
+1. Phone and laptop must be on the same Wi-Fi.
+2. On the laptop, open QATRA through that same Wi-Fi address (not `localhost`): the QR code is built from the address of the page that shows it, so a `localhost` QR cannot be opened from a phone (the drawer warns about it).
+3. Scan the QR code, or type `http://<laptop-ip>:5173/passport/SSUD-20260708` on the phone.
+4. If the phone cannot connect, allow Node.js on private networks when Windows Firewall asks.
+
+With the real API (`dev:lan`), the backend must also run (`uvicorn app.main:app --host 0.0.0.0`) and `VITE_API_BASE_URL` must point to the laptop address, not `localhost`. The mock mode needs none of this.
 
 ### Rebuild the data
 Run the scripts in number order (`python scripts/NN_*.py`, or `scripts/run_all.sh`). Downloads are cached in `data/raw/`.
@@ -158,7 +212,7 @@ Batch-level status:
 
 A missing metals analysis only adds a non-blocking warning. This module checks **dates**, not legal **limits**; limit checks belong to the compatibility rules (see 2).
 
-### 2. Legal limits and compatibility rules — *Planned* (`rules` router)
+### 2. Legal limits and compatibility rules — *Implemented* (A-03: `engine/rules.py`, `engine/rules_config.py`)
 
 Inputs are the NT 106.03 (1989) limits in `data/clean/nt106003_rules.json`:
 
@@ -172,9 +226,9 @@ Inputs are the NT 106.03 (1989) limits in `data/clean/nt106003_rules.json`:
 | Chloride | 2000 mg/L | Fluoride | 3 mg/L |
 | Organochlorines | 0.001 mg/L | | |
 
-Faecal coliforms have **no limit** in NT 106.03. The engine uses a WHO-derived fallback of **1,000 CFU/100 mL**, tagged `TO_VERIFY`; it is not Tunisian law.
+Faecal coliforms have **no limit** in NT 106.03, so the rules engine has no coliform rule. The batch passport shows a WHO-derived fallback of **1,000 CFU/100 mL**, tagged `TO_VERIFY`; it is not Tunisian law and never decides a batch's colour.
 
-Each rule returns a `RuleResult {rule_id, passed, severity, reason_en, reason_fr, legal_ref}` with severity `block`, `condition` or `info`. The farm-level decision is:
+Each rule returns a `RuleResult {rule_id, passed, severity, reason_en, reason_fr, legal_ref}` with severity `block`, `condition` or `info`. A **soil-salinity condition** applies per crop: it fails when the soil ECe is at least **80 %** of the crop threshold (FAO-29, a QATRA choice). The farm-level decision is:
 
 ```
 decision = blocked      if any rule has severity=block and passed=false
@@ -186,7 +240,7 @@ Crop rules (QATRA interpretation of the decree and the arrêté of 21 June 1994,
 - **Blocked**: vegetables eaten raw (Art. 5) and direct grazing (Art. 6). Example: farm C (lettuce).
 - **Allowed**: cereals, fodder (alfalfa, oat, barley), industrial crops, fruit trees without sprinklers, olive.
 
-### 3. Crop water need — *Planned* (`needs` router); ET₀ itself is *Data pipeline*
+### 3. Crop water need — *Implemented* (A-04: `engine/needs.py`); ET₀ itself is *Data pipeline*
 
 **Reference evapotranspiration ET₀** is computed in `scripts/02_fetch_weather.py` with the **FAO-56 Penman-Monteith** equation (daily step), from NASA POWER inputs (Tmax, Tmin, mean RH, wind at 2 m, solar radiation):
 
@@ -231,26 +285,55 @@ season_m3 = area_ha × 10 × 1000 × Kc_mid × 0.6 / 0.9
 ```
 rounded to the nearest 100 m³.
 
-### 4. Salinity: yield loss and leaching — *Data pipeline* (parameters) / *Planned* (`soil` router)
+### 4. Salinity: yield loss, leaching and TWW volume cap — *Implemented* (B-03: `engine/soil.py`, `engine/soil_inputs.py`)
 
-**Yield response to soil salinity** (FAO-29, Maas–Hoffman), parameters per crop in `crop_salt_tolerance.csv`:
+All assumptions below are `ESTIMATE`. Crop thresholds that FAO-29 does not publish (olive, pomegranate: 4.0 dS/m; oat fodder: 6.0 dS/m) are `TO_VERIFY` placeholders and tag the result `TO_VERIFY`.
 
-```
-Y% = 100 − b · (ECe − a)       for ECe > a        (a = threshold in dS/m, b = % loss per dS/m)
-Y% = 100                       for ECe ≤ a
-```
-Examples: alfalfa a = 2.0, b = 7.3; lettuce a = 1.3, b = 13.0; wheat a = 6.0, b = 7.1; barley a = 8.0, b = 5.0.
-Olive and pomegranate have a rating (moderately tolerant) but no published threshold; 4.0 dS/m is an `ESTIMATE / TO_VERIFY` placeholder.
-
-**Leaching requirement** (FAO-29), the extra fraction of water needed to keep soil salinity under the crop threshold:
+**Leaching requirement and equilibrium** (FAO-29). `ECw` = water EC, `ECe_thr` = crop threshold, `LF` = leaching fraction in (0, 1]:
 
 ```
-LR = ECw / (5·ECe − ECw)        surface / sprinkler irrigation, ECe = crop threshold
-LR = ECw / (2·max ECe)          drip / high-frequency irrigation
+LR     = ECw / (5·ECe_thr − ECw)          infinite (flag "water too saline for this crop") when 5·ECe_thr ≤ ECw
+ECe_eq = ECw · (1 + LF) / (5 · LF)        so LF = LR gives ECe_eq = ECe_thr
 ```
-`ECw` is the irrigation-water EC. The soil simulation returns a `leaching_fraction` and the farm ECe series over time. When ECe is above the threshold, the allocated volume is **capped** (see 6).
 
-**Steady-state soil salinity** rule of thumb used to set up the simulated farms: `ECe ≈ 1.5 × ECw` (FAO-29, leaching fraction 15–20 %). With ECw of 1–4 dS/m this gives 1.5–6 dS/m for TWW-irrigated coastal soils (`ESTIMATE / TO_VERIFY`).
+**Yearly trajectory** (30 years, relaxation time τ = 3 years):
+
+```
+ECe[t+1] = ECe[t] + (ECe_eq − ECe[t]) · (1 − exp(−1/τ))
+```
+
+The series moves monotonically from the starting ECe to `ECe_eq`, so it stays under the threshold exactly when `ECe0 ≤ thr` and `ECe_eq ≤ thr`.
+
+**Two policies** (`POST /api/soil/simulate`):
+
+```
+naive : LF = LF_naive                      no managed leaching, rain only
+qatra : LF = max(LR, LF_naive), capped at 0.5
+LF_naive = Pe / (Pe + ETc)                 bounded to (0.02, 0.5]
+Pe  = 0.7 × mean annual precipitation      effective rain, 30-year mean (~272 mm/yr)
+ETc = Kc_mid × ET0 of the growing season   mm, 30-year mean; seasons: perennials Apr–Oct, winter cereals and fodder Nov–May
+```
+
+Irrigation water per season (`need = ETc × area_ha × 10` m³): naive applies exactly `need`; QATRA applies `need × (1/(1−LF) − LF_naive/(1−LF_naive))`, which credits the rain that already leaches (equal to `need` when `LF = LF_naive`).
+
+**Yield loss at the last year** (FAO-29, Maas–Hoffman), slope `b` from `crop_salt_tolerance.csv`:
+
+```
+loss% = clip( b · (ECe_year30 − a), 0, 100 )      null when the crop has no published slope (olive, pomegranate, oat): never invented
+```
+Examples: alfalfa a = 2.0, b = 7.3; wheat a = 6.0, b = 7.1; barley a = 8.0, b = 5.0.
+
+**Maximum TWW volume per season per farm** (`cap_volume(farm, ecw)`): the largest volume of treated water that keeps the 30-year ECe under the threshold, never above the crop need, 0 for crops forbidden by law. The water is mixed with fresh water of EC `ECf = 1.0 dS/m` (ESTIMATE):
+
+```
+ECw_max = thr · 5·LF_max / (1 + LF_max)           LF_max = 0.3, a practical ceiling (ESTIMATE)
+f       = clip( (ECw_max − ECf) / (ECw − ECf), 0, 1 )   share of the water that can be TWW
+LF      = min( max(LR(ECw_mix), LF_naive), LF_max )
+volume  = min( f · need / (1 − LF), need )
+```
+`limiting_reason` is `crop_need`, `salinity`, `blocked` or `infeasible`. Example at ECw = 3.5 dS/m: farm A (alfalfa) 15,728 of 21,048 m³ (salinity), farm B (olive) its full need, farm C (lettuce) 0 (blocked).
+
+**Steady-state rule of thumb** used to set up the simulated farms: `ECe ≈ 1.5 × ECw` (FAO-29, leaching fraction 15–20 %). With ECw of 1–4 dS/m this gives 1.5–6 dS/m for TWW-irrigated coastal soils (`ESTIMATE / TO_VERIFY`).
 
 **Water-quality guidelines** (`irrigation_water_quality_guidelines.csv`, FAO-29) classify the water on infiltration (SAR combined with ECw), sodium toxicity (SAR < 3 none, 3–9 moderate, > 9 severe) and salinity.
 
@@ -288,17 +371,20 @@ is maximised, subject to the basin volume balance (`basin_m3(t+1) = basin_m3(t) 
 
 **Cost reference:** STEG average selling price 2025 = 290.7 millimes/kWh, production cost 456.3 millimes/kWh (both `REPORTED`, press). The agricultural-pumping tariff was not found (`TO_VERIFY`).
 
-### 6. Allocation of a batch across farms — *Planned* (`optimiser` router)
+### 6. Allocation of a batch across farms — *Implemented* (A-05: `engine/plan.py`, `engine/schedule.py`); the hourly energy optimisation is *Planned*
 
-Per farm and batch, volume `m3` and status (`allocated`, `conditional`, `capped`, `blocked`) follow these constraints:
+Simple readable rules, no optimiser (A-05a), applied per farm in this order. Status is `allocated`, `conditional`, `capped` or `blocked`:
 
 ```
-Σ m3_farm            ≤ batch volume_m3
-m3_farm              ≤ crop need over the horizon             (formula 3)
-m3_farm              = 0                if decision = blocked  (formula 2)
-m3_farm              ≤ salinity cap     if ECe above threshold (formula 4, leaching limits the volume)
+1. legal status          m3_farm = 0                       if the farm is blocked (formula 2)
+2. need                  need = max(0, ET0·Kc − 0.7·rain) × area × 10      (formula 3)
+3. soil cap              conditional farms limited by cap_volume (formula 4)
+4. anti-rebound          m3_farm ≤ fresh_m3_season / 180  never more than the farm already takes from its own well that day
+5. sharing               everybody gets the capped need if the total fits in the batch,
+                         otherwise the batch is shared in proportion to the capped needs
+6. leftover              what is not allocated stays in the basin (a warning says how much)
 ```
-Outputs: `energy_kwh`, `solar_share`, and
+Volumes are rounded down to 0.1 m³. **Pump schedule** (A-05b, 24 hourly slots): hours are filled with solar first (an hour counts as solar when PV ≥ the pump power of 44.6 kW, 07:00-12:00 first), then the grid at 06:00 and 18:00-21:00, then the other daytime hours as a last resort; during an outage the grid is never used. Outputs: `energy_kwh`, `solar_share`, and
 
 ```
 fresh_replaced_m3 = Σ m3_allocated            (TWW volume substituting fresh-water supply)
@@ -322,6 +408,87 @@ The grid emission factor is **not sourced yet** (`null`, `TO_VERIFY` in `energy_
 - **Polygon area:** approximate geodesic area of a lon/lat ring (spherical excess), giving hectares for OSM farmland.
 - **Polygon centroid:** ring centroid of each farmland polygon.
 - **Soil texture:** USDA triangle in simplified ordered rules from sand and clay (silt = 100 − sand − clay), e.g. `clay ≥ 40 → clay`, `27 ≤ clay < 40 → clay loam / silty clay loam / sandy clay loam`. SoilGrids values (0–30 and 30–60 cm) are matched to each farm by nearest point.
+
+### 9. Batch passport — *Implemented* (B-12: `engine/passport.py`)
+
+Read from the existing engines and the regulation pack; nothing is invented.
+- **Quality summary** (7 rows): EC (limit 7000 µS/cm shown as 7 dS/m), BOD5 30, COD 90, TSS 30 mg/L, pH 6.5–8.5, helminth eggs 1 per litre (NT 106.03, `REPORTED`), faecal coliforms 1,000 CFU/100 mL (WHO fallback, `TO_VERIFY`, not law). A value that is not measured has `ok = null`.
+- **Analysis checks**: `valid_until = analysis date + validity`, validity from Decree 89-1047 Art. 3: physico-chemical 30 days, parasite eggs 15 days, metals 182 days (not required per batch).
+- **Colour**: `compliant` is green, `conditional` amber, `non_compliant` and `analysis_invalid` red, from the legal compliance of the batch until the risk model (A-08) exists.
+- **Crops**: allowed = the 21 June 1994 order (fruit trees only without sprinklers; olive and alfalfa flagged "to verify"); empty when the batch is red. Blocked = crops eaten raw (Art. 5) and direct grazing (Art. 6).
+- **QR code**: encodes `{page origin}/passport/{batch id}`.
+
+### 10. Heatwave and grid outage — *Implemented* (B-05 and B-06: `engine/heatwave.py`, Heatwave tab)
+
+The naive policy irrigates straight from the grid on demand: **no storage basin and no solar shifting**. Hours are hour-start labels: hour 13 is 13:00 to 14:00, so the window 13:00-17:00 covers hours 13 to 16. Outage days come from `sim_outage_windows.csv` (hot days, based on Human Rights Watch Oct 2026; no official STEG schedule exists) and from the scenario file.
+
+**Irrigation demand profile** (ESTIMATE):
+
+```
+need_i     = max(0, ET0_day × Kc_i − 0.7 × rain) × area_i × 10       Dev A's formula (engine/needs.py)
+daily_m3   = Σ need_i / 0.9                                          crop-need profile of the naive run on its own (B-05a)
+per hour   = daily_m3 / 14   for hours 06:00-20:00, else 0           farmers irrigate during the working day
+```
+Only the demo farms that grow in the month of the day count (olive and alfalfa in August; winter cereals do not), and lettuce is excluded (forbidden for treated water). On 2026-08-26: ET0 = 7.88 mm, crop need 874 m³ (971 m³ with the 0.9 efficiency). **In the scenario the demand is the volume Dev A's plan allocates** (see below): 410.8 m³, 29.3 m³ per hour.
+
+**Naive policy** (B-05a), with transfer pump TP1 (150 m³/h, 44.6 kW, so 0.2973 kWh/m³):
+
+```
+delivered_m3 = 0                      during an outage hour (the pump cannot run)
+             = min(demand, 150)       otherwise
+grid_kw      = delivered_m3 × 0.2973
+unserved_m3  = demand − delivered
+hours_without_water = hours with demand > 0 and nothing delivered
+```
+Result on 2026-08-26, scenario volume of 410.8 m³: **4 hours without water** (13:00 to 17:00), 117.4 m³ unserved, 87 kWh from the grid (with the crop-need profile of 971 m³ alone: 277.6 m³ unserved, 206 kWh). A day without outage (2026-07-08) gives 0. The result is tagged `SIMULATED` with the caveat "NASA POWER ~0.5 deg grid: coastal extremes smoothed" (local Tmax 44.0 °C against the national record of 49.7 °C).
+
+**Choosing the day** (B-06b): the scenario can run on any of the 12 days of `sim_outage_windows.csv` (`date` in the request, `dates` in the response). That day's weather, outage and batch (`SSUD-yyyymmdd`) are used; the PV array, the 600 m³ basin starting level and the pump stay. On 3 days (12, 18 and 19 July) the batch cannot be used (analysis expired or a limit exceeded), so Dev A's plan allocates nothing: both policies have 0 hours without water and the tab says so instead of showing a QATRA win. On the 9 other days the naive policy has 4 hours without water and QATRA 0.
+
+**QATRA policy** (B-05b, `qatra_run`): an hourly rule-based plan on the 60 kWp array (the 50 kWp estimate of `pv_estimate_sousse.csv` × 60/50) and the 3,000 m³ basin (600 m³ at the start of the scenario). The pump power is proportional to its flow, so a pump on part of the solar power delivers that part of its flow. Rules, hour by hour:
+
+```
+outside the outage:  1. irrigate on solar first:   direct = min(demand, 150 m³/h, PV_kW / 0.2973)
+                     2. the rest from the basin by gravity, keeping the reserve the outage still needs
+                     3. only what is left from the grid (backup)
+during the outage:   4. irrigate from the basin by gravity, NO grid
+every hour:          5. solar surplus pumps water into the basin, never above 3,000 m³
+```
+The plant supplies at most the batch of the day (1,800 m³). Basin evaporation (8 mm/d) is not applied: the basin area is not in the data. Result on 2026-08-26: **0 hours without water**, 0 kWh from the grid, 325 kWh of solar (share 100 %; it includes the surplus pumped into the basin for the next days), basin level between 583 and 1,339 m³, against 87 kWh of grid and 117.4 m³ unserved for the naive policy.
+
+`POST /api/scenarios/heatwave` returns both hourly series, the 24-slot schedule (`solar`, `grid`, `basin` or `off`) and the naive run as `baseline`. **`allocation.items` are Dev A's plan** (A-05a): lettuce blocked (0), alfalfa conditional (soil cap), anti-rebound caps on the others, only the farms growing in August (A, B, D, H, I). It receives the need of the heatwave day through the optional `need_fn` of `plan.allocate`, because the forecast file does not cover that summer day. The hourly schedule is the heatwave model's, not the A-05 pump schedule (whose solar rule needs PV ≥ 44.6 kW, above the 44.3 kW peak of that day).
+
+### 11. Savings per farm — *Implemented* (A-14a: `engine/savings.py`)
+
+For each farm and one day of the plan (the m³ per farm come from the allocation, formula 6). A blocked farm gets 0 and a reason; a conditional farm uses its capped m³; a farm on the public network has no pump of its own and saves no electricity.
+
+```
+well_kwh_per_m³       = 0.00272 × well_depth_m / pump_efficiency
+electricity_saved     = m³ × well_kwh_per_m³ × electricity_price             the farm stops pumping that water
+N_kg                  = m³ × N_mg_per_L / 1000                               1 mg/L = 1 g/m³
+fertiliser_value      = N_kg / 0.335 × fertiliser_price × availability       ammonium nitrate is 33.5 % N; availability 0.5 (ESTIMATE)
+water_cost            = m³ × treated_water_price
+net_saving            = electricity_saved + fertiliser_value − water_cost
+qatra_fee             = qatra_fee_pct % × net_saving                         only when net_saving > 0 (10 %, ESTIMATE)
+farmer_net            = net_saving − qatra_fee
+```
+The electricity price (290.7 millimes/kWh, STEG average sale price) and the nitrogen of the water come from the data pack. The fertiliser price (1.0 TND/kg) and the treated-water tariff (0.020 TND/m³) are `TO_VERIFY` assumptions. Season and year figures are `PROJECTION`s (daily total × 150 irrigation days × 1 season per year) and are never mixed with the daily ones. Prices can be overridden in the request.
+
+### 12. Messages to the farmers — *Implemented, not merged* (B-08a: `engine/messages.py`)
+
+No formula: templates by allocation status, filled with values that already exist. One message per farm for the latest allocation, in **French and Tunisian Arabic** (no language column in `sim_farms`).
+
+```
+allocated    "{m3} m³ available, delivery tomorrow {first hour}-{last hour}, reply 1 to accept, 2 to refuse"
+conditional  same, with the condition: wash the salt out of the soil and watch the soil salinity
+capped       same, with why the volume is limited (replaces the farm's own water, batch shared, soil salt)
+blocked      why in simple words, safety first, never a fault of the farmer; NO number and NO money
+saving line  "About {X} TND saved this season (estimate)"  only if Dev A's savings engine returns X > 0 for the farm
+```
+`{m3}` is the farm's volume in the Allocation; the delivery hours are the longest block of consecutive pump hours of the allocation's schedule (the pump may run at other hours too, which are not announced). `{X}` is `savings(plan, farm_id).season.farmer_net_tnd`, printed exactly as returned and never computed in the messages. **Every Arabic template has `needs_human_review: true`** until a Tunisian speaker approves it: the review sheet is `docs/messages-templates.md`.
+
+**The tab** (B-08b): a phone mockup (status bar, QATRA contact, chat bubbles: outgoing green on the right, the farmer's replies grey on the left, timestamps). A farm selector and a FR / AR / FR + AR toggle; the Arabic is shown right to left. Under a message with water, "View water passport" opens `/passport/{batch_id}`. Buttons "1 · Accept" and "2 · Refuse" call `POST /api/messages/reply`; they are not shown when no water is offered (blocked farm). Buttons 3 and 4 will come once their meaning is defined. A visible note says "Mockup: no real message is sent". Next to the phone, a live table "Today's water plan" shows the plan and how it moved since it was first shown.
+
+**Answers** (B-08c): `1` accept, `2` refuse, `3` postpone, `4` call me; Arabic-Indic digits work; any other text gets a help reply and changes nothing. A refusal runs `plan()` (Dev A's allocator, in process) again for the same batch without that farm, stores the new allocation and writes to the farms that got more water ("+X m³ added"). Blocked farms never receive the freed volume; a second `2` does nothing more. Note: Dev A's allocator never gives a farm more than its own need or anti-rebound cap, so on the default batch (1,500 m³ for about 800 m³ of needs) a refusal frees water that nobody else can use and it stays in the basin; on a limited batch such as SSUD-20260827 (700 m³) it is shared between the other farms.
 
 ---
 

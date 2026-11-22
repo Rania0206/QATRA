@@ -6,15 +6,34 @@
   "analysis_status": "valid",
   "risk_colour": "green",
   "allowed_crops": [
-    "olive",
+    "cotton",
+    "tobacco",
+    "flax",
+    "jojoba",
+    "castor",
+    "safflower",
     "wheat",
     "barley",
-    "alfalfa (no sprinkler)",
-    "oat fodder"
+    "triticale",
+    "oat",
+    "berseem",
+    "maize",
+    "fodder sorghum",
+    "vetch",
+    "acacia",
+    "atriplex",
+    "date palm (no sprinkler)",
+    "citrus (no sprinkler)",
+    "vines (no sprinkler)",
+    "forest trees",
+    "olive (to verify)",
+    "alfalfa (to verify)"
   ],
   "blocked_crops": [
     "lettuce",
-    "vegetables eaten raw"
+    "tomato",
+    "vegetables and crops eaten raw (Decree 89-1047 Art.5)",
+    "direct grazing (Decree 89-1047 Art.6)"
   ],
   "destinations": [
     {
@@ -40,8 +59,158 @@
   ],
   "issued_at": "2026-07-08T07:00:00",
   "qr_payload": "qatra:passport:SSUD-20260708",
+  "quality_summary": [
+    {
+      "param": "EC",
+      "label": "Electrical conductivity",
+      "value": 3.66,
+      "unit": "dS/m",
+      "limit_min": null,
+      "limit_max": 7.0,
+      "ok": true,
+      "legal_ref": "NT 106.03 (1989)",
+      "tag": {
+        "status": "REPORTED",
+        "source": "Benabdallah S. (2003) 'La reutilisation des eaux usees traitees en Tunisie', Tableau 10 p.15"
+      }
+    },
+    {
+      "param": "BOD5",
+      "label": "BOD5",
+      "value": 23.5,
+      "unit": "mg/L",
+      "limit_min": null,
+      "limit_max": 30.0,
+      "ok": true,
+      "legal_ref": "NT 106.03 (1989)",
+      "tag": {
+        "status": "REPORTED",
+        "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)'"
+      }
+    },
+    {
+      "param": "COD",
+      "label": "COD",
+      "value": 68.8,
+      "unit": "mg/L",
+      "limit_min": null,
+      "limit_max": 90.0,
+      "ok": true,
+      "legal_ref": "NT 106.03 (1989)",
+      "tag": {
+        "status": "REPORTED",
+        "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)'"
+      }
+    },
+    {
+      "param": "TSS",
+      "label": "Suspended solids (TSS)",
+      "value": 19.3,
+      "unit": "mg/L",
+      "limit_min": null,
+      "limit_max": 30.0,
+      "ok": true,
+      "legal_ref": "NT 106.03 (1989)",
+      "tag": {
+        "status": "REPORTED",
+        "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)'"
+      }
+    },
+    {
+      "param": "pH",
+      "label": "pH",
+      "value": 7.34,
+      "unit": "",
+      "limit_min": 6.5,
+      "limit_max": 8.5,
+      "ok": true,
+      "legal_ref": "NT 106.03 (1989)",
+      "tag": {
+        "status": "REPORTED",
+        "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)'"
+      }
+    },
+    {
+      "param": "helminth_eggs",
+      "label": "Helminth (nematode) eggs",
+      "value": 0.76,
+      "unit": "eggs/L",
+      "limit_min": null,
+      "limit_max": 1.0,
+      "ok": true,
+      "legal_ref": "NT 106.03 (1989)",
+      "tag": {
+        "status": "REPORTED",
+        "source": "Ministere de l'Environnement (TN), 'Presentation_EIE.pdf', p.13 'Normes Tunisiennes pour la reutilisation des eaux traitees (NT 106.03:1989)'"
+      }
+    },
+    {
+      "param": "faecal_coliforms",
+      "label": "Faecal coliforms",
+      "value": 171873.0,
+      "unit": "CFU/100 mL",
+      "limit_min": null,
+      "limit_max": 1000.0,
+      "ok": false,
+      "legal_ref": "No limit in NT 106.03: WHO-derived fallback, not Tunisian law",
+      "tag": {
+        "status": "TO_VERIFY",
+        "source": "WHO 2006 design value (fallback), not Tunisian law"
+      }
+    }
+  ],
+  "checks": [
+    {
+      "type": "physico_chemical",
+      "required": true,
+      "present": true,
+      "analysed_on": "2026-07-04",
+      "valid_until": "2026-08-03",
+      "validity_days": 30,
+      "is_valid": true,
+      "legal_ref": "Decree 89-1047 Art.3a"
+    },
+    {
+      "type": "parasite_eggs",
+      "required": true,
+      "present": true,
+      "analysed_on": "2026-07-04",
+      "valid_until": "2026-07-19",
+      "validity_days": 15,
+      "is_valid": true,
+      "legal_ref": "Decree 89-1047 Art.3c"
+    },
+    {
+      "type": "metals",
+      "required": false,
+      "present": false,
+      "analysed_on": null,
+      "valid_until": null,
+      "validity_days": 182,
+      "is_valid": null,
+      "legal_ref": "Decree 89-1047 Art.3b"
+    }
+  ],
+  "timeline": [
+    {
+      "at": "2026-07-04",
+      "event": "Sampled for laboratory analysis"
+    },
+    {
+      "at": "2026-07-08",
+      "event": "Checked against NT 106.03 limits and analysis validity"
+    },
+    {
+      "at": "2026-07-08T07:00:00",
+      "event": "Passport issued"
+    },
+    {
+      "at": "2026-07-08",
+      "event": "Delivered to the farms listed below"
+    }
+  ],
   "tag": {
     "status": "SIMULATED",
-    "source": "data/simulated/sim_batches.csv"
+    "source": "data/simulated/sim_batches"
   }
 }

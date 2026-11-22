@@ -1,500 +1,780 @@
 {
-  "start": "2026-07-08",
+  "start": "2026-11-21",
   "days": 7,
   "items": [
     {
-      "date": "2026-07-08",
+      "date": "2026-11-21",
       "farm_id": "A",
-      "et0_mm": 7.04,
+      "et0_mm": 2.68,
       "kc": 0.95,
-      "need_m3": 133.8
+      "etc_mm": 2.55,
+      "effective_rain_mm": 0.0,
+      "need_mm": 2.55,
+      "need_m3": 50.9,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-08",
+      "date": "2026-11-21",
       "farm_id": "B",
-      "et0_mm": 7.04,
+      "et0_mm": 2.68,
       "kc": 0.7,
-      "need_m3": 197.1
+      "etc_mm": 1.88,
+      "effective_rain_mm": 0.0,
+      "need_mm": 1.88,
+      "need_m3": 75.0,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-08",
+      "date": "2026-11-21",
       "farm_id": "C",
-      "et0_mm": 7.04,
+      "et0_mm": 2.68,
       "kc": 1.0,
-      "need_m3": 70.4
+      "etc_mm": 2.68,
+      "effective_rain_mm": 0.0,
+      "need_mm": 2.68,
+      "need_m3": 26.8,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-08",
+      "date": "2026-11-21",
       "farm_id": "D",
-      "et0_mm": 7.04,
+      "et0_mm": 2.68,
       "kc": 0.7,
-      "need_m3": 320.3
+      "etc_mm": 1.88,
+      "effective_rain_mm": 0.0,
+      "need_mm": 1.88,
+      "need_m3": 121.9,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-08",
+      "date": "2026-11-21",
       "farm_id": "E",
-      "et0_mm": 7.04,
-      "kc": 0.9,
-      "need_m3": 190.1
+      "et0_mm": 2.68,
+      "kc": 1.15,
+      "etc_mm": 3.08,
+      "effective_rain_mm": 0.0,
+      "need_mm": 3.08,
+      "need_m3": 92.5,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-08",
+      "date": "2026-11-21",
       "farm_id": "F",
-      "et0_mm": 7.04,
+      "et0_mm": 2.68,
       "kc": 1.15,
-      "need_m3": 404.8
+      "etc_mm": 3.08,
+      "effective_rain_mm": 0.0,
+      "need_mm": 3.08,
+      "need_m3": 154.1,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-08",
+      "date": "2026-11-21",
       "farm_id": "G",
-      "et0_mm": 7.04,
+      "et0_mm": 2.68,
       "kc": 1.15,
-      "need_m3": 64.8
+      "etc_mm": 3.08,
+      "effective_rain_mm": 0.0,
+      "need_mm": 3.08,
+      "need_m3": 24.7,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-08",
+      "date": "2026-11-21",
       "farm_id": "H",
-      "et0_mm": 7.04,
+      "et0_mm": 2.68,
       "kc": 0.7,
-      "need_m3": 29.6
+      "etc_mm": 1.88,
+      "effective_rain_mm": 0.0,
+      "need_mm": 1.88,
+      "need_m3": 11.3,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-08",
+      "date": "2026-11-21",
       "farm_id": "I",
-      "et0_mm": 7.04,
+      "et0_mm": 2.68,
       "kc": 0.95,
-      "need_m3": 100.3
+      "etc_mm": 2.55,
+      "effective_rain_mm": 0.0,
+      "need_mm": 2.55,
+      "need_m3": 38.2,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-08",
+      "date": "2026-11-21",
       "farm_id": "J",
-      "et0_mm": 7.04,
+      "et0_mm": 2.68,
       "kc": 1.15,
-      "need_m3": 647.7
+      "etc_mm": 3.08,
+      "effective_rain_mm": 0.0,
+      "need_mm": 3.08,
+      "need_m3": 246.6,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-09",
+      "date": "2026-11-22",
       "farm_id": "A",
-      "et0_mm": 8.33,
+      "et0_mm": 3.01,
       "kc": 0.95,
-      "need_m3": 158.3
+      "etc_mm": 2.86,
+      "effective_rain_mm": 0.0,
+      "need_mm": 2.86,
+      "need_m3": 57.2,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-09",
+      "date": "2026-11-22",
       "farm_id": "B",
-      "et0_mm": 8.33,
+      "et0_mm": 3.01,
       "kc": 0.7,
-      "need_m3": 233.2
+      "etc_mm": 2.11,
+      "effective_rain_mm": 0.0,
+      "need_mm": 2.11,
+      "need_m3": 84.3,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-09",
+      "date": "2026-11-22",
       "farm_id": "C",
-      "et0_mm": 8.33,
+      "et0_mm": 3.01,
       "kc": 1.0,
-      "need_m3": 83.3
+      "etc_mm": 3.01,
+      "effective_rain_mm": 0.0,
+      "need_mm": 3.01,
+      "need_m3": 30.1,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-09",
+      "date": "2026-11-22",
       "farm_id": "D",
-      "et0_mm": 8.33,
+      "et0_mm": 3.01,
       "kc": 0.7,
-      "need_m3": 379.0
+      "etc_mm": 2.11,
+      "effective_rain_mm": 0.0,
+      "need_mm": 2.11,
+      "need_m3": 137.0,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-09",
+      "date": "2026-11-22",
       "farm_id": "E",
-      "et0_mm": 8.33,
-      "kc": 0.9,
-      "need_m3": 224.9
+      "et0_mm": 3.01,
+      "kc": 1.15,
+      "etc_mm": 3.46,
+      "effective_rain_mm": 0.0,
+      "need_mm": 3.46,
+      "need_m3": 103.8,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-09",
+      "date": "2026-11-22",
       "farm_id": "F",
-      "et0_mm": 8.33,
+      "et0_mm": 3.01,
       "kc": 1.15,
-      "need_m3": 479.0
+      "etc_mm": 3.46,
+      "effective_rain_mm": 0.0,
+      "need_mm": 3.46,
+      "need_m3": 173.1,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-09",
+      "date": "2026-11-22",
       "farm_id": "G",
-      "et0_mm": 8.33,
+      "et0_mm": 3.01,
       "kc": 1.15,
-      "need_m3": 76.6
+      "etc_mm": 3.46,
+      "effective_rain_mm": 0.0,
+      "need_mm": 3.46,
+      "need_m3": 27.7,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-09",
+      "date": "2026-11-22",
       "farm_id": "H",
-      "et0_mm": 8.33,
+      "et0_mm": 3.01,
       "kc": 0.7,
-      "need_m3": 35.0
+      "etc_mm": 2.11,
+      "effective_rain_mm": 0.0,
+      "need_mm": 2.11,
+      "need_m3": 12.6,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-09",
+      "date": "2026-11-22",
       "farm_id": "I",
-      "et0_mm": 8.33,
+      "et0_mm": 3.01,
       "kc": 0.95,
-      "need_m3": 118.7
+      "etc_mm": 2.86,
+      "effective_rain_mm": 0.0,
+      "need_mm": 2.86,
+      "need_m3": 42.9,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-09",
+      "date": "2026-11-22",
       "farm_id": "J",
-      "et0_mm": 8.33,
+      "et0_mm": 3.01,
       "kc": 1.15,
-      "need_m3": 766.4
+      "etc_mm": 3.46,
+      "effective_rain_mm": 0.0,
+      "need_mm": 3.46,
+      "need_m3": 276.9,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-10",
+      "date": "2026-11-23",
       "farm_id": "A",
-      "et0_mm": 7.94,
+      "et0_mm": 2.82,
       "kc": 0.95,
-      "need_m3": 150.9
+      "etc_mm": 2.68,
+      "effective_rain_mm": 0.0,
+      "need_mm": 2.68,
+      "need_m3": 53.6,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-10",
+      "date": "2026-11-23",
       "farm_id": "B",
-      "et0_mm": 7.94,
+      "et0_mm": 2.82,
       "kc": 0.7,
-      "need_m3": 222.3
+      "etc_mm": 1.97,
+      "effective_rain_mm": 0.0,
+      "need_mm": 1.97,
+      "need_m3": 79.0,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-10",
+      "date": "2026-11-23",
       "farm_id": "C",
-      "et0_mm": 7.94,
+      "et0_mm": 2.82,
       "kc": 1.0,
-      "need_m3": 79.4
+      "etc_mm": 2.82,
+      "effective_rain_mm": 0.0,
+      "need_mm": 2.82,
+      "need_m3": 28.2,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-10",
+      "date": "2026-11-23",
       "farm_id": "D",
-      "et0_mm": 7.94,
+      "et0_mm": 2.82,
       "kc": 0.7,
-      "need_m3": 361.3
+      "etc_mm": 1.97,
+      "effective_rain_mm": 0.0,
+      "need_mm": 1.97,
+      "need_m3": 128.3,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-10",
+      "date": "2026-11-23",
       "farm_id": "E",
-      "et0_mm": 7.94,
-      "kc": 0.9,
-      "need_m3": 214.4
+      "et0_mm": 2.82,
+      "kc": 1.15,
+      "etc_mm": 3.24,
+      "effective_rain_mm": 0.0,
+      "need_mm": 3.24,
+      "need_m3": 97.3,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-10",
+      "date": "2026-11-23",
       "farm_id": "F",
-      "et0_mm": 7.94,
+      "et0_mm": 2.82,
       "kc": 1.15,
-      "need_m3": 456.6
+      "etc_mm": 3.24,
+      "effective_rain_mm": 0.0,
+      "need_mm": 3.24,
+      "need_m3": 162.1,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-10",
+      "date": "2026-11-23",
       "farm_id": "G",
-      "et0_mm": 7.94,
+      "et0_mm": 2.82,
       "kc": 1.15,
-      "need_m3": 73.0
+      "etc_mm": 3.24,
+      "effective_rain_mm": 0.0,
+      "need_mm": 3.24,
+      "need_m3": 25.9,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-10",
+      "date": "2026-11-23",
       "farm_id": "H",
-      "et0_mm": 7.94,
+      "et0_mm": 2.82,
       "kc": 0.7,
-      "need_m3": 33.3
+      "etc_mm": 1.97,
+      "effective_rain_mm": 0.0,
+      "need_mm": 1.97,
+      "need_m3": 11.8,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-10",
+      "date": "2026-11-23",
       "farm_id": "I",
-      "et0_mm": 7.94,
+      "et0_mm": 2.82,
       "kc": 0.95,
-      "need_m3": 113.1
+      "etc_mm": 2.68,
+      "effective_rain_mm": 0.0,
+      "need_mm": 2.68,
+      "need_m3": 40.2,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-10",
+      "date": "2026-11-23",
       "farm_id": "J",
-      "et0_mm": 7.94,
+      "et0_mm": 2.82,
       "kc": 1.15,
-      "need_m3": 730.5
+      "etc_mm": 3.24,
+      "effective_rain_mm": 0.0,
+      "need_mm": 3.24,
+      "need_m3": 259.4,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-11",
+      "date": "2026-11-24",
       "farm_id": "A",
-      "et0_mm": 8.08,
+      "et0_mm": 2.81,
       "kc": 0.95,
-      "need_m3": 153.5
+      "etc_mm": 2.67,
+      "effective_rain_mm": 0.0,
+      "need_mm": 2.67,
+      "need_m3": 53.4,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-11",
+      "date": "2026-11-24",
       "farm_id": "B",
-      "et0_mm": 8.08,
+      "et0_mm": 2.81,
       "kc": 0.7,
-      "need_m3": 226.2
+      "etc_mm": 1.97,
+      "effective_rain_mm": 0.0,
+      "need_mm": 1.97,
+      "need_m3": 78.7,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-11",
+      "date": "2026-11-24",
       "farm_id": "C",
-      "et0_mm": 8.08,
+      "et0_mm": 2.81,
       "kc": 1.0,
-      "need_m3": 80.8
+      "etc_mm": 2.81,
+      "effective_rain_mm": 0.0,
+      "need_mm": 2.81,
+      "need_m3": 28.1,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-11",
+      "date": "2026-11-24",
       "farm_id": "D",
-      "et0_mm": 8.08,
+      "et0_mm": 2.81,
       "kc": 0.7,
-      "need_m3": 367.6
+      "etc_mm": 1.97,
+      "effective_rain_mm": 0.0,
+      "need_mm": 1.97,
+      "need_m3": 127.9,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-11",
+      "date": "2026-11-24",
       "farm_id": "E",
-      "et0_mm": 8.08,
-      "kc": 0.9,
-      "need_m3": 218.2
+      "et0_mm": 2.81,
+      "kc": 1.15,
+      "etc_mm": 3.23,
+      "effective_rain_mm": 0.0,
+      "need_mm": 3.23,
+      "need_m3": 96.9,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-11",
+      "date": "2026-11-24",
       "farm_id": "F",
-      "et0_mm": 8.08,
+      "et0_mm": 2.81,
       "kc": 1.15,
-      "need_m3": 464.6
+      "etc_mm": 3.23,
+      "effective_rain_mm": 0.0,
+      "need_mm": 3.23,
+      "need_m3": 161.6,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-11",
+      "date": "2026-11-24",
       "farm_id": "G",
-      "et0_mm": 8.08,
+      "et0_mm": 2.81,
       "kc": 1.15,
-      "need_m3": 74.3
+      "etc_mm": 3.23,
+      "effective_rain_mm": 0.0,
+      "need_mm": 3.23,
+      "need_m3": 25.9,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-11",
+      "date": "2026-11-24",
       "farm_id": "H",
-      "et0_mm": 8.08,
+      "et0_mm": 2.81,
       "kc": 0.7,
-      "need_m3": 33.9
+      "etc_mm": 1.97,
+      "effective_rain_mm": 0.0,
+      "need_mm": 1.97,
+      "need_m3": 11.8,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-11",
+      "date": "2026-11-24",
       "farm_id": "I",
-      "et0_mm": 8.08,
+      "et0_mm": 2.81,
       "kc": 0.95,
-      "need_m3": 115.1
+      "etc_mm": 2.67,
+      "effective_rain_mm": 0.0,
+      "need_mm": 2.67,
+      "need_m3": 40.0,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-11",
+      "date": "2026-11-24",
       "farm_id": "J",
-      "et0_mm": 8.08,
+      "et0_mm": 2.81,
       "kc": 1.15,
-      "need_m3": 743.4
+      "etc_mm": 3.23,
+      "effective_rain_mm": 0.0,
+      "need_mm": 3.23,
+      "need_m3": 258.5,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-12",
+      "date": "2026-11-25",
       "farm_id": "A",
-      "et0_mm": 7.91,
+      "et0_mm": 1.98,
       "kc": 0.95,
-      "need_m3": 150.3
+      "etc_mm": 1.88,
+      "effective_rain_mm": 0.07,
+      "need_mm": 1.81,
+      "need_m3": 36.2,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-12",
+      "date": "2026-11-25",
       "farm_id": "B",
-      "et0_mm": 7.91,
+      "et0_mm": 1.98,
       "kc": 0.7,
-      "need_m3": 221.5
+      "etc_mm": 1.39,
+      "effective_rain_mm": 0.07,
+      "need_mm": 1.32,
+      "need_m3": 52.6,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-12",
+      "date": "2026-11-25",
       "farm_id": "C",
-      "et0_mm": 7.91,
+      "et0_mm": 1.98,
       "kc": 1.0,
-      "need_m3": 79.1
+      "etc_mm": 1.98,
+      "effective_rain_mm": 0.07,
+      "need_mm": 1.91,
+      "need_m3": 19.1,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-12",
+      "date": "2026-11-25",
       "farm_id": "D",
-      "et0_mm": 7.91,
+      "et0_mm": 1.98,
       "kc": 0.7,
-      "need_m3": 359.9
+      "etc_mm": 1.39,
+      "effective_rain_mm": 0.07,
+      "need_mm": 1.32,
+      "need_m3": 85.5,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-12",
+      "date": "2026-11-25",
       "farm_id": "E",
-      "et0_mm": 7.91,
-      "kc": 0.9,
-      "need_m3": 213.6
+      "et0_mm": 1.98,
+      "kc": 1.15,
+      "etc_mm": 2.28,
+      "effective_rain_mm": 0.07,
+      "need_mm": 2.21,
+      "need_m3": 66.2,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-12",
+      "date": "2026-11-25",
       "farm_id": "F",
-      "et0_mm": 7.91,
+      "et0_mm": 1.98,
       "kc": 1.15,
-      "need_m3": 454.8
+      "etc_mm": 2.28,
+      "effective_rain_mm": 0.07,
+      "need_mm": 2.21,
+      "need_m3": 110.3,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-12",
+      "date": "2026-11-25",
       "farm_id": "G",
-      "et0_mm": 7.91,
+      "et0_mm": 1.98,
       "kc": 1.15,
-      "need_m3": 72.8
+      "etc_mm": 2.28,
+      "effective_rain_mm": 0.07,
+      "need_mm": 2.21,
+      "need_m3": 17.7,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-12",
+      "date": "2026-11-25",
       "farm_id": "H",
-      "et0_mm": 7.91,
+      "et0_mm": 1.98,
       "kc": 0.7,
-      "need_m3": 33.2
+      "etc_mm": 1.39,
+      "effective_rain_mm": 0.07,
+      "need_mm": 1.32,
+      "need_m3": 7.9,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-12",
+      "date": "2026-11-25",
       "farm_id": "I",
-      "et0_mm": 7.91,
+      "et0_mm": 1.98,
       "kc": 0.95,
-      "need_m3": 112.7
+      "etc_mm": 1.88,
+      "effective_rain_mm": 0.07,
+      "need_mm": 1.81,
+      "need_m3": 27.2,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-12",
+      "date": "2026-11-25",
       "farm_id": "J",
-      "et0_mm": 7.91,
+      "et0_mm": 1.98,
       "kc": 1.15,
-      "need_m3": 727.7
+      "etc_mm": 2.28,
+      "effective_rain_mm": 0.07,
+      "need_mm": 2.21,
+      "need_m3": 176.6,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-13",
+      "date": "2026-11-26",
       "farm_id": "A",
-      "et0_mm": 6.89,
+      "et0_mm": 1.59,
       "kc": 0.95,
-      "need_m3": 130.9
+      "etc_mm": 1.51,
+      "effective_rain_mm": 0.14,
+      "need_mm": 1.37,
+      "need_m3": 27.4,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-13",
+      "date": "2026-11-26",
       "farm_id": "B",
-      "et0_mm": 6.89,
+      "et0_mm": 1.59,
       "kc": 0.7,
-      "need_m3": 192.9
+      "etc_mm": 1.11,
+      "effective_rain_mm": 0.14,
+      "need_mm": 0.97,
+      "need_m3": 38.9,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-13",
+      "date": "2026-11-26",
       "farm_id": "C",
-      "et0_mm": 6.89,
+      "et0_mm": 1.59,
       "kc": 1.0,
-      "need_m3": 68.9
+      "etc_mm": 1.59,
+      "effective_rain_mm": 0.14,
+      "need_mm": 1.45,
+      "need_m3": 14.5,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-13",
+      "date": "2026-11-26",
       "farm_id": "D",
-      "et0_mm": 6.89,
+      "et0_mm": 1.59,
       "kc": 0.7,
-      "need_m3": 313.5
+      "etc_mm": 1.11,
+      "effective_rain_mm": 0.14,
+      "need_mm": 0.97,
+      "need_m3": 63.2,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-13",
+      "date": "2026-11-26",
       "farm_id": "E",
-      "et0_mm": 6.89,
-      "kc": 0.9,
-      "need_m3": 186.0
+      "et0_mm": 1.59,
+      "kc": 1.15,
+      "etc_mm": 1.83,
+      "effective_rain_mm": 0.14,
+      "need_mm": 1.69,
+      "need_m3": 50.7,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-13",
+      "date": "2026-11-26",
       "farm_id": "F",
-      "et0_mm": 6.89,
+      "et0_mm": 1.59,
       "kc": 1.15,
-      "need_m3": 396.2
+      "etc_mm": 1.83,
+      "effective_rain_mm": 0.14,
+      "need_mm": 1.69,
+      "need_m3": 84.4,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-13",
+      "date": "2026-11-26",
       "farm_id": "G",
-      "et0_mm": 6.89,
+      "et0_mm": 1.59,
       "kc": 1.15,
-      "need_m3": 63.4
+      "etc_mm": 1.83,
+      "effective_rain_mm": 0.14,
+      "need_mm": 1.69,
+      "need_m3": 13.5,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-13",
+      "date": "2026-11-26",
       "farm_id": "H",
-      "et0_mm": 6.89,
+      "et0_mm": 1.59,
       "kc": 0.7,
-      "need_m3": 28.9
+      "etc_mm": 1.11,
+      "effective_rain_mm": 0.14,
+      "need_mm": 0.97,
+      "need_m3": 5.8,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-13",
+      "date": "2026-11-26",
       "farm_id": "I",
-      "et0_mm": 6.89,
+      "et0_mm": 1.59,
       "kc": 0.95,
-      "need_m3": 98.2
+      "etc_mm": 1.51,
+      "effective_rain_mm": 0.14,
+      "need_mm": 1.37,
+      "need_m3": 20.6,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-13",
+      "date": "2026-11-26",
       "farm_id": "J",
-      "et0_mm": 6.89,
+      "et0_mm": 1.59,
       "kc": 1.15,
-      "need_m3": 633.9
+      "etc_mm": 1.83,
+      "effective_rain_mm": 0.14,
+      "need_mm": 1.69,
+      "need_m3": 135.1,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-14",
+      "date": "2026-11-27",
       "farm_id": "A",
-      "et0_mm": 8.23,
+      "et0_mm": 1.45,
       "kc": 0.95,
-      "need_m3": 156.4
+      "etc_mm": 1.38,
+      "effective_rain_mm": 3.57,
+      "need_mm": 0.0,
+      "need_m3": 0.0,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-14",
+      "date": "2026-11-27",
       "farm_id": "B",
-      "et0_mm": 8.23,
+      "et0_mm": 1.45,
       "kc": 0.7,
-      "need_m3": 230.4
+      "etc_mm": 1.01,
+      "effective_rain_mm": 3.57,
+      "need_mm": 0.0,
+      "need_m3": 0.0,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-14",
+      "date": "2026-11-27",
       "farm_id": "C",
-      "et0_mm": 8.23,
+      "et0_mm": 1.45,
       "kc": 1.0,
-      "need_m3": 82.3
+      "etc_mm": 1.45,
+      "effective_rain_mm": 3.57,
+      "need_mm": 0.0,
+      "need_m3": 0.0,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-14",
+      "date": "2026-11-27",
       "farm_id": "D",
-      "et0_mm": 8.23,
+      "et0_mm": 1.45,
       "kc": 0.7,
-      "need_m3": 374.5
+      "etc_mm": 1.01,
+      "effective_rain_mm": 3.57,
+      "need_mm": 0.0,
+      "need_m3": 0.0,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-14",
+      "date": "2026-11-27",
       "farm_id": "E",
-      "et0_mm": 8.23,
-      "kc": 0.9,
-      "need_m3": 222.2
+      "et0_mm": 1.45,
+      "kc": 1.15,
+      "etc_mm": 1.67,
+      "effective_rain_mm": 3.57,
+      "need_mm": 0.0,
+      "need_m3": 0.0,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-14",
+      "date": "2026-11-27",
       "farm_id": "F",
-      "et0_mm": 8.23,
+      "et0_mm": 1.45,
       "kc": 1.15,
-      "need_m3": 473.2
+      "etc_mm": 1.67,
+      "effective_rain_mm": 3.57,
+      "need_mm": 0.0,
+      "need_m3": 0.0,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-14",
+      "date": "2026-11-27",
       "farm_id": "G",
-      "et0_mm": 8.23,
+      "et0_mm": 1.45,
       "kc": 1.15,
-      "need_m3": 75.7
+      "etc_mm": 1.67,
+      "effective_rain_mm": 3.57,
+      "need_mm": 0.0,
+      "need_m3": 0.0,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-14",
+      "date": "2026-11-27",
       "farm_id": "H",
-      "et0_mm": 8.23,
+      "et0_mm": 1.45,
       "kc": 0.7,
-      "need_m3": 34.6
+      "etc_mm": 1.01,
+      "effective_rain_mm": 3.57,
+      "need_mm": 0.0,
+      "need_m3": 0.0,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-14",
+      "date": "2026-11-27",
       "farm_id": "I",
-      "et0_mm": 8.23,
+      "et0_mm": 1.45,
       "kc": 0.95,
-      "need_m3": 117.3
+      "etc_mm": 1.38,
+      "effective_rain_mm": 3.57,
+      "need_mm": 0.0,
+      "need_m3": 0.0,
+      "weather_source": "forecast"
     },
     {
-      "date": "2026-07-14",
+      "date": "2026-11-27",
       "farm_id": "J",
-      "et0_mm": 8.23,
+      "et0_mm": 1.45,
       "kc": 1.15,
-      "need_m3": 757.2
+      "etc_mm": 1.67,
+      "effective_rain_mm": 3.57,
+      "need_mm": 0.0,
+      "need_m3": 0.0,
+      "weather_source": "forecast"
     }
   ],
   "tag": {
     "status": "PROJECTION",
-    "source": "weather_summer2026_sousse.csv ET0 x FAO-56 Kc"
+    "source": "Open-Meteo forecast (data pack), else historical weather, x FAO-56 Kc (mid-season)"
   }
 }

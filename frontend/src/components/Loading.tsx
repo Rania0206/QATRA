@@ -1,8 +1,12 @@
-export default function Loading({ label = "Loading…" }: { label?: string }) {
+import { C, useLang } from "../i18n";
+
+export default function Loading({ label }: { label?: string }) {
+  const { lang } = useLang();
   return (
-    <div role="status" aria-live="polite" className="flex items-center gap-3 p-6 text-slate-500">
-      <span className="h-5 w-5 animate-spin rounded-full border-2 border-slate-300 border-t-teal-700" />
-      <span className="text-sm">{label}</span>
+    <div role="status" aria-live="polite" className="flex items-center justify-center gap-3 py-12 text-[16px]">
+      <span className="h-px w-10 animate-pulse bg-ink" />
+      <span>{label ?? C.loading[lang]}</span>
+      <span className="h-px w-10 animate-pulse bg-ink" />
     </div>
   );
 }

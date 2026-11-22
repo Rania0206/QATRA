@@ -1,17 +1,18 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { get } from "../../api/client";
-import type { AllFarmsCompatibility, Batch, Decision, Farm } from "../../api/types";
+import type { AllFarmsCompatibility, Batch, Farm } from "../../api/types";
 import ErrorBox from "../../components/ErrorBox";
-import Loading from "../../components/Loading";
-import TagChip from "../../components/TagChip";
+import FarmCodeForm from "../../components/FarmCodeForm";
+import { getFarmCode, saveFarmCode } from "../../farm";
+import { Band, Intro, Pill, Skeleton } from "../../components/ui";
 import { USE_MOCKS } from "../../config";
 import { useApi } from "../../hooks/useApi";
-import ComplianceBadge from "../batches/ComplianceBadge";
-import { COMPLIANCE_BADGE, fmtDate } from "../batches/format";
-import DecisionBadge from "./DecisionBadge";
-import FarmCard from "./FarmCard";
-import FarmDrawer from "./FarmDrawer";
-import { T, type Lang, type RuleInfo } from "./format";
+import { useLang } from "../../i18n";
+import { COMPLIANCE } from "../batches/format";
+import DayPicker from "./DayPicker";
+import MyFarm from "./MyFarm";
+import OperatorView, { useOperatorView } from "./OperatorView";
+import { T, type RuleInfo } from "./format";
 
 interface Static {
   farms: Farm[];
@@ -20,11 +21,16 @@ interface Static {
 }
 
 const newestFirst = (a: Batch, b: Batch) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id);
-
-export default function CompatibilityTab() {
-  const [lang, setLang] = useState<Lang>("en");
+/**
+ * "Is this water safe for your farm?" — one farm only. A farmer never sees other farms.
+ * NOTE: the page still loads every farm's result from the API and keeps only one; real privacy
+ * needs logins and a per-farm endpoint on the server (next version).
+ */
+function FarmerCompatibility() {
+  const { lang } = useLang();
   const [batchId, setBatchId] = useState<string | null>(null); // null = backend default (latest usable batch)
-  const [selectedFarm, setSelectedFarm] = useState<string | null>(null);
+  const [farmCode, setFarmCode] = useState<string | null>(getFarmCode);
+  const [badCode, setBadCode] = useState(false); // a saved or linked code that does not exist
 
   const base = useApi<Static>(async () => {
     const [farms, batches, rules] = await Promise.all([
@@ -43,119 +49,90 @@ export default function CompatibilityTab() {
     if (batchId !== null) reloadCompat();
   }, [batchId, reloadCompat]);
 
-  const close = useCallback(() => setSelectedFarm(null), []);
+  const farm = farmCode ? base.data?.farms.find((f) => f.id.toUpperCase() === farmCode) : undefined;
+  const result = farm ? compat.data?.items.find((i) => i.farm_id === farm.id) : undefined;
+
+  // a remembered or linked code that does not exist: ask again
+  useEffect(() => {
+    if (farmCode && base.data && !farm) {
+      setBadCode(true);
+      setFarmCode(null);
+      saveFarmCode(null);
+    }
+  }, [farmCode, base.data, farm]);
+
+  const choose = (code: string) => {
+    setBadCode(false);
+    setFarmCode(code);
+    saveFarmCode(code);
+  };
+
+  const change = () => {
+    setFarmCode(null);
+    saveFarmCode(null);
+  };
+
   const shownBatch = batchId ?? compat.data?.batch_id ?? "";
   const batch = base.data?.batches.find((b) => b.id === shownBatch);
-  const byFarm = useMemo(() => new Map((compat.data?.items ?? []).map((i) => [i.farm_id, i])), [compat.data]);
-  const counts = useMemo(() => {
-    const c: Record<Decision, number> = { compatible: 0, conditional: 0, blocked: 0 };
-    for (const i of compat.data?.items ?? []) c[i.decision] += 1;
-    return c;
-  }, [compat.data]);
-
+  const batchStatus = batch?.status ?? compat.data?.batch_status;
   const error = base.error ?? compat.error;
-  const farm = base.data?.farms.find((f) => f.id === selectedFarm);
-  const farmResult = selectedFarm ? byFarm.get(selectedFarm) : undefined;
 
   return (
-    <div className="space-y-5">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div className="space-y-3">
-          <h2 className="text-2xl font-bold text-slate-900">{T.title[lang]}</h2>
-          <div className="flex flex-wrap items-center gap-3">
-            <label htmlFor="batch" className="text-lg font-medium text-slate-700">
-              {T.batch[lang]}
-            </label>
-            <select
-              id="batch"
-              value={shownBatch}
-              disabled={!base.data}
-              onChange={(e) => setBatchId(e.target.value)}
-              className="rounded-md border border-slate-300 bg-white px-3 py-2 font-mono text-base"
-            >
-              {!shownBatch && <option value="">…</option>}
-              {base.data?.batches.map((b) => (
-                <option key={b.id} value={b.id}>
-                  {b.id} · {fmtDate(b.date)} · {COMPLIANCE_BADGE[b.status]?.label ?? b.status}
-                </option>
-              ))}
-            </select>
-            {(batch?.status ?? compat.data?.batch_status) && (
-              <ComplianceBadge status={batch?.status ?? compat.data!.batch_status} large />
+    <>
+      <Band tone="olive" className="md:py-24">
+        <Intro as="h1" size="xl" eyebrow={T.eyebrow[lang]} title={T.title[lang]}>
+          <p>{T.lead[lang]}</p>
+        </Intro>
+
+        {!farmCode ? (
+          <FarmCodeForm onSubmit={choose} notFound={badCode} />
+        ) : (
+          <div className="fade-up mx-auto mt-10 flex max-w-2xl flex-col items-center gap-4">
+            {base.data ? (
+              <DayPicker batches={base.data.batches} value={shownBatch} onChange={setBatchId} lang={lang} />
+            ) : (
+              <Skeleton className="h-12 w-72" />
             )}
+            <div className="flex items-center gap-3 text-[16px]">
+              {T.quality[lang]}:
+              {batchStatus ? (
+                <Pill tone={COMPLIANCE[batchStatus]?.tone ?? "neutral"}>{COMPLIANCE[batchStatus]?.label[lang] ?? batchStatus}</Pill>
+              ) : (
+                <Skeleton className="h-8 w-32" />
+              )}
+            </div>
           </div>
-        </div>
+        )}
+      </Band>
 
-        <div className="flex flex-col items-end gap-2">
-          <div className="inline-flex rounded-lg ring-1 ring-slate-300" role="group" aria-label="Language">
-            {(["en", "fr"] as const).map((l) => (
-              <button
-                key={l}
-                type="button"
-                onClick={() => setLang(l)}
-                aria-pressed={lang === l}
-                className={`px-4 py-2 text-base font-semibold first:rounded-l-lg last:rounded-r-lg ${
-                  lang === l ? "bg-teal-700 text-white" : "bg-white text-slate-700 hover:bg-slate-50"
-                }`}
-              >
-                {l.toUpperCase()}
-              </button>
-            ))}
-          </div>
-          <div className="flex flex-wrap justify-end gap-2">
-            {compat.data && <TagChip tag={compat.data.tag} showSource={false} />}
-            {base.data?.farms[0] && <TagChip tag={base.data.farms[0].tag} />}
-          </div>
-        </div>
-      </div>
-
-      {USE_MOCKS && <p className="text-sm text-slate-500">{T.mockNote[lang]}</p>}
-
-      {compat.data && !compat.loading && (
-        <div className="flex flex-wrap gap-3 text-lg">
-          {(Object.keys(counts) as Decision[]).map((d) => (
-            <span key={d} className="inline-flex items-center gap-2">
-              <DecisionBadge decision={d} lang={lang} /> <strong>{counts[d]}</strong>
-            </span>
-          ))}
-        </div>
+      {farmCode && (
+        <Band tone="cream">
+          {USE_MOCKS && <p className="mb-6 text-center text-[15px]">{T.mockNote[lang]}</p>}
+          {error ? (
+            <ErrorBox
+              error={error}
+              onRetry={() => {
+                base.reload();
+                compat.reload();
+              }}
+            />
+          ) : !farm || !result || compat.loading ? (
+            <div className="mx-auto max-w-2xl space-y-4" aria-busy="true">
+              <Skeleton className="h-16 w-full" />
+              <Skeleton className="h-10 w-2/3" />
+              <Skeleton className="h-6 w-full" />
+              <Skeleton className="h-40 w-full" />
+            </div>
+          ) : (
+            <MyFarm farm={farm} result={result} rules={base.data!.rules} lang={lang} onChange={change} />
+          )}
+        </Band>
       )}
-
-      {error ? (
-        <ErrorBox
-          error={error}
-          onRetry={() => {
-            base.reload();
-            compat.reload();
-          }}
-        />
-      ) : base.loading || compat.loading || !base.data || !compat.data ? (
-        <Loading label={lang === "fr" ? "Chargement…" : "Loading compatibility…"} />
-      ) : base.data.farms.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center text-lg text-slate-500">
-          {lang === "fr" ? "Aucune ferme." : "No farms yet."}
-        </div>
-      ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {base.data.farms.map((f) => {
-            const r = byFarm.get(f.id);
-            return r ? (
-              <FarmCard
-                key={f.id}
-                farm={f}
-                result={r}
-                lang={lang}
-                selected={selectedFarm === f.id}
-                onSelect={() => setSelectedFarm(f.id)}
-              />
-            ) : null;
-          })}
-        </div>
-      )}
-
-      {farm && farmResult && base.data && (
-        <FarmDrawer farm={farm} result={farmResult} rules={base.data.rules} lang={lang} onClose={close} />
-      )}
-    </div>
+    </>
   );
+}
+
+/** Farmers get their own farm only. The all-farms operator view is a hidden demo mode (see OperatorView.tsx). */
+export default function CompatibilityTab() {
+  return useOperatorView() ? <OperatorView /> : <FarmerCompatibility />;
 }

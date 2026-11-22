@@ -146,8 +146,263 @@ export interface BusinessView {
   tag: Tag;
 }
 
+export interface Plant {
+  id: string;
+  name: string;
+  governorate: string;
+  serves_perimeter: string | null;
+  treatment_level: string;
+  capacity_m3_d: number | null; // TREATMENT capacity, not volume available to farmers
+  lat: number | null; // null when no coordinates are known (never invented)
+  lon: number | null;
+  tag: Tag;
+}
+
+export interface GeoPolygon {
+  type: "Polygon";
+  coordinates: number[][][]; // [lon, lat] rings
+}
+
+export interface MapFeature {
+  id: string;
+  name: string;
+  lat: number | null; // null: the data has no location (e.g. the irrigated perimeter)
+  lon: number | null;
+  // layer-specific extras
+  crop?: string;
+  capacity_m3?: number;
+  area_ha?: number | null;
+  wwtp?: string | null;
+  campaign?: string | null;
+  tww_distributed_m3_yr?: number | null;
+  landuse?: string;
+  geometry?: GeoPolygon; // farmland polygons
+}
+
+export interface MapLayer {
+  id: string;
+  label: string;
+  tag: Tag;
+  features: MapFeature[];
+}
+
+export interface MapLayersResponse {
+  layers: MapLayer[];
+}
+
+export interface SoilPoint {
+  day: number; // legacy: year * 365
+  ece: number;
+}
+
+export interface SoilPolicy {
+  series: number[]; // ECe (dS/m) at the start of each year, index = year (0..years)
+  first_year_over: number | null; // first year ECe > threshold, null if never
+  water_used_m3_season: number;
+  yield_loss_pct_30y: number | null; // null when the crop has no published yield slope
+}
+
+export interface SoilQatraPolicy extends SoilPolicy {
+  leaching_fraction: number;
+}
+
+export interface SoilSimulation {
+  farm_id: string;
+  batch_id: string;
+  crop: string;
+  threshold_ece: number;
+  ecw: number;
+  years: number[]; // [0..N]
+  naive: SoilPolicy;
+  qatra: SoilQatraPolicy;
+  // legacy fields: `series` is the QATRA curve, `leaching_fraction` = qatra.leaching_fraction
+  series: SoilPoint[];
+  leaching_fraction: number;
+  blocked_reason?: string | null; // set when the crop cannot receive TWW by law: show no simulation
+  warning?: string | null;
+  tag: Tag;
+}
+
+export interface SoilSimulateRequest {
+  farm_id: string;
+  batch_id: string;
+  days?: number; // legacy, ignored
+  years?: number; // default 30
+  soil_ece?: number; // override the farm's soil ECe
+  ecw?: number; // override the batch EC
+}
+
+export interface PassportQuality {
+  param: string; // EC, BOD5, COD, TSS, pH, helminth_eggs, faecal_coliforms
+  label: string;
+  value: number | null; // null: not measured
+  unit: string;
+  limit_min: number | null; // only ranges (pH)
+  limit_max: number | null;
+  ok: boolean | null; // null: not measured
+  legal_ref: string;
+  tag: Tag; // faecal coliforms: TO_VERIFY (WHO-derived fallback, not Tunisian law)
+}
+
+export interface PassportCheck {
+  type: AnalysisType;
+  required: boolean; // metals are not required per batch
+  present: boolean;
+  analysed_on: string | null;
+  valid_until: string | null;
+  validity_days: number; // 30 / 15 / 182 (Decree 89-1047 Art.3)
+  is_valid: boolean | null; // null: not applicable
+  legal_ref: string;
+}
+
+export interface PassportEvent {
+  at: string; // ISO date or datetime
+  event: string;
+}
+
+export interface PassportDestination {
+  farm_id: string;
+  m3: number;
+}
+
+/** GET /api/batches/{id}/passport */
+export interface Passport {
+  batch_id: string;
+  plant: string;
+  date: string;
+  volume_m3: number;
+  analysis_status: AnalysisStatus;
+  risk_colour: RiskColour | null;
+  allowed_crops: string[]; // the 1994 order; empty when the batch is not usable
+  blocked_crops: string[];
+  destinations: PassportDestination[]; // from the allocation; [] until it exists
+  issued_at: string;
+  qr_payload: string; // "qatra:passport:{id}"
+  quality_summary: PassportQuality[];
+  checks: PassportCheck[];
+  timeline: PassportEvent[];
+  tag: Tag;
+}
+
+export interface HeatwaveHour {
+  hour: number;
+  outage: boolean;
+  demand_m3: number;
+  delivered_m3: number;
+  unserved_m3: number;
+  grid_kw: number;
+  solar_kw: number;
+  basin_m3: number | null; // null for the naive policy (no basin)
+  source: EnergySource;
+}
+
+export interface HeatwaveRun {
+  policy: "naive" | "qatra";
+  hours_without_water: number;
+  unserved_m3: number;
+  delivered_m3: number;
+  grid_kwh: number;
+  solar_kwh: number;
+  hourly: HeatwaveHour[]; // 24 rows
+}
+
+/** POST /api/scenarios/heatwave body: `date` is optional (default: the scenario's day) and must be one of `dates`. */
+export interface HeatwaveRequest {
+  scenario_id: string;
+  date?: string;
+}
+
+/** POST /api/scenarios/heatwave */
+export interface HeatwaveResult {
+  scenario_id: string;
+  label: string;
+  date: string;
+  dates: string[]; // the days that can be chosen: the days with an outage window
+  allocated_m3: number; // 0 when the batch of the day cannot be used: nothing is irrigated
+  allocation: Allocation;
+  baseline: { energy_kwh: number; solar_share: number }; // the naive run: all grid, no solar
+  naive: HeatwaveRun;
+  qatra: HeatwaveRun;
+  caveat: string; // "NASA POWER ~0.5 deg grid: coastal extremes smoothed"
+  tag: Tag;
+}
+
+/** GET /api/messages, POST /api/messages/reply */
+export interface Message {
+  id: string;
+  farm_id: string;
+  direction: "in" | "out";
+  channel: string; // "sms"
+  at: string; // ISO datetime
+  text?: string | null; // incoming: what the farmer wrote
+  text_fr?: string | null; // outgoing: French and Tunisian Arabic
+  text_ar?: string | null;
+  needs_human_review?: boolean; // true while the Arabic text is not approved by a Tunisian speaker
+  batch_id?: string | null; // outgoing: the batch of the allocation (link to /passport/{batch_id})
+  status?: string | null; // outgoing: allocated | conditional | capped | blocked
+}
+
 export interface Health {
   status: string;
   datasets: Record<string, number>;
   errors?: Record<string, string>;
+}
+
+// A-14a: savings of one plan day (POST /api/savings). Replaces SavingsResult above as the response of the endpoint.
+export interface SavingsOverrides {
+  fertiliser_price?: number; // TND/kg of ammonium nitrate
+  electricity_price?: number; // TND/kWh
+  treated_water_price?: number; // TND/m3
+  availability_factor?: number; // 0..1
+  irrigation_days?: number;
+  qatra_fee_pct?: number; // 0..100
+  seasons_per_year?: number;
+}
+
+export interface SavingsAssumption {
+  name: string;
+  value: number;
+  unit: string;
+  source: string;
+  status: TagStatus;
+}
+
+export interface SavingsItem {
+  farm_id: string;
+  status: string; // allocated | capped | conditional | blocked
+  m3: number;
+  nitrogen_kg: number;
+  well_kwh_saved: number;
+  electricity_saved_tnd: number;
+  fertiliser_value_tnd: number;
+  water_cost_tnd: number;
+  net_saving_tnd: number;
+  qatra_fee_tnd: number;
+  farmer_net_tnd: number;
+  reason?: string | null;
+  tag: Tag;
+}
+
+export interface SavingsTotals {
+  m3: number;
+  electricity_saved_tnd: number;
+  fertiliser_value_tnd: number;
+  water_cost_tnd: number;
+  net_saving_tnd: number;
+  qatra_fee_tnd: number;
+  farmer_net_tnd: number;
+  tag: Tag;
+}
+
+export interface SavingsReport {
+  batch_id: string;
+  date?: string | null;
+  scenario: "normal" | "outage";
+  items: SavingsItem[];
+  day: SavingsTotals; // ESTIMATE
+  season: SavingsTotals; // PROJECTION: day x irrigation_days
+  year: SavingsTotals; // PROJECTION: season x seasons_per_year
+  assumptions: SavingsAssumption[];
+  warnings: string[];
+  tag: Tag;
 }

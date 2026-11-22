@@ -1,87 +1,312 @@
 {
-  "water_need_m3": 12700.0,
-  "well_kwh_avoided": 5474,
-  "well_cost_avoided_tnd": 1591.3,
-  "treated_water_cost_tnd": 254.0,
-  "nitrogen_kg": 383.2,
-  "fertiliser_kg_ammonium_nitrate": 1143.9,
-  "fertiliser_saved_tnd": 1143.9,
-  "net_saving_tnd": 2481.2,
-  "kwh_off_grid": 5474,
-  "well_water_kept_m3": 12700.0,
-  "compatibility_status": "conditional",
-  "breakdown": [
+  "batch_id": "SSUD-20260829",
+  "date": "2026-11-21",
+  "scenario": "normal",
+  "items": [
     {
-      "label": "Season water need (alfalfa, 2 ha)",
-      "value": 12700.0,
-      "unit": "m³",
+      "farm_id": "A",
+      "status": "conditional",
+      "m3": 35.0,
+      "nitrogen_kg": 1.15,
+      "well_kwh_saved": 18.86,
+      "electricity_saved_tnd": 5.48,
+      "fertiliser_value_tnd": 1.71,
+      "water_cost_tnd": 0.7,
+      "net_saving_tnd": 6.49,
+      "qatra_fee_tnd": 0.65,
+      "farmer_net_tnd": 5.84,
+      "reason": "soil salinity: limited volume (alfalfa tolerates ECe 2 dS/m: only 48% of the water can be TWW (blend 2.31 dS/m, leaching fraction 0.30))",
       "tag": {
-        "status": "SIMULATED",
-        "source": "data/simulated/sim_farms.csv"
+        "status": "ESTIMATE",
+        "source": "plan m3 x prices below (see assumptions)"
       }
     },
     {
-      "label": "Well pumping energy avoided (103 m, η 0.65)",
-      "value": 5474,
-      "unit": "kWh",
+      "farm_id": "B",
+      "status": "allocated",
+      "m3": 75.0,
+      "nitrogen_kg": 2.46,
+      "well_kwh_saved": 22.03,
+      "electricity_saved_tnd": 6.4,
+      "fertiliser_value_tnd": 3.67,
+      "water_cost_tnd": 1.5,
+      "net_saving_tnd": 8.57,
+      "qatra_fee_tnd": 0.86,
+      "farmer_net_tnd": 7.71,
+      "reason": null,
       "tag": {
         "status": "ESTIMATE",
-        "source": "E = 0.00272·H/η·V, data/clean/energy_params.json"
+        "source": "plan m3 x prices below (see assumptions)"
       }
     },
     {
-      "label": "Well electricity cost avoided",
-      "value": 1591.3,
-      "unit": "TND",
+      "farm_id": "C",
+      "status": "blocked",
+      "m3": 0.0,
+      "nitrogen_kg": 0.0,
+      "well_kwh_saved": 0.0,
+      "electricity_saved_tnd": 0.0,
+      "fertiliser_value_tnd": 0.0,
+      "water_cost_tnd": 0.0,
+      "net_saving_tnd": 0.0,
+      "qatra_fee_tnd": 0.0,
+      "farmer_net_tnd": 0.0,
+      "reason": "Lettuce is eaten raw: forbidden (Decree 89-1047 Art. 5)",
       "tag": {
         "status": "ESTIMATE",
-        "source": "STEG average sale price 2025, 290.7 millimes/kWh; agricultural tariff TO_VERIFY"
+        "source": "plan m3 x prices below (see assumptions)"
       }
     },
     {
-      "label": "Treated water cost",
-      "value": -254.0,
-      "unit": "TND",
+      "farm_id": "D",
+      "status": "allocated",
+      "m3": 121.9,
+      "nitrogen_kg": 4.0,
+      "well_kwh_saved": 37.14,
+      "electricity_saved_tnd": 10.8,
+      "fertiliser_value_tnd": 5.97,
+      "water_cost_tnd": 2.44,
+      "net_saving_tnd": 14.33,
+      "qatra_fee_tnd": 1.43,
+      "farmer_net_tnd": 12.9,
+      "reason": null,
       "tag": {
         "status": "ESTIMATE",
-        "source": "assumed 0.020 TND/m³, TO_VERIFY"
+        "source": "plan m3 x prices below (see assumptions)"
       }
     },
     {
-      "label": "Nitrogen supplied by treated water",
-      "value": 383.2,
-      "unit": "kg N",
+      "farm_id": "E",
+      "status": "allocated",
+      "m3": 92.5,
+      "nitrogen_kg": 3.03,
+      "well_kwh_saved": 42.54,
+      "electricity_saved_tnd": 12.37,
+      "fertiliser_value_tnd": 4.53,
+      "water_cost_tnd": 1.85,
+      "net_saving_tnd": 15.05,
+      "qatra_fee_tnd": 1.5,
+      "farmer_net_tnd": 13.55,
+      "reason": null,
       "tag": {
         "status": "ESTIMATE",
-        "source": "mean total N 30.2 mg/L, sim_batches"
+        "source": "plan m3 x prices below (see assumptions)"
       }
     },
     {
-      "label": "Ammonium nitrate replaced (33.5% N)",
-      "value": 1143.9,
-      "unit": "kg",
+      "farm_id": "F",
+      "status": "allocated",
+      "m3": 154.1,
+      "nitrogen_kg": 5.05,
+      "well_kwh_saved": 70.11,
+      "electricity_saved_tnd": 20.38,
+      "fertiliser_value_tnd": 7.54,
+      "water_cost_tnd": 3.08,
+      "net_saving_tnd": 24.84,
+      "qatra_fee_tnd": 2.48,
+      "farmer_net_tnd": 22.36,
+      "reason": null,
       "tag": {
         "status": "ESTIMATE",
-        "source": "N / 0.335"
+        "source": "plan m3 x prices below (see assumptions)"
       }
     },
     {
-      "label": "Fertiliser saved",
-      "value": 1143.9,
-      "unit": "TND",
+      "farm_id": "G",
+      "status": "allocated",
+      "m3": 24.7,
+      "nitrogen_kg": 0.81,
+      "well_kwh_saved": 11.84,
+      "electricity_saved_tnd": 3.44,
+      "fertiliser_value_tnd": 1.21,
+      "water_cost_tnd": 0.49,
+      "net_saving_tnd": 4.16,
+      "qatra_fee_tnd": 0.42,
+      "farmer_net_tnd": 3.74,
+      "reason": null,
       "tag": {
         "status": "ESTIMATE",
-        "source": "assumed 1.0 TND/kg ammonium nitrate, TO_VERIFY"
+        "source": "plan m3 x prices below (see assumptions)"
       }
     },
     {
-      "label": "Net saving for the season",
-      "value": 2481.2,
-      "unit": "TND",
+      "farm_id": "H",
+      "status": "allocated",
+      "m3": 11.3,
+      "nitrogen_kg": 0.37,
+      "well_kwh_saved": 0.0,
+      "electricity_saved_tnd": 0.0,
+      "fertiliser_value_tnd": 0.55,
+      "water_cost_tnd": 0.23,
+      "net_saving_tnd": 0.32,
+      "qatra_fee_tnd": 0.03,
+      "farmer_net_tnd": 0.29,
+      "reason": "farm uses the network, no own pump: no electricity saved",
       "tag": {
         "status": "ESTIMATE",
-        "source": "energy + fertiliser − treated water cost"
+        "source": "plan m3 x prices below (see assumptions)"
+      }
+    },
+    {
+      "farm_id": "I",
+      "status": "allocated",
+      "m3": 38.2,
+      "nitrogen_kg": 1.25,
+      "well_kwh_saved": 9.77,
+      "electricity_saved_tnd": 2.84,
+      "fertiliser_value_tnd": 1.87,
+      "water_cost_tnd": 0.76,
+      "net_saving_tnd": 3.95,
+      "qatra_fee_tnd": 0.4,
+      "farmer_net_tnd": 3.55,
+      "reason": null,
+      "tag": {
+        "status": "ESTIMATE",
+        "source": "plan m3 x prices below (see assumptions)"
+      }
+    },
+    {
+      "farm_id": "J",
+      "status": "allocated",
+      "m3": 246.6,
+      "nitrogen_kg": 8.09,
+      "well_kwh_saved": 79.73,
+      "electricity_saved_tnd": 23.18,
+      "fertiliser_value_tnd": 12.07,
+      "water_cost_tnd": 4.93,
+      "net_saving_tnd": 30.32,
+      "qatra_fee_tnd": 3.03,
+      "farmer_net_tnd": 27.29,
+      "reason": null,
+      "tag": {
+        "status": "ESTIMATE",
+        "source": "plan m3 x prices below (see assumptions)"
       }
     }
-  ]
+  ],
+  "day": {
+    "m3": 799.3,
+    "electricity_saved_tnd": 84.89,
+    "fertiliser_value_tnd": 39.12,
+    "water_cost_tnd": 15.98,
+    "net_saving_tnd": 108.03,
+    "qatra_fee_tnd": 10.8,
+    "farmer_net_tnd": 97.23,
+    "tag": {
+      "status": "ESTIMATE",
+      "source": "plan m3 x prices below (see assumptions)"
+    }
+  },
+  "season": {
+    "m3": 119895.0,
+    "electricity_saved_tnd": 12733.5,
+    "fertiliser_value_tnd": 5868.0,
+    "water_cost_tnd": 2397.0,
+    "net_saving_tnd": 16204.5,
+    "qatra_fee_tnd": 1620.0,
+    "farmer_net_tnd": 14584.5,
+    "tag": {
+      "status": "PROJECTION",
+      "source": "day x 150 irrigation days x 1 season(s)/year"
+    }
+  },
+  "year": {
+    "m3": 119895.0,
+    "electricity_saved_tnd": 12733.5,
+    "fertiliser_value_tnd": 5868.0,
+    "water_cost_tnd": 2397.0,
+    "net_saving_tnd": 16204.5,
+    "qatra_fee_tnd": 1620.0,
+    "farmer_net_tnd": 14584.5,
+    "tag": {
+      "status": "PROJECTION",
+      "source": "day x 150 irrigation days x 1 season(s)/year"
+    }
+  },
+  "assumptions": [
+    {
+      "name": "electricity_price",
+      "value": 0.2907,
+      "unit": "TND/kWh",
+      "source": "STEG average sale price (all customers) 2025 (steg_tariffs.csv): average of all customers, NOT the agricultural tariff",
+      "status": "ESTIMATE"
+    },
+    {
+      "name": "well_energy_coefficient",
+      "value": 0.00272,
+      "unit": "kWh/(m3*m)",
+      "source": "E = 0.00272 x H / eta (physics, energy_params.json); H = well depth, else the pump head",
+      "status": "REPORTED"
+    },
+    {
+      "name": "default_pump_efficiency",
+      "value": 0.65,
+      "unit": "share (0..1)",
+      "source": "used only for a farm with no pump efficiency (energy_params.json, typical)",
+      "status": "ESTIMATE"
+    },
+    {
+      "name": "nitrogen_in_treated_water",
+      "value": 32.8,
+      "unit": "mg/L",
+      "source": "batch SSUD-20260829 analysis of 2026-08-25",
+      "status": "SIMULATED"
+    },
+    {
+      "name": "ammonium_nitrate_n_share",
+      "value": 0.335,
+      "unit": "share (0..1)",
+      "source": "ammonium nitrate is 33.5% nitrogen",
+      "status": "REPORTED"
+    },
+    {
+      "name": "fertiliser_price",
+      "value": 1.0,
+      "unit": "TND/kg",
+      "source": "ammonium nitrate 33.5% N, assumed 1.0 TND/kg - not in the data pack, check with a supplier",
+      "status": "TO_VERIFY"
+    },
+    {
+      "name": "treated_water_price",
+      "value": 0.02,
+      "unit": "TND/m3",
+      "source": "20 millimes/m3, treated-wastewater irrigation tariff (2016) - not in the data pack",
+      "status": "TO_VERIFY"
+    },
+    {
+      "name": "availability_factor",
+      "value": 0.5,
+      "unit": "share (0..1)",
+      "source": "only half of the nitrogen counts as usable fertiliser (losses, timing)",
+      "status": "ESTIMATE"
+    },
+    {
+      "name": "qatra_fee_pct",
+      "value": 10.0,
+      "unit": "% of net saving",
+      "source": "QATRA business-model parameter, to be agreed",
+      "status": "ESTIMATE"
+    },
+    {
+      "name": "irrigation_days",
+      "value": 150.0,
+      "unit": "days/season",
+      "source": "length of one irrigation season, for the projection",
+      "status": "ESTIMATE"
+    },
+    {
+      "name": "seasons_per_year",
+      "value": 1.0,
+      "unit": "seasons/year",
+      "source": "one irrigation season per year, for the projection",
+      "status": "ESTIMATE"
+    }
+  ],
+  "warnings": [
+    "Season and year are PROJECTIONS: this day repeated for 150 irrigation days; needs change through the season."
+  ],
+  "tag": {
+    "status": "ESTIMATE",
+    "source": "plan m3 x prices below (see assumptions)"
+  }
 }

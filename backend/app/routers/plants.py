@@ -151,7 +151,31 @@ def _basin_layer() -> MapLayer:
                                "capacity_m3": cap}])
 
 
+def _geojson(geom: Any) -> dict | None:
+    """Raw GeoJSON dict, whether the loader gave a dict (no geopandas) or a shapely geometry."""
+    if isinstance(geom, dict):
+        return geom
+    return dict(geom.__geo_interface__) if hasattr(geom, "__geo_interface__") else None
+
+
+def _farmland_layer() -> MapLayer:
+    """OSM farmland / orchard polygons near Sousse. `geometry` (GeoJSON Polygon) is an extra field on each feature."""
+    df = get_store()["farmland_sousse"]
+    feats = []
+    for _, r in df.iterrows():
+        geom = _geojson(r["geometry"])
+        if geom is None:
+            continue
+        area = _num(r["area_ha"])
+        landuse = str(r["landuse"])
+        feats.append({"id": str(r["osm_id"]), "name": f"{landuse.capitalize()} ({area:g} ha)" if area else landuse.capitalize(),
+                      "lat": _num(r["centroid_lat"]), "lon": _num(r["centroid_lon"]), "landuse": landuse,
+                      "area_ha": area, "geometry": geom})
+    return MapLayer(id="farmland", label="OSM farmland",
+                    tag=Tag(status="REPORTED", source=f"{OSM_SOURCE}; area and centroid are ESTIMATES"), features=feats)
+
+
 @router.get("/map/layers", response_model=MapLayersResponse)
 def map_layers():
     return MapLayersResponse(layers=[_plant_layer(), _irrigated_layer(), _osm_plants_layer(),
-                                     _farms_layer(), _basin_layer()])
+                                     _farmland_layer(), _farms_layer(), _basin_layer()])

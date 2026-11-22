@@ -1,19 +1,32 @@
+import { C, TAB_LABEL, useLang } from "../i18n";
+import { Band, Intro } from "./ui";
+
 interface Props {
   title: string;
   endpoints: string[];
 }
 
+/** Screen not built yet: one calm band, with the API it will use. */
 export default function Placeholder({ title, endpoints }: Props) {
+  const { lang } = useLang();
+  // titles come from the feature files in English; translate through the tab names when known
+  const known = Object.values(TAB_LABEL).find((t) => t.en === title);
   return (
-    <section className="rounded-lg border border-dashed border-slate-300 bg-white p-6">
-      <h2 className="text-lg font-semibold text-slate-800">{title}</h2>
-      <p className="mt-1 text-sm text-slate-500">Placeholder: not implemented yet.</p>
-      <p className="mt-4 text-xs font-medium uppercase tracking-wide text-slate-400">Endpoints</p>
-      <ul className="mt-1 space-y-0.5 font-mono text-sm text-slate-600">
-        {endpoints.map((e) => (
-          <li key={e}>{e}</li>
-        ))}
-      </ul>
-    </section>
+    <>
+      <Band tone="olive" className="md:py-32">
+        <Intro as="h1" size="xl" eyebrow={C.comingNext[lang]} title={known ? known[lang] : title}>
+          <p>{C.building[lang]}</p>
+        </Intro>
+      </Band>
+      <Band tone="cream">
+        <ul dir="ltr" className="mx-auto max-w-md space-y-3 text-center text-[16px]">
+          {endpoints.map((e) => (
+            <li key={e} className="border-b border-line pb-3 last:border-0">
+              {e}
+            </li>
+          ))}
+        </ul>
+      </Band>
+    </>
   );
 }

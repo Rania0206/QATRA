@@ -2,7 +2,8 @@
 import json
 from pathlib import Path
 
-from app.schemas import Allocation, Batch, BusinessView, Farm, RuleResult, SavingsResult
+from app.engine.savings import SavingsReport
+from app.schemas import Allocation, Batch, BusinessView, Farm, RuleResult
 
 MOCKS = Path(__file__).resolve().parents[2] / "frontend" / "src" / "mocks"
 
@@ -46,7 +47,7 @@ def test_all_mocks_are_strict_json():
 
 
 def test_lite_mocks_match_schema():
-    SavingsResult.model_validate(load("post_savings.json"))
+    SavingsReport.model_validate(load("post_savings.json"))
     BusinessView.model_validate(load("business.json"))
 
 
@@ -63,3 +64,16 @@ def test_a03c_mocks_match_engine_models():
     AllFarmsCompatibility.model_validate(load("compatibility.json"))
     for r in load("rules.json"):
         Rule.model_validate(r)
+
+
+def test_soil_simulate_mock_matches_schema():
+    from app.schemas import SoilSimulation
+    m = SoilSimulation.model_validate(load("post_soil_simulate.json"))
+    assert len(m.years) == len(m.naive.series) == len(m.qatra.series) == len(m.series)
+
+
+def test_needs_mock_matches_engine_model():
+    from app.engine.needs import NeedsForecast
+
+    body = NeedsForecast.model_validate(load("forecast_needs.json"))
+    assert body.days == 7 and len(body.items) == 70
