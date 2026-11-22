@@ -103,7 +103,8 @@ export default function Shell({ tabs, active, onSelect, role, onRole, children }
       </div>
 
       <header className="sticky top-0 z-[1000] border-b border-line bg-cream">
-        <div className="mx-auto grid h-20 max-w-7xl grid-cols-[1fr_auto_1fr] items-center px-5 sm:px-8">
+        {/* phones: menu + wordmark on the first line, role and language wrap onto a second one (no sideways scroll); from sm: the original 3-column row */}
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-4 gap-y-1 px-5 py-2 sm:grid sm:h-20 sm:grid-cols-[1fr_auto_1fr] sm:py-0 sm:px-8">
           <div className="flex items-center gap-5">
             <button
               type="button"
@@ -126,8 +127,8 @@ export default function Shell({ tabs, active, onSelect, role, onRole, children }
           >
             <Wordmark />
           </a>
-          <div className="flex items-center justify-end gap-5">
-            <label className="flex items-center gap-2 text-[15px]">
+          <div className="flex w-full min-w-0 items-center justify-between gap-3 sm:w-auto sm:justify-end sm:gap-5">
+            <label className="flex min-w-0 items-center gap-2 text-[15px]">
               <span className="hidden text-ink-soft sm:inline">{RT.select[lang]}</span>
               <select
                 value={role ?? ""}

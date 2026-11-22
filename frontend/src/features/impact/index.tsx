@@ -7,8 +7,9 @@ import { USE_MOCKS } from "../../config";
 import { fmtN } from "../../format";
 import { useApi } from "../../hooks/useApi";
 import { useLang, type Lang } from "../../i18n";
-import { project } from "../business/data"; // the same arithmetic as the Business screen, so both show the same numbers
-import { Im, growSub, headline, nf, pilotSub } from "./texts";
+import { pilotFigures } from "../../pilot"; // the one source of truth for the pilot figures
+import { project } from "../business/data"; // scale-up: the same arithmetic as the Business screen, so both show the same numbers
+import { Im, growSub, headline, pilotSub } from "./texts";
 
 const ADOPTION = 0.3; // the scale-up shown here: 30 % of the equipped hectares
 
@@ -54,6 +55,9 @@ interface RowData {
   unit: string;
   dayTag: string;
   seasonTag: string;
+  dayDec: number; // decimals shown (rounding happens only here, at display)
+  seasonDec: number;
+  fixedDay?: boolean;
 }
 
 function Block({ title, rows, lang }: { title: string; rows: RowData[]; lang: Lang }) {
@@ -64,8 +68,8 @@ function Block({ title, rows, lang }: { title: string; rows: RowData[]; lang: La
         {rows.map((r) => (
           <li key={r.key} className="grid grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)_minmax(0,1fr)] items-start gap-x-3 border-b border-line py-3 last:border-0">
             <span className="text-[16px] leading-snug">{r.label}</span>
-            {r.day !== undefined ? <Cell value={nf(r.day, lang)} unit={r.unit} caption={r.dayTag} /> : <span />}
-            {r.season !== undefined ? <Cell value={nf(r.season, lang)} unit={r.unit} caption={r.seasonTag} /> : <span />}
+            {r.day !== undefined ? <Cell value={fmtN(r.day, lang, r.dayDec, r.fixedDay)} unit={r.unit} caption={r.dayTag} /> : <span />}
+            {r.season !== undefined ? <Cell value={fmtN(r.season, lang, r.seasonDec)} unit={r.unit} caption={r.seasonTag} /> : <span />}
           </li>
         ))}
       </ul>
@@ -123,23 +127,18 @@ export default function ImpactTab() {
       </>
     );
 
-  // ---- the pilot: the savings of the default plan (day), its season projection, and the per-hectare pilot figures of /api/business
+  // ---- the pilot: the one source of truth (the savings report of the default plan); only the solar share comes from the allocation
   const s = d.savings;
-  const days = s.assumptions.find((a) => a.name === "irrigation_days")?.value ?? 150;
-  const farms = s.items.length;
+  const p = pilotFigures(s);
+  const days = p.days;
   const b = d.business;
-  const pilotHa = b?.pilot.pilot_ha ?? 0; // the hectares that receive water (the per-hectare figures are per such hectare)
-  const pilotNow = b ? project(b.pilot, pilotHa, 1) : undefined; // the pilot hectares at 100 % (= the "Our pilot" row of the Business screen)
-  const wellSeason = pilotNow?.water;
-  const kwhSeason = pilotNow?.kwh;
-  const wellDay = wellSeason !== undefined ? wellSeason / days : undefined;
-  const kwhDay = kwhSeason !== undefined ? kwhSeason / days : undefined;
   const solar = d.allocation ? d.allocation.solar_share * 100 : undefined;
 
   const est = Im.estimate[lang];
   const proj = Im.projection[lang];
-  const mk = (key: string, label: string, day: number | undefined, season: number | undefined, unit: string): RowData => ({
-    key, label, day, season, unit, dayTag: est, seasonTag: proj,
+  // m3 and kWh by the day keep one decimal (799.3), money by the day two (97.23); seasons are whole numbers
+  const mk = (key: string, label: string, day: number, season: number, unit: string, dayDec: number, fixedDay = false): RowData => ({
+    key, label, day, season, unit, dayTag: est, seasonTag: proj, dayDec, seasonDec: 0, fixedDay,
   });
 
   // ---- the scale-up: GET /api/business at 30 % adoption of the equipped hectares (per year = per season with one season a year)
@@ -149,7 +148,7 @@ export default function ImpactTab() {
   const perSeason = (yearly: number) => yearly / seasons;
   const perDay = (yearly: number) => yearly / seasons / days;
   const grow = (label: string, key: string, yearly: number | undefined, unit: string): RowData => ({
-    key, label, unit, dayTag: proj, seasonTag: proj,
+    key, label, unit, dayTag: proj, seasonTag: proj, dayDec: 0, seasonDec: 0,
     day: yearly === undefined ? undefined : perDay(yearly),
     season: yearly === undefined ? undefined : perSeason(yearly),
   });
@@ -157,7 +156,7 @@ export default function ImpactTab() {
   return (
     <>
       <Band tone="olive" className="md:py-24">
-        <Intro as="h1" eyebrow={Im.eyebrow[lang]} title={wellDay !== undefined ? headline(farms, s.day.farmer_net_tnd, wellDay, lang) : Im.eyebrow[lang]}>
+        <Intro as="h1" eyebrow={Im.eyebrow[lang]} title={headline(p.farms, p.farmers.day, p.m3.day, lang)}>
           <p>{Im.lead[lang]}</p>
           <p className="mt-3 text-[15px]">{Im.leadNote[lang]}</p>
         </Intro>
@@ -166,19 +165,19 @@ export default function ImpactTab() {
       <Band tone="cream" wide>
         {USE_MOCKS && <p className="mb-6 text-center text-[15px]">{Im.mockNote[lang]}</p>}
         <div className="grid items-start gap-4 lg:grid-cols-2">
-          <Panel title={Im.pilotTitle[lang]} sub={pilotSub(farms, b?.pilot.total_area_ha ?? 0, days, lang)} lang={lang}>
+          <Panel title={Im.pilotTitle[lang]} sub={pilotSub(p.farms, b?.pilot.total_area_ha ?? 0, days, lang)} lang={lang}>
             <Block
               title={Im.water[lang]}
               lang={lang}
-              rows={[mk("treated", Im.treated[lang], s.day.m3, s.season.m3, Im.m3[lang]), mk("well", Im.well[lang], wellDay, wellSeason, Im.m3[lang])]}
+              rows={[mk("treated", Im.treated[lang], p.m3.day, p.m3.season, Im.m3[lang], 1), mk("well", Im.well[lang], p.m3.day, p.m3.season, Im.m3[lang], 1)]}
             />
             <Block
               title={Im.energy[lang]}
               lang={lang}
               rows={[
-                mk("kwh", Im.kwh[lang], kwhDay, kwhSeason, Im.kwhUnit[lang]),
+                mk("kwh", Im.kwh[lang], p.kwh.day, p.kwh.season, Im.kwhUnit[lang], 1),
                 ...(solar !== undefined
-                  ? [{ key: "solar", label: Im.solar[lang], day: solar, unit: "%", dayTag: est, seasonTag: est } as RowData]
+                  ? [{ key: "solar", label: Im.solar[lang], day: solar, unit: "%", dayTag: est, seasonTag: est, dayDec: 0, seasonDec: 0 } as RowData]
                   : []),
               ]}
             />
@@ -186,8 +185,8 @@ export default function ImpactTab() {
               title={Im.money[lang]}
               lang={lang}
               rows={[
-                mk("farmers", Im.farmers[lang], s.day.farmer_net_tnd, s.season.farmer_net_tnd, Im.tnd[lang]),
-                mk("qatra", `${Im.qatra[lang]} (${Im.qatraShare[lang]})`, s.day.qatra_fee_tnd, s.season.qatra_fee_tnd, Im.tnd[lang]),
+                mk("farmers", Im.farmers[lang], p.farmers.day, p.farmers.season, Im.tnd[lang], 2, true),
+                mk("qatra", `${Im.qatra[lang]} (${Im.qatraShare[lang]})`, p.qatra.day, p.qatra.season, Im.tnd[lang], 2, true),
               ]}
             />
           </Panel>
