@@ -11,6 +11,7 @@ import { useLang } from "../../i18n";
 import { COMPLIANCE } from "../batches/format";
 import DayPicker from "./DayPicker";
 import MyFarm from "./MyFarm";
+import OperatorView, { useOperatorView } from "./OperatorView";
 import { T, type RuleInfo } from "./format";
 
 interface Static {
@@ -25,10 +26,11 @@ const newestFirst = (a: Batch, b: Batch) => b.date.localeCompare(a.date) || b.id
  * NOTE: the page still loads every farm's result from the API and keeps only one; real privacy
  * needs logins and a per-farm endpoint on the server (next version).
  */
-export default function CompatibilityTab() {
+function FarmerCompatibility() {
   const { lang } = useLang();
   const [batchId, setBatchId] = useState<string | null>(null); // null = backend default (latest usable batch)
   const [farmCode, setFarmCode] = useState<string | null>(getFarmCode);
+  const [badCode, setBadCode] = useState(false); // a saved or linked code that does not exist
 
   const base = useApi<Static>(async () => {
     const [farms, batches, rules] = await Promise.all([
@@ -53,12 +55,14 @@ export default function CompatibilityTab() {
   // a remembered or linked code that does not exist: ask again
   useEffect(() => {
     if (farmCode && base.data && !farm) {
+      setBadCode(true);
       setFarmCode(null);
       saveFarmCode(null);
     }
   }, [farmCode, base.data, farm]);
 
   const choose = (code: string) => {
+    setBadCode(false);
     setFarmCode(code);
     saveFarmCode(code);
   };
@@ -80,8 +84,8 @@ export default function CompatibilityTab() {
           <p>{T.lead[lang]}</p>
         </Intro>
 
-        {!farm ? (
-          <FarmCodeForm onSubmit={choose} />
+        {!farmCode ? (
+          <FarmCodeForm onSubmit={choose} notFound={badCode} />
         ) : (
           <div className="fade-up mx-auto mt-10 flex max-w-2xl flex-col items-center gap-4">
             {base.data ? (
@@ -126,4 +130,9 @@ export default function CompatibilityTab() {
       )}
     </>
   );
+}
+
+/** Farmers get their own farm only. The all-farms operator view is a hidden demo mode (see OperatorView.tsx). */
+export default function CompatibilityTab() {
+  return useOperatorView() ? <OperatorView /> : <FarmerCompatibility />;
 }
