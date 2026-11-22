@@ -26,7 +26,6 @@ export const S = {
   basedOn: { en: "Based on water of", fr: "Basé sur l'eau du", ar: "بناءً على ماء" },
   waterSalt: { en: "water salt", fr: "sel de l'eau", ar: "ملوحة الماء" },
   estimate: { en: "Estimate from a simplified salt balance. Soil values are simulated.", fr: "Estimation à partir d'un bilan salin simplifié. Valeurs du sol simulées.", ar: "تقدير بناءً على حساب مبسّط للملح. قيم التربة محاكاة." },
-  change: { en: "Not your farm? Change", fr: "Pas votre ferme ? Changer", ar: "ليست مزرعتك؟ غيّرها" },
   perSeason: { en: "m³/season", fr: "m³/saison", ar: "م³/الموسم" },
 } satisfies Record<string, Tr>;
 

@@ -7,11 +7,13 @@ import FarmCodeForm from "../../components/FarmCodeForm";
 import { Band, Intro, Skeleton } from "../../components/ui";
 import { getFarmCode, saveFarmCode } from "../../farm";
 import { useApi } from "../../hooks/useApi";
-import { useLang } from "../../i18n";
+import { FARM, useLang } from "../../i18n";
 import { fmtNumber } from "../batches/format";
 import { cropName } from "../compatibility/format";
 import { S, blockedText, soilVerdict, yearText, yieldText } from "./texts";
 
+// the API answers 404 "Unknown farm" for a code that does not exist
+const UNKNOWN_FARM = /-> 404[\s\S]*Unknown farm/;
 const DEMO_BATCH = "SSUD-20260713"; // EC 2.67 dS/m: the managed-leaching policy can hold alfalfa under its threshold
 const PLAY_SECONDS = 6; // a full sweep 0 -> 30 for the live pitch
 
@@ -110,7 +112,7 @@ export default function SoilTab() {
           <p className="fade-up mt-8 text-center text-[17px]">
             {S.yourCrop[lang]}: <strong className="font-medium">{crop}</strong> ·{" "}
             <button type="button" onClick={change} className="link text-[15px]">
-              {S.change[lang]}
+              {FARM.change[lang]}
             </button>
           </p>
         )}
@@ -123,12 +125,21 @@ export default function SoilTab() {
               <Skeleton className="h-16 w-full" />
               <Skeleton className="h-96 w-full" />
             </div>
+          ) : sim.error && UNKNOWN_FARM.test(sim.error.message) ? (
+            <div role="alert" className="mx-auto max-w-2xl border border-bad px-6 py-8 text-center">
+              <h2 className="text-3xl text-bad">{FARM.notFound[lang]}</h2>
+              <p className="mt-4">
+                <button type="button" onClick={change} className="link">
+                  {FARM.change[lang]}
+                </button>
+              </p>
+            </div>
           ) : sim.error ? (
             <div className="space-y-4">
               <ErrorBox error={sim.error} onRetry={sim.reload} />
               <p className="text-center">
                 <button type="button" onClick={change} className="link">
-                  {S.change[lang]}
+                  {FARM.change[lang]}
                 </button>
               </p>
             </div>
