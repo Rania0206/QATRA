@@ -441,7 +441,7 @@ export interface ImpactSummary {
   fresh_water_saved_m3: number;
   energy_kwh: number;
   solar_share: number; // 0..1
-  co2_avoided_kg: number;
+  co2_avoided_kg: number | null; // null until the grid emission factor is sourced
   farms_served: number;
   small_farms_served: number;
   batches_blocked: number;
