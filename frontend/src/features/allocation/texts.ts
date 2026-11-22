@@ -1,5 +1,6 @@
 import type { AllocationItem, FarmCompatibility, Farm } from "../../api/types";
-import { FARM, LOCALE, type Lang, type Tr } from "../../i18n";
+import { fmtMoney, fmtN } from "../../format";
+import { FARM, type Lang, type Tr } from "../../i18n";
 import { cropName, mainReason } from "../compatibility/format";
 
 export const A = {
@@ -153,11 +154,8 @@ export function pumpLine(hours: number[], lang: Lang): string {
   return `${head} ${join(parts, lang)}.`;
 }
 
-/** Numbers in the reader's language, Latin digits (same choice as the dates). */
-export function fmtN(v: number, lang: Lang, decimals = 1, fixed = false): string {
-  return v.toLocaleString(`${LOCALE[lang]}-u-nu-latn`, { minimumFractionDigits: fixed ? decimals : 0, maximumFractionDigits: decimals });
-}
-export const fmtMoney = (v: number, lang: Lang) => fmtN(v, lang, 2, true);
+// Number formatting lives in one place (src/format.ts); re-exported here for the screens that already import it from this file.
+export { fmtMoney, fmtN };
 
 /** The plain sentence under a farm's figures: why the volume is what it is. */
 export function reasonText(item: AllocationItem, farm: Farm, compat: FarmCompatibility | undefined, lang: Lang): string {

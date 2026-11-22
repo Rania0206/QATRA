@@ -2,14 +2,323 @@
   "area_name": "Zaouiet-Sousse (Sousse Sud)",
   "area_ha": 257.0,
   "farms": 10,
-  "total_saving_tnd": 318834.0,
+  "total_saving_tnd": 119368.79,
   "qatra_share_pct": 10.0,
-  "qatra_revenue_tnd": 31883.0,
-  "steg_kwh_avoided": 703409.0,
-  "steg_value_tnd": 320966.0,
+  "qatra_revenue_tnd": 13258.63,
+  "steg_kwh_avoided": 358515.0,
+  "steg_value_tnd": 163590.39,
   "national_areas": 36,
   "tag": {
-    "status": "ESTIMATE",
-    "source": "farm A saving per ha × 257 ha equipped (Agridata, TO_VERIFY); STEG value at 2025 production cost 456.3 millimes/kWh"
-  }
+    "status": "PROJECTION",
+    "source": "Zaouiet-Sousse perimeter at the pilot's saving per hectare; STEG value at the 2025 production cost (456.3 millimes/kWh, REPORTED)"
+  },
+  "date": "2026-11-21",
+  "adoption_rate": 1.0,
+  "pilot": {
+    "date": "2026-11-21",
+    "farms_total": 10,
+    "farms_receiving": 9,
+    "total_area_ha": 32.4,
+    "pilot_ha": 31.4,
+    "irrigation_days": 150.0,
+    "seasons_per_year": 1.0,
+    "farmers_net_tnd_per_ha_season": 464.47,
+    "qatra_fee_tnd_per_ha_season": 51.59,
+    "well_water_replaced_m3_per_ha_season": 3764.33,
+    "electricity_saved_kwh_per_ha_season": 1395.0,
+    "nitrogen_kg_per_ha_season": 125.21,
+    "tag": {
+      "status": "PROJECTION",
+      "source": "default plan of 2026-11-21 x 150 irrigation days"
+    }
+  },
+  "territory": [
+    {
+      "id": "CF10",
+      "key": "equipped_ha",
+      "label": "Treated-wastewater perimeters, equipped area (Tunisia)",
+      "value": 7819.0,
+      "unit": "ha",
+      "period": "2026",
+      "source": "idem",
+      "source_url": "https://www.leconomistemaghrebin.com/2026/09/02/eaux-usees-traitees-la-tunisie-peut-elle-en-faire-une-veritable-ressource-agricole/",
+      "note": "official dataset 2021/22 (Agridata): 7593 / 2363 ha",
+      "tag": {
+        "status": "REPORTED",
+        "source": "context_figures.csv CF10: idem"
+      }
+    },
+    {
+      "id": "CF11",
+      "key": "irrigated_ha",
+      "label": "Treated-wastewater perimeters, area actually irrigated (Tunisia)",
+      "value": 2778.0,
+      "unit": "ha",
+      "period": "July 2026",
+      "source": "authorities cited by L'Economiste Maghrebin",
+      "source_url": "https://www.leconomistemaghrebin.com/2026/09/02/eaux-usees-traitees-la-tunisie-peut-elle-en-faire-une-veritable-ressource-agricole/",
+      "note": "official dataset 2021/22 (Agridata): 7593 / 2363 ha",
+      "tag": {
+        "status": "REPORTED",
+        "source": "context_figures.csv CF11: authorities cited by L'Economiste Maghrebin"
+      }
+    },
+    {
+      "id": "CF31",
+      "key": "perimeter_ha",
+      "label": "Zaouiet-Sousse perimeter, equipped area (fed by Sousse Sud)",
+      "value": 257.0,
+      "unit": "ha",
+      "period": "2023/24",
+      "source": "Agridata / data.gov.tn",
+      "source_url": "https://catalog.data.gov.tn/fr/dataset/repartition-regionale-des-ppi-irrigues-par-les-eaux-usees-traitees",
+      "note": "publication date to verify",
+      "tag": {
+        "status": "REPORTED",
+        "source": "context_figures.csv CF31: Agridata / data.gov.tn"
+      }
+    },
+    {
+      "id": "CF09",
+      "key": "perimeters",
+      "label": "Treated-wastewater irrigated perimeters (Tunisia)",
+      "value": 36.0,
+      "unit": "perimeters",
+      "period": "2026",
+      "source": "L'Economiste Maghrebin 2026-09-02",
+      "source_url": "https://www.leconomistemaghrebin.com/2026/09/02/eaux-usees-traitees-la-tunisie-peut-elle-en-faire-une-veritable-ressource-agricole/",
+      "note": null,
+      "tag": {
+        "status": "REPORTED",
+        "source": "context_figures.csv CF09: L'Economiste Maghrebin 2026-09-02"
+      }
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "pilot",
+      "label": "The pilot farms",
+      "kind": "pilot",
+      "ha": 31.4,
+      "ha_tag": {
+        "status": "SIMULATED",
+        "source": "areas of the demo farms (data/simulated/sim_farms)"
+      },
+      "adoption_rate": 1.0,
+      "farmers_saving_tnd_per_year": 14584.36,
+      "qatra_revenue_tnd_per_year": 1619.93,
+      "well_water_saved_m3_per_year": 118200.0,
+      "electricity_saved_kwh_per_year": 43803.0,
+      "nitrogen_kg_per_year": 3931.6,
+      "tag": {
+        "status": "PROJECTION",
+        "source": "pilot saving per hectare x hectares x adoption rate (same saving per hectare as the pilot)"
+      }
+    },
+    {
+      "id": "ha-100",
+      "label": "100 ha",
+      "kind": "preset",
+      "ha": 100.0,
+      "ha_tag": {
+        "status": "ESTIMATE",
+        "source": "round number chosen for the demo"
+      },
+      "adoption_rate": 1.0,
+      "farmers_saving_tnd_per_year": 46447.0,
+      "qatra_revenue_tnd_per_year": 5159.0,
+      "well_water_saved_m3_per_year": 376433.0,
+      "electricity_saved_kwh_per_year": 139500.0,
+      "nitrogen_kg_per_year": 12521.0,
+      "tag": {
+        "status": "PROJECTION",
+        "source": "pilot saving per hectare x hectares x adoption rate (same saving per hectare as the pilot)"
+      }
+    },
+    {
+      "id": "ha-1000",
+      "label": "1,000 ha",
+      "kind": "preset",
+      "ha": 1000.0,
+      "ha_tag": {
+        "status": "ESTIMATE",
+        "source": "round number chosen for the demo"
+      },
+      "adoption_rate": 1.0,
+      "farmers_saving_tnd_per_year": 464470.0,
+      "qatra_revenue_tnd_per_year": 51590.0,
+      "well_water_saved_m3_per_year": 3764330.0,
+      "electricity_saved_kwh_per_year": 1395000.0,
+      "nitrogen_kg_per_year": 125210.0,
+      "tag": {
+        "status": "PROJECTION",
+        "source": "pilot saving per hectare x hectares x adoption rate (same saving per hectare as the pilot)"
+      }
+    },
+    {
+      "id": "perimeter",
+      "label": "Zaouiet-Sousse perimeter",
+      "kind": "perimeter",
+      "ha": 257.0,
+      "ha_tag": {
+        "status": "REPORTED",
+        "source": "context_figures.csv CF31: Agridata / data.gov.tn"
+      },
+      "adoption_rate": 1.0,
+      "farmers_saving_tnd_per_year": 119368.79,
+      "qatra_revenue_tnd_per_year": 13258.63,
+      "well_water_saved_m3_per_year": 967432.8,
+      "electricity_saved_kwh_per_year": 358515.0,
+      "nitrogen_kg_per_year": 32179.0,
+      "tag": {
+        "status": "PROJECTION",
+        "source": "pilot saving per hectare x hectares x adoption rate (same saving per hectare as the pilot)"
+      }
+    },
+    {
+      "id": "irrigated",
+      "label": "Treated-water area irrigated in Tunisia",
+      "kind": "territory",
+      "ha": 2778.0,
+      "ha_tag": {
+        "status": "REPORTED",
+        "source": "context_figures.csv CF11: authorities cited by L'Economiste Maghrebin"
+      },
+      "adoption_rate": 1.0,
+      "farmers_saving_tnd_per_year": 1290297.66,
+      "qatra_revenue_tnd_per_year": 143317.02,
+      "well_water_saved_m3_per_year": 10457308.7,
+      "electricity_saved_kwh_per_year": 3875310.0,
+      "nitrogen_kg_per_year": 347833.4,
+      "tag": {
+        "status": "PROJECTION",
+        "source": "pilot saving per hectare x hectares x adoption rate (same saving per hectare as the pilot)"
+      }
+    },
+    {
+      "id": "equipped",
+      "label": "Treated-water area equipped in Tunisia",
+      "kind": "territory",
+      "ha": 7819.0,
+      "ha_tag": {
+        "status": "REPORTED",
+        "source": "context_figures.csv CF10: idem"
+      },
+      "adoption_rate": 1.0,
+      "farmers_saving_tnd_per_year": 3631690.93,
+      "qatra_revenue_tnd_per_year": 403382.21,
+      "well_water_saved_m3_per_year": 29433296.3,
+      "electricity_saved_kwh_per_year": 10907505.0,
+      "nitrogen_kg_per_year": 979017.0,
+      "tag": {
+        "status": "PROJECTION",
+        "source": "pilot saving per hectare x hectares x adoption rate (same saving per hectare as the pilot)"
+      }
+    }
+  ],
+  "assumptions": [
+    {
+      "name": "electricity_price",
+      "value": 0.2907,
+      "unit": "TND/kWh",
+      "source": "STEG average sale price (all customers) 2025 (steg_tariffs.csv): average of all customers, NOT the agricultural tariff",
+      "status": "ESTIMATE"
+    },
+    {
+      "name": "well_energy_coefficient",
+      "value": 0.00272,
+      "unit": "kWh/(m3*m)",
+      "source": "E = 0.00272 x H / eta (physics, energy_params.json); H = well depth, else the pump head",
+      "status": "REPORTED"
+    },
+    {
+      "name": "default_pump_efficiency",
+      "value": 0.65,
+      "unit": "share (0..1)",
+      "source": "used only for a farm with no pump efficiency (energy_params.json, typical)",
+      "status": "ESTIMATE"
+    },
+    {
+      "name": "nitrogen_in_treated_water",
+      "value": 32.8,
+      "unit": "mg/L",
+      "source": "batch SSUD-20260829 analysis of 2026-08-25",
+      "status": "SIMULATED"
+    },
+    {
+      "name": "ammonium_nitrate_n_share",
+      "value": 0.335,
+      "unit": "share (0..1)",
+      "source": "ammonium nitrate is 33.5% nitrogen",
+      "status": "REPORTED"
+    },
+    {
+      "name": "fertiliser_price",
+      "value": 1.0,
+      "unit": "TND/kg",
+      "source": "ammonium nitrate 33.5% N, assumed 1.0 TND/kg - not in the data pack, check with a supplier",
+      "status": "TO_VERIFY"
+    },
+    {
+      "name": "treated_water_price",
+      "value": 0.02,
+      "unit": "TND/m3",
+      "source": "20 millimes/m3, treated-wastewater irrigation tariff (2016) - not in the data pack",
+      "status": "TO_VERIFY"
+    },
+    {
+      "name": "availability_factor",
+      "value": 0.5,
+      "unit": "share (0..1)",
+      "source": "only half of the nitrogen counts as usable fertiliser (losses, timing)",
+      "status": "ESTIMATE"
+    },
+    {
+      "name": "qatra_fee_pct",
+      "value": 10.0,
+      "unit": "% of net saving",
+      "source": "QATRA business-model parameter, to be agreed",
+      "status": "ESTIMATE"
+    },
+    {
+      "name": "irrigation_days",
+      "value": 150.0,
+      "unit": "days/season",
+      "source": "length of one irrigation season, for the projection",
+      "status": "ESTIMATE"
+    },
+    {
+      "name": "seasons_per_year",
+      "value": 1.0,
+      "unit": "seasons/year",
+      "source": "one irrigation season per year, for the projection",
+      "status": "ESTIMATE"
+    },
+    {
+      "name": "saving_per_hectare",
+      "value": 464.47,
+      "unit": "TND/ha/season",
+      "source": "same saving per hectare as the pilot (crop mix, water and well depths of the pilot farms)",
+      "status": "PROJECTION"
+    },
+    {
+      "name": "adoption_rate",
+      "value": 1.0,
+      "unit": "share (0..1)",
+      "source": "share of the hectares that join; 100% by default, set by the request",
+      "status": "PROJECTION"
+    },
+    {
+      "name": "qatra_revenue_rule",
+      "value": 10.0,
+      "unit": "% of the farmers' saving",
+      "source": "QATRA's only income is its share of the saving; no cost data, so no profit is shown",
+      "status": "ESTIMATE"
+    }
+  ],
+  "warnings": [
+    "Built on prices still to be verified: fertiliser_price, treated_water_price.",
+    "Scale-up assumes the same saving per hectare as the pilot; water supply is not checked (more hectares need more treated water than one plant gives).",
+    "Revenue only: the data has no QATRA costs, so no profit is shown."
+  ]
 }

@@ -69,7 +69,7 @@ export const TAB_LABEL: Record<string, Tr> = {
   heatwave: { en: "Heatwave", fr: "Canicule", ar: "موجة الحر" },
   messages: { en: "Messages", fr: "Messages", ar: "الرسائل" },
   impact: { en: "Impact", fr: "Impact", ar: "الأثر" },
-  territory: { en: "Territory (next version)", fr: "Territoire (prochaine version)", ar: "المجال الترابي (النسخة القادمة)" },
+  territory: { en: "Business", fr: "Modèle économique", ar: "النموذج الاقتصادي" },
   public: { en: "Public (next version)", fr: "Public (prochaine version)", ar: "العموم (النسخة القادمة)" },
 };
 
