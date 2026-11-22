@@ -13,7 +13,7 @@ import MessagesTab from "./features/messages";
 import RequestsTab from "./features/requests"; // B-11b: a new tab (Dev A: one line in TABS and one in TAB_LABEL)
 import ImpactTab from "./features/impact";
 import BusinessTab from "./features/business"; // the "territory" route now shows the Business screen (A-14c)
-import PublicTab from "./features/public";
+import SourcesTab from "./features/sources"; // the "public" route now shows Sources and assumptions (A-17); features/public is no longer routed
 import PassportPage from "./features/passport/PassportPage";
 
 // One entry per feature tab. Add a tab = one line here (by agreement).
@@ -30,7 +30,7 @@ const TABS: { id: string; label: string; Component: ComponentType }[] = [
   { id: "impact", label: "Impact", Component: ImpactTab },
   // QATRA Lite: next-version tabs stay at the end
   { id: "territory", label: "Business", Component: BusinessTab },
-  { id: "public", label: "Public", Component: PublicTab },
+  { id: "public", label: "Sources", Component: SourcesTab },
 ];
 
 const TAB_IDS = TABS.map((t) => t.id);

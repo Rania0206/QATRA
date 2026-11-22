@@ -4,6 +4,7 @@ import { Band, Intro, Pill, Skeleton } from "../../components/ui";
 import { USE_MOCKS } from "../../config";
 import { fmtN } from "../../format";
 import { useLang } from "../../i18n";
+import { DemoTag } from "../allocation/Notes";
 import { assumptionName, assumptionValue, STATUS } from "../savings/texts";
 import ScaleChart, { type Row } from "./ScaleChart";
 import { MAX_CUSTOM_HA, project, useBusiness } from "./data";
@@ -250,6 +251,7 @@ export default function BusinessTab() {
                   ))}
                 </ul>
               </section>
+              <DemoTag lang={lang} />
             </>
           )}
         </div>
