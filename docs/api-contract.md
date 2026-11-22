@@ -26,6 +26,7 @@ Shared between backend (FastAPI, `backend/app`) and frontend (React, `frontend/s
 | `SoilSimulation` | `farm_id`, `batch_id`, `crop`, `threshold_ece`, `ecw`, `years`: `[0..N]`, `naive`: `{series: number[], first_year_over: int \| null, water_used_m3_season, yield_loss_pct_30y: number \| null}`, `qatra`: same + `leaching_fraction`, legacy `series`: `[{day, ece}]` (= qatra curve, `day` = year x 365) and `leaching_fraction` (= `qatra.leaching_fraction`), `blocked_reason?` (string when the crop is forbidden for TWW, e.g. lettuce: the UI shows no simulation), `warning?`, `tag` |
 | `Passport` | `batch_id`, `plant`, `date`, `volume_m3`, `analysis_status`, `risk_colour?`, `allowed_crops`, `blocked_crops`, `destinations`: `[{farm_id, m3}]`, `issued_at`, `qr_payload`, `tag` (original fields) + B-12a: `quality_summary`: `[{param, label, value?, unit, limit_min?, limit_max?, ok?, legal_ref, tag}]`, `checks`: `[{type, required, present, analysed_on?, valid_until?, validity_days, is_valid?, legal_ref}]`, `timeline`: `[{at, event}]` |
 | `HeatwaveResult` | `scenario_id`, `label`, `date`, `dates`, `allocated_m3`, `allocation`: `Allocation`, `baseline`: `{energy_kwh, solar_share}`, `naive` and `qatra`: `{policy, hours_without_water, unserved_m3, delivered_m3, grid_kwh, solar_kwh, hourly: [{hour, outage, demand_m3, delivered_m3, unserved_m3, grid_kw, solar_kw, basin_m3?, source}] x24}`, `caveat`, `tag` |
+| `Message` | `id`, `farm_id`, `direction`: `"in" \| "out"`, `channel` (`"sms"`), `at`, `text?` (incoming), `text_fr?`, `text_ar?`, `needs_human_review` (default false; true on every outgoing message while the Arabic is not approved) |
 | `Allocation` | `batch_id`, `items`: `[{farm_id, status, m3, cap_reason?}]`, `schedule`: `[{hour, pump_kw, source: "solar" \| "grid" \| "basin" \| "off", basin_m3}]`, `energy_kwh`, `solar_share` (0..1), `fresh_replaced_m3`, `warnings`: `string[]` |
 
 Conventions used in mocks (free strings, agree before adding values):
@@ -55,8 +56,8 @@ Conventions used in mocks (free strings, agree before adding values):
 | 16 | POST | `/api/scenarios/heatwave` | `heatwave` | `{scenario_id, date?}` (`scenario_id` `"heatwave_outage"` or `"default"`; `date` one of the response `dates`, default the scenario's day) | `HeatwaveResult` (see below); 404 unknown scenario, 422 bad body or a day without outage window | `post_scenarios_heatwave.json` |
 | 17 | GET | `/api/impact` | `impact` | – | `{period, tww_allocated_m3, fresh_water_saved_m3, energy_kwh, solar_share, co2_avoided_kg, farms_served, small_farms_served, batches_blocked, tag}` | `impact.json` |
 | 18 | POST | `/api/explain` | **CUT FROM MVP** (QATRA Lite) · `llm` | `{kind: "allocation" \| "compatibility", payload: object, lang?}` | `{text_en, text_fr, tag}` | `post_explain.json` |
-| 19 | GET | `/api/messages` | `messages` | query `farm_id?` | `[{id, farm_id, direction: "in" \| "out", channel, at, text? \| text_fr/text_ar}]` | `messages.json` |
-| 20 | POST | `/api/messages/reply` | `messages` | `{farm_id, text}` | message object | `post_messages_reply.json` |
+| 19 | GET | `/api/messages` | `messages` | query `farm_id?` | `Message[]` (see below): one outgoing message per farm for the latest allocation, then the replies; 404 unknown farm | `messages.json` |
+| 20 | POST | `/api/messages/reply` | `messages` | `{farm_id, text}` (text 1 to 500 characters) | `Message` (the stored incoming message, 201); 404 unknown farm, 422 empty text | `post_messages_reply.json` |
 | 21 | POST | `/api/requests` | `requests` | `{farm_id, requested_m3, date}` | `{id, farm_id, requested_m3, date, status: "pending", created_at}` | `post_requests.json` |
 | 22 | GET | `/api/requests` | `requests` | query `status?` | request object[] | `requests.json` |
 | 23 | PATCH | `/api/requests/{id}` | `requests` | `{status: "approved" \| "rejected"}` | request object | `patch_requests_id.json` |
@@ -101,6 +102,14 @@ The QATRA plan against the naive one, hour by hour (`engine/heatwave.py`). Exten
 - Both `naive` and `qatra` irrigate that allocated volume, spread evenly over 06:00-20:00 (ESTIMATE), so the allocation and the two hourly series always agree.
 - **`allocation.schedule`, `energy_kwh`, `solar_share` are the heatwave model's**, not the A-05 pump schedule: that one calls solar only when the PV output reaches the full pump power (44.6 kW) and the array peaks at 44.3 kW on 2026-08-26 (7 % solar there), and it does not model farm draws. `warnings` says so. `energy_kwh` counts the solar surplus pumped into the basin for the next days (also in `warnings`).
 - Basin evaporation is not applied (basin area not in the data). `caveat` = "NASA POWER ~0.5 deg grid: coastal extremes smoothed".
+
+### Messages to the farmers (endpoints 19 and 20, B-08a)
+`engine/messages.py`. One outgoing message per farm for the latest allocation (`engine/plan.plan()`: default batch and day), from templates by status.
+- **Languages**: `sim_farms` has no language column, so every outgoing message has `text_fr` and `text_ar` (French and Tunisian Arabic, Darija). **Every Arabic template is `needs_human_review: true`** until a Tunisian speaker approves it; the review sheet is `docs/messages-templates.md` (`cd backend && python -m app.engine.messages`).
+- **Values**: only the Allocation's. `{m3}` is the farm's `m3` as returned. The delivery hours are the longest block of consecutive pump hours of the allocation's schedule (the pump may also run at other hours, which are not announced); if the pump never runs, no hour is given. The message is dated the evening before the plan's day ("demain" / "غدوة").
+- **allocated**: volume, delivery window, "reply 1 to accept, 2 to refuse". **conditional**: the condition (wash the salt out of the soil, watch the soil salinity). **capped**: why the volume is limited (replaces the farm's own water, batch shared, soil salt), read from `cap_reason`. **blocked**: why in simple words (crop eaten raw, crop not on the allowed list, lab analysis, quality limit, direct grazing), safety first, never a fault of the farmer, **no number and no money**.
+- **Saving line** ("About X TND saved this season (estimate)"): added only when Dev A's savings engine returns a value for the farm: `savings(plan, farm_id).season.farmer_net_tnd` (what the farmer keeps after the QATRA fee; `SAVING_FIELD` in the engine), printed exactly as returned, never computed in the messages. Left out when the value is missing, 0 or negative, or the farm is blocked. The season figure is a PROJECTION, hence "estimate".
+- **Replies** (`POST /api/messages/reply`) are kept in memory only (lost at restart) and listed after the outgoing messages. Nothing parses "1" or "2" yet.
 
 ## Examples
 

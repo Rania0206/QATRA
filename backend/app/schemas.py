@@ -246,6 +246,23 @@ class HeatwaveResult(BaseModel):
     tag: Tag
 
 
+class Message(BaseModel):
+    id: str
+    farm_id: str
+    direction: Literal["in", "out"]
+    channel: str  # "sms"
+    at: str  # ISO datetime
+    text: Optional[str] = None  # incoming messages: what the farmer wrote
+    text_fr: Optional[str] = None  # outgoing messages: French and Tunisian Arabic (no language column in the data)
+    text_ar: Optional[str] = None
+    needs_human_review: bool = False  # true while the Arabic text has not been approved by a Tunisian speaker
+
+
+class ReplyIn(BaseModel):
+    farm_id: str
+    text: str
+
+
 class HealthResponse(BaseModel):
     status: str
     datasets: dict[str, int]

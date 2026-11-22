@@ -327,6 +327,19 @@ export interface HeatwaveResult {
   tag: Tag;
 }
 
+/** GET /api/messages, POST /api/messages/reply */
+export interface Message {
+  id: string;
+  farm_id: string;
+  direction: "in" | "out";
+  channel: string; // "sms"
+  at: string; // ISO datetime
+  text?: string | null; // incoming: what the farmer wrote
+  text_fr?: string | null; // outgoing: French and Tunisian Arabic
+  text_ar?: string | null;
+  needs_human_review?: boolean; // true while the Arabic text is not approved by a Tunisian speaker
+}
+
 export interface Health {
   status: string;
   datasets: Record<string, number>;

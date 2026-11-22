@@ -58,6 +58,12 @@ _Last updated: 2026-11-22. Updated by whoever merges into `dev`; keep it current
 | B-06 | Dev B | Heatwave tab: "Without QATRA" and "With QATRA" 24-hour panels (pump power by source, basin level, outage shading, shared axes), a day picker over the 12 outage days and a very large animated "hours without irrigation" counter. `POST /api/scenarios/heatwave` takes an optional `date` and returns `dates` and `allocated_m3`. English, French, Arabic |
 | B-12 | Dev B | `GET /api/batches/{id}/passport` (quality summary, analysis checks, crops, timeline), passport page `/passport/{id}` for phones, reusable `<PassportQR>`, LAN scripts |
 
+### In progress (on a branch, not merged yet)
+
+| Task | Owner | State |
+|---|---|---|
+| B-08a | Dev B | Messages to the farmers: `engine/messages.py` (templates allocated, conditional, capped, blocked in French and Tunisian Arabic, saving line from Dev A's savings engine), `GET /api/messages`, `POST /api/messages/reply` (replies in memory). The Arabic waits for a Tunisian speaker (`docs/messages-templates.md`). Branch `feature/B-08-messages` |
+
 ### Not done yet
 
 | Area | State |
@@ -65,7 +71,7 @@ _Last updated: 2026-11-22. Updated by whoever merges into `dev`; keep it current
 | Allocation tab | Next. The API exists (`POST /api/allocate`), the tab is still a placeholder |
 | A-05 solar threshold | Open point for Dev A: the pump schedule calls solar only if PV ≥ the full pump power (44.6 kW); the 60 kWp array peaks at 44.3 kW on the heatwave day, so it plans 7 % solar there (`SOLAR_MIN_FRACTION`). The heatwave model uses a pump power proportional to its flow |
 | Supply forecast (cut from the MVP), risk score (A-08), anomalies, impact, messages, requests, territory, LLM explain | Router stubs. The Impact tab only shows a small example |
-| Allocation, Savings, Messages, Public, Territory tabs | Placeholders. The Savings API exists (`POST /api/savings`), the business view (A-14c) does not |
+| Allocation, Savings, Messages, Public, Territory tabs (the Messages API is on the branch above) | Placeholders. The Savings API exists (`POST /api/savings`), the business view (A-14c) does not |
 | Passport `destinations` | Still empty: it can now be filled from `POST /api/allocate` (A-05) |
 | Map: the version with all farms coloured by decision (B-02b) | Not merged: `dev` deliberately shows only the farmer's own farm. The code is in git history (`b733d53`, branch `feature/B-02b-map-farms`) |
 | Map and Soil texts | English, French and Arabic. Passport page: English only |
@@ -466,6 +472,19 @@ qatra_fee             = qatra_fee_pct % × net_saving                         on
 farmer_net            = net_saving − qatra_fee
 ```
 The electricity price (290.7 millimes/kWh, STEG average sale price) and the nitrogen of the water come from the data pack. The fertiliser price (1.0 TND/kg) and the treated-water tariff (0.020 TND/m³) are `TO_VERIFY` assumptions. Season and year figures are `PROJECTION`s (daily total × 150 irrigation days × 1 season per year) and are never mixed with the daily ones. Prices can be overridden in the request.
+
+### 12. Messages to the farmers — *Implemented, not merged* (B-08a: `engine/messages.py`)
+
+No formula: templates by allocation status, filled with values that already exist. One message per farm for the latest allocation, in **French and Tunisian Arabic** (no language column in `sim_farms`).
+
+```
+allocated    "{m3} m³ available, delivery tomorrow {first hour}-{last hour}, reply 1 to accept, 2 to refuse"
+conditional  same, with the condition: wash the salt out of the soil and watch the soil salinity
+capped       same, with why the volume is limited (replaces the farm's own water, batch shared, soil salt)
+blocked      why in simple words, safety first, never a fault of the farmer; NO number and NO money
+saving line  "About {X} TND saved this season (estimate)"  only if Dev A's savings engine returns X > 0 for the farm
+```
+`{m3}` is the farm's volume in the Allocation; the delivery hours are the longest block of consecutive pump hours of the allocation's schedule (the pump may run at other hours too, which are not announced). `{X}` is `savings(plan, farm_id).season.farmer_net_tnd`, printed exactly as returned and never computed in the messages. **Every Arabic template has `needs_human_review: true`** until a Tunisian speaker approves it: the review sheet is `docs/messages-templates.md`.
 
 ---
 
