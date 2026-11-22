@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { PROJECT_NAME, USE_MOCKS } from "../config";
 import { C, LANGS, LANG_NAME, TAB_LABEL, useLang } from "../i18n";
+import { ROLES, RT, type RoleId } from "../roles";
 
 export interface ShellTab {
   id: string;
@@ -11,6 +12,8 @@ interface Props {
   tabs: ShellTab[];
   active: string;
   onSelect: (id: string) => void;
+  role: RoleId | null;
+  onRole: (r: RoleId | null) => void;
   children: ReactNode;
 }
 
@@ -69,7 +72,7 @@ function LangSwitch() {
 
 // App shell: demo strip, header (menu · wordmark · language + link), full-screen menu, footer.
 // Pages that must be shell-less (e.g. the passport page) simply don't render this component.
-export default function Shell({ tabs, active, onSelect, children }: Props) {
+export default function Shell({ tabs, active, onSelect, role, onRole, children }: Props) {
   const { lang } = useLang();
   const [menuOpen, setMenuOpen] = useState(false);
   const go = (id: string) => {
@@ -88,6 +91,7 @@ export default function Shell({ tabs, active, onSelect, children }: Props) {
     return () => window.removeEventListener("keydown", onKey);
   }, [menuOpen]);
 
+  const relevant = ROLES.find((r) => r.id === role)?.tabs ?? null; // null: no role, nothing is dimmed
   const current = tabs.find((t) => t.id === active);
   const shortcut = tabs.find((t) => t.id === "compatibility");
 
@@ -123,6 +127,22 @@ export default function Shell({ tabs, active, onSelect, children }: Props) {
             <Wordmark />
           </a>
           <div className="flex items-center justify-end gap-5">
+            <label className="flex items-center gap-2 text-[15px]">
+              <span className="hidden text-ink-soft sm:inline">{RT.select[lang]}</span>
+              <select
+                value={role ?? ""}
+                onChange={(e) => onRole((e.target.value || null) as RoleId | null)}
+                aria-label={RT.select[lang]}
+                className="rounded border border-line bg-cream px-2 py-1 text-[15px] focus:outline-none focus-visible:outline-2 focus-visible:outline-ink"
+              >
+                <option value="">{RT.none[lang]}</option>
+                {ROLES.map((r) => (
+                  <option key={r.id} value={r.id}>
+                    {r.label[lang]}
+                  </option>
+                ))}
+              </select>
+            </label>
             <LangSwitch />
             {shortcut && (
               <a
@@ -139,6 +159,12 @@ export default function Shell({ tabs, active, onSelect, children }: Props) {
           </div>
         </div>
       </header>
+
+      {role && (
+        <p role="note" className="bg-sand px-4 py-2 text-center text-[15px] text-ink-soft">
+          <span className="text-ink">{ROLES.find((r) => r.id === role)?.label[lang]}</span> · {RT.notice[lang]}
+        </p>
+      )}
 
       {menuOpen && (
         <div className="fixed inset-0 z-[1200] flex flex-col overflow-y-auto bg-olive" role="dialog" aria-modal="true" aria-label="Menu">
@@ -157,7 +183,12 @@ export default function Shell({ tabs, active, onSelect, children }: Props) {
           <nav aria-label="Main sections" className="flex flex-1 items-center justify-center px-5 py-10">
             <ol className="grid w-full max-w-4xl gap-x-16 gap-y-4 md:grid-cols-2">
               {tabs.map((t, i) => (
-                <li key={t.id} className="fade-up" style={{ animationDelay: `${i * 35}ms` }}>
+                <li
+                  key={t.id}
+                  className={`fade-up transition-opacity ${relevant && !relevant.includes(t.id) ? "opacity-40" : ""}`}
+                  data-relevant={relevant ? String(relevant.includes(t.id)) : undefined}
+                  style={{ animationDelay: `${i * 35}ms` }}
+                >
                   <a
                     href={`#/${t.id}`}
                     onClick={(e) => {
@@ -175,11 +206,13 @@ export default function Shell({ tabs, active, onSelect, children }: Props) {
                     >
                       {label(t)}
                     </span>
+                    {relevant?.includes(t.id) && <span className="ms-auto text-[15px]">● {RT.relevant[lang]}</span>}
                   </a>
                 </li>
               ))}
             </ol>
           </nav>
+          <p className="pb-2 text-center text-[15px]">{RT.notice[lang]}</p>
           <p className="pb-8 text-center text-[15px]">{C.area[lang]}</p>
         </div>
       )}

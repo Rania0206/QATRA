@@ -1,6 +1,7 @@
 import type { ComponentType } from "react";
 import Shell from "./components/Shell";
 import { useHashTab } from "./hooks/useHashTab";
+import { useHashRole } from "./hooks/useHashRole";
 import MapTab from "./features/map";
 import BatchesTab from "./features/batches";
 import CompatibilityTab from "./features/compatibility";
@@ -42,10 +43,11 @@ export default function App() {
 
 function TabsApp() {
   const [active, setActive] = useHashTab(TAB_IDS, TABS[0].id);
+  const [role, setRole] = useHashRole();
   const { Component } = TABS.find((t) => t.id === active)!;
 
   return (
-    <Shell tabs={TABS} active={active} onSelect={setActive}>
+    <Shell tabs={TABS} active={active} onSelect={setActive} role={role} onRole={setRole}>
       <Component />
     </Shell>
   );
