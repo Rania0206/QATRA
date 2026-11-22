@@ -19,10 +19,16 @@
   --color-ink-soft: #3a3834; /* secondary text, still dark for a projector */
   --color-line: #d9cfc1;
 
-  /* status (outlined pills only) */
+  /* status (soft rounded pills: dark text on a pale tint of the same colour) */
   --color-ok: #3d6b26;
   --color-warn: #93560a;
   --color-bad: #9e2a2b;
+  --color-good: #1f5f63; /* legal verdict "meets the law": teal, distinct from the green lab-test pill */
+  --color-good-soft: #dcebea;
+  --color-ok-soft: #e7eedc;
+  --color-warn-soft: #f6e8d2;
+  --color-bad-soft: #f4dedb;
+  --color-neutral-soft: #efe8dc;
 }
 
 @layer base {

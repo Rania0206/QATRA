@@ -54,7 +54,7 @@ export const ANALYSIS_STATUS: Record<AnalysisStatus, { label: Tr; tone: Tone }> 
 export const COMPLIANCE: Record<string, { label: Tr; tone: Tone; title: string }> = {
   compliant: {
     label: { en: "Meets the law", fr: "Conforme à la loi", ar: "مطابق للقانون" },
-    tone: "ok",
+    tone: "good",
     title: "All measured values within NT 106.03",
   },
   conditional: {

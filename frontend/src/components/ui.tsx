@@ -57,23 +57,24 @@ export function Intro({
   );
 }
 
-export type Tone = "ok" | "warn" | "bad" | "neutral";
+export type Tone = "ok" | "good" | "warn" | "bad" | "neutral";
 
 const PILL: Record<Tone, string> = {
-  ok: "text-ok border-ok",
-  warn: "text-warn border-warn",
-  bad: "text-bad border-bad",
-  neutral: "text-ink-soft border-ink-soft",
+  ok: "text-ok bg-ok-soft",
+  good: "text-good bg-good-soft",
+  warn: "text-warn bg-warn-soft",
+  bad: "text-bad bg-bad-soft",
+  neutral: "text-ink-soft bg-neutral-soft",
 };
-const DOT: Record<Tone, string> = { ok: "bg-ok", warn: "bg-warn", bad: "bg-bad", neutral: "bg-ink-soft" };
+const DOT: Record<Tone, string> = { ok: "bg-ok", good: "bg-good", warn: "bg-warn", bad: "bg-bad", neutral: "bg-ink-soft" };
 
-/** Thin outlined status pill with a dot; colour only carries the status. */
+/** Soft rounded status pill with a dot; colour only carries the status. */
 export function Pill({ tone, children, title, large = false }: { tone: Tone; children: ReactNode; title?: string; large?: boolean }) {
   return (
     <span
       title={title}
-      className={`inline-flex items-center gap-2 whitespace-nowrap border bg-cream ${PILL[tone]} ${
-        large ? "px-3 py-1 text-[16px]" : "px-2.5 py-0.5 text-[15px]"
+      className={`inline-flex items-center gap-2 whitespace-nowrap rounded-full font-medium ${PILL[tone]} ${
+        large ? "px-4 py-1.5 text-[16px]" : "px-3 py-1 text-[15px]"
       }`}
     >
       <span aria-hidden="true" className={`h-2 w-2 rounded-full ${DOT[tone]}`} />
