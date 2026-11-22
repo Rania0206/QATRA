@@ -46,7 +46,7 @@ function FarmerAllocation() {
 
   return (
     <>
-      <Band tone="olive" className="md:py-24">
+      <Band tone="olive">
         <Intro as="h1" size="xl" eyebrow={A.eyebrow[lang]} title={A.title[lang]}>
           <p>{farmCode ? A.leadOwn[lang] : A.leadCode[lang]}</p>
           {farmCode && (d?.allocation.date ?? d?.savings?.date) && (

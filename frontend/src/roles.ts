@@ -86,11 +86,11 @@ export const OPERATOR_ROLES = ROLES.filter((r) => r.operator).map((r) => r.id) a
 
 /**
  * Requests: a farm asks, the operator decides. GDA (the farmers' association) sends; ONAS and CRDA (the operators) approve or reject;
- * the sender cannot decide its own request. Lab and Public do not use requests. With no role the demo shows both.
+ * the sender cannot decide its own request. Lab and Public do not use requests. With no role the demo can send but not decide.
  * UI only: like the roles themselves, the API has no login.
  */
 export function requestPowers(role: RoleId | null): { send: boolean; decide: boolean } {
-  if (role === null) return { send: true, decide: true };
+  if (role === null) return { send: true, decide: false }; // "All sections": Approve and Reject stay hidden until ONAS or CRDA is chosen
   return { send: role === "gda", decide: ROLES.find((r) => r.id === role)?.operator === true };
 }
 

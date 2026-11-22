@@ -103,7 +103,7 @@ export default function SoilTab() {
 
   return (
     <>
-      <Band tone="olive" className="md:py-24">
+      <Band tone="olive">
         <Intro as="h1" size="xl" eyebrow={S.eyebrow[lang]} title={S.title[lang]}>
           <p>{S.lead[lang]}</p>
         </Intro>

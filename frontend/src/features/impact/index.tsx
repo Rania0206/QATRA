@@ -113,7 +113,7 @@ export default function ImpactTab() {
   if (!d)
     return (
       <>
-        <Band tone="olive" className="md:py-24">
+        <Band tone="olive">
           <Intro as="h1" eyebrow={Im.eyebrow[lang]} title={Im.eyebrow[lang]}>
             <p>{Im.lead[lang]}</p>
           </Intro>
@@ -155,7 +155,7 @@ export default function ImpactTab() {
 
   return (
     <>
-      <Band tone="olive" className="md:py-24">
+      <Band tone="olive">
         <Intro as="h1" eyebrow={Im.eyebrow[lang]} title={headline(p.farms, p.farmers.day, p.m3.day, lang)}>
           <p>{Im.lead[lang]}</p>
           <p className="mt-3 text-[length:calc(15px*var(--fs))]">{Im.leadNote[lang]}</p>

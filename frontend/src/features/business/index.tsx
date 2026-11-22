@@ -64,7 +64,7 @@ export default function BusinessTab() {
 
   return (
     <>
-      <Band tone="olive" className="md:py-20">
+      <Band tone="olive">
         <Intro as="h1" eyebrow={Bz.eyebrow[lang]} title={d ? headline(selectedHa, lang) : Bz.eyebrow[lang]}>
           <p>{Bz.lead[lang]}</p>
           {d && <p className="mt-4 text-[length:calc(16px*var(--fs))]">{inPractice(adoptionPct, selectedHa * adoption, lang)}</p>}

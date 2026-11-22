@@ -79,7 +79,7 @@ function FarmerCompatibility() {
 
   return (
     <>
-      <Band tone="olive" className="md:py-24">
+      <Band tone="olive">
         <Intro as="h1" size="xl" eyebrow={T.eyebrow[lang]} title={T.title[lang]}>
           <p>{T.lead[lang]}</p>
         </Intro>

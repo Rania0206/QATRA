@@ -91,7 +91,7 @@ export default function HeatwaveTab() {
 
   return (
     <>
-      <Band tone="olive" className="md:py-24">
+      <Band tone="olive">
         <Intro as="h1" size="xl" eyebrow={H.eyebrow[lang]} title={H.title[lang]}>
           <p>{H.lead[lang]}</p>
         </Intro>
@@ -124,7 +124,7 @@ export default function HeatwaveTab() {
                   <p className="mt-3 text-[length:calc(17px*var(--fs))]">{H.nothingText[lang]}</p>
                 </div>
               ) : (
-                <p className="mx-auto max-w-3xl border-s-4 border-ok ps-5 font-display text-[length:calc(26px*var(--fs)*var(--fsn))] leading-snug">
+                <p className="mx-auto max-w-3xl border-s-4 border-ok ps-4 font-display text-[length:calc(20px*var(--fs))] leading-snug">
                   {heatwaveVerdict(d.naive.hours_without_water, d.qatra.hours_without_water, model.outage?.[0] ?? 13, model.outage?.[1] ?? 17, lang)}
                 </p>
               )}
@@ -192,22 +192,22 @@ function BigCounter({ without, withQatra, muted, lang }: { without: number; with
   const tone = (good: boolean) => (muted ? "text-ink-soft" : good ? "text-ok" : "text-bad");
   const spoken = `${H.counterTitle[lang]}: ${H.without[lang]} ${without} ${unit}, ${H.with[lang]} ${withQatra} ${unit}`;
   return (
-    <section aria-label={spoken} className="space-y-6 text-center">
+    <section aria-label={spoken} className="space-y-3 text-center">
       <h2 className="eyebrow" aria-hidden="true">
         {H.counterTitle[lang]}
       </h2>
       <div aria-hidden="true" dir="ltr" className="grid items-center gap-6 md:grid-cols-[1fr_auto_1fr]">
         <div className={`transition-colors duration-500 ${tone(false)}`}>
-          <p className="text-[clamp(1.25rem,2.6vw,2rem)] font-medium">{muted ? "" : "✕ "}{H.without[lang]}</p>
-          <p className="font-display text-[clamp(7rem,24vw,17rem)] leading-[0.9] tabular-nums">
+          <p className="text-[clamp(1rem,1.6vw,1.25rem)] font-medium">{muted ? "" : "✕ "}{H.without[lang]}</p>
+          <p className="font-display text-[clamp(3.5rem,9vw,6rem)] leading-none tabular-nums">
             {a}
             <span className="ms-2 text-[0.28em]">{unit}</span>
           </p>
         </div>
-        <span className="font-display text-[clamp(3rem,8vw,6rem)] leading-none text-ink-soft">→</span>
+        <span className="font-display text-[clamp(1.5rem,3vw,2.25rem)] leading-none text-ink-soft">→</span>
         <div className={`transition-colors duration-500 ${tone(true)}`}>
-          <p className="text-[clamp(1.25rem,2.6vw,2rem)] font-medium">{muted ? "" : "✓ "}{H.with[lang]}</p>
-          <p className="font-display text-[clamp(7rem,24vw,17rem)] leading-[0.9] tabular-nums">
+          <p className="text-[clamp(1rem,1.6vw,1.25rem)] font-medium">{muted ? "" : "✓ "}{H.with[lang]}</p>
+          <p className="font-display text-[clamp(3.5rem,9vw,6rem)] leading-none tabular-nums">
             {b}
             <span className="ms-2 text-[0.28em]">{unit}</span>
           </p>

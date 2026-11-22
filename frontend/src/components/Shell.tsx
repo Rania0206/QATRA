@@ -1,5 +1,5 @@
-import { useEffect, useState, type ReactNode } from "react";
-import { PROJECT_NAME, USE_MOCKS } from "../config";
+import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
+import { PROJECT_NAME } from "../config";
 import { C, LANGS, LANG_NAME, TAB_LABEL, useLang } from "../i18n";
 import { ROLES, RT, type RoleId } from "../roles";
 
@@ -100,11 +100,6 @@ export default function Shell({ tabs, active, onSelect, role, onRole, children }
 
   return (
     <div className="flex min-h-screen flex-col bg-cream text-ink">
-      <div role="note" className="bg-ink px-4 py-2 text-center text-[length:calc(15px*var(--fs))] text-cream">
-        {C.demo[lang]}
-        {USE_MOCKS && <span className="ms-3 underline underline-offset-4">mock API</span>}
-      </div>
-
       <header className="sticky top-0 z-[1000] border-b border-line bg-cream">
         {/* phones: menu + wordmark on the first line, role and language wrap onto a second one (no sideways scroll); from sm: the original 3-column row */}
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-4 gap-y-1 px-5 py-2 sm:grid sm:h-20 sm:grid-cols-[1fr_auto_1fr] sm:py-0 sm:px-8">
@@ -203,7 +198,10 @@ export default function Shell({ tabs, active, onSelect, role, onRole, children }
             <span />
           </div>
           <nav aria-label="Main sections" className="flex flex-1 items-center justify-center px-5 py-10">
-            <ol className="grid w-full max-w-4xl gap-x-16 gap-y-4 md:grid-cols-2">
+            <ol
+              className="grid w-full max-w-4xl gap-x-16 gap-y-4 md:grid-flow-col md:grid-cols-2 md:[grid-template-rows:repeat(var(--rows),auto)]"
+              style={{ "--rows": Math.ceil(menuTabs.length / 2) } as CSSProperties}
+            >
               {menuTabs.map((t, i) => (
                 <li
                   key={t.id}
@@ -220,7 +218,7 @@ export default function Shell({ tabs, active, onSelect, role, onRole, children }
                     aria-current={active === t.id ? "page" : undefined}
                     className="group flex items-baseline gap-4 border-b border-olive-deep pb-3"
                   >
-                    <span className="text-[length:calc(15px*var(--fs))]">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="w-7 shrink-0 text-[length:calc(15px*var(--fs))] tabular-nums">{String(i + 1).padStart(2, "0")}</span>
                     <span
                       className={`font-display text-4xl leading-tight transition-transform duration-300 group-hover:translate-x-2 rtl:group-hover:-translate-x-2 ${
                         active === t.id ? "underline decoration-2 underline-offset-8" : ""

@@ -52,7 +52,7 @@ export function Intro({
     <div className="fade-up mx-auto max-w-2xl text-center">
       {eyebrow && <p className="eyebrow mb-3">{eyebrow}</p>}
       <H className={size === "xl" ? "text-4xl sm:text-5xl" : "text-3xl sm:text-4xl"}>{title}</H>
-      {children && <div className="mx-auto mt-3 max-w-xl text-[length:calc(17px*var(--fs))] leading-relaxed">{children}</div>}
+      {children && <div className={`mx-auto max-w-xl text-[length:calc(17px*var(--fs))] leading-relaxed mt-3`}>{children}</div>}
     </div>
   );
 }

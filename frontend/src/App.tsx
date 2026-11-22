@@ -3,6 +3,7 @@ import Shell from "./components/Shell";
 import { useHashTab } from "./hooks/useHashTab";
 import { RoleContext, useHashRole } from "./hooks/useHashRole";
 import { ROLES } from "./roles";
+import HomeTab from "./features/home"; // the landing page: first tab, opened by default and by the wordmark
 import MapTab from "./features/map";
 import BatchesTab from "./features/batches";
 import CompatibilityTab from "./features/compatibility";
@@ -20,6 +21,7 @@ import PassportPage from "./features/passport/PassportPage";
 // One entry per feature tab. Add a tab = one line here (by agreement).
 const TABS: { id: string; label: string; Component: ComponentType }[] = [
   // Order = the demo story (docs/demo-script.md): water, safety, plan, savings, scale-up, impact, sources; then the backup screens
+  { id: "home", label: "Home", Component: HomeTab },
   { id: "batches", label: "Batches", Component: BatchesTab },
   { id: "compatibility", label: "Compatibility", Component: CompatibilityTab },
   { id: "allocation", label: "Allocation", Component: AllocationTab },
