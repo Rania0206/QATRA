@@ -27,7 +27,7 @@ const TABS: { id: string; label: string; Component: ComponentType }[] = [
   { id: "impact", label: "Impact", Component: ImpactTab },
   // QATRA Lite: next-version tabs stay at the end
   { id: "territory", label: "Territory (next version)", Component: TerritoryTab },
-  { id: "public", label: "Public (next version)", Component: PublicTab },
+  { id: "public", label: "Public", Component: PublicTab },
 ];
 
 const TAB_IDS = TABS.map((t) => t.id);

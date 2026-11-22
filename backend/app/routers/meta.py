@@ -31,6 +31,15 @@ def _describe(r) -> str:
     return f"{r.metric}: {_clean(r.value)} {_clean(r.unit)}".strip() + f" ({_clean(r.period)})"
 
 
+def _source_name(cf, row_id: str) -> str:
+    """The CSV writes "idem" when a row has the same source as the row above: name the real source."""
+    ids = list(cf.index)
+    i = ids.index(row_id)
+    while i > 0 and str(cf.loc[ids[i], "source_name"]).strip().lower().startswith("idem"):
+        i -= 1
+    return str(cf.loc[ids[i], "source_name"])
+
+
 def safe_figures() -> list[SafeFigure]:
     cf = get_store()["context_figures"].set_index("id")
     out = []
@@ -41,7 +50,7 @@ def safe_figures() -> list[SafeFigure]:
             parts.append("Also reported: " + "; ".join(_describe(cf.loc[i]) for i in related) + ".")
         out.append(SafeFigure(
             id=sid, label=r.metric, value=_clean(r.value), unit=_clean(r.unit), definition=" ".join(parts),
-            status=r.status, source_name=r.source_name, source_url=r.source_url, as_of=_clean(r.publication_date),
+            status=r.status, source_name=_source_name(cf, main), source_url=r.source_url, as_of=_clean(r.publication_date),
         ))
     return out
 

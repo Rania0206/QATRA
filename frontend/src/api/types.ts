@@ -433,3 +433,17 @@ export interface MetaSources {
   sources: SourceRow[];
   safe_figures: SafeFigure[];
 }
+
+/** GET /api/impact */
+export interface ImpactSummary {
+  period: string;
+  tww_allocated_m3: number;
+  fresh_water_saved_m3: number;
+  energy_kwh: number;
+  solar_share: number; // 0..1
+  co2_avoided_kg: number;
+  farms_served: number;
+  small_farms_served: number;
+  batches_blocked: number;
+  tag: Tag;
+}
