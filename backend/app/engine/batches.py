@@ -11,13 +11,13 @@ from datetime import date, timedelta
 import pandas as pd
 
 from app.schemas import Analysis, Batch, Tag
+from app.engine.rules import batch_compliance
 from app.store import get_store
 
 DATASET = "sim_batches"
 RULES_DATASET = "nt106003_rules"
 SOURCE = "data/simulated/sim_batches"
 DEFAULT_PLANT_ID = "sousse_sud"
-PENDING_STATUS = "pending_rules"  # legal limits are checked later (A-03)
 
 # Analysis type -> candidate columns. Only columns present in the data are used; a type with
 # no present column is left out and then reported as missing. No values are invented.
@@ -116,10 +116,13 @@ def analysis_warnings(analyses: list[Analysis]) -> list[str]:
 
 def build_batch(*, id: str, plant_id: str, batch_date, volume_m3: float, treatment_level: str,
                 analyses: list[Analysis], tag: Tag) -> Batch:
-    return Batch(id=id, plant_id=plant_id, date=_to_date(batch_date).isoformat(), volume_m3=float(volume_m3),
-                 treatment_level=treatment_level, analyses=analyses,
-                 analysis_status=analysis_status(analyses), status=PENDING_STATUS,
-                 warnings=analysis_warnings(analyses), tag=tag)
+    batch = Batch(id=id, plant_id=plant_id, date=_to_date(batch_date).isoformat(), volume_m3=float(volume_m3),
+                  treatment_level=treatment_level, analyses=analyses,
+                  analysis_status=analysis_status(analyses), status="analysis_invalid",
+                  warnings=analysis_warnings(analyses), tag=tag)
+    # A-03b: status = compliance with NT 106.03 / Decree 89-1047
+    batch.status = batch_compliance(batch)
+    return batch
 
 
 # ---------------------------------------------------------------- dataset rows -> Batch

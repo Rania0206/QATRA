@@ -1,62 +1,83 @@
 import type { Batch } from "../../api/types";
-import { fmtDate, fmtNumber } from "./format";
-import StatusBadge from "./StatusBadge";
-import TagChip from "../../components/TagChip";
+import { Skeleton } from "../../components/ui";
+import { useLang } from "../../i18n";
+import { B, fmtDate, fmtNumber, treatmentName } from "./format";
+import { AnalysisPill, CompliancePill } from "./pills";
 
 interface Props {
   batches: Batch[];
+  latestId?: string;
   selectedId?: string;
-  showRowTags: boolean; // true when batches come from more than one source
+  showRowTags?: boolean; // unused since tags were removed from the UI
   onSelect: (b: Batch) => void;
 }
 
-const TH = "px-4 py-3 text-left text-sm font-semibold uppercase tracking-wide text-slate-600";
-const TD = "px-4 py-3";
+const TH = "sticky top-0 z-10 border-b border-ink bg-cream px-4 py-4 text-start text-[15px] font-normal";
+const TD = "px-4 py-4";
 
-export default function BatchesTable({ batches, selectedId, showRowTags, onSelect }: Props) {
+export function TableSkeleton() {
   return (
-    <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white">
-      <table className="w-full text-base">
-        <thead className="border-b border-slate-200 bg-slate-50">
+    <div className="space-y-3" aria-busy="true">
+      {Array.from({ length: 8 }, (_, i) => (
+        <Skeleton key={i} className="h-12 w-full" />
+      ))}
+    </div>
+  );
+}
+
+export default function BatchesTable({ batches, latestId, selectedId, onSelect }: Props) {
+  const { lang } = useLang();
+  return (
+    <div className="max-h-[70vh] overflow-auto border-y border-ink">
+      <table className="w-full border-collapse text-[17px]">
+        <thead>
           <tr>
-            <th className={TH}>Date</th>
-            <th className={TH}>Batch ID</th>
-            <th className={`${TH} text-right`}>Volume (m³)</th>
-            <th className={TH}>Treatment</th>
-            <th className={TH}>Analyses</th>
-            <th className={TH} title="Legal limits check (A-03)">Compliance</th>
+            <th className={TH}>{B.date[lang]}</th>
+            <th className={TH}>{B.batchId[lang]}</th>
+            <th className={`${TH} !text-end`}>{B.volume[lang]}</th>
+            <th className={TH}>{B.treatment[lang]}</th>
+            <th className={TH}>{B.labTests[lang]}</th>
+            <th className={TH} title="NT 106.03 limits and Decree 89-1047 analyses">
+              {B.quality[lang]}
+            </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100">
-          {batches.map((b) => (
-            <tr
-              key={b.id}
-              onClick={() => onSelect(b)}
-              onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && onSelect(b)}
-              tabIndex={0}
-              className={`cursor-pointer hover:bg-teal-50 focus:bg-teal-50 focus:outline-none ${
-                b.id === selectedId ? "bg-teal-50" : ""
-              }`}
-            >
-              <td className={`${TD} whitespace-nowrap`}>{fmtDate(b.date)}</td>
-              <td className={`${TD} whitespace-nowrap font-mono`}>
-                {b.id}
-                {showRowTags && (
-                  <span className="ml-2">
-                    <TagChip tag={b.tag} showSource={false} />
-                  </span>
-                )}
-              </td>
-              <td className={`${TD} text-right tabular-nums`}>{fmtNumber(b.volume_m3)}</td>
-              <td className={`${TD} max-w-56 truncate text-slate-600`} title={b.treatment_level}>
-                {b.treatment_level.split(" (")[0]}
-              </td>
-              <td className={TD}>
-                <StatusBadge status={b.analysis_status} />
-              </td>
-              <td className={`${TD} text-slate-400`}>—</td>
-            </tr>
-          ))}
+        <tbody>
+          {batches.map((b) => {
+            const latest = b.id === latestId;
+            return (
+              <tr
+                key={b.id}
+                onClick={() => onSelect(b)}
+                onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && onSelect(b)}
+                tabIndex={0}
+                aria-selected={b.id === selectedId}
+                className={`cursor-pointer border-b border-line transition-colors duration-200 hover:bg-sand focus:bg-sand focus:outline-none ${
+                  b.id === selectedId ? "bg-sand" : ""
+                }`}
+              >
+                <td className={`${TD} whitespace-nowrap`}>
+                  {fmtDate(b.date, lang)}
+                  {latest && (
+                    <span className="ms-3 rounded-sm bg-olive px-2 py-0.5 text-[14px] font-medium text-ink">{B.today[lang]}</span>
+                  )}
+                </td>
+                <td dir="ltr" className={`${TD} whitespace-nowrap text-start text-[16px]`}>
+                  {b.id}
+                </td>
+                <td className={`${TD} text-end tabular-nums`}>{fmtNumber(b.volume_m3)}</td>
+                <td className={`${TD} max-w-52 truncate`} title={b.treatment_level}>
+                  {treatmentName(b.treatment_level, lang)}
+                </td>
+                <td className={TD}>
+                  <AnalysisPill status={b.analysis_status} />
+                </td>
+                <td className={TD}>
+                  <CompliancePill status={b.status} />
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>

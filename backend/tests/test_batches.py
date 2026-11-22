@@ -44,7 +44,7 @@ def test_get_batch_maps_real_values():
     b = get_batch("SSUD-20260701")
     assert b is not None
     assert b.plant_id == "w27944541" and b.date == "2026-07-01" and b.volume_m3 == 1680
-    assert b.status == "pending_rules"
+    assert b.status == "compliant"
     assert b.tag.status == "SIMULATED" and b.tag.source == "data/simulated/sim_batches"
     by_type = {a.type: a for a in b.analyses}
     assert by_type["physico_chemical"].values["EC_dS_m"] == 3.34

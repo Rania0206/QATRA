@@ -7,9 +7,9 @@ export interface ApiState<T> {
   reload: () => void;
 }
 
-// Runs `fn` on mount and on reload(). Ignores results that arrive after unmount
+// Runs `fn` on mount, on reload() and whenever `deps` change. Ignores results that arrive after unmount
 // or after a newer call started. `fn` is read through a ref, so inline lambdas are fine.
-export function useApi<T>(fn: () => Promise<T>): ApiState<T> {
+export function useApi<T>(fn: () => Promise<T>, deps: readonly unknown[] = []): ApiState<T> {
   const fnRef = useRef(fn);
   fnRef.current = fn;
   const callId = useRef(0);
@@ -36,13 +36,15 @@ export function useApi<T>(fn: () => Promise<T>): ApiState<T> {
       );
   }, []);
 
+  // `deps` re-runs the call when an input changes (e.g. a selected id); results of older calls are ignored.
   useEffect(() => {
     mounted.current = true;
     run();
     return () => {
       mounted.current = false;
     };
-  }, [run]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [run, ...deps]);
 
   return { ...state, reload: run };
 }

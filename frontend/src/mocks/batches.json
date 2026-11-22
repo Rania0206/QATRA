@@ -34,7 +34,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -79,7 +79,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -124,7 +124,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -169,7 +169,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -214,7 +214,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -259,7 +259,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -304,7 +304,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -349,7 +349,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -394,7 +394,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -439,7 +439,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -484,7 +484,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -529,7 +529,7 @@
       }
     ],
     "analysis_status": "expired",
-    "status": "on_hold",
+    "status": "analysis_invalid",
     "risk_colour": "amber",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -574,7 +574,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -619,7 +619,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -664,7 +664,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -709,7 +709,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -754,7 +754,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -799,7 +799,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "blocked",
+    "status": "non_compliant",
     "risk_colour": "red",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -844,7 +844,7 @@
       }
     ],
     "analysis_status": "expired",
-    "status": "on_hold",
+    "status": "analysis_invalid",
     "risk_colour": "amber",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -889,7 +889,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -934,7 +934,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -979,7 +979,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -1024,7 +1024,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -1069,7 +1069,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -1114,7 +1114,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -1159,7 +1159,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -1204,7 +1204,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -1249,7 +1249,7 @@
       }
     ],
     "analysis_status": "expired",
-    "status": "on_hold",
+    "status": "analysis_invalid",
     "risk_colour": "amber",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -1294,7 +1294,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -1339,7 +1339,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -1384,7 +1384,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -1429,7 +1429,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -1474,7 +1474,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -1519,7 +1519,7 @@
       }
     ],
     "analysis_status": "expired",
-    "status": "on_hold",
+    "status": "analysis_invalid",
     "risk_colour": "amber",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -1564,7 +1564,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -1609,7 +1609,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -1654,7 +1654,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -1699,7 +1699,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -1744,7 +1744,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "blocked",
+    "status": "non_compliant",
     "risk_colour": "red",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -1789,7 +1789,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -1834,7 +1834,7 @@
       }
     ],
     "analysis_status": "expired",
-    "status": "on_hold",
+    "status": "analysis_invalid",
     "risk_colour": "amber",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -1879,7 +1879,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -1924,7 +1924,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -1969,7 +1969,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -2014,7 +2014,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -2059,7 +2059,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -2104,7 +2104,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -2149,7 +2149,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -2194,7 +2194,7 @@
       }
     ],
     "analysis_status": "expired",
-    "status": "on_hold",
+    "status": "analysis_invalid",
     "risk_colour": "amber",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -2239,7 +2239,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -2284,7 +2284,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -2329,7 +2329,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "blocked",
+    "status": "non_compliant",
     "risk_colour": "red",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -2374,7 +2374,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -2419,7 +2419,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -2464,7 +2464,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -2509,7 +2509,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -2554,7 +2554,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -2599,7 +2599,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -2644,7 +2644,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."
@@ -2689,7 +2689,7 @@
       }
     ],
     "analysis_status": "valid",
-    "status": "received",
+    "status": "compliant",
     "risk_colour": "green",
     "warnings": [
       "No metals analysis on record (required once per semester, Decree 89-1047 Art.3b)."

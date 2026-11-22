@@ -54,14 +54,35 @@ export interface Farm {
 }
 
 export type Severity = "block" | "condition" | "info";
+export type SourceType = "tunisian_law" | "agronomic_advice";
 
 export interface RuleResult {
   rule_id: string;
   passed: boolean;
   severity: Severity;
+  source_type?: SourceType; // UI groups results: "Tunisian law" / "Agronomic advice (FAO)"
   reason_en: string;
   reason_fr: string;
   legal_ref: string;
+}
+
+export type Decision = "compatible" | "conditional" | "blocked";
+
+/** GET /api/farms/{id}/compatibility (and one item of GET /api/compatibility). */
+export interface FarmCompatibility {
+  farm_id: string;
+  batch_id: string;
+  decision: Decision;
+  results: RuleResult[];
+  tag: Tag;
+}
+
+/** GET /api/compatibility?batch_id= : every farm against one batch. */
+export interface AllFarmsCompatibility {
+  batch_id: string;
+  batch_status: string; // Batch.status: compliant | conditional | non_compliant | analysis_invalid
+  items: FarmCompatibility[]; // same order as GET /api/farms
+  tag: Tag;
 }
 
 export interface AllocationItem {
@@ -167,6 +188,48 @@ export interface MapLayer {
 
 export interface MapLayersResponse {
   layers: MapLayer[];
+}
+
+export interface SoilPoint {
+  day: number; // legacy: year * 365
+  ece: number;
+}
+
+export interface SoilPolicy {
+  series: number[]; // ECe (dS/m) at the start of each year, index = year (0..years)
+  first_year_over: number | null; // first year ECe > threshold, null if never
+  water_used_m3_season: number;
+  yield_loss_pct_30y: number | null; // null when the crop has no published yield slope
+}
+
+export interface SoilQatraPolicy extends SoilPolicy {
+  leaching_fraction: number;
+}
+
+export interface SoilSimulation {
+  farm_id: string;
+  batch_id: string;
+  crop: string;
+  threshold_ece: number;
+  ecw: number;
+  years: number[]; // [0..N]
+  naive: SoilPolicy;
+  qatra: SoilQatraPolicy;
+  // legacy fields: `series` is the QATRA curve, `leaching_fraction` = qatra.leaching_fraction
+  series: SoilPoint[];
+  leaching_fraction: number;
+  blocked_reason?: string | null; // set when the crop cannot receive TWW by law: show no simulation
+  warning?: string | null;
+  tag: Tag;
+}
+
+export interface SoilSimulateRequest {
+  farm_id: string;
+  batch_id: string;
+  days?: number; // legacy, ignored
+  years?: number; // default 30
+  soil_ece?: number; // override the farm's soil ECe
+  ecw?: number; // override the batch EC
 }
 
 export interface Health {
