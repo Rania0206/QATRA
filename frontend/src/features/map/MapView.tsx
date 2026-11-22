@@ -118,7 +118,7 @@ export default function MapView({ layers, plants }: { layers: MapLayer[]; plants
           Basemap tiles could not be loaded (offline?). The QATRA layers below are still shown.
         </p>
       )}
-      <MapContainer center={CENTRE} zoom={ZOOM} scrollWheelZoom className="h-[65vh] min-h-96 w-full rounded-lg border border-slate-200 bg-slate-200">
+      <MapContainer center={CENTRE} zoom={ZOOM} scrollWheelZoom className="isolate h-[65vh] min-h-96 w-full rounded-lg border border-slate-200 bg-slate-200">
         <LayersControl position="topright">
           <LayersControl.BaseLayer checked name="Satellite (Esri)">
             <TileLayer url={ESRI} attribution={ESRI_ATTR} maxZoom={19} eventHandlers={{ tileerror: () => setTilesFailed(true) }} />
