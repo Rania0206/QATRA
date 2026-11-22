@@ -13,6 +13,11 @@ export const M = {
     fr: "Votre ferme apparaît ici dès que vous saisissez votre code (Compatibilité ou Sol).",
     ar: "تظهر مزرعتك هنا بعد إدخال رمز مزرعتك (الملاءمة أو التربة).",
   },
+  unnamed: {
+    en: "Wastewater plant (no name in the data)",
+    fr: "Station d'épuration (sans nom dans les données)",
+    ar: "محطة معالجة (بلا اسم في البيانات)",
+  },
   yourFarm: { en: "Your farm", fr: "Votre ferme", ar: "مزرعتك" },
   loading: { en: "Loading the map…", fr: "Chargement de la carte…", ar: "جارٍ تحميل الخريطة…" },
   noLayers: { en: "The API returned no map layers.", fr: "L'API n'a renvoyé aucune couche.", ar: "لم تُرجع الواجهة أي طبقة." },

@@ -28,6 +28,10 @@ export const FALLBACK = { colour: "#f3ebe0", radius: 6 };
 const OUTLINE = "#1b1b1a";
 const LABEL = "!rounded-none !border-ink !bg-cream !px-2 !py-0.5 !text-[14px] !text-ink !shadow-none";
 
+/** OpenStreetMap leaves some plants unnamed; the server then makes up "Unnamed OSM wastewater plant (id)". Never show that id. */
+const isUnnamed = (f: MapFeature) => f.name.startsWith("Unnamed OSM");
+const displayName = (f: MapFeature, lang: Lang) => (isUnnamed(f) ? M.unnamed[lang] : f.name);
+
 export const layerLabel = (l: MapLayer, lang: Lang) => LAYER_LABEL[l.id]?.[lang] ?? l.label;
 
 export const hasCoords = (f: MapFeature): f is MapFeature & { lat: number; lon: number } =>
@@ -53,7 +57,7 @@ function FeaturePopup({ f, layer, plant, lang }: { f: MapFeature; layer: MapLaye
   const source = (plant ? plant.tag : layer.tag).source;
   return (
     <div dir={isRtl(lang) ? "rtl" : "ltr"} className="min-w-52 space-y-1.5 text-[15px]">
-      <p className="font-display text-xl leading-tight">{f.name}</p>
+      <p className="font-display text-xl leading-tight">{displayName(f, lang)}</p>
       <p className="text-[14px] text-ink-soft">{layerLabel(layer, lang)}</p>
       {plant ? (
         <ul className="space-y-1">
@@ -131,7 +135,7 @@ function LayerFeatures({ layer, plants, lang }: { layer: MapLayer; plants: Plant
                 {M.yourFarm[lang]}
               </Tooltip>
             )}
-            {(layer.id === "plants" || layer.id === "basin") && (
+            {(layer.id === "plants" || layer.id === "basin" || (layer.id === "osm_plants" && !isUnnamed(f))) && (
               <Tooltip direction="top" permanent offset={[0, -10]} className={LABEL}>
                 {f.name}
               </Tooltip>
