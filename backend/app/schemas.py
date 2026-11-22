@@ -158,3 +158,36 @@ class HealthResponse(BaseModel):
     status: str
     datasets: dict[str, int]
     errors: dict[str, str] = {}
+
+
+class Plant(BaseModel):
+    id: str
+    name: str
+    governorate: str
+    serves_perimeter: Optional[str] = None
+    treatment_level: str
+    capacity_m3_d: Optional[float] = None  # TREATMENT capacity, not volume available to farmers
+    lat: Optional[float] = None  # null when no coordinates are known (never invented)
+    lon: Optional[float] = None
+    tag: Tag
+
+
+class MapFeature(BaseModel):
+    """id, name, lat, lon plus layer-specific extras (crop, capacity_m3, area_ha...)."""
+    model_config = {"extra": "allow"}
+
+    id: str
+    name: str
+    lat: Optional[float] = None
+    lon: Optional[float] = None
+
+
+class MapLayer(BaseModel):
+    id: str
+    label: str
+    tag: Tag
+    features: list[MapFeature]
+
+
+class MapLayersResponse(BaseModel):
+    layers: list[MapLayer]
