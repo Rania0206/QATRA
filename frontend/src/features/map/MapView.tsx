@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { CircleMarker, LayerGroup, LayersControl, MapContainer, Polygon, Popup, TileLayer, Tooltip, useMap } from "react-leaflet";
+import { CircleMarker, LayerGroup, LayersControl, MapContainer, Polygon, Popup, TileLayer, Tooltip, ZoomControl, useMap } from "react-leaflet";
 import type { LatLngTuple } from "leaflet";
 import type { MapFeature, MapLayer, Plant } from "../../api/types";
 import { isRtl, useLang, type Lang } from "../../i18n";
@@ -26,6 +26,7 @@ export const STYLE: Record<string, { colour: string; radius: number }> = {
 };
 export const FALLBACK = { colour: "#f3ebe0", radius: 6 };
 const OUTLINE = "#1b1b1a";
+const LABEL = "!rounded-none !border-ink !bg-cream !px-2 !py-0.5 !text-[14px] !text-ink !shadow-none";
 
 export const layerLabel = (l: MapLayer, lang: Lang) => LAYER_LABEL[l.id]?.[lang] ?? l.label;
 
@@ -125,7 +126,16 @@ function LayerFeatures({ layer, plants, lang }: { layer: MapLayer; plants: Plant
             radius={style.radius}
             pathOptions={{ color: OUTLINE, weight: 2, fillColor: style.colour, fillOpacity: 0.95 }}
           >
-            {layer.id === "my_farm" && <Tooltip direction="right" permanent offset={[10, 0]}>{M.yourFarm[lang]}</Tooltip>}
+            {layer.id === "my_farm" && (
+              <Tooltip direction="right" permanent offset={[12, 0]} className={LABEL}>
+                {M.yourFarm[lang]}
+              </Tooltip>
+            )}
+            {(layer.id === "plants" || layer.id === "basin") && (
+              <Tooltip direction="top" permanent offset={[0, -10]} className={LABEL}>
+                {f.name}
+              </Tooltip>
+            )}
             {popup}
           </CircleMarker>
         );
@@ -143,6 +153,28 @@ function FitToFarm({ points }: { points: LatLngTuple[] }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map]);
   return null;
+}
+
+/** Colour key on the map itself (top-left): which colour is which layer. */
+function MapKey({ layers, lang }: { layers: MapLayer[]; lang: Lang }) {
+  const drawn = layers.filter((l) => l.features.some(isDrawable));
+  return (
+    <ul
+      dir={isRtl(lang) ? "rtl" : "ltr"}
+      className="absolute left-3 top-3 z-10 space-y-1.5 border border-line bg-cream/95 px-3 py-2.5 text-[15px] shadow-sm"
+    >
+      {drawn.map((l) => (
+        <li key={l.id} className="flex items-center gap-2.5">
+          <span
+            aria-hidden="true"
+            className="h-3.5 w-3.5 shrink-0 rounded-full border border-ink"
+            style={{ background: (STYLE[l.id] ?? FALLBACK).colour }}
+          />
+          {layerLabel(l, lang)}
+        </li>
+      ))}
+    </ul>
+  );
 }
 
 export default function MapView({ layers, plants }: { layers: MapLayer[]; plants: Plant[] }) {
@@ -163,14 +195,16 @@ export default function MapView({ layers, plants }: { layers: MapLayer[]; plants
         </p>
       )}
       {/* the map itself always reads left-to-right (Leaflet controls); popups switch back for Arabic */}
-      <div dir="ltr">
+      <div dir="ltr" className="relative">
         <MapContainer
           key={lang /* layer names are read once: remount when the language changes */}
           center={CENTRE}
           zoom={ZOOM}
           scrollWheelZoom
+          zoomControl={false}
           className="isolate h-[68vh] min-h-96 w-full border border-line bg-sand"
         >
+          <ZoomControl position="bottomright" />
           <FitToFarm points={framing} />
           <LayersControl position="topright">
             <LayersControl.BaseLayer checked name={M.satellite[lang]}>
@@ -188,6 +222,7 @@ export default function MapView({ layers, plants }: { layers: MapLayer[]; plants
               ))}
           </LayersControl>
         </MapContainer>
+        <MapKey layers={layers} lang={lang} />
       </div>
     </div>
   );
