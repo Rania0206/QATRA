@@ -57,7 +57,7 @@ _Last updated: 2026-11-22. Updated by whoever merges into `dev`; keep it current
 
 | Task | Owner | State |
 |---|---|---|
-| B-05a, B-05b | Dev B | Heatwave: `engine/heatwave.py` (naive policy: 4 hours without water on 2026-08-26; QATRA policy on solar and the basin: 0) and `POST /api/scenarios/heatwave`. The allocation items are a stub until A-05. Branch `feature/B-05-heatwave-engine` |
+| B-05a, B-05b | Dev B | Heatwave: `engine/heatwave.py` (naive policy: 4 hours without water on 2026-08-26; QATRA policy on solar and the basin: 0) and `POST /api/scenarios/heatwave`. Volumes come from Dev A's plan (A-05); `engine/plan.py` got an optional `need_fn`. Branch `feature/B-05-heatwave-engine` |
 | README | Dev B | Progress table and the soil, rules and passport formulas (branch `docs/readme-progress`) |
 
 ### Not done yet
@@ -66,14 +66,14 @@ _Last updated: 2026-11-22. Updated by whoever merges into `dev`; keep it current
 |---|---|
 | Needs forecast, supply, optimiser (allocation and pumping schedule) | Router stubs. The formulas marked *Planned* below describe the intended model |
 | Heatwave tab (hourly chart naive vs QATRA) | Next. The API exists on the branch, the tab is still a placeholder |
-| Allocation with Dev A's rule-based plan (A-05, `POST /api/allocate`) | Not merged. The heatwave result uses a documented stub for `allocation.items` |
+| A-05 solar threshold | Open point for Dev A: the pump schedule calls solar only if PV ≥ the full pump power (44.6 kW); the 60 kWp array peaks at 44.3 kW on the heatwave day, so it plans 7 % solar there (`SOLAR_MIN_FRACTION`). The heatwave model uses a pump power proportional to its flow |
 | Risk score (A-08), anomalies, impact, messages, requests, territory, LLM explain | Router stubs. The Impact tab only shows a small example |
 | Allocation, Savings, Heatwave, Messages, Public, Territory tabs | Placeholders |
 | Passport `destinations` | Empty until the allocation exists |
 | Map: the version with all farms coloured by decision (B-02b) | Not merged: `dev` deliberately shows only the farmer's own farm. The code is in git history (`b733d53`, branch `feature/B-02b-map-farms`) |
 | Map and Soil texts | English, French and Arabic. Passport page: English only |
 
-Tests: 143 backend tests on `dev` (191 with the heatwave branch), frontend build (`npm run build`) passes.
+Tests: 216 backend tests on `dev` (219 with the heatwave branch), frontend build (`npm run build`) passes.
 
 Formulas below are labelled **Implemented** (in code today), **Data pipeline** (computed by a script to produce a dataset), or **Planned** (design agreed, not coded yet).
 
@@ -420,10 +420,10 @@ The naive policy irrigates straight from the grid on demand: **no storage basin 
 
 ```
 need_i     = max(0, ET0_day × Kc_i − 0.7 × rain) × area_i × 10       Dev A's formula (engine/needs.py)
-daily_m3   = Σ need_i / 0.9                                          0.9 application efficiency
+daily_m3   = Σ need_i / 0.9                                          crop-need profile of the naive run on its own (B-05a)
 per hour   = daily_m3 / 14   for hours 06:00-20:00, else 0           farmers irrigate during the working day
 ```
-Only the demo farms that grow in the month of the day count (olive and alfalfa in August; winter cereals do not), and lettuce is excluded (forbidden for treated water). On 2026-08-26: ET0 = 7.88 mm, demand 971 m³, 69.4 m³ per hour.
+Only the demo farms that grow in the month of the day count (olive and alfalfa in August; winter cereals do not), and lettuce is excluded (forbidden for treated water). On 2026-08-26: ET0 = 7.88 mm, crop need 874 m³ (971 m³ with the 0.9 efficiency). **In the scenario the demand is the volume Dev A's plan allocates** (see below): 410.8 m³, 29.3 m³ per hour.
 
 **Naive policy** (B-05a), with transfer pump TP1 (150 m³/h, 44.6 kW, so 0.2973 kWh/m³):
 
@@ -434,7 +434,7 @@ grid_kw      = delivered_m3 × 0.2973
 unserved_m3  = demand − delivered
 hours_without_water = hours with demand > 0 and nothing delivered
 ```
-Result on 2026-08-26: **4 hours without water** (13:00 to 17:00), 277.6 of 971.4 m³ unserved, 206 kWh from the grid. A day without outage (2026-07-08) gives 0. The result is tagged `SIMULATED` with the caveat "NASA POWER ~0.5 deg grid: coastal extremes smoothed" (local Tmax 44.0 °C against the national record of 49.7 °C).
+Result on 2026-08-26, scenario volume of 410.8 m³: **4 hours without water** (13:00 to 17:00), 117.4 m³ unserved, 87 kWh from the grid (with the crop-need profile of 971 m³ alone: 277.6 m³ unserved, 206 kWh). A day without outage (2026-07-08) gives 0. The result is tagged `SIMULATED` with the caveat "NASA POWER ~0.5 deg grid: coastal extremes smoothed" (local Tmax 44.0 °C against the national record of 49.7 °C).
 
 **QATRA policy** (B-05b, `qatra_run`): an hourly rule-based plan on the 60 kWp array (the 50 kWp estimate of `pv_estimate_sousse.csv` × 60/50) and the 3,000 m³ basin (600 m³ at the start of the scenario). The pump power is proportional to its flow, so a pump on part of the solar power delivers that part of its flow. Rules, hour by hour:
 
@@ -445,9 +445,9 @@ outside the outage:  1. irrigate on solar first:   direct = min(demand, 150 m³/
 during the outage:   4. irrigate from the basin by gravity, NO grid
 every hour:          5. solar surplus pumps water into the basin, never above 3,000 m³
 ```
-The plant supplies at most the batch of the day (1,800 m³). Basin evaporation (8 mm/d) is not applied: the basin area is not in the data. Result on 2026-08-26: **0 hours without water**, 0 kWh from the grid, 325 kWh of solar (share 100 %), basin level between 514 and 906 m³, against 206 kWh of grid and 277.6 m³ unserved for the naive policy.
+The plant supplies at most the batch of the day (1,800 m³). Basin evaporation (8 mm/d) is not applied: the basin area is not in the data. Result on 2026-08-26: **0 hours without water**, 0 kWh from the grid, 325 kWh of solar (share 100 %; it includes the surplus pumped into the basin for the next days), basin level between 583 and 1,339 m³, against 87 kWh of grid and 117.4 m³ unserved for the naive policy.
 
-`POST /api/scenarios/heatwave` returns both hourly series, the 24-slot schedule (`solar`, `grid`, `basin` or `off`) and the naive run as `baseline`. **`allocation.items` is a stub** until Dev A's plan (A-05) is merged: each growing farm gets its own daily need, scaled to what was delivered.
+`POST /api/scenarios/heatwave` returns both hourly series, the 24-slot schedule (`solar`, `grid`, `basin` or `off`) and the naive run as `baseline`. **`allocation.items` are Dev A's plan** (A-05a): lettuce blocked (0), alfalfa conditional (soil cap), anti-rebound caps on the others, only the farms growing in August (A, B, D, H, I). It receives the need of the heatwave day through the optional `need_fn` of `plan.allocate`, because the forecast file does not cover that summer day. The hourly schedule is the heatwave model's, not the A-05 pump schedule (whose solar rule needs PV ≥ 44.6 kW, above the 44.3 kW peak of that day).
 
 ---
 

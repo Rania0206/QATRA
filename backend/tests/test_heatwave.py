@@ -219,13 +219,43 @@ def test_scenario_result_has_the_contract_shape():
     assert r["tag"]["status"] == "SIMULATED" and r["caveat"] == "NASA POWER ~0.5 deg grid: coastal extremes smoothed"
 
 
-def test_stub_allocation_is_said_and_never_waters_a_blocked_crop():
+def test_allocation_follows_dev_a_rules_not_a_stub():
     a = hw.run_scenario("heatwave_outage")["allocation"]
-    assert any("Stub allocation" in w and "A-05" in w for w in a["warnings"])
+    assert not any("Stub" in w for w in a["warnings"])
     items = {i["farm_id"]: i for i in a["items"]}
+    assert set(items) == {"A", "B", "C", "D", "H", "I"}  # growing farms + the blocked crop; E, F, G, J are out of season
     assert items["C"]["status"] == "blocked" and items["C"]["m3"] == 0 and "Art. 5" in items["C"]["cap_reason"]
-    assert {k for k, v in items.items() if v["status"] == "allocated"} == {"A", "B", "D", "H", "I"}
-    assert sum(i["m3"] for i in a["items"]) == pytest.approx(a["fresh_replaced_m3"], abs=0.3)
+    assert items["A"]["status"] == "conditional"  # alfalfa: soil salinity condition
+    # anti-rebound: never more than the farm already takes from its own well that day (season volume / 180)
+    from app.engine.farms import get_farm
+    from app.engine.plan import SEASON_DAYS
+    for fid in ("A", "B", "D", "H", "I"):
+        farm = get_farm(fid)
+        assert items[fid]["m3"] <= farm.fresh_m3_season / SEASON_DAYS + 0.1
+    assert any("E, F, G, J" in w and "not growing" in w for w in a["warnings"])
+
+
+def test_both_runs_irrigate_the_allocated_volume():
+    r = hw.run_scenario("heatwave_outage")
+    total = round(sum(i["m3"] for i in r["allocation"]["items"]), 1)
+    assert sum(h["demand_m3"] for h in r["qatra"]["hourly"]) == pytest.approx(total, abs=0.2)
+    assert sum(h["demand_m3"] for h in r["naive"]["hourly"]) == pytest.approx(total, abs=0.2)
+    assert r["allocation"]["fresh_replaced_m3"] == pytest.approx(total, abs=0.2)  # the plan delivers what it allocates
+    assert 300 < total < 500  # ~411 m3 after the anti-rebound caps (the farms' full need is ~874)
+
+
+def test_heatwave_need_uses_the_summer_weather_with_dev_as_formula():
+    from app.engine.farms import get_farm
+    n = hw.heatwave_need(get_farm("B"), HOT_DAY)  # olive, 4 ha, Kc 0.7
+    assert n.date == HOT_DAY and n.et0_mm == pytest.approx(7.88) and n.kc == 0.7
+    assert n.need_m3 == pytest.approx(7.88 * 0.7 * 4 * 10, abs=0.2)
+    assert hw.heatwave_need(get_farm("B"), "2030-01-01") is None  # no weather: no need (the plan warns)
+
+
+def test_schedule_note_explains_why_the_a05_pump_schedule_is_not_used():
+    w = hw.run_scenario("heatwave_outage")["allocation"]["warnings"]
+    assert any("A-05 pump schedule" in x and "44.6 kW" in x and "44.3" in x for x in w)
+    assert any("Solar surplus" in x and "kept for the next days" in x for x in w)
 
 
 def test_unknown_scenario_raises_keyerror():

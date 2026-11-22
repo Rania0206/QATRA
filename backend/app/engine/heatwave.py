@@ -15,6 +15,9 @@ from typing import Optional
 import pandas as pd
 
 from app.engine import needs, soil_inputs
+from app.engine.batches import get_batch
+from app.engine.plan import AllocateOptions, Plan, allocate
+from app.schemas import Farm
 from app.store import get_store
 
 WEATHER = "weather_summer2026_sousse"
@@ -143,10 +146,15 @@ def daily_demand_m3(day: str) -> float:
     return sum(f["need_m3"] for f in farm_needs(day)) / EFFICIENCY
 
 
-def demand_profile(day: str) -> list[float]:
-    """Irrigation demand per hour (m3), 24 values: the day's volume spread evenly over 06:00-20:00. ESTIMATE."""
-    per_hour = daily_demand_m3(day) / len(IRRIGATION_HOURS)
+def spread_demand(total_m3: float) -> list[float]:
+    """A day's volume spread evenly over the working hours 06:00-20:00 (24 values, m3 per hour)."""
+    per_hour = total_m3 / len(IRRIGATION_HOURS)
     return [per_hour if h in IRRIGATION_HOURS else 0.0 for h in range(24)]
+
+
+def demand_profile(day: str) -> list[float]:
+    """Irrigation demand per hour (m3), 24 values: the crop need of the day spread evenly over 06:00-20:00. ESTIMATE."""
+    return spread_demand(daily_demand_m3(day))
 
 
 # ---------------------------------------------------------------- the naive run
@@ -241,6 +249,7 @@ def qatra_run(day: str, demand_m3_by_hour: Optional[list[float]] = None, pump: O
         fill = max(0.0, min(spare_pv / k, spare_flow, cap - level, plant_left))
         level += fill
         plant_left -= fill
+        level = min(max(level, 0.0), cap)  # clamp before the hour is recorded (float noise must not show)
         solar_kw = solar_for_farms + fill * k
         grid_kw = from_grid * k
         delivered = direct_solar + from_basin + from_grid
@@ -250,7 +259,6 @@ def qatra_run(day: str, demand_m3_by_hour: Optional[list[float]] = None, pump: O
                        "unserved_m3": round(d - delivered, 3), "grid_kw": round(grid_kw, 3), "solar_kw": round(solar_kw, 3),
                        "pump_kw": round(pump_kw, 3), "basin_m3": round(level, 3), "basin_out_m3": round(from_basin, 3),
                        "basin_in_m3": round(fill, 3), "source": source})
-        level = min(max(level, 0.0), cap)
 
     solar_kwh, grid_kwh = sum(r["solar_kw"] for r in hourly), sum(r["grid_kw"] for r in hourly)
     return {
@@ -268,28 +276,46 @@ def qatra_run(day: str, demand_m3_by_hour: Optional[list[float]] = None, pump: O
 
 
 # ---------------------------------------------------------------- scenario result (POST /api/scenarios/heatwave)
-STUB_NOTE = ("Stub allocation: Dev A's rule-based plan (A-05) is not merged, so each growing farm receives its own daily need "
-             "(ET0 x Kc, scaled to what was delivered). Salinity caps are not applied.")
+SCHEDULE_NOTE = ("Hourly schedule: the heatwave model of this scenario (pump power proportional to its flow, farms irrigated from the "
+                 "basin during the outage). The A-05 pump schedule is not used here: it calls solar only when the PV output reaches "
+                 "the full pump power ({kw:g} kW) and the array peaks at {peak:.1f} kW this day, and it does not model farm draws.")
 
 
-def _allocation_items(day: str, delivered_m3: float) -> tuple[list[dict], list[str]]:
-    """Stub: split the delivered water between the growing farms by their daily need; blocked crops get 0."""
-    farms = farm_needs(day)
-    total = sum(f["need_m3"] for f in farms)
-    items = [{"farm_id": f["farm_id"], "status": "allocated",
-              "m3": round(delivered_m3 * f["need_m3"] / total, 1) if total > EPS else 0.0} for f in farms]
-    notes = []
+def heatwave_need(farm: Farm, day: str) -> Optional[needs.NeedItem]:
+    """The need of one farm on a heatwave day, with Dev A's formula (engine/needs.py) on the summer weather.
+
+    Dev A's forecast file does not cover this summer day, so the plan receives this function (plan.allocate need_fn)."""
+    try:
+        et0, rain = daily_et0(day), daily_rain(day)
+    except ValueError:
+        return None
+    kc = needs.kc_for(farm.crop, day)
+    if kc is None:
+        return needs.NeedItem(date=day, farm_id=farm.id, et0_mm=round(et0, 2), effective_rain_mm=round(needs.RAIN_EFFICIENCY * rain, 2))
+    n = needs.water_need(et0, kc, rain, farm.area_ha)
+    return needs.NeedItem(date=day, farm_id=farm.id, et0_mm=round(et0, 2), kc=round(kc, 2), etc_mm=round(n["etc_mm"], 2),
+                          effective_rain_mm=round(n["effective_rain_mm"], 2), need_mm=round(n["need_mm"], 2),
+                          need_m3=round(n["need_m3"], 1))
+
+
+def scenario_plan(sc: dict) -> tuple[Plan, list[str]]:
+    """Dev A's rule-based allocation (legal status, soil cap, anti-rebound, sharing) of the scenario batch on its day.
+
+    Only the farms growing that month are planned, plus the farms whose crop is forbidden for treated water (shown as
+    blocked, 0 m3). Farms whose crop is not growing are left out and named in the notes."""
+    day = sc["date"]
+    batch = get_batch(sc["batch_id"])
+    if batch is None:
+        raise ValueError(f"scenario batch {sc['batch_id']} not found")
+    growing = {f["farm_id"] for f in growing_farms(day)}
+    ids, idle = [], []
     for _, f in get_store()["sim_farms"].iterrows():
-        crop = str(f["crop"])
-        reason = soil_inputs._blocked_reason(crop) if crop in soil_inputs.CROP_SEASON_MONTHS else None
-        if reason:
-            items.append({"farm_id": str(f["farm_id"]), "status": "blocked", "m3": 0.0,
-                          "cap_reason": f"{crop.replace('_', ' ').capitalize()}: {reason}"})
-    idle = [str(f["farm_id"]) for _, f in get_store()["sim_farms"].iterrows()
-            if str(f["farm_id"]) not in {i["farm_id"] for i in items}]
-    if idle:
-        notes.append(f"Farms {', '.join(idle)} are not irrigated: their crop is not growing in this month.")
-    return sorted(items, key=lambda i: i["farm_id"]), notes
+        fid, crop = str(f["farm_id"]), str(f["crop"])
+        blocked = crop in soil_inputs.CROP_SEASON_MONTHS and soil_inputs._blocked_reason(crop) is not None
+        (ids if fid in growing or blocked else idle).append(fid)
+    plan = allocate(batch, day, AllocateOptions(farm_ids=ids), need_fn=heatwave_need)
+    notes = [f"Farms {', '.join(idle)} are not irrigated: their crop is not growing in this month."] if idle else []
+    return plan, notes
 
 
 def _series(run: dict, policy: str) -> dict:
@@ -305,23 +331,33 @@ def _series(run: dict, policy: str) -> dict:
 
 
 def run_scenario(scenario_id: str) -> dict:
-    """Contract shape of POST /api/scenarios/heatwave: the QATRA plan against the naive baseline, hour by hour."""
+    """Contract shape of POST /api/scenarios/heatwave: the QATRA plan against the naive one, hour by hour.
+
+    Who gets how much comes from Dev A's plan (A-05a: legal block, soil cap, anti-rebound, sharing). Both policies then
+    irrigate that allocated volume, spread over 06:00-20:00, so the two runs and the allocation always agree."""
     sc = get_scenario(scenario_id)  # KeyError for an unknown scenario
     day = sc["date"]
-    demand = demand_profile(day)
+    plan, notes = scenario_plan(sc)
+    demand = spread_demand(plan.total_allocated_m3)
     naive = naive_run(day, demand)
     qatra = qatra_run(day, demand, basin_initial_m3=sc.get("basin_initial_m3"), pv_kwp=sc.get("pv_kWp"),
                       batch_m3=sc.get("batch_volume_m3"))
-    items, notes = _allocation_items(day, qatra["delivered_m3"])
-    warnings = [STUB_NOTE, *notes]
+    warnings = [*plan.warnings, *notes]
     if qatra["outage_hours"]:
         a, b = qatra["outage_hours"][0], qatra["outage_hours"][-1] + 1
         warnings.insert(0, f"Grid outage {a:02d}:00-{b:02d}:00: irrigation moved to solar hours and the basin; the grid never runs in the outage.")
     if qatra["unserved_m3"] > 0.05:
-        warnings.append(f"{qatra['unserved_m3']:.1f} m3 of the demand could not be delivered.")
+        warnings.append(f"{qatra['unserved_m3']:.1f} m3 of the allocated volume could not be delivered.")
+    stored = sum(r["basin_in_m3"] for r in qatra["hourly"])
+    if stored > 0.5:
+        warnings.append(f"Solar surplus: {stored:.0f} m3 pumped into the basin and kept for the next days "
+                        f"(basin {qatra['basin_initial_m3']:.0f} to {qatra['basin_final_m3']:.0f} m3). The plan's energy counts it.")
+    pump = default_pump()
+    warnings.append(SCHEDULE_NOTE.format(kw=pump["power_kW"], peak=max(pv_kw(day, qatra["pv_kwp"]))))
     warnings.append("Basin evaporation is not applied (basin area not in the data).")
     warnings.append(CAVEAT)
     schedule = [{"hour": r["hour"], "pump_kw": r["pump_kw"], "source": r["source"], "basin_m3": r["basin_m3"]} for r in qatra["hourly"]]
+    items = [{"farm_id": i.farm_id, "status": i.status, "m3": i.m3, "cap_reason": i.cap_reason} for i in plan.items]
     allocation = {"batch_id": sc["batch_id"], "items": items, "schedule": schedule,
                   "energy_kwh": round(qatra["solar_kwh"] + qatra["grid_kwh"], 1), "solar_share": qatra["solar_share"],
                   "fresh_replaced_m3": qatra["delivered_m3"], "warnings": warnings}
