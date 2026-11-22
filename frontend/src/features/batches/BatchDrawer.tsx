@@ -1,4 +1,5 @@
 import type { Analysis, AnalysisType, Batch } from "../../api/types";
+import PassportQR from "../../components/PassportQR";
 import { Drawer } from "../../components/ui";
 import { useLang, type Lang } from "../../i18n";
 import {
@@ -115,6 +116,9 @@ export default function BatchDrawer({ batch, onClose }: Props) {
       {batch.analyses.map((a) => (
         <AnalysisSection key={a.type} a={a} batchDate={batch.date} lang={lang} />
       ))}
+      <section className="space-y-3 border-t border-line pt-6">
+        <PassportQR batchId={batch.id} />
+      </section>
     </Drawer>
   );
 }

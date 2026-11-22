@@ -99,6 +99,21 @@ npm run build         # tsc + vite build
 ```
 Tabs are addressable by URL hash: `http://localhost:5173/#/soil`, `#/batches`, and so on.
 
+### Open the batch passport on a phone
+The passport page is `/passport/{batch id}` (for example `/passport/SSUD-20260708`): no tabs, made for a phone. Every batch drawer (Batches tab) shows its QR code.
+
+```powershell
+cd frontend
+npm run dev:mocks:lan     # or: npm run dev:lan  (real API)
+```
+Vite prints several `Network:` addresses. Use the one marked **Wi-Fi** (the `192.168.x.x` VMware ones are not reachable from a phone), for example `http://172.17.11.238:5173`.
+1. Phone and laptop must be on the same Wi-Fi.
+2. On the laptop, open QATRA through that same Wi-Fi address (not `localhost`): the QR code is built from the address of the page that shows it, so a `localhost` QR cannot be opened from a phone (the drawer warns about it).
+3. Scan the QR code, or type `http://<laptop-ip>:5173/passport/SSUD-20260708` on the phone.
+4. If the phone cannot connect, allow Node.js on private networks when Windows Firewall asks.
+
+With the real API (`dev:lan`), the backend must also run (`uvicorn app.main:app --host 0.0.0.0`) and `VITE_API_BASE_URL` must point to the laptop address, not `localhost`. The mock mode needs none of this.
+
 ### Rebuild the data
 Run the scripts in number order (`python scripts/NN_*.py`, or `scripts/run_all.sh`). Downloads are cached in `data/raw/`.
 Details and caveats are in [data/README.md](data/README.md).
