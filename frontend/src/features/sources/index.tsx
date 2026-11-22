@@ -198,7 +198,7 @@ function Prices({ report, lang }: { report: SavingsReport; lang: Lang }) {
                 <TagPill tag={a.status} lang={lang} />
               </div>
               <p className="mt-1.5 break-words text-[14px] text-ink-soft">
-                {Sx.provider[lang]}: {a.source}
+                {Sx.source[lang]}: {a.source}
               </p>
             </li>
           );

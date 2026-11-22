@@ -44,7 +44,7 @@ export const A = {
   tnd: { en: "TND", fr: "TND", ar: "TND" },
   // summary strip (operator)
   sumShared: { en: "Water shared", fr: "Eau répartie", ar: "الماء الموزَّع" },
-  sumReplaced: { en: "Well water saved", fr: "Eau de puits économisée", ar: "ماء الآبار الموفَّر" },
+  sumReplaced: { en: "Fresh water saved", fr: "Eau douce économisée", ar: "الماء العذب الموفَّر" },
   sumSolar: { en: "Solar energy", fr: "Énergie solaire", ar: "الطاقة الشمسية" },
   sumEnergy: { en: "Pumping energy", fr: "Énergie de pompage", ar: "طاقة الضخ" },
   sumMoney: { en: "Farmers save", fr: "Gain des agriculteurs", ar: "وفر الفلاحين" },

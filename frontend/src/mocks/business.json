@@ -40,12 +40,12 @@
       "value": 7819.0,
       "unit": "ha",
       "period": "2026",
-      "source": "idem",
+      "source": "L'Economiste Maghrebin 2026-09-02",
       "source_url": "https://www.leconomistemaghrebin.com/2026/09/02/eaux-usees-traitees-la-tunisie-peut-elle-en-faire-une-veritable-ressource-agricole/",
       "note": "official dataset 2021/22 (Agridata): 7593 / 2363 ha",
       "tag": {
         "status": "REPORTED",
-        "source": "context_figures.csv CF10: idem"
+        "source": "context_figures.csv CF10: L'Economiste Maghrebin 2026-09-02"
       }
     },
     {
@@ -202,7 +202,7 @@
       "ha": 7819.0,
       "ha_tag": {
         "status": "REPORTED",
-        "source": "context_figures.csv CF10: idem"
+        "source": "context_figures.csv CF10: L'Economiste Maghrebin 2026-09-02"
       },
       "adoption_rate": 1.0,
       "farmers_saving_tnd_per_year": 1696879.38,
