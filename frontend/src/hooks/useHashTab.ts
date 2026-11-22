@@ -17,7 +17,8 @@ export function useHashTab(ids: string[], fallback: string): [string, (id: strin
   }, [ids, fallback]);
 
   const select = useCallback((id: string) => {
-    window.location.hash = `/${id}`; // fires hashchange, which updates state
+    const role = new URLSearchParams(window.location.hash.split("?")[1] ?? "").get("role"); // the demo role follows the tab
+    window.location.hash = `/${id}${role ? `?role=${encodeURIComponent(role)}` : ""}`; // fires hashchange, which updates state
   }, []);
 
   return [active, select];

@@ -1,4 +1,5 @@
 """Shared API objects. Mirror of frontend/src/api/types.ts. Change only by agreement."""
+from datetime import date as date_type
 from typing import Literal, Optional
 
 from pydantic import BaseModel, Field
@@ -246,6 +247,25 @@ class HeatwaveResult(BaseModel):
     tag: Tag
 
 
+class Message(BaseModel):
+    id: str
+    farm_id: str
+    direction: Literal["in", "out"]
+    channel: str  # "sms"
+    at: str  # ISO datetime
+    text: Optional[str] = None  # incoming messages: what the farmer wrote
+    text_fr: Optional[str] = None  # outgoing messages: French and Tunisian Arabic (no language column in the data)
+    text_ar: Optional[str] = None
+    needs_human_review: bool = False  # true while the Arabic text has not been approved by a Tunisian speaker
+    batch_id: Optional[str] = None  # outgoing: the batch of the allocation (the UI links to its passport)
+    status: Optional[str] = None  # outgoing: allocated | conditional | capped | blocked
+
+
+class ReplyIn(BaseModel):
+    farm_id: str
+    text: str
+
+
 class HealthResponse(BaseModel):
     status: str
     datasets: dict[str, int]
@@ -283,3 +303,55 @@ class MapLayer(BaseModel):
 
 class MapLayersResponse(BaseModel):
     layers: list[MapLayer]
+
+
+# ---- B-10a: GET /api/meta/sources
+class SourceRow(BaseModel):
+    """One row of data/data_catalog.csv. `status` is the catalogue's own text (e.g. "REPORTED (incomplete)")."""
+    id: str
+    title: str
+    file: str
+    status: str
+    source_name: str
+    source_url: Optional[str] = None  # a few rows have no public URL
+
+
+class SafeFigure(BaseModel):
+    """One of the 5 REPORTED/PROJECTION figures safe to cite (data/README.md section 4). Values come from context_figures.csv."""
+    id: str  # SF1..SF5
+    label: str
+    value: str
+    unit: str
+    definition: str  # distinct for every figure; related rows keep their own definitions
+    status: str
+    source_name: str
+    source_url: str
+    as_of: str  # publication date of the source, ISO
+
+
+class MetaSources(BaseModel):
+    sources: list[SourceRow]
+    safe_figures: list[SafeFigure]
+
+
+# ---- B-11b: water requests (POST/GET /api/requests, PATCH /api/requests/{id})
+RequestStatus = Literal["pending", "approved", "rejected"]
+
+
+class RequestIn(BaseModel):
+    farm_id: str
+    requested_m3: float = Field(gt=0, le=100000)
+    date: date_type  # ISO date of the day the water is wanted
+
+
+class RequestPatch(BaseModel):
+    status: Literal["approved", "rejected"]
+
+
+class WaterRequest(BaseModel):
+    id: str  # REQ-001, REQ-002, ...
+    farm_id: str
+    requested_m3: float
+    date: date_type
+    status: RequestStatus
+    created_at: str  # ISO datetime

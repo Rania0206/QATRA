@@ -327,6 +327,21 @@ export interface HeatwaveResult {
   tag: Tag;
 }
 
+/** GET /api/messages, POST /api/messages/reply */
+export interface Message {
+  id: string;
+  farm_id: string;
+  direction: "in" | "out";
+  channel: string; // "sms"
+  at: string; // ISO datetime
+  text?: string | null; // incoming: what the farmer wrote
+  text_fr?: string | null; // outgoing: French and Tunisian Arabic
+  text_ar?: string | null;
+  needs_human_review?: boolean; // true while the Arabic text is not approved by a Tunisian speaker
+  batch_id?: string | null; // outgoing: the batch of the allocation (link to /passport/{batch_id})
+  status?: string | null; // outgoing: allocated | conditional | capped | blocked
+}
+
 export interface Health {
   status: string;
   datasets: Record<string, number>;
@@ -392,6 +407,47 @@ export interface SavingsReport {
   tag: Tag;
 }
 
+/** GET /api/meta/sources */
+export interface SourceRow {
+  id: string;
+  title: string;
+  file: string;
+  status: string; // the catalogue's own text, e.g. "REPORTED (incomplete)"
+  source_name: string;
+  source_url: string | null;
+}
+
+export interface SafeFigure {
+  id: string; // SF1..SF5
+  label: string;
+  value: string;
+  unit: string;
+  definition: string;
+  status: string; // REPORTED or PROJECTION
+  source_name: string;
+  source_url: string;
+  as_of: string; // ISO date of the source
+}
+
+export interface MetaSources {
+  sources: SourceRow[];
+  safe_figures: SafeFigure[];
+}
+
+/** GET /api/impact */
+export interface ImpactSummary {
+  period: string;
+  tww_allocated_m3: number;
+  fresh_water_saved_m3: number;
+  energy_kwh: number;
+  solar_share: number; // 0..1
+  co2_avoided_kg: number;
+  farms_served: number;
+  small_farms_served: number;
+  batches_blocked: number;
+  tag: Tag;
+}
+
 // A-14c: GET /api/business (?hectares=&adoption_rate=). Additive: BusinessView above is still the top of the response.
 export interface TerritoryFigure {
   id: string; // id in data/clean/context_figures.csv
@@ -445,4 +501,22 @@ export interface BusinessReport extends BusinessView {
   scenarios: BusinessScenario[];
   assumptions: SavingsAssumption[];
   warnings: string[];
+}
+
+/** POST /api/requests, GET /api/requests?status=, PATCH /api/requests/{id} */
+export type RequestStatus = "pending" | "approved" | "rejected";
+
+export interface WaterRequest {
+  id: string; // REQ-001, ...
+  farm_id: string;
+  requested_m3: number;
+  date: string; // ISO date the water is wanted
+  status: RequestStatus;
+  created_at: string; // ISO datetime
+}
+
+export interface RequestIn {
+  farm_id: string;
+  requested_m3: number; // > 0
+  date: string;
 }

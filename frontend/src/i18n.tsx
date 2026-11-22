@@ -68,9 +68,10 @@ export const TAB_LABEL: Record<string, Tr> = {
   soil: { en: "Soil", fr: "Sol", ar: "التربة" },
   heatwave: { en: "Heatwave", fr: "Canicule", ar: "موجة الحر" },
   messages: { en: "Messages", fr: "Messages", ar: "الرسائل" },
+  requests: { en: "Requests", fr: "Demandes", ar: "الطلبات" },
   impact: { en: "Impact", fr: "Impact", ar: "الأثر" },
   territory: { en: "Business", fr: "Modèle économique", ar: "النموذج الاقتصادي" },
-  public: { en: "Public (next version)", fr: "Public (prochaine version)", ar: "العموم (النسخة القادمة)" },
+  public: { en: "Public", fr: "Public", ar: "العموم" },
 };
 
 /** Farm-code form (farmer-facing screens). */
