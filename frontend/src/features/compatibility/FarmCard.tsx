@@ -1,7 +1,7 @@
 import type { Decision, Farm, FarmCompatibility } from "../../api/types";
 import { Skeleton } from "../../components/ui";
 import { fmtNumber } from "../batches/format";
-import { DECISION, T, cropLabel, mainReason, type Lang } from "./format";
+import { DECISION, T, cropName, mainReason, type Lang } from "./format";
 
 interface Props {
   farm: Farm;
@@ -59,7 +59,7 @@ export default function FarmCard({ farm, result, lang, selected, onSelect }: Pro
       type="button"
       onClick={onSelect}
       aria-pressed={selected}
-      className={`group flex h-full flex-col border bg-white text-left transition-shadow duration-200 hover:shadow-[0_4px_16px_rgba(27,27,26,0.12)] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink ${
+      className={`group flex h-full flex-col border bg-white text-start transition-shadow duration-200 hover:shadow-[0_4px_16px_rgba(27,27,26,0.12)] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink ${
         selected ? "border-ink" : "border-line"
       }`}
     >
@@ -75,11 +75,11 @@ export default function FarmCard({ farm, result, lang, selected, onSelect }: Pro
       <span className="flex flex-1 flex-col px-4 pb-4 pt-3">
         <span className="font-display text-[21px] font-medium leading-tight">{farm.name.replace(/^Ferme [A-Z] - /, "")}</span>
         <span className="text-[15px] text-ink-soft">
-          {cropLabel(farm.crop)} · {fmtNumber(farm.area_ha)} ha
+          {cropName(farm.crop, lang)} · {fmtNumber(farm.area_ha)} ha
         </span>
         <span className="mt-2 text-[16px] leading-snug">{mainReason(result.results, lang, farm.crop)}</span>
         <span className="mt-auto pt-3 text-[15px] font-medium underline decoration-1 underline-offset-4 group-hover:decoration-2">
-          {T.open[lang]} →
+          {T.open[lang]}
         </span>
       </span>
     </button>

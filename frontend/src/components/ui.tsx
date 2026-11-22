@@ -129,11 +129,13 @@ export function Drawer({
   header,
   children,
   onClose,
+  closeLabel = "Close",
 }: {
   label: string;
   header: ReactNode;
   children: ReactNode;
   onClose: () => void;
+  closeLabel?: string;
 }) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -151,8 +153,8 @@ export function Drawer({
       <button type="button" aria-label="Close" onClick={onClose} className="absolute inset-0 bg-ink/35" />
       <aside className="relative flex h-full w-full max-w-xl flex-col overflow-y-auto bg-cream">
         <header className="sticky top-0 z-10 border-b border-line bg-cream px-6 pb-5 pt-6">
-          <button type="button" onClick={onClose} className="link absolute right-6 top-6 text-[15px]">
-            Close
+          <button type="button" onClick={onClose} className="link absolute end-6 top-6 text-[15px]">
+            {closeLabel}
           </button>
           {header}
         </header>

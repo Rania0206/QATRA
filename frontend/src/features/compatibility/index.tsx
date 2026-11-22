@@ -2,14 +2,13 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { get } from "../../api/client";
 import type { AllFarmsCompatibility, Batch, Decision, Farm } from "../../api/types";
 import ErrorBox from "../../components/ErrorBox";
-import { Band, Dot, Intro, Segmented, Skeleton } from "../../components/ui";
+import { Band, Dot, Intro, Pill, Segmented, Skeleton } from "../../components/ui";
 import { USE_MOCKS } from "../../config";
 import { useApi } from "../../hooks/useApi";
 import { COMPLIANCE, fmtDate } from "../batches/format";
-import { CompliancePill } from "../batches/pills";
 import FarmCard, { FarmCardSkeleton } from "./FarmCard";
 import FarmDrawer from "./FarmDrawer";
-import { DECISION, T, type Lang, type RuleInfo } from "./format";
+import { BATCH_STATUS, DECISION, T, isRtl, type Lang, type RuleInfo } from "./format";
 
 interface Static {
   farms: Farm[];
@@ -59,7 +58,7 @@ export default function CompatibilityTab() {
   const farmResult = selectedFarm ? byFarm.get(selectedFarm) : undefined;
 
   return (
-    <>
+    <div dir={isRtl(lang) ? "rtl" : "ltr"} lang={lang}>
       {/* Hero: the question, the batch picker, the language */}
       <Band tone="olive" className="md:py-28">
         <Intro as="h1" size="xl" eyebrow={T.eyebrow[lang]} title={T.title[lang]}>
@@ -71,7 +70,7 @@ export default function CompatibilityTab() {
                   {i > 0 && <span className="mx-2">·</span>}
                   <span className="whitespace-nowrap">
                     {counts[d]} {i === 0 ? `${T.farms[lang]} ` : ""}
-                    {lang === "fr" ? DECISION[d].legendFr : DECISION[d].legendEn}
+                    {DECISION[d].legend[lang]}
                   </span>
                 </span>
               ))}
@@ -94,11 +93,17 @@ export default function CompatibilityTab() {
               {!shownBatch && <option value="">…</option>}
               {base.data?.batches.map((b) => (
                 <option key={b.id} value={b.id}>
-                  {b.id} · {fmtDate(b.date)} · {COMPLIANCE[b.status]?.label ?? b.status}
+                  {b.id} · {fmtDate(b.date)} · {BATCH_STATUS[b.status]?.[lang] ?? b.status}
                 </option>
               ))}
             </select>
-            {batchStatus ? <CompliancePill status={batchStatus} large /> : <Skeleton className="h-10 w-36" />}
+            {batchStatus ? (
+              <Pill tone={COMPLIANCE[batchStatus]?.tone ?? "neutral"} large>
+                {BATCH_STATUS[batchStatus]?.[lang] ?? batchStatus}
+              </Pill>
+            ) : (
+              <Skeleton className="h-10 w-36" />
+            )}
           </div>
           <Segmented
             label="Language"
@@ -107,6 +112,7 @@ export default function CompatibilityTab() {
             options={[
               { id: "en", label: "English" },
               { id: "fr", label: "Français" },
+              { id: "ar", label: "العربية" },
             ]}
           />
         </div>
@@ -143,7 +149,7 @@ export default function CompatibilityTab() {
               ))}
             </div>
           ) : base.data!.farms.length === 0 ? (
-            <p className="text-center font-display text-3xl">{lang === "fr" ? "Aucune ferme." : "No farms yet."}</p>
+            <p className="text-center font-display text-3xl">{T.noFarms[lang]}</p>
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {base.data!.farms.map((f) => {
@@ -167,6 +173,6 @@ export default function CompatibilityTab() {
       {farm && farmResult && base.data && (
         <FarmDrawer farm={farm} result={farmResult} rules={base.data.rules} lang={lang} onClose={close} />
       )}
-    </>
+    </div>
   );
 }

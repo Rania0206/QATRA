@@ -75,7 +75,7 @@ export default function BatchDrawer({ batch, onClose }: Props) {
       label={`Batch ${batch.id}`}
       onClose={onClose}
       header={
-        <div className="space-y-3 pr-14">
+        <div className="space-y-3 pe-14">
           <p className="eyebrow">{fmtDate(batch.date)}</p>
           <h2 className="text-3xl tabular-nums">{batch.id}</h2>
           <p className="text-[17px]">
