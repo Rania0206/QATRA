@@ -71,7 +71,7 @@ export const TAB_LABEL: Record<string, Tr> = {
   requests: { en: "Requests", fr: "Demandes", ar: "الطلبات" },
   impact: { en: "Impact", fr: "Impact", ar: "الأثر" },
   territory: { en: "Business", fr: "Modèle économique", ar: "النموذج الاقتصادي" },
-  public: { en: "Public", fr: "Public", ar: "العموم" },
+  public: { en: "Sources", fr: "Sources", ar: "المصادر" },
 };
 
 /** Farm-code form (farmer-facing screens). */

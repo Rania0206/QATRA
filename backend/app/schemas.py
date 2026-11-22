@@ -314,6 +314,11 @@ class SourceRow(BaseModel):
     status: str
     source_name: str
     source_url: Optional[str] = None  # a few rows have no public URL
+    # A-17 (additive, all optional): what the row is, and its year, so the Sources page can say "where from, and when"
+    publication_date: Optional[str] = None  # the catalogue's text, e.g. "2025" or "2026-11-21 extract"
+    period_covered: Optional[str] = None  # e.g. "2021/22-2023/24" or "current"
+    scope: Optional[str] = None  # e.g. "Tunisia", "Sousse"
+    definition: Optional[str] = None  # what the dataset is
 
 
 class SafeFigure(BaseModel):
