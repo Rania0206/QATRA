@@ -18,6 +18,25 @@ All numbers below were read from the running system on the default plan (21 Nov 
 
 ---
 
+## The menu follows the story
+
+Open the full-screen menu (the three lines, top left). The tabs are listed in the order of this script, so you can go straight down the list:
+
+| Menu | Tab | Script step |
+|---|---|---|
+| 01 | Batches | The water itself (optional first look) |
+| 02 | Compatibility | Step 1 |
+| 03 | Allocation | Step 2 |
+| 04 | Savings | Step 3 |
+| 05 | Business | Step 4 |
+| 06 | Impact | Step 5 |
+| 07 | Sources | Step 6 |
+| 08 to 12 | Heatwave, Soil, Messages, Requests, Map | Backups (see below) |
+
+A Demo role lists only its own tabs, in the same order.
+
+---
+
 ## The run of show
 
 ### 0. Opening (30 s). No screen yet

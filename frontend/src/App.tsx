@@ -19,19 +19,19 @@ import PassportPage from "./features/passport/PassportPage";
 
 // One entry per feature tab. Add a tab = one line here (by agreement).
 const TABS: { id: string; label: string; Component: ComponentType }[] = [
-  { id: "map", label: "Map", Component: MapTab },
+  // Order = the demo story (docs/demo-script.md): water, safety, plan, savings, scale-up, impact, sources; then the backup screens
   { id: "batches", label: "Batches", Component: BatchesTab },
   { id: "compatibility", label: "Compatibility", Component: CompatibilityTab },
   { id: "allocation", label: "Allocation", Component: AllocationTab },
   { id: "savings", label: "Savings", Component: SavingsTab },
-  { id: "soil", label: "Soil", Component: SoilTab },
+  { id: "territory", label: "Business", Component: BusinessTab },
+  { id: "impact", label: "Impact", Component: ImpactTab },
+  { id: "public", label: "Sources", Component: SourcesTab },
   { id: "heatwave", label: "Heatwave", Component: HeatwaveTab },
+  { id: "soil", label: "Soil", Component: SoilTab },
   { id: "messages", label: "Messages", Component: MessagesTab },
   { id: "requests", label: "Requests", Component: RequestsTab },
-  { id: "impact", label: "Impact", Component: ImpactTab },
-  // QATRA Lite: next-version tabs stay at the end
-  { id: "territory", label: "Business", Component: BusinessTab },
-  { id: "public", label: "Sources", Component: SourcesTab },
+  { id: "map", label: "Map", Component: MapTab },
 ];
 
 const TAB_IDS = TABS.map((t) => t.id);
