@@ -1,4 +1,5 @@
 """Shared API objects. Mirror of frontend/src/api/types.ts. Change only by agreement."""
+from datetime import date as date_type
 from typing import Literal, Optional
 
 from pydantic import BaseModel, Field
@@ -331,3 +332,26 @@ class SafeFigure(BaseModel):
 class MetaSources(BaseModel):
     sources: list[SourceRow]
     safe_figures: list[SafeFigure]
+
+
+# ---- B-11b: water requests (POST/GET /api/requests, PATCH /api/requests/{id})
+RequestStatus = Literal["pending", "approved", "rejected"]
+
+
+class RequestIn(BaseModel):
+    farm_id: str
+    requested_m3: float = Field(gt=0, le=100000)
+    date: date_type  # ISO date of the day the water is wanted
+
+
+class RequestPatch(BaseModel):
+    status: Literal["approved", "rejected"]
+
+
+class WaterRequest(BaseModel):
+    id: str  # REQ-001, REQ-002, ...
+    farm_id: str
+    requested_m3: float
+    date: date_type
+    status: RequestStatus
+    created_at: str  # ISO datetime

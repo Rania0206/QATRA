@@ -502,3 +502,21 @@ export interface BusinessReport extends BusinessView {
   assumptions: SavingsAssumption[];
   warnings: string[];
 }
+
+/** POST /api/requests, GET /api/requests?status=, PATCH /api/requests/{id} */
+export type RequestStatus = "pending" | "approved" | "rejected";
+
+export interface WaterRequest {
+  id: string; // REQ-001, ...
+  farm_id: string;
+  requested_m3: number;
+  date: string; // ISO date the water is wanted
+  status: RequestStatus;
+  created_at: string; // ISO datetime
+}
+
+export interface RequestIn {
+  farm_id: string;
+  requested_m3: number; // > 0
+  date: string;
+}
