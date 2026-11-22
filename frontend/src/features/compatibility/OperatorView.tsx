@@ -76,7 +76,12 @@ export default function OperatorView() {
             <p className="mt-6 font-display text-[26px] leading-snug">
               {ORDER.map((d, i) => (
                 <span key={d}>
-                  {i > 0 && <span className="mx-2">·</span>}
+                  {i > 0 && (
+                    <>
+                      <span className="mx-2">·</span>
+                      <wbr /> {/* a place to break the line on a phone */}
+                    </>
+                  )}
                   <span className="whitespace-nowrap">
                     {counts[d]} {i === 0 ? `${T.farms[lang]} ` : ""}
                     {DECISION[d].legend[lang]}

@@ -98,6 +98,15 @@ def _num(text) -> Optional[float]:
         return None
 
 
+def _source_name(df, row_id: str) -> str:
+    """The CSV writes "idem" when a row has the same source as the row above: show the real source (same rule as routers/meta.py)."""
+    ids = list(df["id"])
+    i = ids.index(row_id)
+    while i > 0 and str(df.iloc[i]["source_name"]).strip().lower().startswith("idem"):
+        i -= 1
+    return str(df.iloc[i]["source_name"])
+
+
 def _territory() -> list[TerritoryFigure]:
     wanted = {  # id -> (key, label)
         "CF10": ("equipped_ha", "Treated-wastewater perimeters, equipped area (Tunisia)"),
@@ -122,8 +131,8 @@ def _territory() -> list[TerritoryFigure]:
         if str(r["publication_date"]).upper() == "TO_VERIFY":
             note = "; ".join(x for x in (note, "publication date to verify") if x)
         out.append(TerritoryFigure(id=fid, key=key, label=label, value=v, unit=str(r["unit"]), period=str(r["period"]),
-                                   source=str(r["source_name"]), source_url=str(r["source_url"]), note=note or None,
-                                   tag=Tag(status="REPORTED", source=f"context_figures.csv {fid}: {r['source_name']}")))
+                                   source=_source_name(df, fid), source_url=str(r["source_url"]), note=note or None,
+                                   tag=Tag(status="REPORTED", source=f"context_figures.csv {fid}: {_source_name(df, fid)}")))
     return out
 
 

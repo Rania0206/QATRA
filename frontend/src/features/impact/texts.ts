@@ -24,7 +24,7 @@ export const Im = {
   energy: { en: "Energy", fr: "Énergie", ar: "الطاقة" },
   money: { en: "Money", fr: "Argent", ar: "المال" },
   treated: { en: "Treated water used", fr: "Eau traitée utilisée", ar: "الماء المعالَج المستعمل" },
-  well: { en: "Well water replaced", fr: "Eau de puits remplacée", ar: "ماء الآبار المعوَّض" },
+  well: { en: "Fresh water replaced", fr: "Eau douce remplacée", ar: "الماء العذب المعوَّض" },
   kwh: { en: "Pumping electricity saved on wells", fr: "Électricité de pompage économisée sur les puits", ar: "كهرباء الضخ الموفَّرة من الآبار" },
   solar: { en: "Solar share of the treated-water pumping", fr: "Part du solaire dans le pompage de l'eau traitée", ar: "حصة الطاقة الشمسية في ضخ الماء المعالَج" },
   farmers: { en: "Farmers save", fr: "Les agriculteurs économisent", ar: "الفلاحون يوفّرون" },
@@ -45,9 +45,9 @@ export const Im = {
     ar: "أرقام التوسّع غير متاحة حاليًا.",
   },
   noGrowWater: {
-    en: "Treated water used at scale is not shown: the data gives only the well water replaced.",
-    fr: "L'eau traitée utilisée à grande échelle n'est pas affichée : les données ne donnent que l'eau de puits remplacée.",
-    ar: "لا يُعرض الماء المعالَج المستعمل على النطاق الواسع: تعطي البيانات فقط ماء الآبار المعوَّض.",
+    en: "Treated water used at scale is not shown: the data gives only the fresh water replaced.",
+    fr: "L'eau traitée utilisée à grande échelle n'est pas affichée : les données ne donnent que l'eau douce remplacée.",
+    ar: "لا يُعرض الماء المعالَج المستعمل على النطاق الواسع: تعطي البيانات فقط الماء العذب المعوَّض.",
   },
   m3: { en: "m³", fr: "m³", ar: "م³" },
   tnd: { en: "TND", fr: "TND", ar: "TND" },
@@ -58,14 +58,14 @@ export const Im = {
 /** Values under 100 keep one decimal, larger ones are rounded (97.2 TND, 14,585 TND). */
 export const nf = (v: number, lang: Lang) => fmtN(v, lang, Math.abs(v) < 100 ? 1 : 0);
 
-/** The headline, generated from the response: "In our pilot, 10 farms save about 97 TND a day and replace 788 m³ of well water." */
+/** The headline, generated from the response: "In our pilot, 10 farms save about 97 TND a day and replace 799.3 m³ of fresh water." */
 export const headline = (farms: number, tndPerDay: number, wellM3PerDay: number, lang: Lang) => {
   const t = fmtN(tndPerDay, lang, 0);
   const w = fmtN(wellM3PerDay, lang, 1); // 799.3, the same as the Allocation and Savings screens
   return {
-    en: `In our pilot, ${farms} farms save about ${t} TND a day and replace ${w} m³ of well water.`,
-    fr: `Dans notre pilote, ${farms} fermes économisent environ ${t} TND par jour et remplacent ${w} m³ d'eau de puits.`,
-    ar: `في مشروعنا التجريبي، توفّر ${farms} مزارع حوالي ${t} TND في اليوم وتعوّض ${w} م³ من ماء الآبار.`,
+    en: `In our pilot, ${farms} farms save about ${t} TND a day and replace ${w} m³ of fresh water.`,
+    fr: `Dans notre pilote, ${farms} fermes économisent environ ${t} TND par jour et remplacent ${w} m³ d'eau douce.`,
+    ar: `في مشروعنا التجريبي، توفّر ${farms} مزارع حوالي ${t} TND في اليوم وتعوّض ${w} م³ من الماء العذب.`,
   }[lang];
 };
 

@@ -5,7 +5,7 @@ import type { SavingsReport } from "./api/types";
  * Impact, Business (its "Our pilot" case) and the totals on Savings and Allocation all read these figures, so they agree.
  *
  * - m3: the treated water used. The allocator counts every m3 of treated water as a m3 of fresh water not taken
- *   (plan.fresh_replaced_m3), so "well water replaced" is the same number (799.3 m3 a day), the farm on the network included.
+ *   (plan.fresh_replaced_m3), so "fresh water replaced" is the same number (799.3 m3 a day), the farm on the network included.
  * - kwh: pumping electricity saved on the farms' own wells = sum of the farms' well_kwh_saved.
  * - money: the day, season and year totals of the savings report (the season is the day repeated for the irrigation days).
  * Nothing here is rounded: round only when a number is displayed.

@@ -18,6 +18,7 @@ export const Sx = {
   open: { en: "open source", fr: "ouvrir la source", ar: "فتح المصدر" },
   noLink: { en: "no public link", fr: "pas de lien public", ar: "لا يوجد رابط عام" },
   year: { en: "Year", fr: "Année", ar: "السنة" },
+  source: { en: "Source", fr: "Source", ar: "المصدر" },
   provider: { en: "Provider", fr: "Fournisseur", ar: "الجهة" },
   published: { en: "Published", fr: "Publié", ar: "نُشر" },
   // legend

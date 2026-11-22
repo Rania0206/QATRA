@@ -9,7 +9,7 @@ export const useBusiness = (): ApiState<BusinessReport> => useApi<BusinessReport
 export interface Projection {
   farmers: number; // TND per year, what farmers keep
   qatra: number; // TND per year, QATRA's share (10% of the saving)
-  water: number; // m3 per year of well water not pumped
+  water: number; // m3 per year of fresh water replaced
   kwh: number; // kWh per year of pumping electricity saved
 }
 
