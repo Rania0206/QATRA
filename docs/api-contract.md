@@ -39,7 +39,7 @@ Conventions used in mocks (free strings, agree before adding values):
 | # | Method | Path | Owner | Request | Response | Mock |
 |---|---|---|---|---|---|---|
 | 1 | GET | `/api/health` | `main.py` | – | `{status, datasets: {name: rows}, errors}` | `health.json` |
-| 2 | GET | `/api/meta/sources` | `meta` | – | `[{id, title, file, status, source_name, source_url}]` | `meta_sources.json` |
+| 2 | GET | `/api/meta/sources` | `meta` | – | `{sources: [{id, title, file, status, source_name, source_url}], safe_figures: [{id, label, value, unit, definition, status, source_name, source_url, as_of}]}`: `sources` = the 64 catalogue rows (status is the catalogue's own text, `source_url` null when there is none); `safe_figures` = exactly the 5 figures of `data/README.md` section 4 (SF1 318 Mm³ produced, SF2 11.3 Mm³ in agriculture 2024, SF3 7,819 ha equipped, SF4 Water 2050 targets = PROJECTION, SF5 summer 2026 +2.9 °C), values read from `context_figures.csv`, each with its own definition. 22 % (all uses), 4 % (agriculture) and <10 % are not merged into them; the Court of Auditors 61 % (audit 2008-2011, published May 2014) is left out | `meta_sources.json` |
 | 3 | GET | `/api/map/layers` | `plants` | – | `{layers: [{id, label, tag, features: [{id, name, lat, lon, ...}]}]}` | `map_layers.json` |
 | 4 | GET | `/api/plants` | `plants` | – | `[{id, name, governorate, serves_perimeter, treatment_level, capacity_m3_d, lat, lon, tag}]` | `plants.json` |
 | 5 | GET | `/api/batches` | `batches` | – | `Batch[]` | `batches.json` |

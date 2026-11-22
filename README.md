@@ -63,6 +63,7 @@ _Last updated: 2026-11-22. Updated by whoever merges into `dev`; keep it current
 | Task | Owner | State |
 |---|---|---|
 | B-08a, B-08b, B-08c | Dev B | Messages to the farmers: `engine/messages.py` (templates allocated, conditional, capped, blocked in French and Tunisian Arabic, saving line from Dev A's savings engine), `GET /api/messages`, the Messages tab (phone mockup, farm selector, FR / AR toggle, passport link, quick replies 1 / 2), and the answers: `POST /api/messages/reply` reads 1 accept, 2 refuse, 3 postpone, 4 call me; a refusal runs Dev A's allocator again without that farm and stores the new plan (`GET /api/allocation/current`). The Arabic waits for a Tunisian speaker (`docs/messages-templates.md`). Branch `feature/B-08-messages` |
+| B-10a, B-10b | Dev B | `GET /api/meta/sources` (`routers/meta.py`): the 64 catalogue rows plus `safe_figures`, the 5 figures of `data/README.md` section 4 (318 Mm³, 11.3 Mm³ = 3.8 % in 2024, 7,819 / 2,778 ha, Water 2050 targets as PROJECTION, +2.9 °C), values read from `context_figures.csv`, one definition each (22 % / 4 % / <10 % kept apart, Court of Auditors 61 % left out). Branch `feature/B-10-meta-sources` | The Public tab (B-10b) shows 5 large aggregated numbers from `/api/impact` (fresh water replaced, treated water allocated, solar share, farms served, batches blocked; each with its status chip, no farm name or phone number) and a Sources screen listing the 5 safe figures with definition, status, date and link. `/api/impact` is still an empty stub on the real server (the tab works in mock mode).
 
 ### Not done yet
 
@@ -71,12 +72,12 @@ _Last updated: 2026-11-22. Updated by whoever merges into `dev`; keep it current
 | Allocation tab | Next. The API exists (`POST /api/allocate`), the tab is still a placeholder |
 | A-05 solar threshold | Open point for Dev A: the pump schedule calls solar only if PV ≥ the full pump power (44.6 kW); the 60 kWp array peaks at 44.3 kW on the heatwave day, so it plans 7 % solar there (`SOLAR_MIN_FRACTION`). The heatwave model uses a pump power proportional to its flow |
 | Supply forecast (cut from the MVP), risk score (A-08), anomalies, impact, messages, requests, territory, LLM explain | Router stubs. The Impact tab only shows a small example |
-| Allocation, Savings, Public, Territory tabs | Placeholders. The Savings API exists (`POST /api/savings`), the business view (A-14c) does not |
+| Territory tab (Allocation and Savings are built by Dev A, Public by Dev B) | Placeholder. The Savings API exists (`POST /api/savings`), the business view (A-14c) does not |
 | Passport `destinations` | Still empty: it can now be filled from `POST /api/allocate` (A-05) |
 | Map: the version with all farms coloured by decision (B-02b) | Not merged: `dev` deliberately shows only the farmer's own farm. The code is in git history (`b733d53`, branch `feature/B-02b-map-farms`) |
 | Map and Soil texts | English, French and Arabic. Passport page: English only |
 
-Tests: 316 backend tests with the messages branch (`pytest`), frontend build (`npm run build`) passes.
+Tests: 321 backend tests with the sources branch (`pytest`), frontend build (`npm run build`) passes.
 
 Formulas below are labelled **Implemented** (in code today), **Data pipeline** (computed by a script to produce a dataset), or **Planned** (design agreed, not coded yet).
 
