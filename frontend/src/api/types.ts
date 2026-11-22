@@ -103,6 +103,7 @@ export interface ScheduleSlot {
 
 export interface Allocation {
   batch_id: string;
+  date?: string; // the day the plan is for, YYYY-MM-DD
   items: AllocationItem[];
   schedule: ScheduleSlot[];
   energy_kwh: number;

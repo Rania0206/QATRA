@@ -13,15 +13,15 @@ const business = read("business.json");
 const alloc = read("post_allocate.json");
 const p = pilotFigures(savings);
 
-test("the pilot totals are the Savings figures: 799.3 m3, 97.23 TND a day, 14,585 TND a season", () => {
+test("the pilot totals are the Savings figures: 392.8 m3, 45.43 TND a day, 6,815 TND a season", () => {
   assert.equal(p.farms, 10);
   assert.equal(p.days, 150);
-  assert.equal(p.m3.day, 799.3);
-  assert.equal(Math.round(p.m3.season), 119895);
-  assert.equal(p.farmers.day, 97.23);
-  assert.equal(Math.round(p.farmers.season), 14585);
-  assert.equal(p.qatra.day, 10.8);
-  assert.equal(Math.round(p.qatra.season), 1620);
+  assert.equal(p.m3.day, 392.8);
+  assert.equal(Math.round(p.m3.season), 58920);
+  assert.equal(p.farmers.day, 45.43);
+  assert.equal(Math.round(p.farmers.season), 6815);
+  assert.equal(p.qatra.day, 5.04);
+  assert.equal(Math.round(p.qatra.season), 756);
 });
 
 test("Allocation shows the same water (every m3 of treated water replaces fresh water)", () => {
@@ -40,14 +40,14 @@ test("season = day x irrigation days, year = season x seasons per year (nothing 
 test("Business per-hectare figures agree with the pilot totals to within their own rounding", () => {
   const ha = business.pilot.pilot_ha;
   const perHaFarmers = business.pilot.farmers_net_tnd_per_ha_season * ha;
-  assert.ok(Math.abs(perHaFarmers - p.farmers.season) < 1, `${perHaFarmers} vs ${p.farmers.season}`); // 14,584.4 vs 14,584.5
+  assert.ok(Math.abs(perHaFarmers - p.farmers.season) < 1, `${perHaFarmers} vs ${p.farmers.season}`); // 6,814.4 vs 6,814.5
   assert.ok(Math.abs(business.pilot.qatra_fee_tnd_per_ha_season * ha - p.qatra.season) < 1);
   const perHaKwh = business.pilot.electricity_saved_kwh_per_ha_season * ha;
   assert.ok(Math.abs(perHaKwh - p.kwh.season) < 1, `${perHaKwh} vs ${p.kwh.season}`);
 });
 
 test("per-hectare well water counts only farms with their own well; the pilot total counts all treated water", () => {
-  // Business: 118,200 m3/season (well farms). Savings/Allocation: 119,895 (all farms). The gap is the network farm (H, 11.3 m3 a day).
+  // Business: 57,285 m3/season (well farms). Savings/Allocation: 58,920 (all farms). The gap is the network farm (H, 10.9 m3 a day).
   const perHa = business.pilot.well_water_replaced_m3_per_ha_season * business.pilot.pilot_ha;
   const network = savings.items.filter((i) => i.farm_id === "H").reduce((s, i) => s + i.m3, 0) * p.days;
   assert.ok(Math.abs(p.m3.season - perHa - network) < 5, `${p.m3.season} - ${perHa} vs ${network}`);

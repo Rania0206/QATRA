@@ -122,14 +122,11 @@ def pv_kw(day: str, kwp: float) -> list[float]:
 # ---------------------------------------------------------------- demand
 def growing_farms(day: str) -> list[dict]:
     """Demo farms that need irrigation on `day`: crop in season for the month, not forbidden for treated water."""
-    month = int(day[5:7])
     out = []
     for _, f in get_store()["sim_farms"].iterrows():
         crop = str(f["crop"])
         kc = needs.kc_for(crop, day)
-        if kc is None or crop not in soil_inputs.CROP_SEASON_MONTHS or soil_inputs._blocked_reason(crop) is not None:
-            continue
-        if month not in soil_inputs._months(soil_inputs.CROP_SEASON_MONTHS[crop]):
+        if not needs.is_growing(crop, day) or soil_inputs._blocked_reason(crop) is not None:  # one calendar: engine/needs.CROP_CALENDAR
             continue
         out.append({"farm_id": str(f["farm_id"]), "crop": crop, "area_ha": float(f["area_ha"]), "kc": float(kc)})
     return out
@@ -380,7 +377,7 @@ def run_scenario(scenario_id: str, date: Optional[str] = None) -> dict:
     warnings.append(CAVEAT)
     schedule = [{"hour": r["hour"], "pump_kw": r["pump_kw"], "source": r["source"], "basin_m3": r["basin_m3"]} for r in qatra["hourly"]]
     items = [{"farm_id": i.farm_id, "status": i.status, "m3": i.m3, "cap_reason": i.cap_reason} for i in plan.items]
-    allocation = {"batch_id": sc["batch_id"], "items": items, "schedule": schedule,
+    allocation = {"batch_id": sc["batch_id"], "date": day, "items": items, "schedule": schedule,
                   "energy_kwh": round(qatra["solar_kwh"] + qatra["grid_kwh"], 1), "solar_share": qatra["solar_share"],
                   "fresh_replaced_m3": qatra["delivered_m3"], "warnings": warnings}
     return {"scenario_id": sc["id"], "label": sc["label"], "date": day, "dates": outage_dates(),

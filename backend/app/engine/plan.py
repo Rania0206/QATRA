@@ -2,12 +2,13 @@
 
 Simple, readable rules (no optimiser, no ML), applied in this order, per farm:
   1. Legal status (engine/rules.evaluate): a BLOCKED farm gets 0 m3 (its status is kept for display).
-  2. Need: engine/needs.daily_need(farm, date).need_m3.
-  3. CONDITIONAL farms are capped by the soil salinity model (engine/soil.cap_volume).
+  2. Need: engine/needs.daily_need(farm, date).need_m3 (0 when the crop is not growing that month: needs.CROP_CALENDAR).
+  3. EVERY farm that is not blocked is capped by the soil salinity model (engine/soil.cap_volume; the ratio is 1.0
+     when salinity does not bind, so only the farms the model limits are reduced).
   4. Anti-rebound (always on): never more than the farm already takes from its own well / network that day.
   5. Sharing: if all capped needs fit in the batch, everybody gets them; otherwise the batch is shared
      in proportion to the capped needs.
-  6. Whatever is left stays in the basin (a warning says how much).
+  6. Whatever is left is not sent today and stays at the plant (a warning says how much).
 
 DATE NOTE (demo data): the demo batches are dated July 2026, but the weather forecast in the data pack starts on
 21 Nov 2026. The allocation date therefore defaults to the first forecast day and does NOT have to match the batch
@@ -50,7 +51,7 @@ class PlanItem(AllocationItem):
 
 
 class Plan(BaseModel):
-    date: str
+    date: str  # the day the plan is for (YYYY-MM-DD)
     batch_id: str
     batch_volume_m3: float
     items: list[PlanItem]
@@ -71,9 +72,8 @@ def _batch_ec(batch: Batch) -> Optional[float]:
 
 
 def _soil_cap(farm: Farm, need_m3: float, ecw: Optional[float], warnings: list[str]) -> tuple[float, Optional[str]]:
-    """Daily volume a conditional farm may take without pushing its soil over the crop's salt threshold."""
-    if ecw is None:
-        warnings.append(f"Farm {farm.id}: batch EC unknown, soil cap not applied.")
+    """Daily volume a farm may take without pushing its soil over the crop's salt threshold (need_m3 if it does not bind)."""
+    if ecw is None:  # the batch-level warning is added once in allocate()
         return need_m3, None
     try:
         cap = soil.cap_volume(
@@ -116,6 +116,9 @@ def allocate(batch: Batch, date: Optional[str] = None, options: Optional[Allocat
     elif batch.status == "non_compliant":
         warnings.append(f"Batch {batch.id}: a measured value is above an NT 106.03 limit, so no farm can receive it.")
 
+    if ecw is None and batch.analysis_status == "valid" and batch.status != "non_compliant":
+        warnings.append(f"Batch {batch.id}: no EC value in the analysis, soil cap not applied.")
+
     rows = []  # one dict per farm: the working
     sources: set[str] = set()
     for farm in farms:
@@ -128,14 +131,14 @@ def allocate(batch: Batch, date: Optional[str] = None, options: Optional[Allocat
             warnings.append(f"Farm {farm.id}: no weather for {day}, need taken as 0.")
         elif n.need_m3 is None:
             warnings.append(f"Farm {farm.id}: crop {farm.crop} has no Kc, need taken as 0.")
+        elif n.kc == 0 and ev["status"] != "blocked":
+            warnings.append(f"Farm {farm.id}: its crop is not growing this month, so no water is needed.")
 
         reason: Optional[str] = None
         if ev["status"] == "blocked":
             capped, reason = 0.0, _blocked_reason(ev["results"])
         else:
-            capped = need
-            if ev["status"] == "conditional":  # 3. soil cap
-                capped, reason = _soil_cap(farm, need, ecw, warnings)
+            capped, reason = (need, None) if need <= 0 else _soil_cap(farm, need, ecw, warnings)  # 3. soil cap, every farm
             well_per_day = farm.fresh_m3_season / SEASON_DAYS  # 4. anti-rebound
             if capped > well_per_day:
                 capped, reason = well_per_day, f"anti-rebound: not more than the {well_per_day:.1f} m3/day already taken from the {farm.fresh_source}"
@@ -165,8 +168,11 @@ def allocate(batch: Batch, date: Optional[str] = None, options: Optional[Allocat
 
     total = round(sum(i.m3 for i in items), 1)
     leftover = round(batch.volume_m3 - total, 1)
-    if leftover > max(1.0, STEP * len(items)):  # 6. leftover (rounding down loses up to 0.1 m3 per farm: not worth a warning)
-        warnings.append(f"{leftover:g} m3 not allocated: kept in the basin.")
+    if batch.analysis_status != "valid" or batch.status == "non_compliant":  # 6. a batch that cannot be reused sends nothing
+        why = f"analysis {batch.analysis_status}" if batch.analysis_status != "valid" else "not compliant"
+        warnings.append(f"This batch cannot be reused ({why}): nothing is sent.")
+    elif leftover > max(1.0, STEP * len(items)):  # leftover (rounding down loses up to 0.1 m3 per farm: not worth a warning)
+        warnings.append(f"{leftover:g} m3 not sent today: stays at the plant.")
     return Plan(date=day, batch_id=batch.id, batch_volume_m3=batch.volume_m3, items=items,
                 total_allocated_m3=total, fresh_replaced_m3=total, warnings=warnings)
 
@@ -185,6 +191,7 @@ def plan(batch_id: Optional[str] = None, date: Optional[str] = None, scenario: S
     s = schedule(p.total_allocated_m3, p.date, scenario)
     return Allocation(
         batch_id=batch.id,
+        date=p.date or None,
         items=[AllocationItem(farm_id=i.farm_id, status=i.status, m3=i.m3, cap_reason=i.cap_reason) for i in p.items],
         schedule=s.slots,
         energy_kwh=s.energy_kwh,

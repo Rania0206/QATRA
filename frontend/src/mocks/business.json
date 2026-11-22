@@ -2,11 +2,11 @@
   "area_name": "Zaouiet-Sousse (Sousse Sud)",
   "area_ha": 257.0,
   "farms": 10,
-  "total_saving_tnd": 119368.79,
+  "total_saving_tnd": 55774.14,
   "qatra_share_pct": 10.0,
-  "qatra_revenue_tnd": 13258.63,
-  "steg_kwh_avoided": 358515.0,
-  "steg_value_tnd": 163590.39,
+  "qatra_revenue_tnd": 6188.56,
+  "steg_kwh_avoided": 165261.3,
+  "steg_value_tnd": 75408.73,
   "national_areas": 36,
   "tag": {
     "status": "PROJECTION",
@@ -22,11 +22,11 @@
     "pilot_ha": 31.4,
     "irrigation_days": 150.0,
     "seasons_per_year": 1.0,
-    "farmers_net_tnd_per_ha_season": 464.47,
-    "qatra_fee_tnd_per_ha_season": 51.59,
-    "well_water_replaced_m3_per_ha_season": 3764.33,
-    "electricity_saved_kwh_per_ha_season": 1395.0,
-    "nitrogen_kg_per_ha_season": 125.21,
+    "farmers_net_tnd_per_ha_season": 217.02,
+    "qatra_fee_tnd_per_ha_season": 24.08,
+    "well_water_replaced_m3_per_ha_season": 1824.36,
+    "electricity_saved_kwh_per_ha_season": 643.04,
+    "nitrogen_kg_per_ha_season": 61.58,
     "tag": {
       "status": "PROJECTION",
       "source": "default plan of 2026-11-21 x 150 irrigation days"
@@ -105,11 +105,11 @@
         "source": "areas of the demo farms (data/simulated/sim_farms)"
       },
       "adoption_rate": 1.0,
-      "farmers_saving_tnd_per_year": 14584.36,
-      "qatra_revenue_tnd_per_year": 1619.93,
-      "well_water_saved_m3_per_year": 118200.0,
-      "electricity_saved_kwh_per_year": 43803.0,
-      "nitrogen_kg_per_year": 3931.6,
+      "farmers_saving_tnd_per_year": 6814.43,
+      "qatra_revenue_tnd_per_year": 756.11,
+      "well_water_saved_m3_per_year": 57284.9,
+      "electricity_saved_kwh_per_year": 20191.5,
+      "nitrogen_kg_per_year": 1933.6,
       "tag": {
         "status": "PROJECTION",
         "source": "pilot saving per hectare x hectares x adoption rate (same saving per hectare as the pilot)"
@@ -125,11 +125,11 @@
         "source": "round number chosen for the demo"
       },
       "adoption_rate": 1.0,
-      "farmers_saving_tnd_per_year": 46447.0,
-      "qatra_revenue_tnd_per_year": 5159.0,
-      "well_water_saved_m3_per_year": 376433.0,
-      "electricity_saved_kwh_per_year": 139500.0,
-      "nitrogen_kg_per_year": 12521.0,
+      "farmers_saving_tnd_per_year": 21702.0,
+      "qatra_revenue_tnd_per_year": 2408.0,
+      "well_water_saved_m3_per_year": 182436.0,
+      "electricity_saved_kwh_per_year": 64304.0,
+      "nitrogen_kg_per_year": 6158.0,
       "tag": {
         "status": "PROJECTION",
         "source": "pilot saving per hectare x hectares x adoption rate (same saving per hectare as the pilot)"
@@ -145,11 +145,11 @@
         "source": "round number chosen for the demo"
       },
       "adoption_rate": 1.0,
-      "farmers_saving_tnd_per_year": 464470.0,
-      "qatra_revenue_tnd_per_year": 51590.0,
-      "well_water_saved_m3_per_year": 3764330.0,
-      "electricity_saved_kwh_per_year": 1395000.0,
-      "nitrogen_kg_per_year": 125210.0,
+      "farmers_saving_tnd_per_year": 217020.0,
+      "qatra_revenue_tnd_per_year": 24080.0,
+      "well_water_saved_m3_per_year": 1824360.0,
+      "electricity_saved_kwh_per_year": 643040.0,
+      "nitrogen_kg_per_year": 61580.0,
       "tag": {
         "status": "PROJECTION",
         "source": "pilot saving per hectare x hectares x adoption rate (same saving per hectare as the pilot)"
@@ -165,11 +165,11 @@
         "source": "context_figures.csv CF31: Agridata / data.gov.tn"
       },
       "adoption_rate": 1.0,
-      "farmers_saving_tnd_per_year": 119368.79,
-      "qatra_revenue_tnd_per_year": 13258.63,
-      "well_water_saved_m3_per_year": 967432.8,
-      "electricity_saved_kwh_per_year": 358515.0,
-      "nitrogen_kg_per_year": 32179.0,
+      "farmers_saving_tnd_per_year": 55774.14,
+      "qatra_revenue_tnd_per_year": 6188.56,
+      "well_water_saved_m3_per_year": 468860.5,
+      "electricity_saved_kwh_per_year": 165261.3,
+      "nitrogen_kg_per_year": 15826.1,
       "tag": {
         "status": "PROJECTION",
         "source": "pilot saving per hectare x hectares x adoption rate (same saving per hectare as the pilot)"
@@ -185,11 +185,11 @@
         "source": "context_figures.csv CF11: authorities cited by L'Economiste Maghrebin"
       },
       "adoption_rate": 1.0,
-      "farmers_saving_tnd_per_year": 1290297.66,
-      "qatra_revenue_tnd_per_year": 143317.02,
-      "well_water_saved_m3_per_year": 10457308.7,
-      "electricity_saved_kwh_per_year": 3875310.0,
-      "nitrogen_kg_per_year": 347833.4,
+      "farmers_saving_tnd_per_year": 602881.56,
+      "qatra_revenue_tnd_per_year": 66894.24,
+      "well_water_saved_m3_per_year": 5068072.1,
+      "electricity_saved_kwh_per_year": 1786365.1,
+      "nitrogen_kg_per_year": 171069.2,
       "tag": {
         "status": "PROJECTION",
         "source": "pilot saving per hectare x hectares x adoption rate (same saving per hectare as the pilot)"
@@ -205,11 +205,11 @@
         "source": "context_figures.csv CF10: L'Economiste Maghrebin 2026-09-02"
       },
       "adoption_rate": 1.0,
-      "farmers_saving_tnd_per_year": 3631690.93,
-      "qatra_revenue_tnd_per_year": 403382.21,
-      "well_water_saved_m3_per_year": 29433296.3,
-      "electricity_saved_kwh_per_year": 10907505.0,
-      "nitrogen_kg_per_year": 979017.0,
+      "farmers_saving_tnd_per_year": 1696879.38,
+      "qatra_revenue_tnd_per_year": 188281.52,
+      "well_water_saved_m3_per_year": 14264670.8,
+      "electricity_saved_kwh_per_year": 5027929.8,
+      "nitrogen_kg_per_year": 481494.0,
       "tag": {
         "status": "PROJECTION",
         "source": "pilot saving per hectare x hectares x adoption rate (same saving per hectare as the pilot)"
@@ -296,7 +296,7 @@
     },
     {
       "name": "saving_per_hectare",
-      "value": 464.47,
+      "value": 217.02,
       "unit": "TND/ha/season",
       "source": "same saving per hectare as the pilot (crop mix, water and well depths of the pilot farms)",
       "status": "PROJECTION"
