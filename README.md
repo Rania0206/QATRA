@@ -53,18 +53,26 @@ _Last updated: 2026-11-22. Updated by whoever merges into `dev`; keep it current
 | B-04 | Dev B | Soil tab: chart, year slider with Play, summary cards, blocked-by-law state |
 | B-12 | Dev B | `GET /api/batches/{id}/passport` (quality summary, analysis checks, crops, timeline), passport page `/passport/{id}` for phones, reusable `<PassportQR>`, LAN scripts |
 
+### In progress (on a branch, not merged yet)
+
+| Task | Owner | State |
+|---|---|---|
+| B-05a | Dev B | Heatwave engine `engine/heatwave.py`: the naive policy on the 2026-08-26 heatwave with a 13:00-17:00 grid outage (4 hours without water). Branch `feature/B-05-heatwave-engine` |
+| README | Dev B | Progress table and the soil, rules and passport formulas (branch `docs/readme-progress`) |
+
 ### Not done yet
 
 | Area | State |
 |---|---|
-| Needs forecast, supply, optimiser (allocation and pumping schedule), heatwave | Router stubs. The formulas marked *Planned* below describe the intended model |
+| Needs forecast, supply, optimiser (allocation and pumping schedule) | Router stubs. The formulas marked *Planned* below describe the intended model |
+| Heatwave: QATRA policy (basin and solar), `POST /api/scenarios/heatwave`, tab | Next (B-05b onwards). Only the naive run exists |
 | Risk score (A-08), anomalies, impact, messages, requests, territory, LLM explain | Router stubs. The Impact tab only shows a small example |
 | Allocation, Savings, Heatwave, Messages, Public, Territory tabs | Placeholders |
 | Passport `destinations` | Empty until the allocation exists |
 | Map: the version with all farms coloured by decision (B-02b) | Not merged: `dev` deliberately shows only the farmer's own farm. The code is in git history (`b733d53`, branch `feature/B-02b-map-farms`) |
 | Map and Soil texts | English, French and Arabic. Passport page: English only |
 
-Tests: 143 backend tests (`pytest`), frontend build (`npm run build`) passes.
+Tests: 143 backend tests on `dev` (157 with the heatwave engine), frontend build (`npm run build`) passes.
 
 Formulas below are labelled **Implemented** (in code today), **Data pipeline** (computed by a script to produce a dataset), or **Planned** (design agreed, not coded yet).
 
@@ -402,6 +410,29 @@ Read from the existing engines and the regulation pack; nothing is invented.
 - **Colour**: `compliant` is green, `conditional` amber, `non_compliant` and `analysis_invalid` red, from the legal compliance of the batch until the risk model (A-08) exists.
 - **Crops**: allowed = the 21 June 1994 order (fruit trees only without sprinklers; olive and alfalfa flagged "to verify"); empty when the batch is red. Blocked = crops eaten raw (Art. 5) and direct grazing (Art. 6).
 - **QR code**: encodes `{page origin}/passport/{batch id}`.
+
+### 10. Heatwave and grid outage, naive policy — *Implemented, not merged* (B-05a: `engine/heatwave.py`)
+
+The naive policy irrigates straight from the grid on demand: **no storage basin and no solar shifting**. Hours are hour-start labels: hour 13 is 13:00 to 14:00, so the window 13:00-17:00 covers hours 13 to 16. Outage days come from `sim_outage_windows.csv` (hot days, based on Human Rights Watch Oct 2026; no official STEG schedule exists) and from the scenario file.
+
+**Irrigation demand profile** (ESTIMATE):
+
+```
+daily_m3   = ET0_day (mm) × Σ( Kc_mid × area_ha ) × 10 / 0.9       peak day: full ETc, no rain, 0.9 application efficiency
+per hour   = daily_m3 / 14   for hours 06:00-20:00, else 0           farmers irrigate during the working day
+```
+Only the demo farms that grow in the month of the day count (olive and alfalfa in August; winter cereals do not), and lettuce is excluded (forbidden for treated water). On 2026-08-26: ET0 = 7.88 mm, demand 971 m³, 69.4 m³ per hour.
+
+**Naive run** with transfer pump TP1 (150 m³/h, 44.6 kW, so 0.2973 kWh/m³):
+
+```
+delivered_m3 = 0                      during an outage hour (the pump cannot run)
+             = min(demand, 150)       otherwise
+grid_kw      = delivered_m3 × 0.2973
+unserved_m3  = demand − delivered
+hours_without_water = hours with demand > 0 and nothing delivered
+```
+Result on 2026-08-26: **4 hours without water** (13:00 to 17:00), 277.6 of 971.4 m³ unserved, 206 kWh from the grid. A day without outage (2026-07-08) gives 0. The result is tagged `SIMULATED` with the caveat "NASA POWER ~0.5 deg grid: coastal extremes smoothed" (local Tmax 44.0 °C against the national record of 49.7 °C).
 
 ---
 
