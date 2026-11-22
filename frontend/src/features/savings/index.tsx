@@ -74,29 +74,29 @@ function FarmerSavings() {
               <Skeleton className="h-32 w-full" />
             </div>
           ) : !item ? (
-            <p className="text-center text-[17px]">{S.noPlan[lang]}</p>
+            <p className="text-center text-[length:calc(17px*var(--fs))]">{S.noPlan[lang]}</p>
           ) : (
             <>
-              <article className="fade-up mx-auto w-full max-w-2xl border border-line bg-white">
-                <div className="space-y-8 px-5 py-7 sm:px-7">
+              <article className="fade-up mx-auto w-full max-w-3xl border border-line bg-white">
+                <div className="space-y-6 px-5 py-6 sm:px-7">
                   <header>
                     <p className="eyebrow">{S.yourFarm[lang]}</p>
                     <h2 className="mt-1 text-3xl sm:text-4xl">{farmTitle(farm)}</h2>
-                    <p className="mt-1 text-[16px] text-ink-soft">{farmSub(farm, lang)}</p>
+                    <p className="mt-1 text-[length:calc(16px*var(--fs))] text-ink-soft">{farmSub(farm, lang)}</p>
                   </header>
 
                   <section aria-live="polite">
-                    <p className="text-[18px]">{blocked ? S.blockedTitle[lang] : S.seasonLabel[lang]}</p>
-                    <p className="mt-1 font-display font-medium leading-none text-[64px] sm:text-[88px]">
+                    <p className="text-[length:calc(18px*var(--fs))]">{blocked ? S.blockedTitle[lang] : S.seasonLabel[lang]}</p>
+                    <p className="mt-1 font-display font-medium leading-none text-[length:calc(64px*var(--fs)*var(--fsn))] sm:text-[length:calc(88px*var(--fs)*var(--fsn))]">
                       <span dir="ltr">{blocked ? "0" : season(item.farmer_net_tnd)}</span>{" "}
                       <span className="text-[0.38em]">{S.tnd[lang]}</span>
                     </p>
                     {blocked ? (
-                      <p className="mt-3 text-[21px] leading-snug text-bad">
+                      <p className="mt-3 text-[length:calc(21px*var(--fs))] leading-snug text-bad">
                         {compat ? mainReason(compat.results, lang, farm.crop) : S.blockedGeneric[lang]}
                       </p>
                     ) : (
-                      <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-[17px]">
+                      <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-[length:calc(17px*var(--fs))]">
                         <Pill tone="neutral">{S.projection[lang]}</Pill>
                         <span>
                           {S.perDay[lang]} <span dir="ltr">{fmtMoney(item.farmer_net_tnd, lang)}</span> {S.tnd[lang]} {S.perDayEnd[lang]} ({S.estimate[lang]})
@@ -116,7 +116,7 @@ function FarmerSavings() {
                               key: "elec",
                               value: item.electricity_saved_tnd,
                               swatch: { background: SUN },
-                              label: <>{S.electricity[lang]}{item.electricity_saved_tnd === 0 && <span className="block text-[14px] text-ink-soft">{S.noElec[lang]}</span>}</>,
+                              label: <>{S.electricity[lang]}{item.electricity_saved_tnd === 0 && <span className="block text-[length:calc(14px*var(--fs))] text-ink-soft">{S.noElec[lang]}</span>}</>,
                               amount: `+${season(item.electricity_saved_tnd)} ${S.tnd[lang]}`,
                             },
                             {
@@ -132,7 +132,7 @@ function FarmerSavings() {
                               swatch: STRIPES,
                               label: (
                                 <>
-                                  {S.waterCost[lang]} <span className="text-[14px] text-ink-soft">({S.deduction[lang]})</span>
+                                  {S.waterCost[lang]} <span className="text-[length:calc(14px*var(--fs))] text-ink-soft">({S.deduction[lang]})</span>
                                 </>
                               ),
                               amount: `−${season(item.water_cost_tnd)} ${S.tnd[lang]}`,
@@ -141,26 +141,26 @@ function FarmerSavings() {
                           ]}
                         />
                       </div>
-                      <dl className="mt-2 space-y-1 text-[16px]">
+                      <dl className="mt-2 space-y-1 text-[length:calc(16px*var(--fs))]">
                         <div className="flex justify-between gap-4">
                           <dt>{S.before[lang]}</dt>
                           <dd dir="ltr">{season(item.net_saving_tnd)} {S.tnd[lang]}</dd>
                         </div>
                       </dl>
-                      <p className="mt-3 text-[17px] leading-snug">
+                      <p className="mt-3 text-[length:calc(17px*var(--fs))] leading-snug">
                         {{
                           en: `QATRA keeps ${fmtN(feePct, lang, 1)}% of the saving (${season(item.qatra_fee_tnd)} TND); you keep the rest: ${season(item.farmer_net_tnd)} TND.`,
                           fr: `QATRA garde ${fmtN(feePct, lang, 1)} % de l'économie (${season(item.qatra_fee_tnd)} TND) ; vous gardez le reste : ${season(item.farmer_net_tnd)} TND.`,
                           ar: `تحتفظ قطرة بـ ${fmtN(feePct, lang, 1)}% من الوفر (${season(item.qatra_fee_tnd)} TND)؛ وتحتفظ أنت بالباقي: ${season(item.farmer_net_tnd)} TND.`,
                         }[lang]}
                       </p>
-                      <p className="mt-2 text-[14px] text-ink-soft">
+                      <p className="mt-2 text-[length:calc(14px*var(--fs))] text-ink-soft">
                         {S.projection[lang]}: {S.honest1[lang]}
                       </p>
                     </section>
                   )}
 
-                  <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4 text-[15px]">
+                  <footer className="flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4 text-[length:calc(15px*var(--fs))]">
                     <span className="text-ink-soft">{S.privacy[lang]}</span>
                     <button type="button" onClick={change} className="link">
                       {S.change[lang]}
@@ -182,7 +182,7 @@ function FarmerSavings() {
                   <HowCalculated report={d.report} lang={lang} />
                 </>
               )}
-              {USE_MOCKS && blocked && <p className="mt-6 text-center text-[15px]">{S.mockNote[lang]}</p>}
+              {USE_MOCKS && blocked && <p className="mt-6 text-center text-[length:calc(15px*var(--fs))]">{S.mockNote[lang]}</p>}
               <DemoTag lang={lang} />
             </>
           )}

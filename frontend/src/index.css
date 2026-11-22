@@ -3,7 +3,23 @@
 @import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap");
 @import "tailwindcss";
 
+/* TEXT SIZE KNOB: 1 = the original sizes, 0.9 = 10 % smaller everywhere (every text size below and in the screens follows it) */
+:root {
+  --fs: 0.9;
+  --fsn: 0.85; /* extra factor for the big figures (text of 26 px and more in the screens) */
+  --ds: 0.85; /* size of the boxes: every Tailwind spacing step (padding, margin, gap, widths, heights) is multiplied by it */
+}
+
 @theme {
+  --spacing: calc(0.25rem * var(--ds));
+  --text-xl: calc(1.25rem * var(--fs));
+  --text-2xl: calc(1.5rem * var(--fs));
+  --text-3xl: calc(1.875rem * var(--fs));
+  --text-4xl: calc(2.25rem * var(--fs));
+  --text-5xl: calc(3rem * var(--fs));
+  --text-6xl: calc(3.75rem * var(--fs));
+  --text-7xl: calc(4.5rem * var(--fs));
+
   --font-display: "Fraunces", "IBM Plex Sans Arabic", Georgia, serif; /* titles; Arabic glyphs fall back to Plex Sans Arabic */
   --font-sans: "DM Sans", "IBM Plex Sans Arabic", system-ui, sans-serif;
 
@@ -39,7 +55,7 @@
     -webkit-tap-highlight-color: transparent;
     -webkit-text-size-adjust: 100%;
     font-family: var(--font-sans);
-    font-size: 17px;
+    font-size: calc(17px * var(--fs));
     line-height: 1.6;
     color: var(--color-ink);
     background: var(--color-cream);
@@ -85,7 +101,7 @@
     gap: 0.5rem;
     min-width: 12rem;
     padding: 0.85rem 2rem;
-    font-size: 16px;
+    font-size: calc(16px * var(--fs));
     border: 1px solid currentColor;
     background: transparent;
     transition: background-color 200ms ease, color 200ms ease;
@@ -106,7 +122,7 @@
     text-underline-offset: 4px;
   }
   .eyebrow {
-    font-size: 14px;
+    font-size: calc(14px * var(--fs));
     font-weight: 500;
     letter-spacing: 0.08em;
     text-transform: uppercase;

@@ -24,7 +24,7 @@ export default function FarmCodeForm({ onSubmit, notFound: startNotFound = false
 
   return (
     <form onSubmit={submit} className="fade-up mx-auto mt-10 flex max-w-md flex-col items-center gap-3">
-      <label htmlFor="farm-code" className="text-[17px]">
+      <label htmlFor="farm-code" className="text-[length:calc(17px*var(--fs))]">
         {FARM.codeLabel[lang]}
       </label>
       <div className="flex w-full gap-2">
@@ -38,7 +38,7 @@ export default function FarmCodeForm({ onSubmit, notFound: startNotFound = false
           autoComplete="off"
           maxLength={12}
           dir="ltr"
-          className="min-w-0 flex-1 border border-ink bg-cream px-4 py-3 text-center text-[20px] uppercase tracking-widest focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+          className="min-w-0 flex-1 border border-ink bg-cream px-4 py-3 text-center text-[length:calc(20px*var(--fs))] uppercase tracking-widest focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
           aria-invalid={notFound}
           aria-describedby="farm-code-hint"
         />
@@ -46,7 +46,7 @@ export default function FarmCodeForm({ onSubmit, notFound: startNotFound = false
           {FARM.see[lang]}
         </button>
       </div>
-      <p id="farm-code-hint" className={`text-[15px] ${notFound ? "font-medium text-bad" : ""}`}>
+      <p id="farm-code-hint" className={`text-[length:calc(15px*var(--fs))] ${notFound ? "font-medium text-bad" : ""}`}>
         {notFound ? FARM.notFound[lang] : FARM.codeHint[lang]}
       </p>
     </form>

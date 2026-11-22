@@ -20,7 +20,7 @@ function Big({ value, unit, label, tag }: { value: string; unit?: string; label:
         {value}
         {unit && <span className="ms-2 text-3xl">{unit}</span>}
       </p>
-      <p className="text-[18px]">{label}</p>
+      <p className="text-[length:calc(18px*var(--fs))]">{label}</p>
       <TagChip tag={tag} showSource={false} />
     </div>
   );
@@ -33,8 +33,8 @@ function Figure({ f, lang }: { f: SafeFigure; lang: "en" | "fr" | "ar" }) {
       <p dir="ltr" className="mt-1 font-display text-4xl tabular-nums">
         {f.value} <span className="text-2xl">{unitText(f.unit)}</span>
       </p>
-      <p className="mt-2 text-[17px]">{f.definition}</p>
-      <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-[16px]">
+      <p className="mt-2 text-[length:calc(17px*var(--fs))]">{f.definition}</p>
+      <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-[length:calc(16px*var(--fs))]">
         <TagChip tag={{ status: f.status as "REPORTED" | "PROJECTION" }} />
         <span className="text-ink-soft">
           {PB.as_of[lang]} {fmtDateL(f.as_of, lang)}

@@ -14,7 +14,7 @@ const PRESETS = ["pilot", "ha-100", "ha-1000", "irrigated", "equipped"] as const
 type Choice = (typeof PRESETS)[number] | "custom";
 
 const btn = (on: boolean) =>
-  `border border-ink px-3 py-2 text-[16px] transition-colors duration-200 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink ${
+  `border border-ink px-3 py-2 text-[length:calc(16px*var(--fs))] transition-colors duration-200 focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink ${
     on ? "bg-ink text-cream" : "hover:bg-ink/10"
   }`;
 
@@ -67,13 +67,13 @@ export default function BusinessTab() {
       <Band tone="olive" className="md:py-20">
         <Intro as="h1" eyebrow={Bz.eyebrow[lang]} title={d ? headline(selectedHa, lang) : Bz.eyebrow[lang]}>
           <p>{Bz.lead[lang]}</p>
-          {d && <p className="mt-4 text-[16px]">{inPractice(adoptionPct, selectedHa * adoption, lang)}</p>}
+          {d && <p className="mt-4 text-[length:calc(16px*var(--fs))]">{inPractice(adoptionPct, selectedHa * adoption, lang)}</p>}
         </Intro>
       </Band>
 
       <Band tone="cream" wide>
         <div className="mx-auto max-w-4xl">
-          {USE_MOCKS && <p className="mb-6 text-center text-[15px]">{Bz.mockNote[lang]}</p>}
+          {USE_MOCKS && <p className="mb-6 text-center text-[length:calc(15px*var(--fs))]">{Bz.mockNote[lang]}</p>}
           {api.error ? (
             <ErrorBox error={api.error} onRetry={api.reload} />
           ) : !d ? (
@@ -87,12 +87,12 @@ export default function BusinessTab() {
               <Skeleton className="h-64 w-full" />
             </div>
           ) : scenarios.length === 0 ? (
-            <p className="text-center text-[17px]">{Bz.empty[lang]}</p>
+            <p className="text-center text-[length:calc(17px*var(--fs))]">{Bz.empty[lang]}</p>
           ) : (
             <>
               {/* controls */}
               <section aria-label={Bz.howMany[lang]} className="border border-line bg-white px-4 py-5 sm:px-6">
-                <p className="text-[16px] text-ink-soft">{Bz.howMany[lang]}</p>
+                <p className="text-[length:calc(16px*var(--fs))] text-ink-soft">{Bz.howMany[lang]}</p>
                 <div role="group" aria-label={Bz.howMany[lang]} className="mt-2 flex flex-wrap gap-2">
                   {PRESETS.map((id) => {
                     const s = preset(id);
@@ -118,7 +118,7 @@ export default function BusinessTab() {
                 </div>
 
                 {choice === "custom" && (
-                  <label className="mt-4 flex max-w-xs flex-col gap-1.5 text-[15px]">
+                  <label className="mt-4 flex max-w-xs flex-col gap-1.5 text-[length:calc(15px*var(--fs))]">
                     <span>{Bz.customLabel[lang]}</span>
                     <span className="flex items-stretch">
                       <input
@@ -131,18 +131,18 @@ export default function BusinessTab() {
                         value={customText}
                         onChange={(e) => setCustomText(e.target.value)}
                         aria-invalid={!customOk}
-                        className={`min-w-0 flex-1 border bg-cream px-3 py-2.5 text-[18px] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink ${customOk ? "border-ink" : "border-bad"}`}
+                        className={`min-w-0 flex-1 border bg-cream px-3 py-2.5 text-[length:calc(18px*var(--fs))] focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink ${customOk ? "border-ink" : "border-bad"}`}
                       />
                       <span className="flex items-center border border-s-0 border-ink px-3 text-ink-soft">{Bz.ha[lang]}</span>
                     </span>
-                    {!customOk && <span className="text-[14px] text-bad">{Bz.customBad[lang]}</span>}
+                    {!customOk && <span className="text-[length:calc(14px*var(--fs))] text-bad">{Bz.customBad[lang]}</span>}
                   </label>
                 )}
 
                 <div className="mt-6">
-                  <label htmlFor="adoption" className="flex flex-wrap items-baseline justify-between gap-2 text-[16px]">
+                  <label htmlFor="adoption" className="flex flex-wrap items-baseline justify-between gap-2 text-[length:calc(16px*var(--fs))]">
                     <span>{Bz.adoption[lang]}</span>
-                    <span className="font-display text-[28px] font-medium" dir="ltr">
+                    <span className="font-display text-[length:calc(28px*var(--fs)*var(--fsn))] font-medium" dir="ltr">
                       {fmtN(adoptionPct, lang, 0)}%
                     </span>
                   </label>
@@ -157,7 +157,7 @@ export default function BusinessTab() {
                     aria-valuetext={`${adoptionPct}%`}
                     className="mt-2 h-8 w-full accent-olive-deep"
                   />
-                  <p className="mt-1 text-[14px] text-ink-soft">{Bz.adoptionHelp[lang]}</p>
+                  <p className="mt-1 text-[length:calc(14px*var(--fs))] text-ink-soft">{Bz.adoptionHelp[lang]}</p>
                 </div>
               </section>
 
@@ -166,13 +166,13 @@ export default function BusinessTab() {
                 {tiles.map((t) => (
                   <div key={t.key} className="min-w-0 border border-line bg-white px-5 py-5">
                     <div className="flex flex-wrap items-center justify-between gap-2">
-                      <p className="text-[17px]">{t.label}</p>
+                      <p className="text-[length:calc(17px*var(--fs))]">{t.label}</p>
                       <Pill tone="neutral">{Bz.projection[lang]}</Pill>
                     </div>
-                    <p className="mt-2 break-words font-display text-[40px] font-medium leading-none sm:text-[46px]" dir="ltr">
+                    <p className="mt-2 break-words font-display text-[length:calc(40px*var(--fs)*var(--fsn))] font-medium leading-none sm:text-[length:calc(46px*var(--fs)*var(--fsn))]" dir="ltr">
                       {fmtN(t.value, lang, 0)}
                     </p>
-                    <p className="mt-1.5 text-[15px] text-ink-soft">
+                    <p className="mt-1.5 text-[length:calc(15px*var(--fs))] text-ink-soft">
                       {t.unit}
                       {t.key === "qatra" && ` · ${fmtN(d.qatra_share_pct, lang, 1)}%`}
                     </p>
@@ -180,10 +180,10 @@ export default function BusinessTab() {
                 ))}
               </section>
 
-              <p className="mx-auto mt-6 max-w-2xl text-center text-[18px] leading-snug">
+              <p className="mx-auto mt-6 max-w-2xl text-center text-[length:calc(18px*var(--fs))] leading-snug">
                 {explain(d.qatra_share_pct, lang)} {Bz.noUpfront[lang]}
               </p>
-              <p className="mx-auto mt-2 max-w-2xl text-center text-[14px] text-ink-soft">{Bz.revenueOnly[lang]}</p>
+              <p className="mx-auto mt-2 max-w-2xl text-center text-[length:calc(14px*var(--fs))] text-ink-soft">{Bz.revenueOnly[lang]}</p>
 
               <ScaleChart rows={rows} selectedId={choice === "custom" ? "custom" : choice} lang={lang} />
 
@@ -193,26 +193,26 @@ export default function BusinessTab() {
                   <h2 className="text-2xl sm:text-3xl">{Bz.pilotTitle[lang]}</h2>
                   <Pill tone="neutral">{Bz.projection[lang]}</Pill>
                 </div>
-                <p className="mt-2 text-[18px] leading-snug">
+                <p className="mt-2 text-[length:calc(18px*var(--fs))] leading-snug">
                   {pilotLine(d.pilot.farms_total, d.pilot.total_area_ha, d.pilot.pilot_ha, d.pilot.farmers_net_tnd_per_ha_season, lang)}
                 </p>
-                <p className="mt-1 text-[14px] text-ink-soft">{Bz.pilotNote[lang]}</p>
+                <p className="mt-1 text-[length:calc(14px*var(--fs))] text-ink-soft">{Bz.pilotNote[lang]}</p>
 
                 <h3 className="mt-6 text-xl sm:text-2xl">{Bz.hectaresTitle[lang]}</h3>
                 <ul className="mt-2">
                   {reportedFigures.map((t) => (
                     <li key={t.id} className="border-t border-line py-3">
                       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                        <span className="text-[16px] font-medium">{figureName(t, lang)}</span>
-                        <span dir="ltr" className="font-display text-[24px] font-medium">
+                        <span className="text-[length:calc(16px*var(--fs))] font-medium">{figureName(t, lang)}</span>
+                        <span dir="ltr" className="font-display text-[length:calc(24px*var(--fs))] font-medium">
                           {fmtN(t.value, lang, 0)} {Bz.ha[lang]}
                         </span>
                       </div>
                       <div className="mt-1.5 flex flex-wrap items-center gap-2">
                         <Pill tone="ok">{Bz.reported[lang]}</Pill>
-                        <span className="text-[14px] text-ink-soft">{t.period}</span>
+                        <span className="text-[length:calc(14px*var(--fs))] text-ink-soft">{t.period}</span>
                       </div>
-                      <p className="mt-1.5 break-words text-[14px] text-ink-soft">
+                      <p className="mt-1.5 break-words text-[length:calc(14px*var(--fs))] text-ink-soft">
                         {Bz.source[lang]}: {t.source}{" "}
                         <a href={t.source_url} target="_blank" rel="noreferrer" className="link">
                           {Bz.openSource[lang]}
@@ -227,16 +227,16 @@ export default function BusinessTab() {
               {/* honest note */}
               <section className="mt-6 border border-line bg-white px-5 py-5 sm:px-6">
                 <h2 className="text-2xl sm:text-3xl">{Bz.honestTitle[lang]}</h2>
-                <p className="mt-2 text-[18px] leading-snug">{Bz.honest[lang]}</p>
+                <p className="mt-2 text-[length:calc(18px*var(--fs))] leading-snug">{Bz.honest[lang]}</p>
                 {toVerify.length > 0 && (
                   <>
-                    <p className="mt-4 text-[15px] text-ink-soft">{Bz.toVerifyList[lang]}</p>
+                    <p className="mt-4 text-[length:calc(15px*var(--fs))] text-ink-soft">{Bz.toVerifyList[lang]}</p>
                     <ul className="mt-1">
                       {toVerify.map((a) => (
                         <li key={a.name} className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 bg-warn-soft px-3 py-2.5">
-                          <span className="text-[16px]">{assumptionName(a, lang)}</span>
+                          <span className="text-[length:calc(16px*var(--fs))]">{assumptionName(a, lang)}</span>
                           <span className="flex flex-wrap items-center gap-2">
-                            <span dir="ltr" className="text-[16px]">
+                            <span dir="ltr" className="text-[length:calc(16px*var(--fs))]">
                               {assumptionValue(a, lang)}
                             </span>
                             <Pill tone={STATUS.TO_VERIFY.tone}>{Bz.toVerify[lang]}</Pill>
@@ -246,7 +246,7 @@ export default function BusinessTab() {
                     </ul>
                   </>
                 )}
-                <ul className="mt-4 space-y-1.5 text-[15px] leading-snug">
+                <ul className="mt-4 space-y-1.5 text-[length:calc(15px*var(--fs))] leading-snug">
                   {warningTexts(d.warnings, lang).map((w) => (
                     <li key={w}>• {w}</li>
                   ))}

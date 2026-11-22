@@ -26,7 +26,7 @@ export const STYLE: Record<string, { colour: string; radius: number }> = {
 };
 export const FALLBACK = { colour: "#f3ebe0", radius: 6 };
 const OUTLINE = "#1b1b1a";
-const LABEL = "!rounded-none !border-ink !bg-cream !px-2 !py-0.5 !text-[14px] !text-ink !shadow-none";
+const LABEL = "!rounded-none !border-ink !bg-cream !px-2 !py-0.5 !text-[length:calc(14px*var(--fs))] !text-ink !shadow-none";
 
 /** OpenStreetMap leaves some plants unnamed; the server then makes up "Unnamed OSM wastewater plant (id)". Never show that id. */
 const isUnnamed = (f: MapFeature) => f.name.startsWith("Unnamed OSM");
@@ -56,15 +56,15 @@ export const isDrawable = (f: MapFeature) => hasCoords(f) || polygonPositions(f)
 function FeaturePopup({ f, layer, plant, lang }: { f: MapFeature; layer: MapLayer; plant?: Plant; lang: Lang }) {
   const source = (plant ? plant.tag : layer.tag).source;
   return (
-    <div dir={isRtl(lang) ? "rtl" : "ltr"} className="min-w-52 space-y-1.5 text-[15px]">
+    <div dir={isRtl(lang) ? "rtl" : "ltr"} className="min-w-52 space-y-1.5 text-[length:calc(15px*var(--fs))]">
       <p className="font-display text-xl leading-tight">{displayName(f, lang)}</p>
-      <p className="text-[14px] text-ink-soft">{layerLabel(layer, lang)}</p>
+      <p className="text-[length:calc(14px*var(--fs))] text-ink-soft">{layerLabel(layer, lang)}</p>
       {plant ? (
         <ul className="space-y-1">
           <li>
             {M.capacity[lang]}:{" "}
             {plant.capacity_m3_d === null ? M.unknown[lang] : `${plant.capacity_m3_d.toLocaleString("en-US")} ${M.perDay[lang]}`}
-            <span className="block text-[14px] text-ink-soft">{M.capacityNote[lang]}</span>
+            <span className="block text-[length:calc(14px*var(--fs))] text-ink-soft">{M.capacityNote[lang]}</span>
           </li>
           <li>
             {M.treatment[lang]}: {plant.treatment_level}
@@ -99,7 +99,7 @@ function FeaturePopup({ f, layer, plant, lang }: { f: MapFeature; layer: MapLaye
           )}
         </ul>
       )}
-      {source && <p className="break-words text-[13px] text-ink-soft">{source}</p>}
+      {source && <p className="break-words text-[length:calc(13px*var(--fs))] text-ink-soft">{source}</p>}
     </div>
   );
 }
@@ -165,7 +165,7 @@ function MapKey({ layers, lang }: { layers: MapLayer[]; lang: Lang }) {
   return (
     <ul
       dir={isRtl(lang) ? "rtl" : "ltr"}
-      className="absolute left-3 top-3 z-10 space-y-1.5 border border-line bg-cream/95 px-3 py-2.5 text-[15px] shadow-sm"
+      className="absolute left-3 top-3 z-10 space-y-1.5 border border-line bg-cream/95 px-3 py-2.5 text-[length:calc(15px*var(--fs))] shadow-sm"
     >
       {drawn.map((l) => (
         <li key={l.id} className="flex items-center gap-2.5">
@@ -194,7 +194,7 @@ export default function MapView({ layers, plants }: { layers: MapLayer[]; plants
   return (
     <div className="space-y-3">
       {tilesFailed && (
-        <p role="status" className="border border-warn px-4 py-2 text-[15px] text-warn">
+        <p role="status" className="border border-warn px-4 py-2 text-[length:calc(15px*var(--fs))] text-warn">
           {M.tilesFailed[lang]}
         </p>
       )}

@@ -91,7 +91,7 @@ export default function BatchesTab() {
             </div>
           )}
         </div>
-        <p className="mt-14 text-center text-[15px]">{B.source[lang]}</p>
+        <p className="mt-14 text-center text-[length:calc(15px*var(--fs))]">{B.source[lang]}</p>
       </Band>
 
       {/* Daily batches */}

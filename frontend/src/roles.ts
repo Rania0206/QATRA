@@ -84,6 +84,16 @@ export const ROLE_IDS = ROLES.map((r) => r.id) as string[];
 /** Roles that see every farm in the operator views (the demo's ?view=operator, chosen by role instead of by link). */
 export const OPERATOR_ROLES = ROLES.filter((r) => r.operator).map((r) => r.id) as string[];
 
+/**
+ * Requests: a farm asks, the operator decides. GDA (the farmers' association) sends; ONAS and CRDA (the operators) approve or reject;
+ * the sender cannot decide its own request. Lab and Public do not use requests. With no role the demo shows both.
+ * UI only: like the roles themselves, the API has no login.
+ */
+export function requestPowers(role: RoleId | null): { send: boolean; decide: boolean } {
+  if (role === null) return { send: true, decide: true };
+  return { send: role === "gda", decide: ROLES.find((r) => r.id === role)?.operator === true };
+}
+
 export const RT = {
   select: { en: "Demo role", fr: "Rôle de démo", ar: "دور تجريبي" },
   none: { en: "All sections", fr: "Toutes les sections", ar: "كل الأقسام" },

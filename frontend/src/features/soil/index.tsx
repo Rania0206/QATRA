@@ -117,9 +117,9 @@ export default function SoilTab() {
         </Intro>
         {!farmCode && <FarmCodeForm onSubmit={choose} />}
         {savedCode && data && (
-          <p className="fade-up mt-8 text-center text-[17px]">
+          <p className="fade-up mt-8 text-center text-[length:calc(17px*var(--fs))]">
             {S.yourCrop[lang]}: <strong className="font-medium">{crop}</strong> ·{" "}
-            <button type="button" onClick={change} className="link text-[15px]">
+            <button type="button" onClick={change} className="link text-[length:calc(15px*var(--fs))]">
               {FARM.change[lang]}
             </button>
           </p>
@@ -157,12 +157,12 @@ export default function SoilTab() {
           ) : data && blocked ? (
             <div role="alert" className="mx-auto max-w-2xl border border-bad px-6 py-8 text-center">
               <h2 className="text-3xl text-bad">{S.blockedTitle[lang]}</h2>
-              <p className="mt-3 text-[18px]">{blockedText(crop, lang)}</p>
+              <p className="mt-3 text-[length:calc(18px*var(--fs))]">{blockedText(crop, lang)}</p>
             </div>
           ) : data && verdict ? (
             <div className="space-y-10">
               <p
-                className={`mx-auto max-w-3xl border-s-4 ps-5 font-display text-[26px] leading-snug ${
+                className={`mx-auto max-w-3xl border-s-4 ps-5 font-display text-[length:calc(26px*var(--fs)*var(--fsn))] leading-snug ${
                   verdict.tone === "ok" ? "border-ok" : "border-warn"
                 }`}
               >
@@ -244,8 +244,8 @@ export default function SoilTab() {
                 </Stat>
               </div>
 
-              {data.warning && <p className="border-s-2 border-warn ps-4 text-[15px]">{data.warning}</p>}
-              <p className="text-center text-[15px] text-ink-soft">
+              {data.warning && <p className="border-s-2 border-warn ps-4 text-[length:calc(15px*var(--fs))]">{data.warning}</p>}
+              <p className="text-center text-[length:calc(15px*var(--fs))] text-ink-soft">
                 {S.basedOn[lang]} <span dir="ltr">{data.batch_id}</span> · {S.waterSalt[lang]} {data.ecw} dS/m. {S.estimate[lang]}
               </p>
             </div>
@@ -268,8 +268,8 @@ function Stat({ title, children }: { title: string; children: ReactNode }) {
 function Row({ name, colour, value }: { name: string; colour: string; value: string }) {
   return (
     <div>
-      <dt className={`text-[15px] font-medium ${colour}`}>{name}</dt>
-      <dd className="text-[19px]">{value}</dd>
+      <dt className={`text-[length:calc(15px*var(--fs))] font-medium ${colour}`}>{name}</dt>
+      <dd className="text-[length:calc(19px*var(--fs))]">{value}</dd>
     </div>
   );
 }

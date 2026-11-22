@@ -103,3 +103,45 @@ def test_mocks_match_the_schema():
         WaterRequest.model_validate(json.loads((MOCKS / name).read_text(encoding="utf-8")))
     for r in json.loads((MOCKS / "requests.json").read_text(encoding="utf-8")):
         WaterRequest.model_validate(r)
+
+
+# ---------- the formal request (a form that declares the legal conditions and is signed)
+FORMAL = {
+    "farm_id": "B", "requested_m3": 120, "date": "2026-11-23", "date_end": "2026-11-30",
+    "applicant_name": "Ali Ben Salah", "applicant_capacity": "owner", "applicant_phone": "+216 20 000 000",
+    "irrigation_method": "drip", "signed_name": "Ali Ben Salah",
+    "declarations": ["not_eaten_raw", "no_grazing", "crop_on_list", "water_limits", "accuracy"],
+}
+
+
+def test_a_formal_request_keeps_the_form_and_a_snapshot_of_the_farm(client):
+    r = client.post("/api/requests", json=FORMAL)
+    assert r.status_code == 201
+    b = r.json()
+    assert b["status"] == "pending" and b["applicant_name"] == "Ali Ben Salah" and b["irrigation_method"] == "drip"
+    assert b["date_end"] == "2026-11-30" and b["crop"] == "olive" and b["area_ha"] == 4.0  # farm B
+    assert set(b["declarations"]) == set(FORMAL["declarations"]) and b["signed_name"] == "Ali Ben Salah"
+    assert client.get("/api/requests").json()[0]["applicant_name"] == "Ali Ben Salah"
+
+
+def test_the_minimal_request_keeps_its_old_shape(client):
+    assert set(make(client).json()) == {"id", "farm_id", "requested_m3", "date", "status", "created_at"}
+
+
+@pytest.mark.parametrize("change", [
+    {"declarations": ["accuracy"]},  # one declaration is not enough: all five
+    {"signed_name": "  "},
+    {"applicant_name": ""},
+    {"date_end": "2026-11-20"},  # before the start
+    {"irrigation_method": "flood"},
+    {"applicant_capacity": "neighbour"},
+])
+def test_an_incomplete_formal_request_is_422(client, change):
+    assert client.post("/api/requests", json={**FORMAL, **change}).status_code == 422
+    assert client.get("/api/requests").json() == []
+
+
+def test_a_decision_on_a_formal_request_keeps_its_details(client):
+    req_id = client.post("/api/requests", json=FORMAL).json()["id"]
+    done = client.patch(f"/api/requests/{req_id}", json={"status": "approved"}).json()
+    assert done["status"] == "approved" and done["applicant_name"] == "Ali Ben Salah"

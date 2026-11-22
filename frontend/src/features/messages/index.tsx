@@ -65,12 +65,12 @@ export default function MessagesTab() {
       <Band tone="cream" wide>
         <div className="space-y-8">
           <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
-            <label className="flex items-center gap-3 text-[17px]">
+            <label className="flex items-center gap-3 text-[length:calc(17px*var(--fs))]">
               {MS.farm[lang]}
               <select
                 value={farmId}
                 onChange={(e) => setFarmId(e.target.value)}
-                className="border border-ink bg-cream px-3 py-2 text-[17px] focus:outline-none focus-visible:outline-2 focus-visible:outline-ink"
+                className="border border-ink bg-cream px-3 py-2 text-[length:calc(17px*var(--fs))] focus:outline-none focus-visible:outline-2 focus-visible:outline-ink"
               >
                 {(farms.data ?? [{ id: DEFAULT_FARM, crop: "olive" } as Farm]).map((f) => (
                   <option key={f.id} value={f.id}>
@@ -91,7 +91,7 @@ export default function MessagesTab() {
             />
           </div>
 
-          <p role="note" className="mx-auto w-fit border border-warn px-5 py-2 text-center text-[18px] font-medium text-warn">
+          <p role="note" className="mx-auto w-fit border border-warn px-5 py-2 text-center text-[length:calc(18px*var(--fs))] font-medium text-warn">
             {MS.mockup[lang]}
           </p>
 
@@ -142,10 +142,10 @@ function PlanPanel({ alloc, first, farms, lang, selected }: { alloc?: Allocation
   return (
     <section className="space-y-4" aria-label={MS.allocTitle[lang]}>
       <h2 className="text-3xl">{MS.allocTitle[lang]}</h2>
-      <p className="text-[16px] text-ink-soft">{MS.allocHint[lang]}</p>
-      <table className="w-full text-[17px]">
+      <p className="text-[length:calc(16px*var(--fs))] text-ink-soft">{MS.allocHint[lang]}</p>
+      <table className="w-full text-[length:calc(17px*var(--fs))]">
         <thead>
-          <tr className="border-b border-ink text-start text-[14px] uppercase tracking-wide text-ink-soft">
+          <tr className="border-b border-ink text-start text-[length:calc(14px*var(--fs))] uppercase tracking-wide text-ink-soft">
             <th className="py-2 text-start font-normal">{MS.colFarm[lang]}</th>
             <th className="py-2 text-start font-normal">{MS.colStatus[lang]}</th>
             <th className="py-2 text-end font-normal">{MS.colVolume[lang]}</th>
@@ -156,7 +156,7 @@ function PlanPanel({ alloc, first, farms, lang, selected }: { alloc?: Allocation
           {alloc.items.map((i) => (
             <tr key={i.farm_id} className={`border-b border-line ${i.farm_id === selected ? "bg-sand" : ""} ${i.status === "blocked" ? "text-ink-soft" : ""}`}>
               <td className="py-2">
-                {i.farm_id} <span className="text-[14px] text-ink-soft">{crop.has(i.farm_id) ? cropName(crop.get(i.farm_id)!, lang) : ""}</span>
+                {i.farm_id} <span className="text-[length:calc(14px*var(--fs))] text-ink-soft">{crop.has(i.farm_id) ? cropName(crop.get(i.farm_id)!, lang) : ""}</span>
               </td>
               <td className="py-2">{status(i)}</td>
               <td className="py-2 text-end tabular-nums" dir="ltr">{fmtM3(i.m3)}</td>
@@ -182,7 +182,7 @@ function PhoneFrame({ lang, children }: { lang: Lang; children: React.ReactNode 
     <div dir="ltr" className="mx-auto w-full max-w-[28rem] rounded-[3rem] border-[12px] border-ink bg-ink shadow-2xl">
       <div className="relative overflow-hidden rounded-[2.1rem] bg-cream">
         <span aria-hidden="true" className="absolute left-1/2 top-0 z-10 h-5 w-28 -translate-x-1/2 rounded-b-2xl bg-ink" />
-        <div aria-hidden="true" className="flex items-center justify-between bg-cream px-7 pb-1 pt-2 text-[13px] font-medium">
+        <div aria-hidden="true" className="flex items-center justify-between bg-cream px-7 pb-1 pt-2 text-[length:calc(13px*var(--fs))] font-medium">
           <span>9:41</span>
           <span className="tracking-widest">▂▄▆ 5G ▭</span>
         </div>
@@ -191,8 +191,8 @@ function PhoneFrame({ lang, children }: { lang: Lang; children: React.ReactNode 
             ق
           </span>
           <div>
-            <p className="text-[17px] font-medium leading-tight">{MS.contact[lang]}</p>
-            <p className="text-[13px] text-ink-soft">SMS</p>
+            <p className="text-[length:calc(17px*var(--fs))] font-medium leading-tight">{MS.contact[lang]}</p>
+            <p className="text-[length:calc(13px*var(--fs))] text-ink-soft">SMS</p>
           </div>
         </div>
         {children}
@@ -204,7 +204,7 @@ function PhoneFrame({ lang, children }: { lang: Lang; children: React.ReactNode 
 function Chat({ thread, show, lang }: { thread: Message[]; show: Show; lang: Lang }) {
   return (
     <div className="h-[34rem] space-y-4 overflow-y-auto bg-sand px-3 py-4" role="log" aria-live="polite">
-      {thread.length === 0 && <p className="mt-10 text-center text-[16px] text-ink-soft">{MS.empty[lang]}</p>}
+      {thread.length === 0 && <p className="mt-10 text-center text-[length:calc(16px*var(--fs))] text-ink-soft">{MS.empty[lang]}</p>}
       {thread.map((m) => (
         <Bubble key={m.id} m={m} show={show} lang={lang} />
       ))}
@@ -219,11 +219,11 @@ function Bubble({ m, show, lang }: { m: Message; show: Show; lang: Lang }) {
   const wantFr = show !== "ar" && !!m.text_fr;
   return (
     <div className={`flex flex-col ${out ? "items-end" : "items-start"}`}>
-      <div className={`max-w-[88%] space-y-3 rounded-3xl px-4 py-3 text-[17px] leading-snug ${out ? "rounded-br-md bg-ok text-cream" : "rounded-bl-md bg-line text-ink"}`}>
+      <div className={`max-w-[88%] space-y-3 rounded-3xl px-4 py-3 text-[length:calc(17px*var(--fs))] leading-snug ${out ? "rounded-br-md bg-ok text-cream" : "rounded-bl-md bg-line text-ink"}`}>
         {out ? (
           <>
             {wantAr && (
-              <p dir="rtl" lang="ar" className="text-right text-[19px] leading-relaxed">
+              <p dir="rtl" lang="ar" className="text-right text-[length:calc(19px*var(--fs))] leading-relaxed">
                 {m.text_ar}
               </p>
             )}
@@ -233,9 +233,9 @@ function Bubble({ m, show, lang }: { m: Message; show: Show; lang: Lang }) {
                 {m.text_fr}
               </p>
             )}
-            {wantAr && m.needs_human_review && <p className="text-[13px] opacity-80">⚠ {MS.review[lang]}</p>}
+            {wantAr && m.needs_human_review && <p className="text-[length:calc(13px*var(--fs))] opacity-80">⚠ {MS.review[lang]}</p>}
             {m.batch_id && m.status && m.status !== "blocked" && (
-              <a href={`/passport/${encodeURIComponent(m.batch_id)}`} target="_blank" rel="noreferrer" className="block text-[16px] font-medium underline underline-offset-4">
+              <a href={`/passport/${encodeURIComponent(m.batch_id)}`} target="_blank" rel="noreferrer" className="block text-[length:calc(16px*var(--fs))] font-medium underline underline-offset-4">
                 {MS.passport[lang]} →
               </a>
             )}
@@ -244,7 +244,7 @@ function Bubble({ m, show, lang }: { m: Message; show: Show; lang: Lang }) {
           <p dir="auto">{m.text}</p>
         )}
       </div>
-      <time dateTime={m.at} className="mt-1 px-2 text-[13px] text-ink-soft">
+      <time dateTime={m.at} className="mt-1 px-2 text-[length:calc(13px*var(--fs))] text-ink-soft">
         {stampOf(m.at, lang)}
       </time>
     </div>
@@ -257,7 +257,7 @@ function ReplyBar({ canReply, sending, onReply, lang, hasThread }: { canReply: b
     <div className="border-t border-line bg-cream px-4 py-3">
       {canReply ? (
         <div className="space-y-2">
-          <p className="text-[14px] text-ink-soft">{MS.replyHint[lang]}</p>
+          <p className="text-[length:calc(14px*var(--fs))] text-ink-soft">{MS.replyHint[lang]}</p>
           <div className="grid grid-cols-2 gap-3">
             {[
               { code: "1", label: MS.accept[lang] },
@@ -268,7 +268,7 @@ function ReplyBar({ canReply, sending, onReply, lang, hasThread }: { canReply: b
                 type="button"
                 disabled={sending}
                 onClick={() => onReply(b.code)}
-                className="rounded-full border-2 border-ink px-4 py-3 text-[18px] font-medium transition-colors hover:bg-ink hover:text-cream focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink disabled:opacity-50"
+                className="rounded-full border-2 border-ink px-4 py-3 text-[length:calc(18px*var(--fs))] font-medium transition-colors hover:bg-ink hover:text-cream focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink disabled:opacity-50"
               >
                 {b.code} · {b.label}
               </button>
@@ -276,7 +276,7 @@ function ReplyBar({ canReply, sending, onReply, lang, hasThread }: { canReply: b
           </div>
         </div>
       ) : (
-        <p className="py-2 text-center text-[15px] text-ink-soft">{hasThread ? MS.noReplyNeeded[lang] : ""}</p>
+        <p className="py-2 text-center text-[length:calc(15px*var(--fs))] text-ink-soft">{hasThread ? MS.noReplyNeeded[lang] : ""}</p>
       )}
     </div>
   );

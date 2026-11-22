@@ -34,8 +34,8 @@ export default function MapTab() {
 
   return (
     <Band tone="cream" wide className="!py-10 md:!py-12">
-      <p className="text-[18px]">{M.lead[lang]}</p>
-      {!hasMine && <p className="mt-1 text-[15px] text-ink-soft">{M.noFarmHint[lang]}</p>}
+      <p className="text-[length:calc(18px*var(--fs))]">{M.lead[lang]}</p>
+      {!hasMine && <p className="mt-1 text-[length:calc(15px*var(--fs))] text-ink-soft">{M.noFarmHint[lang]}</p>}
       <div className="mb-5" />
       {layers.loading ? (
         <Loading label={M.loading[lang]} />
@@ -65,7 +65,7 @@ function Detail({ f, lang }: { f: MapFeature; lang: Lang }) {
       : null,
   ].filter(Boolean);
   return (
-    <p className="text-[15px] text-ink-soft">
+    <p className="text-[length:calc(15px*var(--fs))] text-ink-soft">
       <span className="font-medium text-ink">{f.name}</span>
       {parts.length ? ` · ${parts.join(" · ")}` : ""}
     </p>
