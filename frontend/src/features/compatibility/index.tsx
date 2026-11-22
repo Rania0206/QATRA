@@ -11,6 +11,7 @@ import { useLang } from "../../i18n";
 import { COMPLIANCE } from "../batches/format";
 import DayPicker from "./DayPicker";
 import MyFarm from "./MyFarm";
+import OperatorView, { useOperatorView } from "./OperatorView";
 import { T, type RuleInfo } from "./format";
 
 interface Static {
@@ -25,7 +26,7 @@ const newestFirst = (a: Batch, b: Batch) => b.date.localeCompare(a.date) || b.id
  * NOTE: the page still loads every farm's result from the API and keeps only one; real privacy
  * needs logins and a per-farm endpoint on the server (next version).
  */
-export default function CompatibilityTab() {
+function FarmerCompatibility() {
   const { lang } = useLang();
   const [batchId, setBatchId] = useState<string | null>(null); // null = backend default (latest usable batch)
   const [farmCode, setFarmCode] = useState<string | null>(getFarmCode);
@@ -129,4 +130,9 @@ export default function CompatibilityTab() {
       )}
     </>
   );
+}
+
+/** Farmers get their own farm only. The all-farms operator view is a hidden demo mode (see OperatorView.tsx). */
+export default function CompatibilityTab() {
+  return useOperatorView() ? <OperatorView /> : <FarmerCompatibility />;
 }
