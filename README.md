@@ -67,6 +67,7 @@ _Last updated: 2026-11-22. Updated by whoever merges into `dev`; keep it current
 | B-11a, B-11b | Dev B | Demo role selector in the header (ONAS, Lab, CRDA, GDA, Public): the menu highlights the sections of the role and dims the others, nothing is blocked. The role lives in the URL hash (`#/batches?role=onas`) and follows tab changes; a visible note says it is a demo switch, not a login. CRDA and GDA also highlight the Requests tab (B-11b). Branch `feature/B-11-roles` | Water requests (B-11b): `POST /api/requests` (farm must exist, `requested_m3` > 0, else 404 / 422), `GET /api/requests?status=`, `PATCH /api/requests/{id}` approved or rejected (404 unknown id, 409 once decided), in memory. A new **Requests** tab (one line in `App.tsx` and one in `i18n.tsx`, tell Dev A) has the form, the list with Approve / Reject buttons and a status chip Pending, Approved or Rejected. Branch `feature/B-11-requests` |
 | Fix | Dev B | `GET /api/impact` is now real (`engine/impact.py`): totals over the 60 simulated batches, each run through Dev A's allocator and pump schedule, no farm name; `co2_avoided_kg` is null until the grid emission factor is sourced. The Public tab now works on the real server, not only in mock mode. CORS accepts any local dev port (`localhost` or `127.0.0.1`), not only 5173. Branch `fix/impact-endpoint` |
 | B-04c | Dev B | "Break it" (judge demo, `#/soil?view=operator`): a slider raises a farm's soil salinity; the 30-year curves are computed again (`POST /api/soil/simulate` with `soil_ece`; the response now says which `soil_ece` it started from) and the allocator re-plans a batch as if it held 250 m³ (`POST /api/allocate` accepts two additive fields on Dev A's endpoint: `soil_ece: {farm: dS/m}`, 0 to 30, and `volume_m3`, a judge override that does not change the stored batch; since the crop calendar (A-05f) no real batch is shorter than the farms' needs, so the freed water would otherwise stay at the plant). Farm A at 1.9 dS/m is just under alfalfa's 2.0 threshold: at 5 dS/m it gets 0 m³ and the other farms share its water. With mock data the slider changes nothing (a note says so). Branch `feature/B-04c-break-it` |
+| B-14 | Dev B | Phone app prototype (iPhone, local): the web app installs on the home screen and opens full screen (`index.html` Apple meta tags, `manifest.webmanifest`, icons in `frontend/public`), a bottom tab bar on phones (the role's four tabs, or Map, Soil, Heatwave, Messages, plus More), safe areas for the notch and home bar, 16 px fields so iOS does not zoom, and the Requests table scrolls instead of widening the page. No service worker (iOS needs HTTPS for it), so it needs the laptop running. See "Phone app (iPhone)" below. Branch `feature/B-14-phone-app` |
 
 ### Not done yet
 
@@ -141,6 +142,17 @@ npm run dev           # talks to the backend at VITE_API_BASE_URL (default http:
 npm run build         # tsc + vite build
 ```
 Tabs are addressable by URL hash: `http://localhost:5173/#/soil`, `#/batches`, and so on.
+
+### Phone app (iPhone)
+A prototype to show the jury: the same web app, installed on the home screen, full screen without the Safari bars. It is local: the laptop runs the app and the iPhone connects to it.
+
+1. Laptop and iPhone on the **same Wi-Fi**. In the jury room, another option is to turn on the iPhone's Personal Hotspot and connect the laptop to it.
+2. On the laptop: `cd frontend`, then `npm run dev:mocks:lan` (demo data, no backend needed). For the real calculations (Break it, refusals in Messages) also run the backend with `uvicorn app.main:app --host 0.0.0.0` and start the site with `VITE_API_BASE_URL=http://<laptop-ip>:8000 npm run dev:lan`.
+3. Vite prints `Network:` addresses. Use the Wi-Fi one (for example `http://172.17.11.238:5173`), not the VMware `192.168.x.x` ones. Allow Node.js on private networks if Windows Firewall asks.
+4. On the iPhone, open that address in **Safari** (not Chrome), tap **Share**, then **Add to Home Screen**, then **Add**. A green drop icon "QATRA" appears.
+5. Open it from the home screen: it runs full screen, with a bottom tab bar.
+
+Limits: no service worker (iOS only allows one over HTTPS), so there is no offline mode and the laptop must stay on; the titles use Google Fonts, which need internet the first time (otherwise a serif fallback is used); SMS and WhatsApp are a mockup (Messages tab).
 
 ### Open the batch passport on a phone
 The passport page is `/passport/{batch id}` (for example `/passport/SSUD-20260708`): no tabs, made for a phone. Every batch drawer (Batches tab) shows its QR code.

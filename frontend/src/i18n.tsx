@@ -97,6 +97,8 @@ export const C = {
   safe: { en: "Is this water safe?", fr: "Cette eau est-elle sûre ?", ar: "هل هذا الماء آمن؟" },
   openMenu: { en: "Open menu", fr: "Ouvrir le menu", ar: "فتح القائمة" },
   closeMenu: { en: "Close menu", fr: "Fermer le menu", ar: "إغلاق القائمة" },
+  more: { en: "More", fr: "Plus", ar: "المزيد" },
+  mainTabs: { en: "Main sections", fr: "Sections principales", ar: "الأقسام الرئيسية" },
   language: { en: "Language", fr: "Langue", ar: "اللغة" },
   area: {
     en: "Sousse Sud plant → Zaouiet-Sousse irrigated area",
