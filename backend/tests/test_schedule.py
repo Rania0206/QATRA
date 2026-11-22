@@ -1,4 +1,4 @@
-"""A-05b/d: 24-hour pump schedule, plan() and POST /api/allocate."""
+"""A-05b/d/e: 24-hour pump schedule (hybrid solar), plan() and POST /api/allocate."""
 import time
 
 import pytest
@@ -13,8 +13,9 @@ from app.store import init_store
 
 init_store()
 
-SUMMER_SOLAR_DAY = "2026-07-08"  # PV reaches the pump's kW at 11:00-13:00
-NO_SOLAR_DAY = "2026-08-26"  # PV peaks at 44.3 kW, just under the pump's 44.6 kW: no solar hour
+HEATWAVE = "2026-08-26"  # hottest day of the summer; sun peaks at 44.3 kW, just under the 44.6 kW pump
+HEATWAVE_BATCH = "SSUD-20260826"
+SUMMER = "2026-07-08"
 GOOD = "SSUD-20260708"
 
 
@@ -22,74 +23,107 @@ def pumping(s):
     return [x for x in s.slots if x.source != "off"]
 
 
+def in_window(h):
+    return 13 <= h < 17
+
+
 # ---------- the schedule
-def test_24_slots_and_hours_needed_is_ceil_of_volume_over_flow():
-    s = schedule(800, NO_SOLAR_DAY)
+def test_24_slots_and_hours_needed():
+    s = schedule(800, HEATWAVE)
     assert [x.hour for x in s.slots] == list(range(24))
-    assert len(pumping(s)) == 6  # ceil(800 / 150)
     assert s.pumped_m3 == 800 and s.warnings == []
+    assert len(pumping(s)) == 6  # 800 m3 at 150 m3/h: 5 full hours + 1 partial
 
 
-def test_energy_formula():
+def test_energy_formula_unchanged():
     p = pump_spec()
-    s = schedule(800, NO_SOLAR_DAY)
-    assert s.energy_kwh == pytest.approx(800 * 0.00272 * p["head_m"] / p["efficiency"], abs=0.1)
+    for date in (HEATWAVE, "2026-11-21"):
+        s = schedule(800, date)
+        assert s.energy_kwh == pytest.approx(800 * 0.00272 * p["head_m"] / p["efficiency"], abs=0.1)
 
 
-def test_solar_share_between_0_and_1_and_solar_hours_really_have_enough_sun():
-    s = schedule(1800, SUMMER_SOLAR_DAY)
+def test_hours_are_chosen_by_highest_sun_first():
+    s = schedule(450, HEATWAVE)  # 3 hours of water: they must be the 3 best sun hours
+    pv = sch._pv_kw(HEATWAVE)
+    best = sorted(range(24), key=lambda h: -pv.get(h, 0))[:3]
+    assert sorted(x.hour for x in pumping(s)) == sorted(best) == [11, 12, 13]
+    assert all(x.source == "solar" for x in pumping(s))
+
+
+def test_hybrid_solar_share_is_energy_based_with_partial_credit():
+    s = schedule(800, "2026-11-21")  # the sun never reaches the pump's 44.6 kW in November (peak 26 kW)
+    pv = sch._pv_kw("2026-11-21")
     assert 0 < s.solar_share < 1
-    pv, kw = sch._pv_kw(SUMMER_SOLAR_DAY), pump_spec()["power_kW"]
-    solar_hours = [x.hour for x in s.slots if x.source == "solar"]
-    assert solar_hours == [11, 12, 13] and all(pv[h] >= kw for h in solar_hours)
-    assert schedule(800, NO_SOLAR_DAY).solar_share == 0.0  # no hour qualifies on that day
+    solar_kwh = sum(min(x.pump_kw, pv.get(x.hour, 0)) for x in s.slots)
+    assert s.solar_share == pytest.approx(solar_kwh / s.energy_kwh, abs=0.02)  # solar_kw = min(pv, pump_kw)
 
 
-def test_solar_threshold_is_one_constant(monkeypatch):
-    monkeypatch.setattr(sch, "SOLAR_MIN_FRACTION", 0.8)  # weaker sun counts
-    assert schedule(800, NO_SOLAR_DAY).solar_share > 0
+def test_source_label_rule_is_one_constant_at_the_top(monkeypatch):
+    pv, kw = sch._pv_kw(HEATWAVE), pump_spec()["kw"]
+    s = schedule(1200, HEATWAVE)
+    for x in pumping(s):  # "solar" iff PV >= 50% of the pump's kW
+        assert (x.source == "solar") == (pv.get(x.hour, 0) >= sch.SOLAR_LABEL_FRACTION * kw)
+    monkeypatch.setattr(sch, "SOLAR_LABEL_FRACTION", 0.99)  # a stricter label: nothing is called solar ...
+    strict = schedule(800, "2026-11-21")
+    assert not any(x.source == "solar" for x in strict.slots)
+    assert 0 < strict.solar_share < 1  # ... but the sun still gets its partial credit
 
 
-def test_no_grid_between_13_and_17_in_an_outage():
-    # heatwave start: basin at 600 m3, so 2,400 m3 can be pumped = 16 hours; an outage removes 4 of the grid hours
-    normal = schedule(2400, NO_SOLAR_DAY, "normal", basin_initial_m3=600)
-    outage = schedule(2400, NO_SOLAR_DAY, "outage", basin_initial_m3=600)
-    assert any(x.source == "grid" and 13 <= x.hour < 17 for x in normal.slots) and normal.pumped_m3 == 2400
-    assert not any(x.source == "grid" and 13 <= x.hour < 17 for x in outage.slots)
-    # and the volume that no longer fits is reported, not hidden
-    assert outage.pumped_m3 == 1800
-    assert any("600 m3 could not be pumped: not enough pumping hours" in w and "no grid during the outage" in w for w in outage.warnings)
+def test_outage_never_uses_the_grid_between_13_and_17_but_pumps_on_the_sun():
+    s = schedule(2400, HEATWAVE, "outage", basin_initial_m3=600)
+    pv, kw = sch._pv_kw(HEATWAVE), pump_spec()["kw"]
+    assert not any(x.source == "grid" and in_window(x.hour) for x in s.slots)
+    window = [x for x in pumping(s) if in_window(x.hour)]
+    assert [x.hour for x in window] == [13, 14, 15]  # the sunny hours of the window; 16:00 is too dark
+    for x in window:  # solar only, at the reduced flow = pump flow x PV / pump kW
+        assert x.source == "solar" and x.pump_kw == pytest.approx(min(pv[x.hour], kw), abs=0.06)
+    assert any(x.pump_kw < kw - 1 for x in window)  # partial pumping, not the full 44.6 kW
+    assert 0 < s.solar_share <= 1
 
 
-def test_outage_without_a_squeeze_changes_nothing_visible():
-    # a normal-sized day fits outside the window: same hours, no warning
-    assert schedule(800, NO_SOLAR_DAY, "outage").warnings == [] and schedule(800, NO_SOLAR_DAY, "outage").pumped_m3 == 800
-
-
-def test_outage_does_not_stop_solar():
-    s = schedule(1800, SUMMER_SOLAR_DAY, "outage")
-    assert [x.hour for x in s.slots if x.source == "solar"] == [11, 12, 13]  # 13:00 is in the window: sun, not grid
+def test_outage_reports_what_cannot_be_pumped():
+    normal = schedule(2400, HEATWAVE, "normal", basin_initial_m3=600)
+    outage = schedule(2400, HEATWAVE, "outage", basin_initial_m3=600)
+    assert normal.pumped_m3 == 2400 and normal.warnings == []
+    assert outage.pumped_m3 < normal.pumped_m3
+    assert any("could not be pumped: not enough pumping hours" in w and "no grid during the outage" in w for w in outage.warnings)
 
 
 def test_basin_level_is_tracked_and_capped():
-    s = schedule(800, NO_SOLAR_DAY)
+    s = schedule(800, HEATWAVE)
     levels = [x.basin_m3 for x in s.slots]
     assert levels == sorted(levels) and levels[0] >= 1200 and levels[-1] == 1200 + 800
-    big = schedule(2500, NO_SOLAR_DAY)  # the basin (3000 m3) already holds 1200
+    big = schedule(2500, HEATWAVE)  # the basin (3000 m3) already holds 1200
     assert max(x.basin_m3 for x in big.slots) <= 3000 and big.pumped_m3 == 1800
     assert any("basin is full" in w for w in big.warnings)
 
 
 def test_nothing_to_pump_and_missing_pv_data_do_not_crash():
-    assert pumping(schedule(0, NO_SOLAR_DAY)) == [] and schedule(0, NO_SOLAR_DAY).energy_kwh == 0
+    assert pumping(schedule(0, HEATWAVE)) == [] and schedule(0, HEATWAVE).energy_kwh == 0
     s = schedule(300, "2030-01-01")
     assert any("No PV data" in w for w in s.warnings) and s.solar_share == 0
 
 
 # ---------- plan() and the endpoint
+def test_default_plan_has_a_solar_share():  # 21 Nov, the first forecast day
+    a = plan(GOOD)
+    assert 0 < a.solar_share < 1 and a.warnings and not any("historical" in w for w in a.warnings)
+
+
+def test_heatwave_plan_has_needs_solar_and_no_grid_in_the_outage():
+    normal = plan(HEATWAVE_BATCH, HEATWAVE, "normal")
+    outage = plan(HEATWAVE_BATCH, HEATWAVE, "outage")
+    for a in (normal, outage):
+        by = {i.farm_id: i for i in a.items}
+        assert all(by[f].m3 > 0 for f in "ABD"), "farms A, B and D need water on the heatwave day"
+        assert 0 < a.solar_share <= 1
+        assert any("historical data" in w for w in a.warnings)  # the weather is not a forecast: say so
+    assert not any(s.source == "grid" and in_window(s.hour) for s in outage.schedule)
+    assert any(s.source == "solar" and in_window(s.hour) for s in outage.schedule)  # pumping on the sun only
+
+
 def test_plan_default_batch_is_the_latest_not_invalid():
-    a = plan()
-    assert a.batch_id == "SSUD-20260829"
+    assert plan().batch_id == "SSUD-20260829"
     assert plan("NOPE") is None
 
 
@@ -111,8 +145,15 @@ def test_endpoint_contract_shape_and_speed():
         Allocation.model_validate(r.json())
         assert set(r.json()) == {"batch_id", "items", "schedule", "energy_kwh", "solar_share", "fresh_replaced_m3", "warnings"}
         assert set(r.json()["schedule"][0]) == {"hour", "pump_kw", "source", "basin_m3"}
+        assert r.json()["solar_share"] > 0  # default date
         assert c.post("/api/allocate", json={}).json()["batch_id"] == "SSUD-20260829"  # all fields optional
-        assert c.post("/api/allocate", json={"batch_id": GOOD, "scenario": "outage"}).status_code == 200
+
+
+def test_endpoint_heatwave_replay():
+    with TestClient(app) as c:
+        r = c.post("/api/allocate", json={"batch_id": HEATWAVE_BATCH, "date": HEATWAVE, "scenario": "outage"}).json()
+    assert sum(i["m3"] for i in r["items"]) > 0 and r["solar_share"] > 0
+    assert not any(s["source"] == "grid" and in_window(s["hour"]) for s in r["schedule"])
 
 
 def test_endpoint_errors():

@@ -46,9 +46,9 @@ Conventions used in mocks (free strings, agree before adding values):
 | 9 | GET | `/api/batches/{id}/risk` | **CUT FROM MVP** (QATRA Lite) · `risk` | – | `{batch_id, risk_colour, score, factors: [{param, value, limit, ok}], tag}` | `batches_id_risk.json` |
 | 10 | GET | `/api/farms` | `needs` | – | `Farm[]` | `farms.json` |
 | 11 | GET | `/api/farms/{id}/compatibility?batch_id=` | `rules` | query `batch_id?` (default: latest batch whose status is not `analysis_invalid`) | `{farm_id, batch_id, decision: "compatible" \| "conditional" \| "blocked", results: RuleResult[], tag}` | `farms_id_compatibility.json` |
-| 12 | GET | `/api/forecast/needs` | `needs` | query `start?` (default: first forecast day), `days?` (default 7, forecast covers 7), `farm_id?` | `{start, days, items: [{date, farm_id, et0_mm, kc, need_m3, etc_mm?, effective_rain_mm?, need_mm?}], tag}`; need = max(0, ET0 x Kc - 0.7 x rain), need_m3 = need_mm x area_ha x 10; `kc`/`etc_mm`/`need_mm`/`need_m3` are `null` for a crop without a Kc; 404 for an unknown `farm_id` or `start`; tag `PROJECTION` | `forecast_needs.json` |
+| 12 | GET | `/api/forecast/needs` | `needs` | query `start?` (any date; default: first forecast day), `days?` (default 7, max 14), `farm_id?` | `{start, days, items: [{date, farm_id, et0_mm, kc, need_m3, etc_mm?, effective_rain_mm?, need_mm?, weather_source?}], tag}`; need = max(0, ET0 x Kc - 0.7 x rain), need_m3 = need_mm x area_ha x 10; `weather_source` is `"forecast"` (the 7 forecast days) or `"historical"` (summer 2026 file for 1 Jun-31 Aug, else the 30-year average of that day of the year); `kc`/`etc_mm`/`need_mm`/`need_m3` are `null` for a crop without a Kc; 404 for an unknown `farm_id` or a `start` that is not a date | `forecast_needs.json` |
 | 13 | GET | `/api/forecast/supply` | **CUT FROM MVP** (QATRA Lite) · `supply` | query `start?`, `days?` | `{start, days, items: [{date, plant_id, volume_m3, batch_id}], tag}` | `forecast_supply.json` |
-| 14 | POST | `/api/allocate` | `optimiser` | `{batch_id?, date?, scenario?: "normal" \| "outage", farm_ids?}` (all optional; default batch = latest not `analysis_invalid`, default date = first forecast day, default scenario `normal`; `outage` = no grid 13:00-17:00) | `Allocation` (404 unknown batch, 422 bad scenario) | `post_allocate.json` |
+| 14 | POST | `/api/allocate` | `optimiser` | `{batch_id?, date?, scenario?: "normal" \| "outage", farm_ids?}` (all optional; default batch = latest not `analysis_invalid`, default date = first forecast day, default scenario `normal`; any other date uses historical weather and adds a warning; `outage` = no grid 13:00-17:00, the pump may still run there on the sun alone at a reduced flow) | `Allocation` (404 unknown batch, 422 bad scenario). `solar_share` = solar kWh / total kWh: within an hour the sun covers min(PV kW, pump kW) and the grid the rest | `post_allocate.json` |
 | 15 | POST | `/api/soil/simulate` | `soil` | `{farm_id, batch_id, days?, years?, soil_ece?, ecw?}` | `SoilSimulation` (see below) | `post_soil_simulate.json` |
 | 16 | POST | `/api/scenarios/heatwave` | `heatwave` | `{scenario_id: "heatwave_outage"}` | `{scenario_id, label, date, allocation: Allocation, baseline: {energy_kwh, solar_share}, tag}` | `post_scenarios_heatwave.json` |
 | 17 | GET | `/api/impact` | `impact` | – | `{period, tww_allocated_m3, fresh_water_saved_m3, energy_kwh, solar_share, co2_avoided_kg, farms_served, small_farms_served, batches_blocked, tag}` | `impact.json` |
@@ -132,7 +132,8 @@ Decision: any failed `block` → `blocked`; else any failed `condition` → `con
 
 `POST /api/allocate` with `{"batch_id": "SSUD-20260708"}` → `Allocation` (real output, abbreviated: 3 of the 10 farms, only the pumping hours)
 (the batch is dated July, the weather forecast starts on 21 Nov: the date defaults to the first forecast day and does not have to match the batch;
-farm A is limited by soil salinity, farm C (lettuce) is blocked, 800 of the 1,200 m³ are allocated and the rest stays in the basin)
+farm A is limited by soil salinity, farm C (lettuce) is blocked, 800 of the 1,200 m³ are allocated and the rest stays in the basin;
+the sun covers part of the pumping at midday, hence a solar share above 0)
 ```json
 {
   "batch_id": "SSUD-20260708",
@@ -165,39 +166,39 @@ farm A is limited by soil salinity, farm C (lettuce) is blocked, 800 of the 1,20
       "basin_m3": 1350.0
     },
     {
-      "hour": 7,
-      "pump_kw": 14.9,
-      "source": "grid",
-      "basin_m3": 1400.0
+      "hour": 11,
+      "pump_kw": 44.6,
+      "source": "solar",
+      "basin_m3": 1500.0
+    },
+    {
+      "hour": 12,
+      "pump_kw": 44.6,
+      "source": "solar",
+      "basin_m3": 1650.0
+    },
+    {
+      "hour": 13,
+      "pump_kw": 44.6,
+      "source": "solar",
+      "basin_m3": 1800.0
+    },
+    {
+      "hour": 14,
+      "pump_kw": 44.6,
+      "source": "solar",
+      "basin_m3": 1950.0
     },
     {
       "hour": 18,
-      "pump_kw": 44.6,
-      "source": "grid",
-      "basin_m3": 1550.0
-    },
-    {
-      "hour": 19,
-      "pump_kw": 44.6,
-      "source": "grid",
-      "basin_m3": 1700.0
-    },
-    {
-      "hour": 20,
-      "pump_kw": 44.6,
-      "source": "grid",
-      "basin_m3": 1850.0
-    },
-    {
-      "hour": 21,
-      "pump_kw": 44.6,
+      "pump_kw": 14.9,
       "source": "grid",
       "basin_m3": 2000.0
     },
     "... 24 slots in all (hour 0..23); hours without pumping have source \"off\""
   ],
   "energy_kwh": 238.0,
-  "solar_share": 0.0,
+  "solar_share": 0.41,
   "fresh_replaced_m3": 800.0,
   "warnings": [
     "400 m3 not allocated: kept in the basin."
