@@ -1,11 +1,13 @@
-import { useMemo } from "react";
+import { useMemo, useRef, useState } from "react";
 import ErrorBox from "../../components/ErrorBox";
 import { Band, Intro, Skeleton } from "../../components/ui";
 import { USE_MOCKS } from "../../config";
 import { fmtDateL, useLang } from "../../i18n";
 import AllocationCard, { CardSkeleton } from "./AllocationCard";
+import Controls, { type DayChoice } from "./Controls";
 import { DemoTag, Notes } from "./Notes";
-import { usePlan } from "./data";
+import ScheduleChart from "./ScheduleChart";
+import { HEATWAVE, usePlan, type PlanParams, type Scenario } from "./data";
 import { A, fmtMoney, fmtN } from "./texts";
 
 /*
@@ -14,8 +16,14 @@ import { A, fmtMoney, fmtN } from "./texts";
  */
 export default function OperatorAllocation() {
   const { lang } = useLang();
-  const plan = usePlan();
+  const [scenario, setScenario] = useState<Scenario>("normal");
+  const [day, setDay] = useState<DayChoice>({ kind: "forecast" });
+  const params: PlanParams =
+    day.kind === "heatwave" ? { scenario, ...HEATWAVE } : day.kind === "custom" ? { scenario, date: day.date } : { scenario };
+  const plan = usePlan(params);
   const d = plan.data;
+  const forecastDate = useRef<string | undefined>(undefined); // the backend's default day, remembered for the button label
+  if (d?.params.date === undefined && d?.savings?.date) forecastDate.current = d.savings.date;
 
   const byFarm = useMemo(() => new Map((d?.allocation.items ?? []).map((i) => [i.farm_id, i])), [d]);
   const money = useMemo(() => new Map((d?.savings?.items ?? []).map((i) => [i.farm_id, i])), [d]);
@@ -74,6 +82,16 @@ export default function OperatorAllocation() {
           <p className="text-center text-[17px]">{A.empty[lang]}</p>
         ) : (
           <>
+            <Controls
+              scenario={scenario}
+              onScenario={setScenario}
+              day={day}
+              onDay={setDay}
+              forecastDate={forecastDate.current}
+              heatwaveDate={HEATWAVE.date}
+              busy={plan.loading}
+              lang={lang}
+            />
             <dl className="mb-8 grid grid-cols-2 gap-3 lg:grid-cols-5">
               {tiles!.map((t) => (
                 <div key={t.label} className="min-w-0 border border-line bg-white px-4 py-3">
@@ -85,6 +103,9 @@ export default function OperatorAllocation() {
                 </div>
               ))}
             </dl>
+            <div className="mb-10">
+              <ScheduleChart allocation={d.allocation} scenario={d.params.scenario} lang={lang} />
+            </div>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {d.farms.map((f) => {
                 const item = byFarm.get(f.id);

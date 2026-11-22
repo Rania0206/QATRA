@@ -10,7 +10,7 @@ import AllocationCard from "./AllocationCard";
 import OperatorAllocation from "./OperatorView";
 import { DemoTag, Notes } from "./Notes";
 import { usePlan } from "./data";
-import { A, farmerWarnings } from "./texts";
+import { A, farmerWarnings, pumpLine } from "./texts";
 
 /** "How much water does my farm get today?" - one farm only. A farmer never sees other farms. */
 function FarmerAllocation() {
@@ -75,6 +75,11 @@ function FarmerAllocation() {
           ) : (
             <>
               <AllocationCard farm={farm} item={item} money={money} compat={compat} lang={lang} large onChange={change} />
+              {item.m3 > 0 && d.allocation.schedule.some((s) => s.pump_kw > 0) && (
+                <p className="mx-auto mt-6 max-w-2xl text-center text-[17px] leading-snug">
+                  {pumpLine(d.allocation.schedule.filter((s) => s.pump_kw > 0).map((s) => s.hour), lang)}
+                </p>
+              )}
               <Notes warnings={farmerWarnings([...d.allocation.warnings, ...(d.savings?.warnings ?? [])], farm.id)} lang={lang} />
               <DemoTag lang={lang} />
             </>

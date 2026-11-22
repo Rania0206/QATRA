@@ -89,7 +89,69 @@ export const A = {
     fr: "L'argent est une estimation : les prix non vérifiés sont signalés dans les hypothèses.",
     ar: "المبلغ تقدير: الأسعار غير المؤكدة مشار إليها في الافتراضات.",
   },
+  // judge controls
+  ctlTitle: { en: "Try the demo", fr: "Essayez la démo", ar: "جرّب العرض" },
+  ctlScenario: { en: "Scenario", fr: "Scénario", ar: "السيناريو" },
+  ctlNormal: { en: "Normal day", fr: "Journée normale", ar: "يوم عادي" },
+  ctlOutage: { en: "Power cut", fr: "Coupure de courant", ar: "انقطاع الكهرباء" },
+  ctlDay: { en: "Day", fr: "Jour", ar: "اليوم" },
+  ctlForecast: { en: "Forecast day", fr: "Jour de prévision", ar: "يوم التوقعات" },
+  ctlHeatwave: { en: "Heatwave day", fr: "Jour de canicule", ar: "يوم موجة الحر" },
+  ctlOther: { en: "Other day", fr: "Autre jour", ar: "يوم آخر" },
+  updating: { en: "Updating…", fr: "Mise à jour…", ar: "جارٍ التحديث…" },
+  mockCtl: {
+    en: "Mock mode: the controls change the label only; the same sample plan is shown.",
+    fr: "Mode maquette : les commandes ne changent que l'intitulé ; le même plan d'exemple est affiché.",
+    ar: "وضع تجريبي: الأزرار تغيّر العنوان فقط؛ تظهر نفس الخطة النموذجية.",
+  },
+  // pump schedule chart
+  chartTitle: { en: "When the pump runs", fr: "Quand la pompe fonctionne", ar: "متى تعمل المضخة" },
+  chartLead: {
+    en: "Each bar is one hour of the day: how much power the pump uses.",
+    fr: "Chaque barre est une heure de la journée : la puissance utilisée par la pompe.",
+    ar: "كل عمود هو ساعة من اليوم: القدرة التي تستعملها المضخة.",
+  },
+  hour: { en: "Hour", fr: "Heure", ar: "الساعة" },
+  basinLevel: { en: "Basin level", fr: "Niveau du bassin", ar: "مستوى الحوض" },
+  source: { en: "Energy", fr: "Énergie", ar: "الطاقة" },
+  srcSolar: { en: "Solar", fr: "Solaire", ar: "شمسية" },
+  srcGrid: { en: "Grid", fr: "Réseau", ar: "الشبكة" },
+  srcBasin: { en: "Basin", fr: "Bassin", ar: "الحوض" },
+  solarOnly: { en: "solar only (power cut)", fr: "solaire seul (coupure)", ar: "شمسية فقط (انقطاع)" },
+  powerCut: { en: "Power cut", fr: "Coupure", ar: "انقطاع" },
+  notPumping: { en: "Not pumping", fr: "À l'arrêt", ar: "متوقفة" },
+  noPumping: { en: "The pump does not run today: nothing to pump.", fr: "La pompe ne fonctionne pas aujourd'hui : rien à pomper.", ar: "المضخة لا تعمل اليوم: لا شيء لضخه." },
+  chartAria: { en: "Bar chart of the pump's power for each hour of the day", fr: "Histogramme de la puissance de la pompe heure par heure", ar: "مخطط أعمدة لقدرة المضخة في كل ساعة من اليوم" },
 } satisfies Record<string, Tr>;
+
+export const hh = (h: number) => `${String(h).padStart(2, "0")}:00`;
+
+/** Consecutive pumping hours as ranges: [11,12,13,14] -> [[11, 15]] ("11:00 to 15:00"). */
+export function pumpRanges(hours: number[]): [number, number][] {
+  const out: [number, number][] = [];
+  for (const h of [...hours].sort((a, b) => a - b)) {
+    const last = out[out.length - 1];
+    if (last && last[1] === h) last[1] = h + 1;
+    else out.push([h, h + 1]);
+  }
+  return out;
+}
+
+const join = (parts: string[], lang: Lang) => {
+  if (parts.length < 2) return parts.join("");
+  const comma = lang === "ar" ? "، " : ", ";
+  const and = { en: " and ", fr: " et ", ar: " و" }[lang]; // Arabic "and" is written attached to the next word
+  return `${parts.slice(0, -1).join(comma)}${and}${parts[parts.length - 1]}`;
+};
+
+/** "Your water is pumped between 11:00 and 15:00" (one phrase per block of pumping hours). */
+export function pumpLine(hours: number[], lang: Lang): string {
+  const parts = pumpRanges(hours).map(([a, b]) =>
+    ({ en: `between ${hh(a)} and ${hh(b)}`, fr: `entre ${hh(a)} et ${hh(b)}`, ar: `بين ${hh(a)} و${hh(b)}` })[lang],
+  );
+  const head = { en: "Your water is pumped", fr: "Votre eau est pompée", ar: "يُضخّ ماؤك" }[lang];
+  return `${head} ${join(parts, lang)}.`;
+}
 
 /** Numbers in the reader's language, Latin digits (same choice as the dates). */
 export function fmtN(v: number, lang: Lang, decimals = 1, fixed = false): string {
