@@ -324,3 +324,62 @@ export interface Health {
   datasets: Record<string, number>;
   errors?: Record<string, string>;
 }
+
+// A-14a: savings of one plan day (POST /api/savings). Replaces SavingsResult above as the response of the endpoint.
+export interface SavingsOverrides {
+  fertiliser_price?: number; // TND/kg of ammonium nitrate
+  electricity_price?: number; // TND/kWh
+  treated_water_price?: number; // TND/m3
+  availability_factor?: number; // 0..1
+  irrigation_days?: number;
+  qatra_fee_pct?: number; // 0..100
+  seasons_per_year?: number;
+}
+
+export interface SavingsAssumption {
+  name: string;
+  value: number;
+  unit: string;
+  source: string;
+  status: TagStatus;
+}
+
+export interface SavingsItem {
+  farm_id: string;
+  status: string; // allocated | capped | conditional | blocked
+  m3: number;
+  nitrogen_kg: number;
+  well_kwh_saved: number;
+  electricity_saved_tnd: number;
+  fertiliser_value_tnd: number;
+  water_cost_tnd: number;
+  net_saving_tnd: number;
+  qatra_fee_tnd: number;
+  farmer_net_tnd: number;
+  reason?: string | null;
+  tag: Tag;
+}
+
+export interface SavingsTotals {
+  m3: number;
+  electricity_saved_tnd: number;
+  fertiliser_value_tnd: number;
+  water_cost_tnd: number;
+  net_saving_tnd: number;
+  qatra_fee_tnd: number;
+  farmer_net_tnd: number;
+  tag: Tag;
+}
+
+export interface SavingsReport {
+  batch_id: string;
+  date?: string | null;
+  scenario: "normal" | "outage";
+  items: SavingsItem[];
+  day: SavingsTotals; // ESTIMATE
+  season: SavingsTotals; // PROJECTION: day x irrigation_days
+  year: SavingsTotals; // PROJECTION: season x seasons_per_year
+  assumptions: SavingsAssumption[];
+  warnings: string[];
+  tag: Tag;
+}
