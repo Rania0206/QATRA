@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { CircleMarker, LayerGroup, LayersControl, MapContainer, Polygon, Popup, TileLayer, Tooltip } from "react-leaflet";
+import { useEffect, useState } from "react";
+import { CircleMarker, LayerGroup, LayersControl, MapContainer, Polygon, Popup, TileLayer, Tooltip, useMap } from "react-leaflet";
 import type { LatLngTuple } from "leaflet";
 import type { MapFeature, MapLayer, Plant } from "../../api/types";
 import { isRtl, useLang, type Lang } from "../../i18n";
@@ -20,7 +20,7 @@ const OSM_ATTR = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenS
 export const STYLE: Record<string, { colour: string; radius: number }> = {
   plants: { colour: "#ffffff", radius: 11 },
   osm_plants: { colour: "#e2d9c3", radius: 7 },
-  farms: { colour: "#b9d86b", radius: 7 },
+  my_farm: { colour: "#f2c14e", radius: 11 }, // the farmer's own farm, stands out from the rest
   basin: { colour: "#8fd3e8", radius: 8 },
   farmland: { colour: "#b9d86b", radius: 0 },
 };
@@ -125,7 +125,7 @@ function LayerFeatures({ layer, plants, lang }: { layer: MapLayer; plants: Plant
             radius={style.radius}
             pathOptions={{ color: OUTLINE, weight: 2, fillColor: style.colour, fillOpacity: 0.95 }}
           >
-            {layer.id === "farms" && <Tooltip direction="right" offset={[8, 0]}>{`${M.farm[lang]} ${f.id}`}</Tooltip>}
+            {layer.id === "my_farm" && <Tooltip direction="right" permanent offset={[10, 0]}>{M.yourFarm[lang]}</Tooltip>}
             {popup}
           </CircleMarker>
         );
@@ -134,9 +134,27 @@ function LayerFeatures({ layer, plants, lang }: { layer: MapLayer; plants: Plant
   );
 }
 
+/** Farmer view: frame his own farm together with the treatment plants, so he sees where his water comes from. */
+function FitToFarm({ points }: { points: LatLngTuple[] }) {
+  const map = useMap();
+  useEffect(() => {
+    if (points.length >= 2) map.fitBounds(points, { padding: [80, 80], maxZoom: 13, animate: false });
+    // once, when the map is created (it is remounted when the language changes)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [map]);
+  return null;
+}
+
 export default function MapView({ layers, plants }: { layers: MapLayer[]; plants: Plant[] }) {
   const { lang } = useLang();
   const [tilesFailed, setTilesFailed] = useState(false);
+  const mine = layers.find((l) => l.id === "my_farm")?.features.find(hasCoords);
+  const framing: LatLngTuple[] = mine
+    ? [
+        [mine.lat, mine.lon],
+        ...layers.filter((l) => l.id === "plants").flatMap((l) => l.features.filter(hasCoords).map((f): LatLngTuple => [f.lat, f.lon])),
+      ]
+    : [];
   return (
     <div className="space-y-3">
       {tilesFailed && (
@@ -153,6 +171,7 @@ export default function MapView({ layers, plants }: { layers: MapLayer[]; plants
           scrollWheelZoom
           className="isolate h-[68vh] min-h-96 w-full border border-line bg-sand"
         >
+          <FitToFarm points={framing} />
           <LayersControl position="topright">
             <LayersControl.BaseLayer checked name={M.satellite[lang]}>
               <TileLayer url={ESRI} attribution={ESRI_ATTR} maxZoom={19} eventHandlers={{ tileerror: () => setTilesFailed(true) }} />

@@ -8,6 +8,12 @@ export const M = {
     fr: "Stations, périmètre irrigué, terres agricoles et bassin. Touchez un repère ou un champ pour les détails.",
     ar: "المحطات، المنطقة السقوية، الأراضي الفلاحية وحوض التخزين. اضغط على علامة أو حقل لرؤية التفاصيل.",
   },
+  noFarmHint: {
+    en: "Your own farm appears here once you enter your farm code (Compatibility or Soil).",
+    fr: "Votre ferme apparaît ici dès que vous saisissez votre code (Compatibilité ou Sol).",
+    ar: "تظهر مزرعتك هنا بعد إدخال رمز مزرعتك (الملاءمة أو التربة).",
+  },
+  yourFarm: { en: "Your farm", fr: "Votre ferme", ar: "مزرعتك" },
   layers: { en: "On the map", fr: "Sur la carte", ar: "على الخريطة" },
   onMap: { en: "on the map", fr: "sur la carte", ar: "على الخريطة" },
   noLocation: { en: "no location in the data", fr: "pas de position dans les données", ar: "لا يوجد موقع في البيانات" },
@@ -22,7 +28,6 @@ export const M = {
   },
   satellite: { en: "Satellite", fr: "Satellite", ar: "قمر صناعي" },
   streets: { en: "Street map", fr: "Plan des rues", ar: "خريطة الشوارع" },
-  farm: { en: "Farm", fr: "Ferme", ar: "مزرعة" },
   capacity: { en: "Capacity", fr: "Capacité", ar: "السعة" },
   unknown: { en: "unknown", fr: "inconnue", ar: "غير معروفة" },
   perDay: { en: "m³/day", fr: "m³/jour", ar: "م³/يوم" },
@@ -47,6 +52,6 @@ export const LAYER_LABEL: Record<string, Tr> = {
   irrigated_areas: { en: "Irrigated area (treated water)", fr: "Périmètre irrigué (eau traitée)", ar: "المنطقة السقوية (ماء معالج)" },
   osm_plants: { en: "Other plants near Sousse", fr: "Autres stations près de Sousse", ar: "محطات أخرى قرب سوسة" },
   farmland: { en: "Farmland", fr: "Terres agricoles", ar: "الأراضي الفلاحية" },
-  farms: { en: "Demo farms", fr: "Fermes de démonstration", ar: "مزارع تجريبية" },
+  my_farm: { en: "Your farm", fr: "Votre ferme", ar: "مزرعتك" },
   basin: { en: "Storage basin", fr: "Bassin de stockage", ar: "حوض التخزين" },
 };
