@@ -19,10 +19,13 @@ from typing import Optional
 from pydantic import BaseModel
 
 from app.engine import soil
+from app.engine.batches import get_batch
+from app.engine.compatibility import default_batch
 from app.engine.farms import list_farms
 from app.engine.needs import daily_need, forecast_dates
 from app.engine.rules import evaluate
-from app.schemas import AllocationItem, Batch, Farm
+from app.engine.schedule import Scenario, schedule
+from app.schemas import Allocation, AllocationItem, Batch, Farm
 
 # Anti-rebound: a farm's current fresh-water use is stored per SEASON (sim_farms.current_fresh_water_m3_per_season,
 # built in scripts/07_simulate.py from ~1000 mm of ET0 per season). 1000 mm of ET0 is about 180 days at the
@@ -153,3 +156,26 @@ def allocate(batch: Batch, date: Optional[str] = None, options: Optional[Allocat
         warnings.append(f"{leftover:g} m3 not allocated: kept in the basin.")
     return Plan(date=day, batch_id=batch.id, batch_volume_m3=batch.volume_m3, items=items,
                 total_allocated_m3=total, fresh_replaced_m3=total, warnings=warnings)
+
+
+# ---------------------------------------------------------------- A-05d: allocation + pump schedule = the contract Allocation
+def plan(batch_id: Optional[str] = None, date: Optional[str] = None, scenario: Scenario = "normal",
+         farm_ids: Optional[list[str]] = None) -> Optional[Allocation]:
+    """Who gets how much (allocate) and when the pump runs (schedule). None if the batch does not exist.
+
+    Default batch: the latest one that is not analysis_invalid (the same default as the compatibility screen).
+    """
+    batch = get_batch(batch_id) if batch_id else default_batch()
+    if batch is None:
+        return None
+    p = allocate(batch, date, AllocateOptions(farm_ids=farm_ids))
+    s = schedule(p.total_allocated_m3, p.date, scenario)
+    return Allocation(
+        batch_id=batch.id,
+        items=[AllocationItem(farm_id=i.farm_id, status=i.status, m3=i.m3, cap_reason=i.cap_reason) for i in p.items],
+        schedule=s.slots,
+        energy_kwh=s.energy_kwh,
+        solar_share=s.solar_share,
+        fresh_replaced_m3=s.pumped_m3,  # what actually reaches the farms
+        warnings=p.warnings + s.warnings,
+    )
