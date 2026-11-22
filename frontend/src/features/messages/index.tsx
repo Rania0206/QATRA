@@ -56,7 +56,7 @@ export default function MessagesTab() {
 
   return (
     <>
-      <Band tone="olive" className="md:py-24">
+      <Band tone="olive">
         <Intro as="h1" size="xl" eyebrow={MS.eyebrow[lang]} title={MS.title[lang]}>
           <p>{MS.lead[lang]}</p>
         </Intro>

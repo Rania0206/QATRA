@@ -281,7 +281,7 @@ export default function SourcesTab() {
 
   return (
     <>
-      <Band tone="olive" className="md:py-24">
+      <Band tone="olive">
         <Intro as="h1" size="xl" eyebrow={Sx.eyebrow[lang]} title={Sx.title[lang]}>
           <p>{Sx.lead[lang]}</p>
           {Sx.englishNote[lang] && <p className="mt-3 text-[length:calc(15px*var(--fs))]">{Sx.englishNote[lang]}</p>}

@@ -42,7 +42,7 @@ export default function OperatorAllocation() {
 
   return (
     <>
-      <Band tone="olive" className="md:py-20">
+      <Band tone="olive">
         <p role="note" className="mx-auto mb-8 max-w-2xl border-2 border-ink px-4 py-2 text-center text-[length:calc(15px*var(--fs))] font-medium">
           {A.opBanner[lang]}
         </p>

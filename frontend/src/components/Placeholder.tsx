@@ -13,7 +13,7 @@ export default function Placeholder({ title, endpoints }: Props) {
   const known = Object.values(TAB_LABEL).find((t) => t.en === title);
   return (
     <>
-      <Band tone="olive" className="md:py-32">
+      <Band tone="olive">
         <Intro as="h1" size="xl" eyebrow={C.comingNext[lang]} title={known ? known[lang] : title}>
           <p>{C.building[lang]}</p>
         </Intro>

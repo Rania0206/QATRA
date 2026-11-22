@@ -55,7 +55,7 @@ export default function PublicTab() {
 
   return (
     <>
-      <Band tone="olive" className="md:py-28">
+      <Band tone="olive">
         <Intro as="h1" size="xl" eyebrow={PB.eyebrow[lang]} title={PB.title[lang]}>
           <p>{PB.lead[lang]}</p>
         </Intro>

@@ -66,10 +66,10 @@ export default function BatchesTab() {
   return (
     <>
       {/* Hero */}
-      <Band tone="olive" className="md:py-32">
+      <Band tone="olive">
         <Intro as="h1" size="xl" eyebrow={B.eyebrow[lang]} title={B.title[lang]}>
           <p>{B.lead[lang]}</p>
-          <button type="button" className="btn mt-9" onClick={() => scrollTo("daily")}>
+          <button type="button" className="btn mt-5" onClick={() => scrollTo("daily")}>
             {B.see[lang]}
           </button>
         </Intro>

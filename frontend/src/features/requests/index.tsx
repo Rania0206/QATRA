@@ -8,6 +8,7 @@ import { useApi } from "../../hooks/useApi";
 import { useRole } from "../../hooks/useHashRole";
 import { fmtDateL, useLang } from "../../i18n";
 import { requestPowers } from "../../roles";
+import RequestDrawer from "./RequestDrawer";
 import RequestForm from "./RequestForm";
 import { RQ } from "./texts";
 
@@ -16,7 +17,8 @@ const TONE: Record<RequestStatus, Tone> = { pending: "neutral", approved: "ok", 
 
 export default function RequestsTab() {
   const { lang } = useLang();
-  const power = requestPowers(useRole()); // who may send, who may decide
+  const role = useRole();
+  const power = requestPowers(role); // who may send, who may decide
   const farms = useApi<Farm[]>(() => get<Farm[]>("/api/farms"));
   const list = useApi<WaterRequest[]>(() => get<WaterRequest[]>("/api/requests"));
   // only for the "check against the rules" box of the form: if it is missing the form still works
@@ -31,7 +33,10 @@ export default function RequestsTab() {
   const [error, setError] = useState<Error | null>(null);
   const [filter, setFilter] = useState<Filter>("all");
 
+  const [openId, setOpenId] = useState<string | null>(null);
+
   const shown = items.filter((r) => filter === "all" || r.status === filter);
+  const opened = items.find((r) => r.id === openId) ?? null; // read from the list, so the drawer shows the new status after a decision
 
   const create = async (body: RequestIn): Promise<WaterRequest> => {
     const created = await post<WaterRequest>("/api/requests", body);
@@ -83,7 +88,7 @@ export default function RequestsTab() {
       </>
     );
 
-  const note = power.send && power.decide ? RQ.noteBoth[lang] : power.send ? RQ.noteSend[lang] : RQ.noteDecide[lang];
+  const note = role === null ? RQ.noteBoth[lang] : power.send ? RQ.noteSend[lang] : RQ.noteDecide[lang];
 
   return (
     <>
@@ -139,9 +144,11 @@ export default function RequestsTab() {
                   </thead>
                   <tbody>
                     {shown.map((r) => (
-                      <tr key={r.id} className="border-b border-line last:border-0" data-status={r.status}>
+                      <tr key={r.id} onClick={() => setOpenId(r.id)} className="cursor-pointer border-b border-line last:border-0 hover:bg-sand/50" data-status={r.status}>
                         <td className="px-3 py-3" dir="ltr">
-                          {r.id}
+                          <button type="button" onClick={() => setOpenId(r.id)} aria-label={`${RQ.openRequest[lang]} ${r.id}`} className="link">
+                            {r.id}
+                          </button>
                         </td>
                         <td className="px-3 py-3">
                           {r.farm_id}
@@ -157,17 +164,8 @@ export default function RequestsTab() {
                         <td className="px-3 py-3">
                           <Pill tone={TONE[r.status]}>{label(r.status)}</Pill>
                         </td>
-                        <td className="px-3 py-3 text-end">
-                          {power.decide && r.status === "pending" && (
-                            <span className="inline-flex gap-2">
-                              <button type="button" disabled={busy !== null} onClick={() => decide(r, "approved")} className="border border-ink px-3 py-1 text-[length:calc(16px*var(--fs))] hover:bg-sand disabled:opacity-50">
-                                {RQ.approve[lang]}
-                              </button>
-                              <button type="button" disabled={busy !== null} onClick={() => decide(r, "rejected")} className="border border-ink px-3 py-1 text-[length:calc(16px*var(--fs))] hover:bg-sand disabled:opacity-50">
-                                {RQ.reject[lang]}
-                              </button>
-                            </span>
-                          )}
+                        <td className="px-3 py-3 text-end text-ink-soft" aria-hidden="true">
+                          {lang === "ar" ? "‹" : "›"}
                         </td>
                       </tr>
                     ))}
@@ -178,6 +176,17 @@ export default function RequestsTab() {
           </section>
         </div>
       </Band>
+
+      {opened && (
+        <RequestDrawer
+          request={opened}
+          lang={lang}
+          canDecide={power.decide}
+          busy={busy !== null}
+          onDecide={(status) => decide(opened, status)}
+          onClose={() => setOpenId(null)}
+        />
+      )}
     </>
   );
 }

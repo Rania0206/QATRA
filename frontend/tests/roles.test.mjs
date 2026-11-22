@@ -24,11 +24,11 @@ test("only the plant operator and the regional office see all farms", () => {
   assert.equal(ROLE_IDS.length, 5);
 });
 
-test("requests: GDA sends, ONAS and CRDA decide, nobody does both, Lab and Public do neither; no role = demo (both)", () => {
+test("requests: GDA sends, ONAS and CRDA decide, nobody does both, Lab and Public do neither; no role = can send, cannot decide", () => {
   assert.deepEqual(requestPowers("gda"), { send: true, decide: false });
   assert.deepEqual(requestPowers("onas"), { send: false, decide: true });
   assert.deepEqual(requestPowers("crda"), { send: false, decide: true });
   assert.deepEqual(requestPowers("lab"), { send: false, decide: false });
   assert.deepEqual(requestPowers("public"), { send: false, decide: false });
-  assert.deepEqual(requestPowers(null), { send: true, decide: true });
+  assert.deepEqual(requestPowers(null), { send: true, decide: false });
 });

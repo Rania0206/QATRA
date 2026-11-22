@@ -60,6 +60,7 @@ export function fmtDateL(iso: string, lang: Lang): string {
 
 /** Section names, by tab id. Unknown ids fall back to the label given by App.tsx. */
 export const TAB_LABEL: Record<string, Tr> = {
+  home: { en: "Home", fr: "Accueil", ar: "الرئيسية" },
   map: { en: "Map", fr: "Carte", ar: "الخريطة" },
   batches: { en: "Batches", fr: "Lots d'eau", ar: "دفعات الماء" },
   compatibility: { en: "Compatibility", fr: "Compatibilité", ar: "الملاءمة" },

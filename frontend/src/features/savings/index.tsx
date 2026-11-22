@@ -55,7 +55,7 @@ function FarmerSavings() {
 
   return (
     <>
-      <Band tone="olive" className="md:py-24">
+      <Band tone="olive">
         <Intro as="h1" size="xl" eyebrow={S.eyebrow[lang]} title={S.title[lang]}>
           <p>{farmCode ? S.leadOwn[lang] : S.leadCode[lang]}</p>
         </Intro>
