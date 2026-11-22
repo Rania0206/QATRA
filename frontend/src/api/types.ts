@@ -338,6 +338,8 @@ export interface Message {
   text_fr?: string | null; // outgoing: French and Tunisian Arabic
   text_ar?: string | null;
   needs_human_review?: boolean; // true while the Arabic text is not approved by a Tunisian speaker
+  batch_id?: string | null; // outgoing: the batch of the allocation (link to /passport/{batch_id})
+  status?: string | null; // outgoing: allocated | conditional | capped | blocked
 }
 
 export interface Health {

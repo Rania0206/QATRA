@@ -256,6 +256,8 @@ class Message(BaseModel):
     text_fr: Optional[str] = None  # outgoing messages: French and Tunisian Arabic (no language column in the data)
     text_ar: Optional[str] = None
     needs_human_review: bool = False  # true while the Arabic text has not been approved by a Tunisian speaker
+    batch_id: Optional[str] = None  # outgoing: the batch of the allocation (the UI links to its passport)
+    status: Optional[str] = None  # outgoing: allocated | conditional | capped | blocked
 
 
 class ReplyIn(BaseModel):

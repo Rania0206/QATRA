@@ -62,7 +62,7 @@ _Last updated: 2026-11-22. Updated by whoever merges into `dev`; keep it current
 
 | Task | Owner | State |
 |---|---|---|
-| B-08a | Dev B | Messages to the farmers: `engine/messages.py` (templates allocated, conditional, capped, blocked in French and Tunisian Arabic, saving line from Dev A's savings engine), `GET /api/messages`, `POST /api/messages/reply` (replies in memory). The Arabic waits for a Tunisian speaker (`docs/messages-templates.md`). Branch `feature/B-08-messages` |
+| B-08a, B-08b | Dev B | Messages to the farmers: `engine/messages.py` (templates allocated, conditional, capped, blocked in French and Tunisian Arabic, saving line from Dev A's savings engine), `GET /api/messages`, `POST /api/messages/reply` (replies in memory), and the Messages tab: a phone mockup with chat bubbles, farm selector, FR / AR / both toggle, link to the water passport and quick replies 1 / 2. The Arabic waits for a Tunisian speaker (`docs/messages-templates.md`). Branch `feature/B-08-messages` |
 
 ### Not done yet
 
@@ -71,7 +71,7 @@ _Last updated: 2026-11-22. Updated by whoever merges into `dev`; keep it current
 | Allocation tab | Next. The API exists (`POST /api/allocate`), the tab is still a placeholder |
 | A-05 solar threshold | Open point for Dev A: the pump schedule calls solar only if PV ≥ the full pump power (44.6 kW); the 60 kWp array peaks at 44.3 kW on the heatwave day, so it plans 7 % solar there (`SOLAR_MIN_FRACTION`). The heatwave model uses a pump power proportional to its flow |
 | Supply forecast (cut from the MVP), risk score (A-08), anomalies, impact, messages, requests, territory, LLM explain | Router stubs. The Impact tab only shows a small example |
-| Allocation, Savings, Messages, Public, Territory tabs (the Messages API is on the branch above) | Placeholders. The Savings API exists (`POST /api/savings`), the business view (A-14c) does not |
+| Allocation, Savings, Public, Territory tabs | Placeholders. The Savings API exists (`POST /api/savings`), the business view (A-14c) does not |
 | Passport `destinations` | Still empty: it can now be filled from `POST /api/allocate` (A-05) |
 | Map: the version with all farms coloured by decision (B-02b) | Not merged: `dev` deliberately shows only the farmer's own farm. The code is in git history (`b733d53`, branch `feature/B-02b-map-farms`) |
 | Map and Soil texts | English, French and Arabic. Passport page: English only |
@@ -485,6 +485,8 @@ blocked      why in simple words, safety first, never a fault of the farmer; NO 
 saving line  "About {X} TND saved this season (estimate)"  only if Dev A's savings engine returns X > 0 for the farm
 ```
 `{m3}` is the farm's volume in the Allocation; the delivery hours are the longest block of consecutive pump hours of the allocation's schedule (the pump may run at other hours too, which are not announced). `{X}` is `savings(plan, farm_id).season.farmer_net_tnd`, printed exactly as returned and never computed in the messages. **Every Arabic template has `needs_human_review: true`** until a Tunisian speaker approves it: the review sheet is `docs/messages-templates.md`.
+
+**The tab** (B-08b): a phone mockup (status bar, QATRA contact, chat bubbles: outgoing green on the right, the farmer's replies grey on the left, timestamps). A farm selector and a FR / AR / FR + AR toggle; the Arabic is shown right to left. Under a message with water, "View water passport" opens `/passport/{batch_id}`. Buttons "1 · Accept" and "2 · Refuse" call `POST /api/messages/reply`; they are not shown when no water is offered (blocked farm). Buttons 3 and 4 will come once their meaning is defined. A visible note says "Mockup: no real message is sent".
 
 ---
 

@@ -8,7 +8,9 @@
     "text": null,
     "text_fr": "Bonjour, Ferme A. 35 m³ d'eau traitée disponibles, avec une condition : arrosez de façon à laver le sel du sol et surveillez la salinité de votre terre. Livraison demain de 11:00 à 15:00. Répondez 1 pour accepter, 2 pour refuser. Environ 876 TND économisés cette saison (estimation).",
     "text_ar": "مرحبا، ضيعة A. عندك 35 م³ من الماء المعالج، بشرط: اسقي بطريقة تغسل الملح من التربة وراقب ملوحة تربتك. التسليم غدوة من 11:00 إلى 15:00. جاوب بـ 1 باش تقبل ولا بـ 2 باش ترفض. تقريبًا 876 دينار تتوفّر عليك الموسم هذا (تقدير).",
-    "needs_human_review": true
+    "needs_human_review": true,
+    "batch_id": "SSUD-20260829",
+    "status": "conditional"
   },
   {
     "id": "OUT-SSUD-20260829-B",
@@ -19,7 +21,9 @@
     "text": null,
     "text_fr": "Bonjour, Ferme B. 75 m³ d'eau traitée disponibles pour vous. Livraison demain de 11:00 à 15:00. Répondez 1 pour accepter, 2 pour refuser. Environ 1156,5 TND économisés cette saison (estimation).",
     "text_ar": "مرحبا، ضيعة B. عندك 75 م³ من الماء المعالج متوفّرين. التسليم غدوة من 11:00 إلى 15:00. جاوب بـ 1 باش تقبل ولا بـ 2 باش ترفض. تقريبًا 1156.5 دينار تتوفّر عليك الموسم هذا (تقدير).",
-    "needs_human_review": true
+    "needs_human_review": true,
+    "batch_id": "SSUD-20260829",
+    "status": "allocated"
   },
   {
     "id": "OUT-SSUD-20260829-C",
@@ -30,7 +34,9 @@
     "text": null,
     "text_fr": "Bonjour, Ferme C. Aujourd'hui, nous ne pouvons pas vous livrer d'eau traitée : la culture « Laitue » se mange crue, et l'eau traitée ne peut pas l'arroser. C'est une règle de sécurité qui protège la santé de tous, vous compris. Ce n'est en rien un reproche à votre égard.",
     "text_ar": "مرحبا، ضيعة C. اليوم ما نجموش نبعثولك ماء معالج: الخسّ تتاكل نيّة، وما تتسقاش بالماء المعالج. هذا قانون أمان باش نحميو صحة الكل، وانت منهم. موش غلطة منك.",
-    "needs_human_review": true
+    "needs_human_review": true,
+    "batch_id": "SSUD-20260829",
+    "status": "blocked"
   },
   {
     "id": "OUT-SSUD-20260829-D",
@@ -41,7 +47,9 @@
     "text": null,
     "text_fr": "Bonjour, Ferme D. 121,9 m³ d'eau traitée disponibles pour vous. Livraison demain de 11:00 à 15:00. Répondez 1 pour accepter, 2 pour refuser. Environ 1935 TND économisés cette saison (estimation).",
     "text_ar": "مرحبا، ضيعة D. عندك 121.9 م³ من الماء المعالج متوفّرين. التسليم غدوة من 11:00 إلى 15:00. جاوب بـ 1 باش تقبل ولا بـ 2 باش ترفض. تقريبًا 1935 دينار تتوفّر عليك الموسم هذا (تقدير).",
-    "needs_human_review": true
+    "needs_human_review": true,
+    "batch_id": "SSUD-20260829",
+    "status": "allocated"
   },
   {
     "id": "OUT-SSUD-20260829-E",
@@ -52,7 +60,9 @@
     "text": null,
     "text_fr": "Bonjour, Ferme E. 92,5 m³ d'eau traitée disponibles pour vous. Livraison demain de 11:00 à 15:00. Répondez 1 pour accepter, 2 pour refuser. Environ 2032,5 TND économisés cette saison (estimation).",
     "text_ar": "مرحبا، ضيعة E. عندك 92.5 م³ من الماء المعالج متوفّرين. التسليم غدوة من 11:00 إلى 15:00. جاوب بـ 1 باش تقبل ولا بـ 2 باش ترفض. تقريبًا 2032.5 دينار تتوفّر عليك الموسم هذا (تقدير).",
-    "needs_human_review": true
+    "needs_human_review": true,
+    "batch_id": "SSUD-20260829",
+    "status": "allocated"
   },
   {
     "id": "OUT-SSUD-20260829-F",
@@ -63,7 +73,9 @@
     "text": null,
     "text_fr": "Bonjour, Ferme F. 154,1 m³ d'eau traitée disponibles pour vous. Livraison demain de 11:00 à 15:00. Répondez 1 pour accepter, 2 pour refuser. Environ 3354 TND économisés cette saison (estimation).",
     "text_ar": "مرحبا، ضيعة F. عندك 154.1 م³ من الماء المعالج متوفّرين. التسليم غدوة من 11:00 إلى 15:00. جاوب بـ 1 باش تقبل ولا بـ 2 باش ترفض. تقريبًا 3354 دينار تتوفّر عليك الموسم هذا (تقدير).",
-    "needs_human_review": true
+    "needs_human_review": true,
+    "batch_id": "SSUD-20260829",
+    "status": "allocated"
   },
   {
     "id": "OUT-SSUD-20260829-G",
@@ -74,7 +86,9 @@
     "text": null,
     "text_fr": "Bonjour, Ferme G. 24,7 m³ d'eau traitée disponibles pour vous. Livraison demain de 11:00 à 15:00. Répondez 1 pour accepter, 2 pour refuser. Environ 561 TND économisés cette saison (estimation).",
     "text_ar": "مرحبا، ضيعة G. عندك 24.7 م³ من الماء المعالج متوفّرين. التسليم غدوة من 11:00 إلى 15:00. جاوب بـ 1 باش تقبل ولا بـ 2 باش ترفض. تقريبًا 561 دينار تتوفّر عليك الموسم هذا (تقدير).",
-    "needs_human_review": true
+    "needs_human_review": true,
+    "batch_id": "SSUD-20260829",
+    "status": "allocated"
   },
   {
     "id": "OUT-SSUD-20260829-H",
@@ -85,7 +99,9 @@
     "text": null,
     "text_fr": "Bonjour, Ferme H. 11,3 m³ d'eau traitée disponibles pour vous. Livraison demain de 11:00 à 15:00. Répondez 1 pour accepter, 2 pour refuser. Environ 43,5 TND économisés cette saison (estimation).",
     "text_ar": "مرحبا، ضيعة H. عندك 11.3 م³ من الماء المعالج متوفّرين. التسليم غدوة من 11:00 إلى 15:00. جاوب بـ 1 باش تقبل ولا بـ 2 باش ترفض. تقريبًا 43.5 دينار تتوفّر عليك الموسم هذا (تقدير).",
-    "needs_human_review": true
+    "needs_human_review": true,
+    "batch_id": "SSUD-20260829",
+    "status": "allocated"
   },
   {
     "id": "OUT-SSUD-20260829-I",
@@ -96,7 +112,9 @@
     "text": null,
     "text_fr": "Bonjour, Ferme I. 38,2 m³ d'eau traitée disponibles pour vous. Livraison demain de 11:00 à 15:00. Répondez 1 pour accepter, 2 pour refuser. Environ 532,5 TND économisés cette saison (estimation).",
     "text_ar": "مرحبا، ضيعة I. عندك 38.2 م³ من الماء المعالج متوفّرين. التسليم غدوة من 11:00 إلى 15:00. جاوب بـ 1 باش تقبل ولا بـ 2 باش ترفض. تقريبًا 532.5 دينار تتوفّر عليك الموسم هذا (تقدير).",
-    "needs_human_review": true
+    "needs_human_review": true,
+    "batch_id": "SSUD-20260829",
+    "status": "allocated"
   },
   {
     "id": "OUT-SSUD-20260829-J",
@@ -107,7 +125,9 @@
     "text": null,
     "text_fr": "Bonjour, Ferme J. 246,6 m³ d'eau traitée disponibles pour vous. Livraison demain de 11:00 à 15:00. Répondez 1 pour accepter, 2 pour refuser. Environ 4093,5 TND économisés cette saison (estimation).",
     "text_ar": "مرحبا، ضيعة J. عندك 246.6 م³ من الماء المعالج متوفّرين. التسليم غدوة من 11:00 إلى 15:00. جاوب بـ 1 باش تقبل ولا بـ 2 باش ترفض. تقريبًا 4093.5 دينار تتوفّر عليك الموسم هذا (تقدير).",
-    "needs_human_review": true
+    "needs_human_review": true,
+    "batch_id": "SSUD-20260829",
+    "status": "allocated"
   },
   {
     "id": "IN-1",

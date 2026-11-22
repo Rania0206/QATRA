@@ -234,7 +234,7 @@ def outgoing_messages() -> list[dict]:
         farm = get_farm(item.farm_id)
         saving = _season_saving(alloc, item.farm_id, day) if item.status != "blocked" else None
         out.append({"id": f"OUT-{alloc.batch_id}-{item.farm_id}", "farm_id": item.farm_id, "direction": "out", "channel": "sms",
-                    "at": sent, **render(item, farm, DEFAULT_LANG, saving, window)})
+                    "at": sent, "batch_id": alloc.batch_id, "status": item.status, **render(item, farm, DEFAULT_LANG, saving, window)})
     return out
 
 

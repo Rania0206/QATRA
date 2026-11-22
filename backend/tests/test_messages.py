@@ -178,6 +178,15 @@ def test_one_message_per_farm_with_the_allocation_volumes():
         assert x["needs_human_review"] is True
 
 
+def test_an_outgoing_message_knows_its_batch_and_status_for_the_passport_link():
+    from app.engine.plan import plan
+    alloc = plan()
+    for x in m.outgoing_messages():
+        assert x["batch_id"] == alloc.batch_id
+        assert x["status"] == next(i.status for i in alloc.items if i.farm_id == x["farm_id"])
+    assert {x["farm_id"]: x["status"] for x in m.outgoing_messages()}["C"] == "blocked"
+
+
 def test_the_saving_comes_from_dev_as_savings_engine_for_that_farm_and_season():
     from app.engine.plan import plan
     from app.engine.savings import savings

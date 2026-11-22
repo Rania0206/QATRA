@@ -1,8 +1,13 @@
 {
-  "id": "M5",
-  "farm_id": "J",
-  "direction": "out",
+  "id": "IN-2",
+  "farm_id": "B",
+  "direction": "in",
   "channel": "sms",
-  "at": "2026-07-08T07:10:00",
-  "text_fr": "Demande notee pour demain."
+  "at": "2026-11-22T04:12:48",
+  "text": "1",
+  "text_fr": null,
+  "text_ar": null,
+  "needs_human_review": false,
+  "batch_id": null,
+  "status": null
 }
