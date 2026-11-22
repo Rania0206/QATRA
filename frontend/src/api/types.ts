@@ -306,11 +306,19 @@ export interface HeatwaveRun {
   hourly: HeatwaveHour[]; // 24 rows
 }
 
+/** POST /api/scenarios/heatwave body: `date` is optional (default: the scenario's day) and must be one of `dates`. */
+export interface HeatwaveRequest {
+  scenario_id: string;
+  date?: string;
+}
+
 /** POST /api/scenarios/heatwave */
 export interface HeatwaveResult {
   scenario_id: string;
   label: string;
   date: string;
+  dates: string[]; // the days that can be chosen: the days with an outage window
+  allocated_m3: number; // 0 when the batch of the day cannot be used: nothing is irrigated
   allocation: Allocation;
   baseline: { energy_kwh: number; solar_share: number }; // the naive run: all grid, no solar
   naive: HeatwaveRun;
