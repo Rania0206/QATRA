@@ -72,7 +72,7 @@ _Last updated: 2026-11-22. Updated by whoever merges into `dev`; keep it current
 | Allocation tab | Next. The API exists (`POST /api/allocate`), the tab is still a placeholder |
 | A-05 solar threshold | Open point for Dev A: the pump schedule calls solar only if PV ≥ the full pump power (44.6 kW); the 60 kWp array peaks at 44.3 kW on the heatwave day, so it plans 7 % solar there (`SOLAR_MIN_FRACTION`). The heatwave model uses a pump power proportional to its flow |
 | Supply forecast (cut from the MVP), risk score (A-08), anomalies, impact, messages, requests, territory, LLM explain | Router stubs. The Impact tab only shows a small example |
-| Territory tab (Allocation and Savings are built by Dev A, Public by Dev B) | Placeholder. The Savings API exists (`POST /api/savings`), the business view (A-14c) does not |
+| Territory tab (Allocation, Savings and Business are built by Dev A, Public by Dev B) | Placeholder. The Savings API exists (`POST /api/savings`), the business view (A-14c) does not |
 | Passport `destinations` | Still empty: it can now be filled from `POST /api/allocate` (A-05) |
 | Map: the version with all farms coloured by decision (B-02b) | Not merged: `dev` deliberately shows only the farmer's own farm. The code is in git history (`b733d53`, branch `feature/B-02b-map-farms`) |
 | Map and Soil texts | English, French and Arabic. Passport page: English only |
