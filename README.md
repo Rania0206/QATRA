@@ -56,14 +56,20 @@ _Last updated: 2026-11-22. Updated by whoever merges into `dev`; keep it current
 | B-05 | Dev B | Heatwave and grid outage: `engine/heatwave.py` (naive policy: 4 hours without water on 2026-08-26; QATRA policy on solar and the basin: 0) and `POST /api/scenarios/heatwave`. Volumes come from Dev A's plan (A-05) through an optional `need_fn` added to `plan.allocate` |
 | B-12 | Dev B | `GET /api/batches/{id}/passport` (quality summary, analysis checks, crops, timeline), passport page `/passport/{id}` for phones, reusable `<PassportQR>`, LAN scripts |
 
+### In progress (on a branch, not merged yet)
+
+| Task | Owner | State |
+|---|---|---|
+| B-06a | Dev B | Heatwave tab: two 24-hour panels, "Without QATRA" and "With QATRA" (pump power bars by source, basin level line, outage shaded 13:00-17:00, same axes on both). English, French, Arabic. Branch `feature/B-06-heatwave-ui` |
+
 ### Not done yet
 
 | Area | State |
 |---|---|
-| Heatwave tab (hourly chart naive vs QATRA) and Allocation tab | Next. Both APIs exist (`POST /api/scenarios/heatwave`, `POST /api/allocate`), the tabs are still placeholders |
+| Allocation tab | Next. The API exists (`POST /api/allocate`), the tab is still a placeholder |
 | A-05 solar threshold | Open point for Dev A: the pump schedule calls solar only if PV ≥ the full pump power (44.6 kW); the 60 kWp array peaks at 44.3 kW on the heatwave day, so it plans 7 % solar there (`SOLAR_MIN_FRACTION`). The heatwave model uses a pump power proportional to its flow |
 | Supply forecast (cut from the MVP), risk score (A-08), anomalies, impact, messages, requests, territory, LLM explain | Router stubs. The Impact tab only shows a small example |
-| Allocation, Savings, Heatwave, Messages, Public, Territory tabs | Placeholders |
+| Allocation, Savings, Messages, Public, Territory tabs | Placeholders |
 | Passport `destinations` | Still empty: it can now be filled from `POST /api/allocate` (A-05) |
 | Map: the version with all farms coloured by decision (B-02b) | Not merged: `dev` deliberately shows only the farmer's own farm. The code is in git history (`b733d53`, branch `feature/B-02b-map-farms`) |
 | Map and Soil texts | English, French and Arabic. Passport page: English only |
