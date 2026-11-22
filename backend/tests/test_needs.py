@@ -7,6 +7,7 @@ from app.engine.needs import (
     NeedsForecast,
     daily_need,
     forecast_dates,
+    weather_for,
     kc_for,
     needs_forecast,
     water_need,
@@ -66,8 +67,26 @@ def test_unknown_crop_does_not_crash():
     assert n.kc is None and n.need_m3 is None and n.et0_mm == 2.68
 
 
-def test_unknown_day_returns_none():
-    assert daily_need(get_farm("A"), "2030-01-01") is None
+def test_not_a_date_returns_none():
+    assert daily_need(get_farm("A"), "not-a-date") is None
+    assert daily_need(get_farm("A"), "2026-02-29") is None  # no such day in 2026
+
+
+# ---------- weather for any date (A-05e): forecast, else historical
+def test_weather_source_forecast_summer_and_climate():
+    a = get_farm("A")
+    assert weather_for("2026-11-21")[2] == "forecast"
+    assert weather_for("2026-08-26") == (7.88, 0.0, "historical")  # exact day of weather_summer2026_sousse
+    clim = weather_for("2026-03-15")  # not in the forecast nor the summer file: 30-year average of 15 March
+    assert clim[2] == "historical" and clim[0] > 0
+    assert daily_need(a, "2026-11-21").weather_source == "forecast"
+    assert daily_need(a, "2030-01-01").weather_source == "historical"
+
+
+def test_summer_day_gives_real_needs_for_a_b_d():
+    for fid, expected in (("A", 149.7), ("B", 220.6), ("D", 358.5)):  # ET0 7.88 mm x Kc x area x 10
+        n = daily_need(get_farm(fid), "2026-08-26")
+        assert n.need_m3 == pytest.approx(expected, abs=0.1) and n.weather_source == "historical"
 
 
 def test_10_farms_x_7_days():
@@ -88,7 +107,9 @@ def test_days_and_farm_filters():
     assert len(needs_forecast(3)) == 30
     assert len(needs_forecast(7, farm_id="A")) == 7
     assert needs_forecast(7, farm_id="ZZ") == []
-    assert len(needs_forecast(7, start="2026-11-25")) == 30  # only 3 forecast days left
+    late = needs_forecast(7, start="2026-11-25")  # 3 forecast days, then 4 historical days
+    assert len(late) == 70
+    assert [i.weather_source for i in late if i.farm_id == "A"] == ["forecast"] * 3 + ["historical"] * 4
 
 
 # ---------- the endpoint
@@ -109,5 +130,7 @@ def test_endpoint_filters_and_errors():
         one = c.get("/api/forecast/needs?farm_id=D").json()
         assert {i["farm_id"] for i in one["items"]} == {"D"} and len(one["items"]) == 7
         assert c.get("/api/forecast/needs?farm_id=ZZ").status_code == 404
-        assert c.get("/api/forecast/needs?start=2030-01-01").status_code == 404
+        far = c.get("/api/forecast/needs?start=2030-01-01&farm_id=A&days=2")
+        assert far.status_code == 200 and {i["weather_source"] for i in far.json()["items"]} == {"historical"}
+        assert c.get("/api/forecast/needs?start=nope").status_code == 404
         assert c.get("/api/forecast/needs?days=0").status_code == 422

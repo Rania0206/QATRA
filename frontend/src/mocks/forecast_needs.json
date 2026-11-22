@@ -10,7 +10,8 @@
       "etc_mm": 2.55,
       "effective_rain_mm": 0.0,
       "need_mm": 2.55,
-      "need_m3": 50.9
+      "need_m3": 50.9,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-21",
@@ -20,7 +21,8 @@
       "etc_mm": 1.88,
       "effective_rain_mm": 0.0,
       "need_mm": 1.88,
-      "need_m3": 75.0
+      "need_m3": 75.0,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-21",
@@ -30,7 +32,8 @@
       "etc_mm": 2.68,
       "effective_rain_mm": 0.0,
       "need_mm": 2.68,
-      "need_m3": 26.8
+      "need_m3": 26.8,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-21",
@@ -40,7 +43,8 @@
       "etc_mm": 1.88,
       "effective_rain_mm": 0.0,
       "need_mm": 1.88,
-      "need_m3": 121.9
+      "need_m3": 121.9,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-21",
@@ -50,7 +54,8 @@
       "etc_mm": 3.08,
       "effective_rain_mm": 0.0,
       "need_mm": 3.08,
-      "need_m3": 92.5
+      "need_m3": 92.5,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-21",
@@ -60,7 +65,8 @@
       "etc_mm": 3.08,
       "effective_rain_mm": 0.0,
       "need_mm": 3.08,
-      "need_m3": 154.1
+      "need_m3": 154.1,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-21",
@@ -70,7 +76,8 @@
       "etc_mm": 3.08,
       "effective_rain_mm": 0.0,
       "need_mm": 3.08,
-      "need_m3": 24.7
+      "need_m3": 24.7,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-21",
@@ -80,7 +87,8 @@
       "etc_mm": 1.88,
       "effective_rain_mm": 0.0,
       "need_mm": 1.88,
-      "need_m3": 11.3
+      "need_m3": 11.3,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-21",
@@ -90,7 +98,8 @@
       "etc_mm": 2.55,
       "effective_rain_mm": 0.0,
       "need_mm": 2.55,
-      "need_m3": 38.2
+      "need_m3": 38.2,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-21",
@@ -100,7 +109,8 @@
       "etc_mm": 3.08,
       "effective_rain_mm": 0.0,
       "need_mm": 3.08,
-      "need_m3": 246.6
+      "need_m3": 246.6,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-22",
@@ -110,7 +120,8 @@
       "etc_mm": 2.86,
       "effective_rain_mm": 0.0,
       "need_mm": 2.86,
-      "need_m3": 57.2
+      "need_m3": 57.2,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-22",
@@ -120,7 +131,8 @@
       "etc_mm": 2.11,
       "effective_rain_mm": 0.0,
       "need_mm": 2.11,
-      "need_m3": 84.3
+      "need_m3": 84.3,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-22",
@@ -130,7 +142,8 @@
       "etc_mm": 3.01,
       "effective_rain_mm": 0.0,
       "need_mm": 3.01,
-      "need_m3": 30.1
+      "need_m3": 30.1,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-22",
@@ -140,7 +153,8 @@
       "etc_mm": 2.11,
       "effective_rain_mm": 0.0,
       "need_mm": 2.11,
-      "need_m3": 137.0
+      "need_m3": 137.0,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-22",
@@ -150,7 +164,8 @@
       "etc_mm": 3.46,
       "effective_rain_mm": 0.0,
       "need_mm": 3.46,
-      "need_m3": 103.8
+      "need_m3": 103.8,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-22",
@@ -160,7 +175,8 @@
       "etc_mm": 3.46,
       "effective_rain_mm": 0.0,
       "need_mm": 3.46,
-      "need_m3": 173.1
+      "need_m3": 173.1,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-22",
@@ -170,7 +186,8 @@
       "etc_mm": 3.46,
       "effective_rain_mm": 0.0,
       "need_mm": 3.46,
-      "need_m3": 27.7
+      "need_m3": 27.7,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-22",
@@ -180,7 +197,8 @@
       "etc_mm": 2.11,
       "effective_rain_mm": 0.0,
       "need_mm": 2.11,
-      "need_m3": 12.6
+      "need_m3": 12.6,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-22",
@@ -190,7 +208,8 @@
       "etc_mm": 2.86,
       "effective_rain_mm": 0.0,
       "need_mm": 2.86,
-      "need_m3": 42.9
+      "need_m3": 42.9,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-22",
@@ -200,7 +219,8 @@
       "etc_mm": 3.46,
       "effective_rain_mm": 0.0,
       "need_mm": 3.46,
-      "need_m3": 276.9
+      "need_m3": 276.9,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-23",
@@ -210,7 +230,8 @@
       "etc_mm": 2.68,
       "effective_rain_mm": 0.0,
       "need_mm": 2.68,
-      "need_m3": 53.6
+      "need_m3": 53.6,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-23",
@@ -220,7 +241,8 @@
       "etc_mm": 1.97,
       "effective_rain_mm": 0.0,
       "need_mm": 1.97,
-      "need_m3": 79.0
+      "need_m3": 79.0,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-23",
@@ -230,7 +252,8 @@
       "etc_mm": 2.82,
       "effective_rain_mm": 0.0,
       "need_mm": 2.82,
-      "need_m3": 28.2
+      "need_m3": 28.2,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-23",
@@ -240,7 +263,8 @@
       "etc_mm": 1.97,
       "effective_rain_mm": 0.0,
       "need_mm": 1.97,
-      "need_m3": 128.3
+      "need_m3": 128.3,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-23",
@@ -250,7 +274,8 @@
       "etc_mm": 3.24,
       "effective_rain_mm": 0.0,
       "need_mm": 3.24,
-      "need_m3": 97.3
+      "need_m3": 97.3,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-23",
@@ -260,7 +285,8 @@
       "etc_mm": 3.24,
       "effective_rain_mm": 0.0,
       "need_mm": 3.24,
-      "need_m3": 162.1
+      "need_m3": 162.1,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-23",
@@ -270,7 +296,8 @@
       "etc_mm": 3.24,
       "effective_rain_mm": 0.0,
       "need_mm": 3.24,
-      "need_m3": 25.9
+      "need_m3": 25.9,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-23",
@@ -280,7 +307,8 @@
       "etc_mm": 1.97,
       "effective_rain_mm": 0.0,
       "need_mm": 1.97,
-      "need_m3": 11.8
+      "need_m3": 11.8,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-23",
@@ -290,7 +318,8 @@
       "etc_mm": 2.68,
       "effective_rain_mm": 0.0,
       "need_mm": 2.68,
-      "need_m3": 40.2
+      "need_m3": 40.2,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-23",
@@ -300,7 +329,8 @@
       "etc_mm": 3.24,
       "effective_rain_mm": 0.0,
       "need_mm": 3.24,
-      "need_m3": 259.4
+      "need_m3": 259.4,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-24",
@@ -310,7 +340,8 @@
       "etc_mm": 2.67,
       "effective_rain_mm": 0.0,
       "need_mm": 2.67,
-      "need_m3": 53.4
+      "need_m3": 53.4,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-24",
@@ -320,7 +351,8 @@
       "etc_mm": 1.97,
       "effective_rain_mm": 0.0,
       "need_mm": 1.97,
-      "need_m3": 78.7
+      "need_m3": 78.7,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-24",
@@ -330,7 +362,8 @@
       "etc_mm": 2.81,
       "effective_rain_mm": 0.0,
       "need_mm": 2.81,
-      "need_m3": 28.1
+      "need_m3": 28.1,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-24",
@@ -340,7 +373,8 @@
       "etc_mm": 1.97,
       "effective_rain_mm": 0.0,
       "need_mm": 1.97,
-      "need_m3": 127.9
+      "need_m3": 127.9,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-24",
@@ -350,7 +384,8 @@
       "etc_mm": 3.23,
       "effective_rain_mm": 0.0,
       "need_mm": 3.23,
-      "need_m3": 96.9
+      "need_m3": 96.9,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-24",
@@ -360,7 +395,8 @@
       "etc_mm": 3.23,
       "effective_rain_mm": 0.0,
       "need_mm": 3.23,
-      "need_m3": 161.6
+      "need_m3": 161.6,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-24",
@@ -370,7 +406,8 @@
       "etc_mm": 3.23,
       "effective_rain_mm": 0.0,
       "need_mm": 3.23,
-      "need_m3": 25.9
+      "need_m3": 25.9,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-24",
@@ -380,7 +417,8 @@
       "etc_mm": 1.97,
       "effective_rain_mm": 0.0,
       "need_mm": 1.97,
-      "need_m3": 11.8
+      "need_m3": 11.8,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-24",
@@ -390,7 +428,8 @@
       "etc_mm": 2.67,
       "effective_rain_mm": 0.0,
       "need_mm": 2.67,
-      "need_m3": 40.0
+      "need_m3": 40.0,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-24",
@@ -400,7 +439,8 @@
       "etc_mm": 3.23,
       "effective_rain_mm": 0.0,
       "need_mm": 3.23,
-      "need_m3": 258.5
+      "need_m3": 258.5,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-25",
@@ -410,7 +450,8 @@
       "etc_mm": 1.88,
       "effective_rain_mm": 0.07,
       "need_mm": 1.81,
-      "need_m3": 36.2
+      "need_m3": 36.2,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-25",
@@ -420,7 +461,8 @@
       "etc_mm": 1.39,
       "effective_rain_mm": 0.07,
       "need_mm": 1.32,
-      "need_m3": 52.6
+      "need_m3": 52.6,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-25",
@@ -430,7 +472,8 @@
       "etc_mm": 1.98,
       "effective_rain_mm": 0.07,
       "need_mm": 1.91,
-      "need_m3": 19.1
+      "need_m3": 19.1,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-25",
@@ -440,7 +483,8 @@
       "etc_mm": 1.39,
       "effective_rain_mm": 0.07,
       "need_mm": 1.32,
-      "need_m3": 85.5
+      "need_m3": 85.5,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-25",
@@ -450,7 +494,8 @@
       "etc_mm": 2.28,
       "effective_rain_mm": 0.07,
       "need_mm": 2.21,
-      "need_m3": 66.2
+      "need_m3": 66.2,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-25",
@@ -460,7 +505,8 @@
       "etc_mm": 2.28,
       "effective_rain_mm": 0.07,
       "need_mm": 2.21,
-      "need_m3": 110.3
+      "need_m3": 110.3,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-25",
@@ -470,7 +516,8 @@
       "etc_mm": 2.28,
       "effective_rain_mm": 0.07,
       "need_mm": 2.21,
-      "need_m3": 17.7
+      "need_m3": 17.7,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-25",
@@ -480,7 +527,8 @@
       "etc_mm": 1.39,
       "effective_rain_mm": 0.07,
       "need_mm": 1.32,
-      "need_m3": 7.9
+      "need_m3": 7.9,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-25",
@@ -490,7 +538,8 @@
       "etc_mm": 1.88,
       "effective_rain_mm": 0.07,
       "need_mm": 1.81,
-      "need_m3": 27.2
+      "need_m3": 27.2,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-25",
@@ -500,7 +549,8 @@
       "etc_mm": 2.28,
       "effective_rain_mm": 0.07,
       "need_mm": 2.21,
-      "need_m3": 176.6
+      "need_m3": 176.6,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-26",
@@ -510,7 +560,8 @@
       "etc_mm": 1.51,
       "effective_rain_mm": 0.14,
       "need_mm": 1.37,
-      "need_m3": 27.4
+      "need_m3": 27.4,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-26",
@@ -520,7 +571,8 @@
       "etc_mm": 1.11,
       "effective_rain_mm": 0.14,
       "need_mm": 0.97,
-      "need_m3": 38.9
+      "need_m3": 38.9,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-26",
@@ -530,7 +582,8 @@
       "etc_mm": 1.59,
       "effective_rain_mm": 0.14,
       "need_mm": 1.45,
-      "need_m3": 14.5
+      "need_m3": 14.5,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-26",
@@ -540,7 +593,8 @@
       "etc_mm": 1.11,
       "effective_rain_mm": 0.14,
       "need_mm": 0.97,
-      "need_m3": 63.2
+      "need_m3": 63.2,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-26",
@@ -550,7 +604,8 @@
       "etc_mm": 1.83,
       "effective_rain_mm": 0.14,
       "need_mm": 1.69,
-      "need_m3": 50.7
+      "need_m3": 50.7,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-26",
@@ -560,7 +615,8 @@
       "etc_mm": 1.83,
       "effective_rain_mm": 0.14,
       "need_mm": 1.69,
-      "need_m3": 84.4
+      "need_m3": 84.4,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-26",
@@ -570,7 +626,8 @@
       "etc_mm": 1.83,
       "effective_rain_mm": 0.14,
       "need_mm": 1.69,
-      "need_m3": 13.5
+      "need_m3": 13.5,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-26",
@@ -580,7 +637,8 @@
       "etc_mm": 1.11,
       "effective_rain_mm": 0.14,
       "need_mm": 0.97,
-      "need_m3": 5.8
+      "need_m3": 5.8,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-26",
@@ -590,7 +648,8 @@
       "etc_mm": 1.51,
       "effective_rain_mm": 0.14,
       "need_mm": 1.37,
-      "need_m3": 20.6
+      "need_m3": 20.6,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-26",
@@ -600,7 +659,8 @@
       "etc_mm": 1.83,
       "effective_rain_mm": 0.14,
       "need_mm": 1.69,
-      "need_m3": 135.1
+      "need_m3": 135.1,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-27",
@@ -610,7 +670,8 @@
       "etc_mm": 1.38,
       "effective_rain_mm": 3.57,
       "need_mm": 0.0,
-      "need_m3": 0.0
+      "need_m3": 0.0,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-27",
@@ -620,7 +681,8 @@
       "etc_mm": 1.01,
       "effective_rain_mm": 3.57,
       "need_mm": 0.0,
-      "need_m3": 0.0
+      "need_m3": 0.0,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-27",
@@ -630,7 +692,8 @@
       "etc_mm": 1.45,
       "effective_rain_mm": 3.57,
       "need_mm": 0.0,
-      "need_m3": 0.0
+      "need_m3": 0.0,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-27",
@@ -640,7 +703,8 @@
       "etc_mm": 1.01,
       "effective_rain_mm": 3.57,
       "need_mm": 0.0,
-      "need_m3": 0.0
+      "need_m3": 0.0,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-27",
@@ -650,7 +714,8 @@
       "etc_mm": 1.67,
       "effective_rain_mm": 3.57,
       "need_mm": 0.0,
-      "need_m3": 0.0
+      "need_m3": 0.0,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-27",
@@ -660,7 +725,8 @@
       "etc_mm": 1.67,
       "effective_rain_mm": 3.57,
       "need_mm": 0.0,
-      "need_m3": 0.0
+      "need_m3": 0.0,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-27",
@@ -670,7 +736,8 @@
       "etc_mm": 1.67,
       "effective_rain_mm": 3.57,
       "need_mm": 0.0,
-      "need_m3": 0.0
+      "need_m3": 0.0,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-27",
@@ -680,7 +747,8 @@
       "etc_mm": 1.01,
       "effective_rain_mm": 3.57,
       "need_mm": 0.0,
-      "need_m3": 0.0
+      "need_m3": 0.0,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-27",
@@ -690,7 +758,8 @@
       "etc_mm": 1.38,
       "effective_rain_mm": 3.57,
       "need_mm": 0.0,
-      "need_m3": 0.0
+      "need_m3": 0.0,
+      "weather_source": "forecast"
     },
     {
       "date": "2026-11-27",
@@ -700,11 +769,12 @@
       "etc_mm": 1.67,
       "effective_rain_mm": 3.57,
       "need_mm": 0.0,
-      "need_m3": 0.0
+      "need_m3": 0.0,
+      "weather_source": "forecast"
     }
   ],
   "tag": {
     "status": "PROJECTION",
-    "source": "Open-Meteo forecast (data pack) x FAO-56 Kc (mid-season)"
+    "source": "Open-Meteo forecast (data pack), else historical weather, x FAO-56 Kc (mid-season)"
   }
 }

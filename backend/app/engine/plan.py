@@ -11,7 +11,8 @@ Simple, readable rules (no optimiser, no ML), applied in this order, per farm:
 
 DATE NOTE (demo data): the demo batches are dated July 2026, but the weather forecast in the data pack starts on
 21 Nov 2026. The allocation date therefore defaults to the first forecast day and does NOT have to match the batch
-date. Same for the soil model, which uses long-term climate, not the forecast.
+date. Any other date works too (A-05e): its needs use the summer 2026 weather file, or the 30-year average of that
+day (engine/needs.weather_for), and a warning says the weather is historical. The soil model uses long-term climate.
 """
 import math
 from typing import Callable, Optional
@@ -116,12 +117,15 @@ def allocate(batch: Batch, date: Optional[str] = None, options: Optional[Allocat
         warnings.append(f"Batch {batch.id}: a measured value is above an NT 106.03 limit, so no farm can receive it.")
 
     rows = []  # one dict per farm: the working
+    sources: set[str] = set()
     for farm in farms:
         ev = evaluate(farm, batch)
         n = need_fn(farm, day)
+        if getattr(n, "weather_source", None):  # a custom need_fn may return items without it
+            sources.add(n.weather_source)
         need = (n.need_m3 or 0.0) if n else 0.0
         if n is None:
-            warnings.append(f"Farm {farm.id}: no forecast for {day}, need taken as 0.")
+            warnings.append(f"Farm {farm.id}: no weather for {day}, need taken as 0.")
         elif n.need_m3 is None:
             warnings.append(f"Farm {farm.id}: crop {farm.crop} has no Kc, need taken as 0.")
 
@@ -136,6 +140,9 @@ def allocate(batch: Batch, date: Optional[str] = None, options: Optional[Allocat
             if capped > well_per_day:
                 capped, reason = well_per_day, f"anti-rebound: not more than the {well_per_day:.1f} m3/day already taken from the {farm.fresh_source}"
         rows.append({"farm": farm, "status": ev["status"], "need": need, "capped": capped, "reason": reason})
+
+    if "historical" in sources:
+        warnings.append(f"Weather for {day}: historical data (not a forecast).")
 
     requested = sum(r["capped"] for r in rows)  # 5. sharing
     share = 1.0 if requested <= batch.volume_m3 else batch.volume_m3 / requested

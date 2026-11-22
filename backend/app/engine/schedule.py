@@ -1,18 +1,24 @@
-"""A-05b: 24-hour schedule of the transfer pump (plant -> storage basin): solar first, grid only when needed.
+"""A-05b/A-05e: 24-hour schedule of the transfer pump (plant -> storage basin), hybrid solar.
 
-Hours are filled in this order (each hour covers hh:00-hh:59):
-  1. SOLAR hours: PV output >= the pump's kW. 07:00-12:00 first, then any other such hour.
-  2. GRID hours at 06:00 and 18:00-21:00 (outside the peak).
-  3. Last resort, normal scenario only: the other daytime hours 07:00-17:00 on the grid.
-In the "outage" scenario the grid is NEVER used in the outage window (13:00-17:00, from sim_outage_windows):
-PV still can be, the grid cannot. Whatever does not fit in the hours (or in the basin) is reported as a warning.
+Which hours pump (each hour covers hh:00-hh:59), in this order:
+  1. SUNNY hours, best sun first (midday): PV output >= SOLAR_LABEL_FRACTION of the pump's kW.
+  2. GRID hours outside the peak: 06:00 and 18:00-21:00.
+  3. Last resort, "normal" scenario only: the other daytime hours 07:00-17:00, best sun first.
+
+Within an hour the sun and the grid work together (hybrid): solar kW = min(PV kW, pump kW) and the grid covers the
+rest, so a cloudy-ish hour still earns partial solar credit. solar_share = solar kWh / total kWh (energy-based).
+The hour is LABELLED "solar" when PV >= SOLAR_LABEL_FRACTION x pump kW, otherwise "grid" (the label is for display;
+the energy split above is what solar_share counts).
+
+Scenario "outage": the grid is never used in the outage window (13:00-17:00 from sim_outage_windows). The pump may
+still run there, on solar only and only in sunny hours, at a reduced flow = pump flow x PV kW / pump kW. Whatever does
+not fit (hours, window, basin room) is reported as a warning with the m3 that could not be pumped.
 
 Everything is read through the store: pump (sim_pumps_basin.transfer_pumps[0]), basin and PV array size
 (sim_pumps_basin), hourly PV (pv_estimate_sousse, scaled to the array), outage windows (sim_outage_windows),
 energy formula constant (energy_params). Farm withdrawals from the basin are not modelled: basin_m3 is the level
 after the water pumped in, starting from the basin's initial level.
 """
-import math
 import re
 from functools import lru_cache
 from typing import Literal, Optional
@@ -25,14 +31,11 @@ from app.store import get_store
 
 Scenario = Literal["normal", "outage"]
 
-# "Solar" means PV output >= SOLAR_MIN_FRACTION x the pump's kW. 1.0 = the full pump power, as specified.
-# With the data pack's 60 kWp array this is rarely true (the pump needs 44.6 kW, the array peaks at ~48 kW in July and
-# ~26 kW in November): lowering it (e.g. 0.8) lets weaker sun count, with the grid topping up.
-SOLAR_MIN_FRACTION = 1.0
+# An hour is labelled "solar" when the PV output is at least this share of the pump's kW; the grid tops up the rest.
+SOLAR_LABEL_FRACTION = 0.5
 
-SOLAR_FIRST = range(7, 13)  # 07:00-12:59
 GRID_PREFERRED = [6, 18, 19, 20, 21]
-LAST_RESORT = range(7, 18)  # 07:00-17:59 on the grid, only when nothing else is left
+LAST_RESORT = range(7, 18)  # 07:00-17:59, grid, "normal" scenario only
 DEFAULT_WINDOW = (13, 17)  # outage window when the date has none in sim_outage_windows (HRW 2026: 13:00-17:00)
 FALLBACK_COEFF = 0.00272  # kWh per m3 per metre of head, if the formula in energy_params cannot be parsed
 
@@ -62,9 +65,14 @@ def _coeff() -> float:
 
 
 def pump_spec() -> dict:
-    """First transfer pump (TP1): flow m3/h, head m, efficiency, rated kW, and its energy per m3."""
+    """First transfer pump (TP1): flow m3/h, head m, efficiency, rated kW, and its energy per m3.
+
+    "kw" = flow x energy per m3 (44.625 kW): the file's power_kW (44.6) before rounding, so energy, solar and grid
+    kW add up exactly.
+    """
     p = _pumps()["transfer_pumps"][0]
-    return {**p, "kwh_per_m3": _coeff() * p["head_m"] / p["efficiency"]}
+    kwh_per_m3 = _coeff() * p["head_m"] / p["efficiency"]
+    return {**p, "kwh_per_m3": kwh_per_m3, "kw": p["flow_m3_h"] * kwh_per_m3}
 
 
 def basin_spec() -> dict:
@@ -94,7 +102,7 @@ def schedule(total_m3: float, date: Optional[str] = None, scenario: Scenario = "
     """basin_initial_m3: starting level of the basin (default: sim_pumps_basin; the heatwave scenario starts at 600)."""
     day = date or (forecast_dates()[0] if forecast_dates() else "")
     pump, basin = pump_spec(), basin_spec()
-    flow, kw, kwh_m3 = float(pump["flow_m3_h"]), float(pump["power_kW"]), pump["kwh_per_m3"]
+    flow, kw, kwh_m3 = float(pump["flow_m3_h"]), pump["kw"], pump["kwh_per_m3"]
     pv = _pv_kw(day)
     warnings: list[str] = []
     if not pv:
@@ -107,19 +115,23 @@ def schedule(total_m3: float, date: Optional[str] = None, scenario: Scenario = "
         warnings.append(f"{total_m3 - room:.0f} m3 could not be pumped: the basin is full "
                         f"({basin['capacity_m3']} m3 capacity, {start:g} m3 already in).")
 
-    no_grid = outage_hours(day) if scenario == "outage" else set()
-    solar_ok = lambda h: pv.get(h, 0.0) >= SOLAR_MIN_FRACTION * kw  # noqa: E731
-    solar = [h for h in SOLAR_FIRST if solar_ok(h)] + [h for h in range(24) if h not in SOLAR_FIRST and solar_ok(h)]
-    grid = [h for h in GRID_PREFERRED if h not in no_grid]
-    last = [h for h in LAST_RESORT if h not in no_grid]
-    order = list(dict.fromkeys(solar + grid + last))
+    window = outage_hours(day) if scenario == "outage" else set()
+    sunny = sorted((h for h in range(24) if pv.get(h, 0.0) >= SOLAR_LABEL_FRACTION * kw), key=lambda h: -pv[h])
+    grid = [h for h in GRID_PREFERRED if h not in sunny and h not in window]
+    last = [] if scenario == "outage" else sorted((h for h in LAST_RESORT if h not in sunny and h not in grid),
+                                                  key=lambda h: -pv.get(h, 0.0))
+    order = sunny + grid + last
+
+    def capacity(h: int) -> float:
+        """m3 the pump can move in hour h: full flow, or - in the outage window, sun only - flow x PV kW / pump kW."""
+        return flow * min(1.0, pv.get(h, 0.0) / kw) if h in window else flow
 
     pumped: dict[int, float] = {}
     left = pumpable
     for h in order:
         if left <= 1e-9:
             break
-        pumped[h] = min(flow, left)
+        pumped[h] = min(capacity(h), left)
         left -= pumped[h]
     if left > 0.05:
         why = " (no grid during the outage)" if scenario == "outage" else ""
@@ -128,13 +140,11 @@ def schedule(total_m3: float, date: Optional[str] = None, scenario: Scenario = "
     slots, level, energy, solar_kwh = [], start, 0.0, 0.0
     for h in range(24):
         m3 = pumped.get(h, 0.0)
-        slot_kw = m3 / flow * kw
-        source = "off" if m3 <= 0 else ("solar" if pv.get(h, 0.0) >= SOLAR_MIN_FRACTION * slot_kw else "grid")
+        kwh = m3 * kwh_m3  # = average kW over the hour
+        source = "off" if m3 <= 0 else ("solar" if pv.get(h, 0.0) >= SOLAR_LABEL_FRACTION * kw else "grid")
         level = min(float(basin["capacity_m3"]), level + m3)
-        energy += m3 * kwh_m3
-        if source == "solar":
-            solar_kwh += m3 * kwh_m3
-        slots.append(ScheduleSlot(hour=h, pump_kw=round(slot_kw, 1), source=source, basin_m3=round(level, 1)))
-    total_pumped = sum(pumped.values())
+        energy += kwh
+        solar_kwh += min(kwh, pv.get(h, 0.0))  # hybrid: the sun covers up to its output, the grid the rest
+        slots.append(ScheduleSlot(hour=h, pump_kw=round(kwh, 1), source=source, basin_m3=round(level, 1)))
     return Schedule(slots=slots, energy_kwh=round(energy, 1), solar_share=round(solar_kwh / energy, 3) if energy else 0.0,
-                    pumped_m3=round(total_pumped, 1), warnings=warnings)
+                    pumped_m3=round(sum(pumped.values()), 1), warnings=warnings)
