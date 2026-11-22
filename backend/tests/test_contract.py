@@ -2,7 +2,8 @@
 import json
 from pathlib import Path
 
-from app.schemas import Allocation, Batch, BusinessView, Farm, RuleResult, SavingsResult
+from app.engine.savings import SavingsReport
+from app.schemas import Allocation, Batch, BusinessView, Farm, RuleResult
 
 MOCKS = Path(__file__).resolve().parents[2] / "frontend" / "src" / "mocks"
 
@@ -46,7 +47,7 @@ def test_all_mocks_are_strict_json():
 
 
 def test_lite_mocks_match_schema():
-    SavingsResult.model_validate(load("post_savings.json"))
+    SavingsReport.model_validate(load("post_savings.json"))
     BusinessView.model_validate(load("business.json"))
 
 
