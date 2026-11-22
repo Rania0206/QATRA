@@ -236,6 +236,8 @@ class HeatwaveResult(BaseModel):
     scenario_id: str
     label: str
     date: str
+    dates: list[str]  # the days that can be chosen: the days with an outage window
+    allocated_m3: float  # what the plan allocated that day; 0 when the batch of the day cannot be used
     allocation: Allocation
     baseline: HeatwaveBaseline  # the naive run: all grid, no solar
     naive: HeatwaveRun

@@ -261,3 +261,51 @@ def test_schedule_note_explains_why_the_a05_pump_schedule_is_not_used():
 def test_unknown_scenario_raises_keyerror():
     with pytest.raises(KeyError):
         hw.run_scenario("nope")
+
+
+# ================================================================ B-06b: choose the day
+def test_outage_dates_are_the_days_of_the_outage_file():
+    dates = hw.outage_dates()
+    assert len(dates) == 12 and dates == sorted(dates)
+    assert dates[0] == "2026-07-12" and HOT_DAY in dates and "2026-08-24" not in dates  # no outage on 24 August
+    assert NORMAL_DAY not in dates
+
+
+def test_default_day_is_unchanged():
+    r = hw.run_scenario("heatwave_outage")
+    assert r["date"] == HOT_DAY and r["dates"] == hw.outage_dates()
+    assert hw.run_scenario("heatwave_outage", HOT_DAY) == r  # asking for the scenario's own day changes nothing
+
+
+def test_another_outage_day_has_its_own_batch_and_outage():
+    r = hw.run_scenario("heatwave_outage", "2026-07-17")
+    assert r["date"] == "2026-07-17" and r["allocation"]["batch_id"] == "SSUD-20260717"
+    assert r["scenario_id"] == "heatwave_outage" and "2026-07-17" in r["label"]
+    assert r["naive"]["hours_without_water"] == 4 and r["qatra"]["hours_without_water"] == 0
+    assert all(h["outage"] == (13 <= h["hour"] <= 16) for h in r["qatra"]["hourly"])
+
+
+def test_every_outage_day_runs_and_keeps_the_invariants():
+    for day in hw.outage_dates():
+        r = hw.run_scenario("heatwave_outage", day)
+        assert r["date"] == day and len(r["qatra"]["hourly"]) == 24, day
+        assert r["qatra"]["hours_without_water"] <= r["naive"]["hours_without_water"], day
+        assert all(h["grid_kw"] == 0 for h in r["qatra"]["hourly"] if h["outage"]), day
+        assert all(0 <= h["basin_m3"] <= 3000 for h in r["qatra"]["hourly"]), day
+        assert r["naive"]["hours_without_water"] in (0, 4), day
+
+
+def test_a_day_whose_batch_cannot_be_used_plans_no_irrigation_and_says_why():
+    for day, why in (("2026-07-12", "analysis"), ("2026-07-18", "above an NT 106.03 limit"), ("2026-07-19", "analysis")):
+        r = hw.run_scenario("heatwave_outage", day)
+        assert r["allocated_m3"] == 0, day
+        assert r["naive"]["hours_without_water"] == 0 and r["qatra"]["hours_without_water"] == 0, day
+        assert any("no farm can receive it" in w and why in w for w in r["allocation"]["warnings"]), day
+    assert hw.run_scenario("heatwave_outage")["allocated_m3"] > 300
+
+
+def test_a_day_without_outage_window_is_refused():
+    with pytest.raises(ValueError, match="no grid outage window"):
+        hw.run_scenario("heatwave_outage", NORMAL_DAY)
+    with pytest.raises(ValueError):
+        hw.run_scenario("heatwave_outage", "2026-08-24")

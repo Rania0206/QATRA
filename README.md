@@ -60,7 +60,7 @@ _Last updated: 2026-11-22. Updated by whoever merges into `dev`; keep it current
 
 | Task | Owner | State |
 |---|---|---|
-| B-06a | Dev B | Heatwave tab: two 24-hour panels, "Without QATRA" and "With QATRA" (pump power bars by source, basin level line, outage shaded 13:00-17:00, same axes on both). English, French, Arabic. Branch `feature/B-06-heatwave-ui` |
+| B-06a, B-06b | Dev B | Heatwave tab: two 24-hour panels, "Without QATRA" and "With QATRA" (pump power bars by source, basin level line, outage shaded 13:00-17:00, same axes on both), a day picker over the 12 outage days and a very large "hours without irrigation" counter that animates when the day changes. `POST /api/scenarios/heatwave` takes an optional `date` and returns `dates` and `allocated_m3`. English, French, Arabic. Branch `feature/B-06-heatwave-ui` |
 
 ### Not done yet
 
@@ -74,7 +74,7 @@ _Last updated: 2026-11-22. Updated by whoever merges into `dev`; keep it current
 | Map: the version with all farms coloured by decision (B-02b) | Not merged: `dev` deliberately shows only the farmer's own farm. The code is in git history (`b733d53`, branch `feature/B-02b-map-farms`) |
 | Map and Soil texts | English, French and Arabic. Passport page: English only |
 
-Tests: 219 backend tests (`pytest`), frontend build (`npm run build`) passes.
+Tests: 224 backend tests on `dev` (234 with the day picker), frontend build (`npm run build`) passes.
 
 Formulas below are labelled **Implemented** (in code today), **Data pipeline** (computed by a script to produce a dataset), or **Planned** (design agreed, not coded yet).
 
@@ -439,6 +439,8 @@ unserved_m3  = demand − delivered
 hours_without_water = hours with demand > 0 and nothing delivered
 ```
 Result on 2026-08-26, scenario volume of 410.8 m³: **4 hours without water** (13:00 to 17:00), 117.4 m³ unserved, 87 kWh from the grid (with the crop-need profile of 971 m³ alone: 277.6 m³ unserved, 206 kWh). A day without outage (2026-07-08) gives 0. The result is tagged `SIMULATED` with the caveat "NASA POWER ~0.5 deg grid: coastal extremes smoothed" (local Tmax 44.0 °C against the national record of 49.7 °C).
+
+**Choosing the day** (B-06b): the scenario can run on any of the 12 days of `sim_outage_windows.csv` (`date` in the request, `dates` in the response). That day's weather, outage and batch (`SSUD-yyyymmdd`) are used; the PV array, the 600 m³ basin starting level and the pump stay. On 3 days (12, 18 and 19 July) the batch cannot be used (analysis expired or a limit exceeded), so Dev A's plan allocates nothing: both policies have 0 hours without water and the tab says so instead of showing a QATRA win. On the 9 other days the naive policy has 4 hours without water and QATRA 0.
 
 **QATRA policy** (B-05b, `qatra_run`): an hourly rule-based plan on the 60 kWp array (the 50 kWp estimate of `pv_estimate_sousse.csv` × 60/50) and the 3,000 m³ basin (600 m³ at the start of the scenario). The pump power is proportional to its flow, so a pump on part of the solar power delivers that part of its flow. Rules, hour by hour:
 

@@ -39,7 +39,21 @@ export const H = {
   tooltipDelivered: { en: "Delivered", fr: "Livré", ar: "الموزّع" },
   tooltipDemand: { en: "Demand", fr: "Demande", ar: "الطلب" },
   tooltipBasin: { en: "Basin", fr: "Bassin", ar: "الحوض" },
+  pickDay: { en: "Choose a day with a power cut", fr: "Choisissez un jour de coupure", ar: "اختر يومًا فيه انقطاع للكهرباء" },
+  counterTitle: { en: "Hours without irrigation", fr: "Heures sans irrigation", ar: "ساعات بلا ري" },
+  hourUnit: { en: "h", fr: "h", ar: "س" },
+  updating: { en: "Running the day…", fr: "Calcul du jour…", ar: "جارٍ حساب اليوم…" },
+  nothingTitle: { en: "No irrigation was planned on this day.", fr: "Aucune irrigation n'était prévue ce jour-là.", ar: "لم يكن هناك ري مبرمج في هذا اليوم." },
+  nothingText: {
+    en: "The water batch of the day cannot be used (lab analysis out of date, or a legal limit exceeded), so no farm receives any. There is nothing to cut, with or without QATRA.",
+    fr: "Le lot d'eau du jour est inutilisable (analyse trop ancienne ou limite légale dépassée) : aucune ferme n'en reçoit. Il n'y a rien à couper, avec ou sans QATRA.",
+    ar: "دفعة الماء لهذا اليوم غير صالحة للاستعمال (تحليل قديم أو تجاوز حد قانوني)، فلا تتلقى أي ضيعة شيئًا. لا شيء يُقطع، مع قطرة أو بدونها.",
+  },
 } satisfies Record<string, Tr>;
+
+/** "17 Jul" / "17 juil." in the reader's language, Latin digits. */
+export const shortDate = (iso: string, lang: Lang) =>
+  new Date(`${iso}T00:00:00`).toLocaleDateString({ en: "en-GB", fr: "fr-FR", ar: "ar-TN-u-nu-latn" }[lang], { day: "numeric", month: "short" });
 
 export const outageLabel = (a: number, b: number, lang: Lang) =>
   ({ en: `Grid outage ${a}:00–${b}:00`, fr: `Coupure du réseau ${a}h–${b}h`, ar: `انقطاع الشبكة ${a}:00–${b}:00` })[lang];

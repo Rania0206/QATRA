@@ -1,15 +1,17 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Bar, CartesianGrid, Cell, ComposedChart, Line, ReferenceArea, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { post } from "../../api/client";
-import type { EnergySource, HeatwaveResult, HeatwaveRun } from "../../api/types";
+import type { EnergySource, HeatwaveRequest, HeatwaveResult, HeatwaveRun } from "../../api/types";
 import ErrorBox from "../../components/ErrorBox";
 import TagChip from "../../components/TagChip";
 import { Band, Intro, Skeleton } from "../../components/ui";
 import { useApi } from "../../hooks/useApi";
+import { useCountUp } from "../../hooks/useCountUp";
 import { useLang, type Lang } from "../../i18n";
-import { H, heatwaveVerdict, outageLabel } from "./texts";
+import { H, heatwaveVerdict, outageLabel, shortDate } from "./texts";
 
 const SCENARIO = "heatwave_outage";
+const DEFAULT_DATE = "2026-08-26"; // the hottest day of the series
 
 const SOFT = "#3a3834";
 const LINE = "#d9cfc1";
@@ -55,8 +57,19 @@ const niceMax = (v: number, step: number) => Math.max(step, Math.ceil((v * 1.1) 
 
 export default function HeatwaveTab() {
   const { lang } = useLang();
-  const sim = useApi<HeatwaveResult>(() => post<HeatwaveResult>("/api/scenarios/heatwave", { scenario_id: SCENARIO }));
+  const [date, setDate] = useState(DEFAULT_DATE);
+  // Changing the day re-runs the scenario. The previous result stays on screen (dimmed) until the new one arrives.
+  const sim = useApi<HeatwaveResult>(
+    () => post<HeatwaveResult>("/api/scenarios/heatwave", { scenario_id: SCENARIO, date } satisfies HeatwaveRequest),
+    [date],
+  );
   const d = sim.data;
+
+  // The days to choose from come with the response. Kept apart so the picker survives an error on one day.
+  const [days, setDays] = useState<string[]>([]);
+  useEffect(() => {
+    if (d?.dates.length) setDays(d.dates);
+  }, [d]);
 
   const model = useMemo(() => {
     if (!d) return null;
@@ -73,6 +86,9 @@ export default function HeatwaveTab() {
     };
   }, [d]);
 
+  const updating = sim.loading && !!d;
+  const nothingPlanned = !!d && d.allocated_m3 === 0;
+
   return (
     <>
       <Band tone="olive" className="md:py-24">
@@ -82,46 +98,122 @@ export default function HeatwaveTab() {
       </Band>
 
       <Band tone="cream" wide>
-        {sim.loading ? (
-          <div className="space-y-4" aria-busy="true" aria-label={H.loading[lang]}>
-            <Skeleton className="h-16 w-full" />
-            <Skeleton className="h-96 w-full" />
-          </div>
-        ) : sim.error ? (
-          <ErrorBox error={sim.error} onRetry={sim.reload} />
-        ) : d && model ? (
-          <div className="space-y-10">
-            <p className="mx-auto max-w-3xl border-s-4 border-ok ps-5 font-display text-[26px] leading-snug">
-              {heatwaveVerdict(d.naive.hours_without_water, d.qatra.hours_without_water, model.outage?.[0] ?? 13, model.outage?.[1] ?? 17, lang)}
-            </p>
+        <div className="space-y-10">
+          {days.length > 0 && <DayPicker days={days} value={date} onChange={setDate} lang={lang} />}
 
-            <Legend lang={lang} outage={model.outage} />
-
-            <div className="grid gap-10 lg:grid-cols-2">
-              <Panel title={H.without[lang]} rows={model.naive} run={d.naive} model={model} lang={lang} bad />
-              <Panel title={H.with[lang]} rows={model.qatra} run={d.qatra} model={model} lang={lang} />
+          {sim.loading && !d ? (
+            <div className="space-y-4" aria-busy="true" aria-label={H.loading[lang]}>
+              <Skeleton className="h-16 w-full" />
+              <Skeleton className="h-96 w-full" />
             </div>
-
-            <div className="mx-auto max-w-3xl space-y-3 text-center">
-              <div className="flex flex-wrap items-center justify-center gap-3">
-                <TagChip tag={d.tag} />
-              </div>
-              <p className="text-[15px] text-ink-soft">{H.caveat[lang]}</p>
-              {d.allocation.warnings.length > 0 && (
-                <details className="text-start text-[15px] text-ink-soft">
-                  <summary className="cursor-pointer text-center">{H.notes[lang]}</summary>
-                  <ul className="mt-3 list-disc space-y-1 ps-6" dir="ltr">
-                    {d.allocation.warnings.map((w) => (
-                      <li key={w}>{w}</li>
-                    ))}
-                  </ul>
-                </details>
+          ) : sim.error ? (
+            <ErrorBox error={sim.error} onRetry={sim.reload} />
+          ) : d && model ? (
+            <div className={`space-y-10 transition-opacity duration-300 ${updating ? "opacity-50" : ""}`} aria-busy={updating}>
+              {updating && (
+                <p role="status" className="text-center text-[15px] text-ink-soft">
+                  {H.updating[lang]}
+                </p>
               )}
+
+              <BigCounter without={d.naive.hours_without_water} withQatra={d.qatra.hours_without_water} muted={nothingPlanned} lang={lang} />
+
+              {nothingPlanned ? (
+                <div role="note" className="mx-auto max-w-3xl border border-warn px-6 py-6 text-center">
+                  <h2 className="text-3xl text-warn">{H.nothingTitle[lang]}</h2>
+                  <p className="mt-3 text-[17px]">{H.nothingText[lang]}</p>
+                </div>
+              ) : (
+                <p className="mx-auto max-w-3xl border-s-4 border-ok ps-5 font-display text-[26px] leading-snug">
+                  {heatwaveVerdict(d.naive.hours_without_water, d.qatra.hours_without_water, model.outage?.[0] ?? 13, model.outage?.[1] ?? 17, lang)}
+                </p>
+              )}
+
+              <Legend lang={lang} outage={model.outage} />
+
+              <div className="grid gap-10 lg:grid-cols-2">
+                <Panel title={H.without[lang]} rows={model.naive} run={d.naive} model={model} lang={lang} bad />
+                <Panel title={H.with[lang]} rows={model.qatra} run={d.qatra} model={model} lang={lang} />
+              </div>
+
+              <div className="mx-auto max-w-3xl space-y-3 text-center">
+                <div className="flex flex-wrap items-center justify-center gap-3">
+                  <TagChip tag={d.tag} />
+                </div>
+                <p className="text-[15px] text-ink-soft">{H.caveat[lang]}</p>
+                {d.allocation.warnings.length > 0 && (
+                  <details className="text-start text-[15px] text-ink-soft">
+                    <summary className="cursor-pointer text-center">{H.notes[lang]}</summary>
+                    <ul className="mt-3 list-disc space-y-1 ps-6" dir="ltr">
+                      {d.allocation.warnings.map((w) => (
+                        <li key={w}>{w}</li>
+                      ))}
+                    </ul>
+                  </details>
+                )}
+              </div>
             </div>
-          </div>
-        ) : null}
+          ) : null}
+        </div>
       </Band>
     </>
+  );
+}
+
+/** One button per day with a power cut. */
+function DayPicker({ days, value, onChange, lang }: { days: string[]; value: string; onChange: (d: string) => void; lang: Lang }) {
+  return (
+    <div className="space-y-3 text-center">
+      <p className="eyebrow">{H.pickDay[lang]}</p>
+      <div role="group" aria-label={H.pickDay[lang]} className="flex flex-wrap justify-center gap-2">
+        {days.map((day) => (
+          <button
+            key={day}
+            type="button"
+            onClick={() => onChange(day)}
+            aria-pressed={day === value}
+            className={`min-w-20 border px-3 py-2 text-[16px] transition-colors focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink ${
+              day === value ? "border-ink bg-ink text-cream" : "border-line hover:border-ink"
+            }`}
+          >
+            {shortDate(day, lang)}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/** The number to read from the back of the room: hours without irrigation, without and with QATRA, counting up or down when the day changes. */
+function BigCounter({ without, withQatra, muted, lang }: { without: number; withQatra: number; muted: boolean; lang: Lang }) {
+  const a = useCountUp(without);
+  const b = useCountUp(withQatra);
+  const unit = H.hourUnit[lang];
+  const tone = (good: boolean) => (muted ? "text-ink-soft" : good ? "text-ok" : "text-bad");
+  const spoken = `${H.counterTitle[lang]}: ${H.without[lang]} ${without} ${unit}, ${H.with[lang]} ${withQatra} ${unit}`;
+  return (
+    <section aria-label={spoken} className="space-y-6 text-center">
+      <h2 className="eyebrow" aria-hidden="true">
+        {H.counterTitle[lang]}
+      </h2>
+      <div aria-hidden="true" dir="ltr" className="grid items-center gap-6 md:grid-cols-[1fr_auto_1fr]">
+        <div className={`transition-colors duration-500 ${tone(false)}`}>
+          <p className="text-[clamp(1.25rem,2.6vw,2rem)] font-medium">{muted ? "" : "✕ "}{H.without[lang]}</p>
+          <p className="font-display text-[clamp(7rem,24vw,17rem)] leading-[0.9] tabular-nums">
+            {a}
+            <span className="ms-2 text-[0.28em]">{unit}</span>
+          </p>
+        </div>
+        <span className="font-display text-[clamp(3rem,8vw,6rem)] leading-none text-ink-soft">→</span>
+        <div className={`transition-colors duration-500 ${tone(true)}`}>
+          <p className="text-[clamp(1.25rem,2.6vw,2rem)] font-medium">{muted ? "" : "✓ "}{H.with[lang]}</p>
+          <p className="font-display text-[clamp(7rem,24vw,17rem)] leading-[0.9] tabular-nums">
+            {b}
+            <span className="ms-2 text-[0.28em]">{unit}</span>
+          </p>
+        </div>
+      </div>
+    </section>
   );
 }
 
